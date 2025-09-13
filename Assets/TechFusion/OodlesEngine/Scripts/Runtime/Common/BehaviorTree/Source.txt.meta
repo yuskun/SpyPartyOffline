@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 925517336bdf46d4aafdb45084b4468b
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 274320
+  packageName: Oodles Engine - Physics Gameplay
+  packageVersion: 1.0
+  assetPath: Assets/TechFusion/OodlesEngine/Scripts/Runtime/Common/BehaviorTree/Source.txt
+  uploadId: 664538

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 23c57acd34c4e284bb51c472e3ed3a7e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 274320
+  packageName: Oodles Engine - Physics Gameplay
+  packageVersion: 1.0
+  assetPath: Assets/TechFusion/OodlesEngine/Scripts/Runtime/Common/Singleton/SingletonMono.cs
+  uploadId: 664538

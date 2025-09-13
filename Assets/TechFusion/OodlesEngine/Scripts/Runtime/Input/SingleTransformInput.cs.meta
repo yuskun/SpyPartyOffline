@@ -1,0 +1,10 @@
+﻿fileFormatVersion: 2
+guid: 227ac0790f7d4552bb9bdfc5d3735d13
+timeCreated: 1603066226
+AssetOrigin:
+  serializedVersion: 1
+  productId: 274320
+  packageName: Oodles Engine - Physics Gameplay
+  packageVersion: 1.0
+  assetPath: Assets/TechFusion/OodlesEngine/Scripts/Runtime/Input/SingleTransformInput.cs
+  uploadId: 664538

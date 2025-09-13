@@ -1,0 +1,10 @@
+﻿fileFormatVersion: 2
+guid: 6c284d3cab8841379f4a02abee439d6f
+timeCreated: 1559272979
+AssetOrigin:
+  serializedVersion: 1
+  productId: 274320
+  packageName: Oodles Engine - Physics Gameplay
+  packageVersion: 1.0
+  assetPath: Assets/TechFusion/OodlesEngine/Scripts/Runtime/Common/BehaviorTree/Runtime/Tasks/Actions/WaitTime/WaitTime.cs
+  uploadId: 664538

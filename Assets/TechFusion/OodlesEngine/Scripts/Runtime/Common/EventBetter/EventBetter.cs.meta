@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: 5f9ccefa2044f0a47a77e4147931eef9
+timeCreated: 1525880545
+licenseType: Store
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 274320
+  packageName: Oodles Engine - Physics Gameplay
+  packageVersion: 1.0
+  assetPath: Assets/TechFusion/OodlesEngine/Scripts/Runtime/Common/EventBetter/EventBetter.cs
+  uploadId: 664538

@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: ead7215a57279b84fb320b0e2be873c6
+timeCreated: 1519018752
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 274320
+  packageName: Oodles Engine - Physics Gameplay
+  packageVersion: 1.0
+  assetPath: Assets/TechFusion/OodlesEngine/Scripts/Editor/Common/RagdollCore.cs
+  uploadId: 664538

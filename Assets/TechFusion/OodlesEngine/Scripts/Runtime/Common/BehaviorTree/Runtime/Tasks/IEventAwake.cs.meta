@@ -1,0 +1,10 @@
+﻿fileFormatVersion: 2
+guid: 77d1e410c8444bd6bd22aa3cb256dfd1
+timeCreated: 1524347190
+AssetOrigin:
+  serializedVersion: 1
+  productId: 274320
+  packageName: Oodles Engine - Physics Gameplay
+  packageVersion: 1.0
+  assetPath: Assets/TechFusion/OodlesEngine/Scripts/Runtime/Common/BehaviorTree/Runtime/Tasks/IEventAwake.cs
+  uploadId: 664538

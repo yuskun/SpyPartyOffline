@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 5196bc0c6e300844888ad4abe3dc5716
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 274320
+  packageName: Oodles Engine - Physics Gameplay
+  packageVersion: 1.0
+  assetPath: Assets/TechFusion/OodlesEngine/Demo/Settings/UniversalRenderPipelineGlobalSettings.asset
+  uploadId: 664538

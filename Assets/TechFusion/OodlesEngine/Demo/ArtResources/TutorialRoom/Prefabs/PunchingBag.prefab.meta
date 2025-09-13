@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: dfdd7c9837cf7a34ab6a73f368c215fa
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 274320
+  packageName: Oodles Engine - Physics Gameplay
+  packageVersion: 1.0
+  assetPath: Assets/TechFusion/OodlesEngine/Demo/ArtResources/TutorialRoom/Prefabs/PunchingBag.prefab
+  uploadId: 664538

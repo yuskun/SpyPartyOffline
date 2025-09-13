@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 9e0ccd4221abe6b4f8073043bcedaceb
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 274320
+  packageName: Oodles Engine - Physics Gameplay
+  packageVersion: 1.0
+  assetPath: Assets/TechFusion/OodlesEngine/Prefabs/GameLocal.prefab
+  uploadId: 664538
