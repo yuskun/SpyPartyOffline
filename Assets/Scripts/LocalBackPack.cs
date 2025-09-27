@@ -8,7 +8,11 @@ public class LocalBackpack : MonoBehaviour
     public int FocusIndex = 0;
     public int SlotCount = 0;
     public List<Button> button = new List<Button>();
+    public List<Image> images = new List<Image>();
     private bool canInvoke = true;
+
+    private PlayerInventory userInventory; // 本地玩家
+    public CardUseUIManager cardUseUIManager; // UI 控制器
 
     void Awake()
     {
@@ -22,9 +26,24 @@ public class LocalBackpack : MonoBehaviour
                 button.Add(btn);
         }
 
-        SlotCount = button.Count;
-    }
+        images.Clear();
+        foreach (var btn in button)
+        {
+            var img = btn.transform.Find("CardImage")?.GetComponent<Image>();
+            images.Add(img);
+        }
 
+        SlotCount = button.Count;
+
+        if (userInventory == null)
+        {
+            var localPlayer = OodlesEngine.LocalPlayer.Instance;
+            if (localPlayer != null)
+            {
+                userInventory = localPlayer.GetComponent<PlayerInventory>();
+            }
+        }
+    }
 
     void Update()
     {
@@ -73,14 +92,50 @@ public class LocalBackpack : MonoBehaviour
 
     void HandleMouseClick()
     {
-        if (Input.GetMouseButtonDown(0)) // 左鍵按下
+        if (Input.GetMouseButtonDown(0))
         {
-            if (FocusIndex >= 0 && FocusIndex < button.Count&&button[FocusIndex].interactable)
+            if (FocusIndex >= 0 && FocusIndex < button.Count && button[FocusIndex].interactable)
             {
-                button[FocusIndex].onClick.Invoke(); // 觸發該按鈕事件
+                // 取得目標玩家（用 PlayerScanner）
+                var scanner = FindObjectOfType<PlayerScanner>();
+                PlayerInventory targetInventory = null;
+                if (scanner != null && scanner.currentTarget != null)
+                    targetInventory = scanner.currentTarget.GetComponent<PlayerInventory>();
+
+                if (userInventory == null)
+                {
+                    Debug.LogError("userInventory 為 null，請檢查初始化！");
+                    return;
+                }
+                if (cardUseUIManager == null)
+                {
+                    Debug.LogError("cardUseUIManager 為 null，請在 Inspector 拖曳！");
+                    return;
+                }
+
+                // 取得目前選中的卡片資料
+                var data = userInventory.slots[FocusIndex];
+                var card = CardManager.Instance.Catalog.cards.Find(c =>
+                    c.cardData.id == data.id && c.cardData.type == data.type
+                );
+
+                if (card is FunctionCard functionCard)
+                {
+                    cardUseUIManager.TryUseFunctionCard(
+                        functionCard,
+                        userInventory,
+                        targetInventory
+                    );
+                }
+                else
+                {
+                    // 不是功能卡就直接觸發原本的按鈕事件
+                    button[FocusIndex].onClick.Invoke();
+                }
             }
         }
     }
+
     public void DisableInteractable()
     {
         for (int i = 0; i < button.Count; i++)
@@ -88,11 +143,50 @@ public class LocalBackpack : MonoBehaviour
             button[i].interactable = false;
         }
     }
-     public void EnableInteractable()
+
+    public void EnableInteractable()
     {
         for (int i = 0; i < button.Count; i++)
         {
             button[i].interactable = true;
+        }
+    }
+
+    /// <summary>
+    /// 根據 PlayerInventory 的 slots 內容，顯示對應卡片圖片
+    /// </summary>
+    /// <param name="inv">玩家背包</param>
+    /// <param name="allCards">所有 Card ScriptableObject 的 List</param>
+    public void UpdateCardImagesByInventory(PlayerInventory inv, List<Card> allCards)
+    {
+        if (inv != userInventory)
+            return;
+
+        for (int i = 0; i < images.Count; i++)
+        {
+            var data = inv.slots[i];
+            if (!data.IsEmpty())
+            {
+                // 找到對應的 Card
+                var card = allCards.Find(c =>
+                    c.cardData.id == data.id && c.cardData.type == data.type
+                );
+                if (card != null && card.image != null)
+                {
+                    images[i].sprite = card.image;
+                    images[i].gameObject.SetActive(true);
+                }
+                else
+                {
+                    images[i].sprite = null;
+                    images[i].gameObject.SetActive(false);
+                }
+            }
+            else
+            {
+                images[i].sprite = null;
+                images[i].gameObject.SetActive(false);
+            }
         }
     }
 }

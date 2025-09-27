@@ -5,12 +5,15 @@ public class CardManager : MonoBehaviour
 {
     [Header("卡片資料庫（用 ID 對應）")]
     public static CardManager Instance;
+    public CardCatalog Catalog => catalog;
 
-    [SerializeField] private CardCatalog catalog;   // ScriptableObject 總表
+    [SerializeField]
+    private CardCatalog catalog; // ScriptableObject 總表
 
     private Dictionary<int, FunctionCard> funcDictionary = new();
     private Dictionary<int, MissionCard> missionDictionary = new();
     private Dictionary<int, ItemCard> itemDictionary = new();
+
     public Dictionary<int, MissionCard> GetAllMissions() => missionDictionary;
 
     void Awake()
@@ -33,7 +36,8 @@ public class CardManager : MonoBehaviour
 
         foreach (var card in catalog.cards)
         {
-            if (card == null) continue;
+            if (card == null)
+                continue;
 
             switch (card.cardData.type)
             {
@@ -54,47 +58,50 @@ public class CardManager : MonoBehaviour
             }
         }
     }
-  public Sprite[] GetCardInfo(CardData[] data)
-{
-    if (data == null || data.Length == 0)
-        return new Sprite[0];
 
-    Sprite[] result = new Sprite[data.Length];
-
-    for (int i = 0; i < data.Length; i++)
+    public Sprite[] GetCardInfo(CardData[] data)
     {
-        CardData d = data[i];
-        Sprite sprite = null;
+        if (data == null || data.Length == 0)
+            return new Sprite[0];
 
-        // 根據 type 分類查找
-        switch (d.type)
+        Sprite[] result = new Sprite[data.Length];
+
+        for (int i = 0; i < data.Length; i++)
         {
-            case CardType.Function:
-                var func = CardManager.Instance.GetFunctionCard(d.id);
-                if (func != null) sprite = func.image;
-                break;
+            CardData d = data[i];
+            Sprite sprite = null;
 
-            case CardType.Mission:
-                var mission = CardManager.Instance.GetMissionCard(d.id);
-                if (mission != null) sprite = mission.image;
-                break;
+            // 根據 type 分類查找
+            switch (d.type)
+            {
+                case CardType.Function:
+                    var func = CardManager.Instance.GetFunctionCard(d.id);
+                    if (func != null)
+                        sprite = func.image;
+                    break;
 
-            case CardType.Item:
-                var item = CardManager.Instance.GetItemCard(d.id);
-                if (item != null) sprite = item.image;
-                break;
+                case CardType.Mission:
+                    var mission = CardManager.Instance.GetMissionCard(d.id);
+                    if (mission != null)
+                        sprite = mission.image;
+                    break;
 
-            default:
-                sprite = null; // 沒有的話就保持 null
-                break;
+                case CardType.Item:
+                    var item = CardManager.Instance.GetItemCard(d.id);
+                    if (item != null)
+                        sprite = item.image;
+                    break;
+
+                default:
+                    sprite = null; // 沒有的話就保持 null
+                    break;
+            }
+
+            result[i] = sprite;
         }
 
-        result[i] = sprite;
+        return result;
     }
-
-    return result;
-}
-    
 
     // 依 ID 取卡片
     public FunctionCard GetFunctionCard(int id) =>

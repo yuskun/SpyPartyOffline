@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class PlayerInventory : MonoBehaviour
 {
-    private const int MaxSlots = 6;          // 6 格背包
+    private const int MaxSlots = 6; // 6 格背包
     public CardData[] slots = new CardData[MaxSlots];
-
 
     private void Awake()
     {
@@ -36,7 +35,8 @@ public class PlayerInventory : MonoBehaviour
     /// <summary>指定索引取得卡片（越界回 Empty）</summary>
     public CardData GetCard(int index)
     {
-        if (index >= 0 && index < MaxSlots) return slots[index];
+        if (index >= 0 && index < MaxSlots)
+            return slots[index];
         Debug.LogError("[Inventory] 索引超出範圍");
         return CardData.Empty();
     }
@@ -44,8 +44,13 @@ public class PlayerInventory : MonoBehaviour
     /// <summary>移除指定格的卡片</summary>
     public void RemoveCard(int index)
     {
-        if (index < 0 || index >= MaxSlots) { Debug.LogError("[Inventory] 索引超出範圍"); return; }
-        if (slots[index].IsEmpty()) return;
+        if (index < 0 || index >= MaxSlots)
+        {
+            Debug.LogError("[Inventory] 索引超出範圍");
+            return;
+        }
+        if (slots[index].IsEmpty())
+            return;
 
         Debug.Log($"[Inventory] 移除第 {index} 格: {slots[index].type}, ID={slots[index].id}");
         slots[index] = CardData.Empty();
@@ -55,7 +60,11 @@ public class PlayerInventory : MonoBehaviour
     /// <summary>將 index 的卡片置換成 newCard</summary>
     public void ReplaceCard(int index, CardData newCard)
     {
-        if (index < 0 || index >= MaxSlots) { Debug.LogError("[Inventory] 索引超出範圍"); return; }
+        if (index < 0 || index >= MaxSlots)
+        {
+            Debug.LogError("[Inventory] 索引超出範圍");
+            return;
+        }
         slots[index] = newCard;
         Debug.Log($"[Inventory] 置換第 {index} 格為: {newCard.type}, ID={newCard.id}");
         NotifyChanged();
@@ -83,20 +92,23 @@ public class PlayerInventory : MonoBehaviour
     public bool IsFull()
     {
         for (int i = 0; i < MaxSlots; i++)
-            if (slots[i].IsEmpty()) return false;
+            if (slots[i].IsEmpty())
+                return false;
         return true;
     }
-
 
     /// <summary>統一對外廣播的入口（可在此做 debounce/batch）</summary>
     private void NotifyChanged()
     {
         PlayerInventoryManager.Instance.Refresh();
+        LocalBackpack.Instance.UpdateCardImagesByInventory(this,CardManager.Instance.Catalog.cards);
     }
+
     public CardData[] GetAllCards()
     {
         return slots;
     }
+
     public CardData RandomGetCard()
     {
         System.Random rand = new System.Random();
@@ -113,20 +125,17 @@ public class PlayerInventory : MonoBehaviour
             return CardData.Empty();
         }
         return slots[index];
-
     }
+
     public bool HasCard(CardData Card)
     {
         for (int i = 0; i < MaxSlots; i++)
         {
-            if (slots[i].id == Card.id&&slots[i].type==Card.type)
+            if (slots[i].id == Card.id && slots[i].type == Card.type)
             {
                 return true;
             }
         }
         return false;
-       
     }
-
-
 }
