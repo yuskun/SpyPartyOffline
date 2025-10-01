@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class ObjectSpawner : MonoBehaviour
 {
@@ -25,7 +26,13 @@ public class ObjectSpawner : MonoBehaviour
     [Header("檢測射線高度")]
     [SerializeField] private float rayHeight = 10f;
 
+    [Header("最大生成數量")]
+    [SerializeField] private int maxTotal = 40;   // 最多 40
+
     private float timer;
+
+    // 記錄生成的物件
+    private List<GameObject> spawnedObjects = new List<GameObject>();
 
     private void Awake()
     {
@@ -41,7 +48,7 @@ public class ObjectSpawner : MonoBehaviour
             RandomSpawnObject();
         }
 
-        // 測試用按鍵
+        // 測試用
         if (Input.GetKeyDown(KeyCode.F2))
         {
             RandomSpawnObject();
@@ -56,11 +63,19 @@ public class ObjectSpawner : MonoBehaviour
             return;
         }
 
+        // ✅ 超過最大數量就不生了
+        if (spawnedObjects.Count >= maxTotal)
+        {
+            return;
+        }
+
         Bounds bounds = spawnArea.bounds;
         int spawnCount = Random.Range(1, 4);
 
         for (int i = 0; i < spawnCount; i++)
         {
+            if (spawnedObjects.Count >= maxTotal) break;
+
             bool spawned = false;
             int attempts = 0;
 
@@ -71,16 +86,15 @@ public class ObjectSpawner : MonoBehaviour
                 float randomX = Random.Range(bounds.min.x, bounds.max.x);
                 float randomZ = Random.Range(bounds.min.z, bounds.max.z);
 
-                // 從上往下打射線
                 Ray ray = new Ray(new Vector3(randomX, bounds.max.y + rayHeight, randomZ), Vector3.down);
                 if (Physics.Raycast(ray, out RaycastHit hit, rayHeight * 2))
                 {
                     Vector3 spawnPosition = hit.point + Vector3.up * spawnHeightOffset;
 
-                    // 檢查半徑內是否有碰撞
                     if (!Physics.CheckSphere(spawnPosition, radiusCheck))
                     {
-                        Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity);
+                        GameObject newObj = Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity);
+                        spawnedObjects.Add(newObj);  // ✅ 加進清單
                         spawned = true;
                     }
                 }
@@ -92,13 +106,21 @@ public class ObjectSpawner : MonoBehaviour
             }
         }
     }
-    public void objectToSpawn(GameObject obj,Transform position)
+
+    // 如果有物件被摧毀，要從清單移除
+    public void RemoveObject(GameObject obj)
     {
-  
+        if (spawnedObjects.Contains(obj))
+        {
+            spawnedObjects.Remove(obj);
+        }
+    }
+    public void objectToSpawn(GameObject obj, Transform position)
+    {
+
         Instantiate(obj, position.position, Quaternion.identity);
     }
 
-    // 可視化生成區與檢查半徑
     private void OnDrawGizmosSelected()
     {
         if (spawnArea != null)
@@ -108,3 +130,6 @@ public class ObjectSpawner : MonoBehaviour
         }
     }
 }
+
+
+

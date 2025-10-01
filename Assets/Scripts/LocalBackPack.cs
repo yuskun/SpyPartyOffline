@@ -2,13 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class LocalBackpack : MonoBehaviour
 {
     public static LocalBackpack Instance;
     public int FocusIndex = 0;
     public int SlotCount = 0;
-    public List<Button> button = new List<Button>();
-    public List<Image> images = new List<Image>();
+    public List<ButtionData> buttons = new List<ButtionData>();
+
     private bool canInvoke = true;
 
     private PlayerInventory userInventory; // 本地玩家
@@ -17,23 +18,33 @@ public class LocalBackpack : MonoBehaviour
     void Awake()
     {
         Instance = this;
-        // 自動抓取子物件的 Button
-        button.Clear();
+        buttons.Clear();
+
         foreach (Transform child in transform)
         {
             Button btn = child.GetComponent<Button>();
             if (btn != null)
-                button.Add(btn);
+            {
+                ButtionData data = new ButtionData();
+                data.button = btn;
+
+                // 嘗試抓 CardImage
+                data.image = btn.transform.Find("CardImage")?.GetComponent<Image>();
+
+                // 確保 Outline 存在
+                data.outline = btn.gameObject.GetComponent<UnityEngine.UI.Outline>();
+                if (data.outline == null) data.outline = btn.gameObject.AddComponent<UnityEngine.UI.Outline>();
+                data.outline.enabled = false;
+
+                // 嘗試抓 Shadow
+                data.shadow = btn.gameObject.GetComponent<Shadow>();
+                if (data.shadow != null) data.shadow.enabled = true;
+
+                buttons.Add(data);
+            }
         }
 
-        images.Clear();
-        foreach (var btn in button)
-        {
-            var img = btn.transform.Find("CardImage")?.GetComponent<Image>();
-            images.Add(img);
-        }
-
-        SlotCount = button.Count;
+        SlotCount = buttons.Count;
 
         if (userInventory == null)
         {
@@ -82,11 +93,26 @@ public class LocalBackpack : MonoBehaviour
 
     void UpdateButtonHighlight()
     {
-        for (int i = 0; i < button.Count; i++)
+        for (int i = 0; i < buttons.Count; i++)
         {
-            ColorBlock cb = button[i].colors;
-            cb.normalColor = (i == FocusIndex) ? Color.yellow : Color.white;
-            button[i].colors = cb;
+
+            if (i == FocusIndex)
+            {
+                // 開啟 Outline
+                buttons[i].outline.enabled = true;
+                buttons[i].shadow.enabled = false;
+
+                // 放大
+                buttons[i].button.transform.localScale = Vector3.one * 1.15f;
+            }
+            else
+            {
+                // 關閉 Outline
+                buttons[i].outline.enabled = false;
+                buttons[i].shadow.enabled = true;
+                // 恢復原始大小
+                buttons[i].button.transform.localScale = Vector3.one;
+            }
         }
     }
 
@@ -94,7 +120,7 @@ public class LocalBackpack : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (FocusIndex >= 0 && FocusIndex < button.Count && button[FocusIndex].interactable)
+            if (FocusIndex >= 0 && FocusIndex < buttons.Count && buttons[FocusIndex].button.interactable)
             {
                 // 取得目標玩家（用 PlayerScanner）
                 var scanner = FindObjectOfType<PlayerScanner>();
@@ -130,7 +156,7 @@ public class LocalBackpack : MonoBehaviour
                 else
                 {
                     // 不是功能卡就直接觸發原本的按鈕事件
-                    button[FocusIndex].onClick.Invoke();
+                    buttons[FocusIndex].button.onClick.Invoke();
                 }
             }
         }
@@ -138,17 +164,17 @@ public class LocalBackpack : MonoBehaviour
 
     public void DisableInteractable()
     {
-        for (int i = 0; i < button.Count; i++)
+        for (int i = 0; i < buttons.Count; i++)
         {
-            button[i].interactable = false;
+            buttons[i].button.interactable = false;
         }
     }
 
     public void EnableInteractable()
     {
-        for (int i = 0; i < button.Count; i++)
+        for (int i = 0; i < buttons.Count; i++)
         {
-            button[i].interactable = true;
+            buttons[i].button.interactable = true;
         }
     }
 
@@ -162,7 +188,7 @@ public class LocalBackpack : MonoBehaviour
         if (inv != userInventory)
             return;
 
-        for (int i = 0; i < images.Count; i++)
+        for (int i = 0; i < buttons.Count; i++)
         {
             var data = inv.slots[i];
             if (!data.IsEmpty())
@@ -173,20 +199,28 @@ public class LocalBackpack : MonoBehaviour
                 );
                 if (card != null && card.image != null)
                 {
-                    images[i].sprite = card.image;
-                    images[i].gameObject.SetActive(true);
+                    buttons[i].image.sprite = card.image;
+                    buttons[i].image.gameObject.SetActive(true);
                 }
                 else
                 {
-                    images[i].sprite = null;
-                    images[i].gameObject.SetActive(false);
+                    buttons[i].image.sprite = null;
+                    buttons[i].image.gameObject.SetActive(false);
                 }
             }
             else
             {
-                images[i].sprite = null;
-                images[i].gameObject.SetActive(false);
+                buttons[i].image.sprite = null;
+                buttons[i].image.gameObject.SetActive(false);
             }
         }
     }
+}
+
+public class ButtionData
+{
+    public Button button;
+    public Image image;
+    public UnityEngine.UI.Outline outline;
+    public Shadow shadow;
 }
