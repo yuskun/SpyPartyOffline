@@ -15,7 +15,6 @@ public class Catch : MissionCard
         if (PlayerInventoryManager.Instance.GetPlayer(parameters.TargetId).GetComponent<PlayerInventory>().HasCard(targetCard.cardData))
         {
             MissionWinSystem.Instance.GameOver();
-
         }
     }
 }

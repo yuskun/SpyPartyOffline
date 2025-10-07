@@ -42,8 +42,39 @@ public class CountdownTimer : MonoBehaviour
         timerText.text = $"{minutes:00}:{seconds:00}";
     }
 
-    private void OnTimerEnd()
+    /*private void OnTimerEnd()
     {
        MissionWinSystem.Instance.GameOver();
+    }*/
+
+    private void OnTimerEnd()
+{
+    // 1. 呼叫 TraceMission 的方法
+    if (TraceMission.Instance != null)
+    {
+        TraceMission.Instance.ProcessPlayerCards();
     }
+    else
+    {
+        Debug.LogWarning("TraceMission.Instance 尚未初始化");
+    }
+
+    // 2. 將 StealWin 設為 true
+    if (MissionWinSystem.Instance != null)
+    {
+        MissionWinSystem.Instance.StealWin = true;
+    }
+    else
+    {
+        Debug.LogWarning("MissionWinSystem.Instance 尚未初始化");
+    }
+
+    // 3. 呼叫 GameOver 判定
+    if (MissionWinSystem.Instance != null)
+    {
+        MissionWinSystem.Instance.GameOver();
+    }
+}
+
+
 }

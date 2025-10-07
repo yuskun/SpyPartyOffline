@@ -12,18 +12,30 @@ public class PlayerInventoryManager : MonoBehaviour
     private List<PlayerInventory> playerInventories = new List<PlayerInventory>();
     // 集中所有玩家的 slots
     private List<CardData> allSlots = new List<CardData>();
+    // 玩家與卡片對應 (PlayerID -> List<CardData>)
+    private Dictionary<int, List<CardData>> playerCards = new Dictionary<int, List<CardData>>();
+
     void Awake()
     {
         Instance = this;
         DontDestroyOnLoad(this.gameObject);
-
     }
 
     void Start()
     {
+        Refresh();
+    }
+
+    /// <summary>
+    /// 更新玩家資料與卡片對應
+    /// </summary>
+    public void Refresh()
+    {
         FindAllPlayerParents();
         GetInventories();
         CollectAllSlots();
+        BuildPlayerCardMapping();
+        Debug.Log("PlayerInventoryManager 已更新");
     }
 
     private void FindAllPlayerParents()
@@ -84,34 +96,66 @@ public class PlayerInventoryManager : MonoBehaviour
         Debug.Log($"總共收集 {allSlots.Count} 格卡片");
     }
 
+    /// <summary>
+    /// 建立玩家與卡片對應
+    /// </summary>
+    private void BuildPlayerCardMapping()
+    {
+        playerCards.Clear();
+
+        for (int i = 0; i < playerInventories.Count; i++)
+        {
+            PlayerIdentify identify = playerInventories[i].GetComponentInParent<PlayerIdentify>();
+            if (identify == null) continue;
+
+            int id = identify.PlayerID;
+            if (!playerCards.ContainsKey(id))
+                playerCards[id] = new List<CardData>();
+
+            foreach (var card in playerInventories[i].slots)
+            {
+                if (!System.Object.ReferenceEquals(card, null))
+                {
+                    playerCards[id].Add(card);
+                }
+            }
+
+            Debug.Log($"Player {id} 擁有 {playerCards[id].Count} 張卡片");
+        }
+    }
+
     // 提供外部存取
-    public List<CardData> GetAllSlots()
+    public List<CardData> GetAllSlots() => allSlots;
+
+    public List<CardData> GetCardsByPlayer(int playerId)
     {
-        return allSlots;
+        if (playerCards.ContainsKey(playerId))
+            return playerCards[playerId];
+        return new List<CardData>();
     }
-    public void Refresh()
-    {
-        FindAllPlayerParents();
-        GetInventories();
-        CollectAllSlots();
-        Debug.Log("PlayerInventoryManager 已更新");
-    }
+
     public GameObject GetPlayer(int index)
     {
+        if (index < 0 || index >= playerParents.Count)
+        {
+            //Debug.LogWarning($"GetPlayer: index {index} 超出範圍 (0 ~ {playerParents.Count - 1})");
+            return null;
+        }
+
         return playerParents[index];
     }
+
+
     private void AssignPlayerIDs()
     {
         for (int i = 0; i < playerParents.Count; i++)
         {
             PlayerIdentify identify = playerParents[i].GetComponent<PlayerIdentify>();
             if (identify == null)
-            {
                 identify = playerParents[i].AddComponent<PlayerIdentify>();
-            }
+
             identify.PlayerID = i;
             Debug.Log($"分配 PlayerID {i} 給 {playerParents[i].name}");
         }
     }
-
 }
