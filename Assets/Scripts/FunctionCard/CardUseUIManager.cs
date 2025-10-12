@@ -1,49 +1,148 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CardUseUIManager : MonoBehaviour
 {
-    public GameObject giveUI;
-    public GameObject giveFailUI;
-    public GameObject peekUI;
-    public GameObject peekFailUI;
-    public GameObject swapUI;
-    public GameObject swapFailUI;
+    [System.Serializable]
+    public struct FunctionCardUIBlock
+    {
+        public GameObject ui;
+        public GameObject failUI;
+        public Image[] userImages;
+        public Image[] targetImages;
+        public Button confirmButton;
+    }
 
+    public FunctionCardUIBlock giveBlock;
+    public FunctionCardUIBlock peekBlock;
+    public FunctionCardUIBlock swapBlock;
+
+    public GameObject localBackpack;
     public float failMessageDuration = 2f;
 
-    public void TryUseFunctionCard(FunctionCard card, PlayerInventory user, PlayerInventory target)
+    // 玩家選的卡片 index
+    private int selectedUserIndex = -1;
+    private int selectedTargetIndex = -1;
+    private FunctionCard currentFunctionCard;
+    private PlayerInventory currentUser, currentTarget;
+    private int currentUseCardIndex;
+
+
+    public void TryUseFunctionCard(FunctionCard card, PlayerInventory user, PlayerInventory target, int useCardIndex)
     {
         if (card == null)
             return;
-
+        
+        currentFunctionCard = card;
+        currentUser = user;
+        currentTarget = target;
+        currentUseCardIndex = useCardIndex;
+            
         if (card is Give giveCard)
         {
             if (giveCard.CanUse(user, target))
-                OpenUI(giveUI);
+            {
+                UpdateImagesByInventory(user, giveBlock.userImages);
+                OpenUI(giveBlock.ui);
+                ChooseCard(giveBlock);
+                BindConfirmButton(giveBlock);
+            }
             else
-                ShowFailUI(giveFailUI);
+                ShowFailUI(giveBlock.failUI);
         }
         else if (card is Peek peekCard)
         {
             if (peekCard.CanUse(user, target))
-                OpenUI(peekUI);
+            {
+                UpdateImagesByInventory(target, peekBlock.targetImages);
+                OpenUI(peekBlock.ui);
+
+                CardUseParameters parameters = new CardUseParameters();
+                parameters.UserId = user.playerId;
+                parameters.UseCardIndex = useCardIndex;
+                card.Execute(parameters);
+            }
             else
-                ShowFailUI(peekFailUI);
+                ShowFailUI(peekBlock.failUI);
         }
         else if (card is Swap swapCard)
         {
             if (swapCard.CanUse(user, target))
-                OpenUI(swapUI);
+            {
+                UpdateImagesByInventory(user, swapBlock.userImages);
+                UpdateImagesByInventory(target, swapBlock.targetImages);
+                OpenUI(swapBlock.ui);
+                ChooseCard(swapBlock);
+                BindConfirmButton(swapBlock);
+            }
             else
-                ShowFailUI(swapFailUI);
+                ShowFailUI(swapBlock.failUI);
         }
+    }
+
+    // 選哪張卡
+    private void ChooseCard(FunctionCardUIBlock block)
+    {
+        for (int i = 0; i < block.userImages.Length; i++)
+        {
+            int idx = i;
+            block.userImages[i].GetComponent<Button>().onClick.RemoveAllListeners();
+            //block.userImages[i].GetComponent<Button>().onClick.AddListener(() => selectedUserIndex = idx);
+
+            block.userImages[i].GetComponent<Button>().onClick.AddListener(() =>
+            {
+                selectedUserIndex = idx;
+                Debug.Log($"[User Image Clicked] Index: {idx}");
+            });
+        }
+        for (int i = 0; i < block.targetImages.Length; i++)
+        {
+            int idx = i;
+            block.targetImages[i].GetComponent<Button>().onClick.RemoveAllListeners();
+            //block.targetImages[i].GetComponent<Button>().onClick.AddListener(() => selectedTargetIndex = idx);
+            block.targetImages[i].GetComponent<Button>().onClick.AddListener(() =>
+            {
+                selectedTargetIndex = idx;
+                Debug.Log($"[Target Image Clicked] Index: {idx}");
+            });
+        }
+    }
+     // 綁定確認按鈕
+    private void BindConfirmButton(FunctionCardUIBlock block)
+    {
+        block.confirmButton.onClick.RemoveAllListeners();
+        block.confirmButton.onClick.AddListener(OnConfirmButtonClicked);
+    }
+
+    // 確認按鈕事件（Give/Swap 共用）
+    public void OnConfirmButtonClicked()
+    {
+        CardUseParameters parameters = new CardUseParameters();
+        parameters.UserId = currentUser.playerId;
+        parameters.TargetId = currentTarget.playerId;
+        parameters.UseCardIndex = currentUseCardIndex;
+        parameters.SelectIndex = selectedUserIndex;
+        parameters.TargetSelectIndex = selectedTargetIndex;
+
+        currentFunctionCard.Execute(parameters);
+
+        // 關閉UI、重設選擇
+        if (currentFunctionCard is Give)
+            CloseUI(giveBlock.ui);
+        else if (currentFunctionCard is Swap)
+            CloseUI(swapBlock.ui);
+
+        selectedUserIndex = -1;
+        selectedTargetIndex = -1;
     }
 
     private void OpenUI(GameObject ui)
     {
+        localBackpack.SetActive(false);
         ui.SetActive(true);
-        ShowCursor(true);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     private void ShowFailUI(GameObject failUI) // fail文字顯示幾秒後關閉
@@ -58,25 +157,29 @@ public class CardUseUIManager : MonoBehaviour
         ui.SetActive(false);
     }
 
-    private void ShowCursor(bool show)
-    {
-        Cursor.visible = show;
-        Cursor.lockState = show ? CursorLockMode.None : CursorLockMode.Locked;
-    }
-
     public void CloseUI(GameObject ui)
     {
         ui.SetActive(false);
-
-        // 如果沒有任何 UI 還開著，就隱藏滑鼠
-        if (!IsAnyUIOpen())
-        {
-            ShowCursor(false);
-        }
+        localBackpack.SetActive(true);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
-    private bool IsAnyUIOpen()
+    public void UpdateImagesByInventory(PlayerInventory inv, Image[] images)
     {
-        return giveUI.activeSelf || peekUI.activeSelf || swapUI.activeSelf;
+        Sprite[] sprites = CardManager.Instance.GetCardInfo(inv.slots);
+        for (int i = 0; i < images.Length; i++)
+        {
+            if (i < sprites.Length && sprites[i] != null)
+            {
+                images[i].sprite = sprites[i];
+                images[i].gameObject.SetActive(true);
+            }
+            else
+            {
+                images[i].sprite = null;
+                images[i].gameObject.SetActive(false);
+            }
+        }
     }
 }
