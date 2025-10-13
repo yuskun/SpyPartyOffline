@@ -59,7 +59,8 @@ public class CardUseUIManager : MonoBehaviour
                 OpenUI(peekBlock.ui);
 
                 CardUseParameters parameters = new CardUseParameters();
-                parameters.UserId = user.playerId;
+                // parameters.UserId = user.playerId;
+                parameters.UserId = user.GetComponent<PlayerIdentify>().PlayerID;
                 parameters.UseCardIndex = useCardIndex;
                 card.Execute(parameters);
             }
@@ -119,8 +120,10 @@ public class CardUseUIManager : MonoBehaviour
     public void OnConfirmButtonClicked()
     {
         CardUseParameters parameters = new CardUseParameters();
-        parameters.UserId = currentUser.playerId;
-        parameters.TargetId = currentTarget.playerId;
+        // parameters.UserId = currentUser.playerId;
+        // parameters.TargetId = currentTarget.playerId;
+        parameters.UserId = currentUser.GetComponent<PlayerIdentify>().PlayerID;
+        parameters.TargetId = currentTarget.GetComponent<PlayerIdentify>().PlayerID;
         parameters.UseCardIndex = currentUseCardIndex;
         parameters.SelectIndex = selectedUserIndex;
         parameters.TargetSelectIndex = selectedTargetIndex;

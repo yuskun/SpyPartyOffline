@@ -25036,8 +25036,6 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
-<<<<<<< Updated upstream
-=======
 --- !u!1001 &3579869763142242465
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25156,7 +25154,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1428587763}
   m_SourcePrefab: {fileID: 100100000, guid: 171e4f94f6e50024f8ec2feb8ace2a20, type: 3}
->>>>>>> Stashed changes
 --- !u!4 &3630093130580574374
 Transform:
   m_ObjectHideFlags: 0

@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerInventory : MonoBehaviour
 {
     private const int MaxSlots = 6; // 6 格背包
-    public int playerId;
+    //public int playerId;
     public CardData[] slots = new CardData[MaxSlots];
 
     private void Awake()

@@ -148,15 +148,6 @@ public class LocalBackpack : MonoBehaviour
                 {
                     cardUseUIManager.TryUseFunctionCard(functionCard, userInventory, targetInventory, FocusIndex);
                 }
-                else if (card is MissionCard missionCard)
-                {
-                    //cardUseUIManager.TryUseMissionCard(missionCard, userInventory, targetInventory, FocusIndex);
-                    if (missionCard.CanUse(userInventory, targetInventory, card.cardData))
-                    {
-                        Debug.Log("MissionCard CanUse");
-                        card.cardData.cooldown = card.cardData.cooldown;
-                    }
-                }
                 else
                 {
                     // 不是功能卡就直接觸發原本的按鈕事件
