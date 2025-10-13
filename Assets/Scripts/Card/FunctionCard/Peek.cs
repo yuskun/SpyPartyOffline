@@ -13,8 +13,13 @@ public class Peek : FunctionCard
 
     public override void Execute(CardUseParameters parameters)
     {
-        PlayerInventory Target = PlayerInventoryManager.Instance.GetPlayer(parameters.TargetId).GetComponent<PlayerInventory>();
-        UIManager.Instance.SetPeekUISprites(CardManager.Instance.GetCardInfo(Target.GetAllCards()));
-        UIManager.Instance.PeekUI.SetActive(true);
+        Debug.Log("Peek Execute"); 
+        PlayerInventory User = PlayerInventoryManager.Instance.GetPlayer(parameters.UserId).GetComponent<PlayerInventory>();
+        //PlayerInventory Target = PlayerInventoryManager.Instance.GetPlayer(parameters.TargetId).GetComponent<PlayerInventory>();
+
+        //UIManager.Instance.SetPeekUISprites(CardManager.Instance.GetCardInfo(Target.GetAllCards()));
+        //UIManager.Instance.PeekUI.SetActive(true);
+        User.RemoveCard(parameters.UseCardIndex);
+        
     }
 }

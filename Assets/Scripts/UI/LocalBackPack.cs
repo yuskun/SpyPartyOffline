@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-
 public class LocalBackpack : MonoBehaviour
 {
     public static LocalBackpack Instance;
@@ -147,11 +146,7 @@ public class LocalBackpack : MonoBehaviour
 
                 if (card is FunctionCard functionCard)
                 {
-                    cardUseUIManager.TryUseFunctionCard(
-                        functionCard,
-                        userInventory,
-                        targetInventory
-                    );
+                    cardUseUIManager.TryUseFunctionCard(functionCard, userInventory, targetInventory, FocusIndex);
                 }
                 else
                 {

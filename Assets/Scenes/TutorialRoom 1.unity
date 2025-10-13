@@ -9305,7 +9305,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 845078698}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &845078698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9419,12 +9431,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c87d184664c4e547a01ff9a93e9ae8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  giveUI: {fileID: 976671590}
-  giveFailUI: {fileID: 798303938}
-  peekUI: {fileID: 1729685353}
-  peekFailUI: {fileID: 1433361434}
-  swapUI: {fileID: 1510568372}
-  swapFailUI: {fileID: 532551236}
+  giveBlock:
+    ui: {fileID: 976671590}
+    failUI: {fileID: 798303938}
+    userImages:
+    - {fileID: 2124431903}
+    - {fileID: 182127391}
+    - {fileID: 2117625294}
+    - {fileID: 1000792521}
+    - {fileID: 941827128}
+    - {fileID: 2007000818}
+    targetImages: []
+    confirmButton: {fileID: 845078697}
+  peekBlock:
+    ui: {fileID: 1729685353}
+    failUI: {fileID: 1433361434}
+    userImages: []
+    targetImages:
+    - {fileID: 458844473}
+    - {fileID: 2125094163}
+    - {fileID: 960904367}
+    - {fileID: 2113021577}
+    - {fileID: 66899280}
+    - {fileID: 1795524059}
+    confirmButton: {fileID: 0}
+  swapBlock:
+    ui: {fileID: 1510568372}
+    failUI: {fileID: 532551236}
+    userImages:
+    - {fileID: 1104067639}
+    - {fileID: 1169239948}
+    - {fileID: 310739994}
+    - {fileID: 1104966718}
+    - {fileID: 191217113}
+    - {fileID: 1798806170}
+    targetImages:
+    - {fileID: 1009703870}
+    - {fileID: 2092142643}
+    - {fileID: 1144423685}
+    - {fileID: 325486276}
+    - {fileID: 1821743380}
+    - {fileID: 1413320710}
+    confirmButton: {fileID: 1635180077}
+  localBackpack: {fileID: 440459966}
   failMessageDuration: 2
 --- !u!1 &848562502
 GameObject:
@@ -12711,6 +12760,7 @@ MonoBehaviour:
   - {fileID: 327363611}
   - {fileID: 777419984}
   - {fileID: 1355502131}
+  AllowAttack: 0
   handFunctionRight: {fileID: 1355502130}
   handFunctionLeft: {fileID: 872247281}
   ignoreGroundCheckOn:
@@ -17366,7 +17416,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1635180078}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 847663719}
+        m_TargetAssemblyTypeName: CardUseUIManager, Assembly-CSharp
+        m_MethodName: OnConfirmSwap
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1635180078
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22209,7 +22271,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -27799,6 +27861,7 @@ MonoBehaviour:
   - {fileID: 4874879213113644602}
   - {fileID: 3335697458763022360}
   - {fileID: 1802823552023884032}
+  AllowAttack: 0
   handFunctionRight: {fileID: 5651703328531087143}
   handFunctionLeft: {fileID: 4270565505811842252}
   ignoreGroundCheckOn:
