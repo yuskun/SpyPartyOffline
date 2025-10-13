@@ -23,6 +23,7 @@ namespace OodlesEngine
             _owner.UpdateAnimations();
             _owner.SyncAnimator();
             _owner.UpdateIK();
+            _owner.UpdateAttack();
             //_owner.UpdateAnimator();
             _owner.UpdateHandFunction();
 

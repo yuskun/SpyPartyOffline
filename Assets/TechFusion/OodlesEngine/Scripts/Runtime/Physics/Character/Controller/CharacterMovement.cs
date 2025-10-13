@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 
 namespace OodlesEngine
-{ 
+{
     public class CharacterMovement : MonoBehaviour
     {
         //Assignables
@@ -25,6 +25,7 @@ namespace OodlesEngine
         public float maxSpeed = 4;
         public bool grounded;
         public LayerMask whatIsGround;
+        private float footstepTimer;
 
         public float counterMovement = 2;//0.175f;
         private float threshold = 0.01f;
@@ -77,7 +78,7 @@ namespace OodlesEngine
             MoveRotate();
             Movement();
         }
-    
+
         private void MoveInput()
         {
             //Get X movement. 0 = not moving 1 = moving
@@ -148,6 +149,25 @@ namespace OodlesEngine
             //Apply all the forces generated to move player
             rb.AddForce(orientation.transform.forward * y * (moveSpeed * sprintScale) * Time.deltaTime * multiplier * multiplierV);
             rb.AddForce(orientation.transform.right * x * (moveSpeed * sprintScale) * Time.deltaTime * multiplier);
+            // if (grounded && rb.linearVelocity.magnitude > 1f)
+            // {
+            //     footstepTimer -= Time.deltaTime;
+
+            //     // 根據速度調整間隔（跑越快 → 間隔越短）
+            //     float speed = rb.linearVelocity.magnitude;
+            //     float interval = Mathf.Lerp(0.5f, 0.2f, speed / 6f); // 0.5秒到0.2秒之間
+            //     if(AudioManager.instance != null)
+            //     {
+            //             if (footstepTimer <= 0f)
+            //             {
+            //                 footstepSource.pitch = UnityEngine.Random.Range(0.9f, 1.1f);
+            //                 footstepSource.PlayOneShot(footstepClip);
+            //                 footstepTimer = interval;
+            //             }
+                    
+            //     }
+               
+            // }
         }
 
 

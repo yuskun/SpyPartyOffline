@@ -23,18 +23,12 @@ namespace OodlesEngine
         // Start is called before the first frame update
         void Start()
         {
-            if (Application.platform == RuntimePlatform.WindowsEditor ||
-                    Application.platform == RuntimePlatform.WindowsPlayer ||
-                    Application.platform == RuntimePlatform.OSXEditor ||
-                    Application.platform == RuntimePlatform.OSXPlayer)
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-            }
+
         }
         void Update()
         {
-            if(Input.GetKeyDown(KeyCode.Escape))
+#if UNITY_EDITOR
+            if (Input.GetKeyDown(KeyCode.Tab))
             {
                 if (Cursor.lockState == CursorLockMode.Locked)
                 {
@@ -47,6 +41,7 @@ namespace OodlesEngine
                     Cursor.visible = false;
                 }
             }
+#endif
         }
 
         private void OnSearchGrabTarget(SearchGrabTargetMessage msg)
@@ -179,7 +174,7 @@ namespace OodlesEngine
         //    if (msg.obj == null) return;
 
         //    WeaponHandler wh = msg.obj.GetComponent<WeaponHandler>();
-            
+
         //    if (wh != null)
         //    {
         //        wh.SetOwner(msg.pc);
@@ -187,7 +182,7 @@ namespace OodlesEngine
         //        Weapon wp = wh.wepon;
 
         //        wp.GetComponent<Rigidbody>().Sleep();
-                
+
         //        wp.GetComponent<Collider>().isTrigger = true;
         //        wp.GetComponent<Rigidbody>().isKinematic = true;
         //        wp.GetComponent<Rigidbody>().interpolation = RigidbodyInterpolation.None;

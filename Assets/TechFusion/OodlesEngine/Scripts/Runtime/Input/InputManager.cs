@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 namespace OodlesEngine
-{ 
+{
     public class InputManager : MonoBehaviour
     {
         private static InputManager _instance;
@@ -51,8 +51,8 @@ namespace OodlesEngine
 
         private void Start()
         {
-           if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
-           //if (true)
+            if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
+                //if (true)
                 InitMobileController();
 
         }
@@ -61,7 +61,7 @@ namespace OodlesEngine
         {
             mobileController = Instantiate(MobileControllerPrefab, transform);
             moveStick = mobileController.transform.Find("DPad Outer").GetComponent<AnalogStick>();
-        
+
             range1d16 = Mathf.Cos((1 / 16.0f) * Mathf.PI * 2);
             range3d16 = Mathf.Cos((3 / 16.0f) * Mathf.PI * 2);
 
@@ -97,7 +97,8 @@ namespace OodlesEngine
                 EventTrigger.Entry entryDown = new EventTrigger.Entry();
                 entryDown.eventID = EventTriggerType.PointerDown;
                 entryDown.callback = new EventTrigger.TriggerEvent();
-                entryDown.callback.AddListener((BaseEventData pointData) => {
+                entryDown.callback.AddListener((BaseEventData pointData) =>
+                {
                     OnAction1(true);
                 });
                 trigger.triggers.Add(entryDown);
@@ -105,7 +106,8 @@ namespace OodlesEngine
                 EventTrigger.Entry entryUp = new EventTrigger.Entry();
                 entryUp.eventID = EventTriggerType.PointerUp;
                 entryUp.callback = new EventTrigger.TriggerEvent();
-                entryUp.callback.AddListener((BaseEventData pointData) => {
+                entryUp.callback.AddListener((BaseEventData pointData) =>
+                {
                     OnAction1(false);
                 });
                 trigger.triggers.Add(entryUp);
@@ -130,11 +132,12 @@ namespace OodlesEngine
                 EventTrigger.Entry entryUp = new EventTrigger.Entry();
                 entryUp.eventID = EventTriggerType.PointerUp;
                 entryUp.callback = new EventTrigger.TriggerEvent();
-                entryUp.callback.AddListener((BaseEventData pointData) => {
+                entryUp.callback.AddListener((BaseEventData pointData) =>
+                {
                     OnUseLeftHand(false);
                 });
                 trigger.triggers.Add(entryUp);
-            
+
             }
 
             //right
@@ -156,12 +159,13 @@ namespace OodlesEngine
                 EventTrigger.Entry entryUp = new EventTrigger.Entry();
                 entryUp.eventID = EventTriggerType.PointerUp;
                 entryUp.callback = new EventTrigger.TriggerEvent();
-                entryUp.callback.AddListener((BaseEventData pointData) => {
+                entryUp.callback.AddListener((BaseEventData pointData) =>
+                {
                     OnUseRightHand(false);
                 });
                 trigger.triggers.Add(entryUp);
             }
-        
+
             //aim area
             aimArea = mobileController.transform.Find("TouchArea").GetComponent<TouchArea>();
             aimArea.onDrag.AddListener(OnAimDrag);
@@ -238,8 +242,8 @@ namespace OodlesEngine
             {
                 cachedInputAim = Vector3.zero;
 
-                Vector3 delta = aimArea.deltaFingerPositionInchesYX  * aimSensitive;
-            
+                Vector3 delta = aimArea.deltaFingerPositionInchesYX * aimSensitive;
+
                 cachedInputAim = delta;
                 cachedInputAim.z = 0f;
             }
@@ -320,25 +324,32 @@ namespace OodlesEngine
         public float GetTouchMoveX()
         {
             if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
-            //if (true)
             {
                 return cachedInputAim.y;
             }
             else
             {
+                // 若滑鼠游標不是鎖定狀態，則不接收滑鼠輸入
+                if (Cursor.lockState != CursorLockMode.Locked)
+                    return 0f;
+
                 return Input.GetAxisRaw("Mouse X") * 2;
             }
         }
 
+
         public float GetTouchMoveY()
         {
             if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
-            //if (true)
             {
                 return cachedInputAim.x;
             }
             else
             {
+                // 若滑鼠游標不是鎖定狀態，則不接收滑鼠輸入
+                if (Cursor.lockState != CursorLockMode.Locked)
+                    return 0f;
+
                 return Input.GetAxisRaw("Mouse Y") * 2;
             }
         }

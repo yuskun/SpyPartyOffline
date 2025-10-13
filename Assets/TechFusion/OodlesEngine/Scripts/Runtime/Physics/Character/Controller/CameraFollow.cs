@@ -59,27 +59,38 @@ namespace OodlesEngine
             currentY = Mathf.Clamp(currentY, minAngle, maxAngle);
         }
 
+        // 加在 class CameraFollow 裡
+        private Vector3 smoothedTarget;   // 平滑位置
+        [SerializeField] private float smoothSpeed = 10f; // 越大越快靠近
+
         public void UpdateControl()
         {
             if (!player)
-            {
                 return;
-            }
 
             Vector3 direction = new Vector3(0, 0, distance);
             Quaternion rotation = Quaternion.Euler(-currentY, -currentX, 0);
-            Vector3 targetPosition = player.position + positionOffset;
-            Vector3 standPosition = player.position + rotation * direction + positionOffset;
 
-            float computedDistance = GetDistanceByObstacle(standPosition, targetPosition);
+            // 玩家實際位置
+            Vector3 rawTarget = player.position + positionOffset;
 
+            // 平滑過渡 (防止相機跟隨 jitter)
+            smoothedTarget = Vector3.Lerp(smoothedTarget, rawTarget, Time.deltaTime * smoothSpeed);
+
+            // 計算相機「理想站位」
+            Vector3 standPosition = smoothedTarget + rotation * direction;
+
+            // 碰撞檢查，避免穿牆
+            float computedDistance = GetDistanceByObstacle(standPosition, smoothedTarget);
             direction = direction.normalized * computedDistance;
 
-            mainCamera.transform.position = player.position + rotation * direction + positionOffset;
-            mainCamera.transform.LookAt(targetPosition);
+            // 更新相機位置與朝向
+            mainCamera.transform.position = smoothedTarget + rotation * direction;
+            mainCamera.transform.LookAt(smoothedTarget);
 
-            ApplyOccluderFade(mainCamera.transform.position, targetPosition);
+            ApplyOccluderFade(mainCamera.transform.position, smoothedTarget);
         }
+
 
         float GetDistanceByObstacle(Vector3 position, Vector3 target)
         {

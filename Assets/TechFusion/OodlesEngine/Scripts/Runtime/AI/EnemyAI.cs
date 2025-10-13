@@ -3,19 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using CleverCrow.Fluid.BTs.Tasks;
 using CleverCrow.Fluid.BTs.Trees;
-using UnityEngine.Windows;
 
 namespace OodlesEngine
 {
     public class EnemyAI : MonoBehaviour
     {
-        OodlesCharacter characterController;
-        OodlesCharacterInput aiInput;
+        private OodlesCharacter characterController;
+        private OodlesCharacterInput aiInput;
 
         [SerializeField]
         private BehaviorTree enemyBrain;
 
         public bool alive = false;
+        private EnemyAI target;
+
+        private float lastJumpTime = 0f;
+        private float jumpCooldown = 2f;
+
+        private bool isRunningAway = false;
+        private float runAwayTimer = 0f;
+        private float runAwayDuration = 2.5f;
 
         private void Awake()
         {
@@ -24,142 +31,186 @@ namespace OodlesEngine
             enemyBrain = new BehaviorTreeBuilder(gameObject)
                 .Selector("AI Brain")
                     .Sequence("Casual")
-                        .Condition("Player Lost Control", () => { return !IsPlayerStanding(); })
+                        .Condition("No Target Found", () => { return FindNearestEnemy() == null; })
                         .Do("Casual Movement", () =>
                         {
                             Casual();
-
                             return TaskStatus.Success;
                         })
                         .WaitTime("Wait", 2)
-                        .End()
+                    .End()
+
                     .Selector("Combat")
                         .Sequence("Try Attack")
-                            .Condition("Find Player", () => { return LocalPlayer.Instance != null; })
+                            .Condition("Find Target", () => { return FindNearestEnemy() != null; })
                             .Condition("Check Attack Range", () => { return InAttackRange(); })
                             .Do("Attack", () =>
                             {
                                 Attack();
-
+                                StartRunAway(); // 打到就準備逃跑
                                 return TaskStatus.Success;
                             })
-                            .End()
-                        .Sequence("Move To Player")
-                            .Condition("Find Player", () => { return LocalPlayer.Instance != null; })
-                            .Do("Close To Player", () =>
+                        .End()
+                        .Sequence("Move To Target")
+                            .Condition("Find Target", () => { return FindNearestEnemy() != null; })
+                            .Do("Close To Target", () =>
                             {
                                 if (InAttackRange())
-                                {
                                     return TaskStatus.Success;
-                                }
 
-                                MoveToPlayer();
-
-                                return TaskStatus.Failure;
+                                MoveToTarget();
+                                return TaskStatus.Continue;
                             })
                         .End()
+                    .End()
+                .End()
                 .Build();
         }
 
-        // Start is called before the first frame update
-        void Start()
+        private void Start()
         {
             characterController = GetComponent<OodlesCharacter>();
+            characterController.AllowAttack = true;
         }
 
-        // Update is called once per frame
-        void Update()
+        private void Update()
         {
             if (!alive) return;
 
             aiInput.Reset();
             aiInput.deltaTime = Time.deltaTime;
 
+            // --- 執行行為樹 ---
             enemyBrain.Tick();
 
+            // --- 若在逃跑狀態，覆蓋當前輸入 ---
+            if (isRunningAway)
+            {
+                RunAway();
+            }
+            else
+            {
+                MaybeJump();
+            }
+
+            // --- 最後才輸出輸入 ---
             characterController.ProcessInput(aiInput);
         }
 
-        public void SetAlive(bool b)
-        {
-            alive = b;
-        }
+        public void SetAlive(bool b) => alive = b;
 
-        public Vector3 GetPosition()
-        {
-            return characterController.GetCharacterPosition();
-        }
+        public Vector3 GetPosition() => characterController.GetCharacterPosition();
 
-        bool IsPlayerStanding()
+        private EnemyAI FindNearestEnemy()
         {
-            if (LocalPlayer.Instance.GetState() == OodlesCharacter.State.Control)
+            EnemyAI[] all = FindObjectsOfType<EnemyAI>();
+            EnemyAI closest = null;
+            float minDist = Mathf.Infinity;
+
+            foreach (var e in all)
             {
-                return true;
+                if (e == this) continue;
+                if (!e.alive) continue;
+
+                float dist = Vector3.Distance(GetPosition(), e.GetPosition());
+                if (dist < minDist)
+                {
+                    minDist = dist;
+                    closest = e;
+                }
             }
 
-            return false;
+            target = closest;
+            return target;
         }
 
-        void Casual()
+        private void Casual()
         {
-            //move around
-            aiInput.jumpAxis = 1;
+            aiInput.forwardAxis = Mathf.Sin(Time.time * 0.5f);
+            aiInput.leftAxis = Mathf.Cos(Time.time * 0.3f);
         }
 
-        bool InAttackRange()
+        private bool InAttackRange()
         {
-            Vector3 playerPosition = LocalPlayer.Instance.GetPosition();
-            Vector3 myPosition = GetPosition();
-
-            if (Vector3.Distance(playerPosition, myPosition) < 1.2f)
-            {
-                return true;
-            }
-
-            return false;
+            if (target == null) return false;
+            float dist = Vector3.Distance(GetPosition(), target.GetPosition());
+            return dist < 1.2f;
         }
 
-        void Attack()
+        private void Attack()
         {
             aiInput.fire1Axis = 1;
         }
 
-        void MoveToPlayer()
+        private void MoveToTarget()
         {
-            Vector3 playerPosition = LocalPlayer.Instance.GetPosition();
-            Vector3 myPosition = GetPosition();
+            if (target == null) return;
 
-            Vector3 moveDir = playerPosition - myPosition;
-            moveDir.Normalize();
+            Vector3 myPos = GetPosition();
+            Vector3 targetPos = target.GetPosition();
+            Vector3 moveDir = (targetPos - myPos).normalized;
 
-            Vector3 lookDir = aiInput.cameraForward;
+            aiInput.cameraForward = moveDir;
+            aiInput.forwardAxis = 1;
+            aiInput.leftAxis = 0;
+        }
 
-            float cos = Vector3.Dot(lookDir, moveDir);
-            if (cos > 0)
+        private void MaybeJump()
+        {
+            if (Time.time - lastJumpTime > jumpCooldown)
             {
-                aiInput.forwardAxis = 1;
+                if (Random.value < 0.05f)
+                {
+                    aiInput.jumpAxis = 1;
+                    lastJumpTime = Time.time;
+                    jumpCooldown = Random.Range(2f, 5f);
+                }
             }
-            else if (cos < 0)
+        }
+
+        // =========================
+        // 🏃 逃跑邏輯
+        // =========================
+        private void StartRunAway()
+        {
+            if (isRunningAway) return;
+            StartCoroutine(RunAwayDelay());
+        }
+
+        private IEnumerator RunAwayDelay()
+        {
+            yield return new WaitForSeconds(Random.Range(1f, 2f)); // 等1~2秒後觸發
+            isRunningAway = true;
+            runAwayTimer = 0f;
+        }
+
+        private void RunAway()
+        {
+            if (target == null)
             {
-                aiInput.forwardAxis = -1;
-            }
-            else
-            {
-                aiInput.forwardAxis = 0;
+                isRunningAway = false;
+                return;
             }
 
-            Vector3 cross = Vector3.Cross(lookDir, moveDir);
-            if (cross.y > 0)
+            runAwayTimer += Time.deltaTime;
+            if (runAwayTimer >= runAwayDuration)
             {
-                aiInput.leftAxis = 1;
+                isRunningAway = false;
+                return;
             }
-            else if(cross.y < 0)
+
+            Vector3 myPos = GetPosition();
+            Vector3 targetPos = target.GetPosition();
+            Vector3 awayDir = (myPos - targetPos).normalized;
+
+            aiInput.cameraForward = awayDir;
+            aiInput.forwardAxis = 1;
+            aiInput.leftAxis = 0;
+
+            // 逃跑中偶爾跳一下
+            if (Random.value < 0.02f)
             {
-                aiInput.leftAxis = -1;
-            }
-            else
-            {
-                aiInput.leftAxis = 0;
+                aiInput.jumpAxis = 1;
             }
         }
     }

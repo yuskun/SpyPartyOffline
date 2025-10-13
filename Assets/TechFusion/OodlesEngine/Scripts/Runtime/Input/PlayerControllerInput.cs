@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using Fusion;
+using UnityEngine;
 
 namespace OodlesEngine
 {
-    public struct OodlesCharacterInput : IInput
+    public struct OodlesCharacterInput : INetworkInput
     {
         public float DeltaTime
         {

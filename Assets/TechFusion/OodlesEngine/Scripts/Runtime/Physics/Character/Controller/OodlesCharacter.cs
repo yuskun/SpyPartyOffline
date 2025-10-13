@@ -9,6 +9,7 @@ namespace OodlesEngine
         [HideInInspector] public GameObject ragdollPlayer;
         [HideInInspector]
         public ConfigurableJoint[] joints;
+        public bool AllowAttack = false;
 
         [HideInInspector] public HandFunction handFunctionRight, handFunctionLeft;
 
@@ -17,8 +18,9 @@ namespace OodlesEngine
         [Tooltip("Rotation range where the target direction influences arm movement.")]
         [HideInInspector] public float minTargetDirAngle = -30;
         [HideInInspector] public float maxTargetDirAngle = 60;
-
+        
         //energy
+
         public float energyTimeLength = 3.0f;
 
         public float moveForce = 20000f;
@@ -231,6 +233,7 @@ namespace OodlesEngine
 
             TickState();
         }
+      
 
         public void UpdateJointState()
         {
@@ -740,11 +743,21 @@ namespace OodlesEngine
 
         public void UpdateAttack()
         {
+            if(AllowAttack){
+                if (inputState.fire1Axis > 0)
+                {
+                    //if (!attackInput)
+                    {
+                        animatorPlayer.SetTrigger("Attack");
+                    }
 
-
-            animatorPlayer.SetTrigger("Attack");
-
-
+                    attackInput = true;
+                }
+                else
+                {
+                    attackInput = false;
+                }
+            }
         }
     }
 }
