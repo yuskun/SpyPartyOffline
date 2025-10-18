@@ -29,5 +29,19 @@ public class Give : FunctionCard
         User.RemoveCard(parameters.SelectIndex);
 
         User.RemoveCard(parameters.UseCardIndex);
+
+        if (CardHistoryManager.Instance != null)
+        {
+            CardHistoryManager.Instance.Record(
+                new CardHistoryEntry(
+                    parameters.UserId,
+                    parameters.TargetId,
+                    "give",
+                    CardType.Function,
+                    null
+                    //result
+                )
+            );
+        }
     }
 }

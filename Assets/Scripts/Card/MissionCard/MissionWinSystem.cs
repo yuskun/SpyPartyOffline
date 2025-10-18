@@ -26,6 +26,8 @@ public class MissionWinSystem : MonoBehaviour
     public void GameOver()
     {
         Debug.Log("StealID："+StealID);
+        Debug.Log("StealID："+CatchID);
+        Debug.Log("StealID："+FightID);
         Debug.Log("遊戲結束，檢查任務完成狀態");
         // 每個任務 ID 只會有一個玩家完成
         HashSet<int> completedPlayers = new HashSet<int>();

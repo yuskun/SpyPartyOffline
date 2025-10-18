@@ -104,7 +104,8 @@ public class PlayerInventory : MonoBehaviour
     private void NotifyChanged()
     {
         PlayerInventoryManager.Instance.Refresh();
-        LocalBackpack.Instance.UpdateCardImagesByInventory(this,CardManager.Instance.Catalog.cards);
+        Debug.LogWarning("更新UI");
+        LocalBackpack.Instance.UpdateCardImagesByInventory(this , CardManager.Instance.Catalog.cards);
     }
 
     public CardData[] GetAllCards()

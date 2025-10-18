@@ -11,7 +11,7 @@ public class LocalBackpack : MonoBehaviour
 
     private bool canInvoke = true;
 
-    private PlayerInventory userInventory; // 本地玩家
+    public PlayerInventory userInventory; // 本地玩家
     public CardUseUIManager cardUseUIManager; // UI 控制器
 
     void Awake()
@@ -45,6 +45,7 @@ public class LocalBackpack : MonoBehaviour
 
         SlotCount = buttons.Count;
 
+        //有問題
         if (userInventory == null)
         {
             var localPlayer = OodlesEngine.LocalPlayer.Instance;
@@ -180,8 +181,9 @@ public class LocalBackpack : MonoBehaviour
     /// <param name="allCards">所有 Card ScriptableObject 的 List</param>
     public void UpdateCardImagesByInventory(PlayerInventory inv, List<Card> allCards)
     {
-        if (inv != userInventory)
-            return;
+        /*if (inv != userInventory)
+            Debug.LogError("inv出錯");
+            return;*/
 
         for (int i = 0; i < buttons.Count; i++)
         {
