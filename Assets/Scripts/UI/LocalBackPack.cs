@@ -49,6 +49,7 @@ public class LocalBackpack : MonoBehaviour
         if (userInventory == null)
         {
             var localPlayer = OodlesEngine.LocalPlayer.Instance;
+            //var localPlayer = FindObjectOfType<OodlesEngine.LocalPlayer>();
             if (localPlayer != null)
             {
                 userInventory = localPlayer.GetComponent<PlayerInventory>();
@@ -181,9 +182,8 @@ public class LocalBackpack : MonoBehaviour
     /// <param name="allCards">所有 Card ScriptableObject 的 List</param>
     public void UpdateCardImagesByInventory(PlayerInventory inv, List<Card> allCards)
     {
-        /*if (inv != userInventory)
-            Debug.LogError("inv出錯");
-            return;*/
+        if (inv != userInventory)
+            return;
 
         for (int i = 0; i < buttons.Count; i++)
         {
