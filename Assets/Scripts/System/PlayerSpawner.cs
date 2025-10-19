@@ -5,7 +5,7 @@ public class PlayerSpawner : MonoBehaviour
 {
 
     public GameObject[] characterPrefabs; // 四個造型
-    private Transform[] spawnPoints;
+    public Transform[] spawnPoints;
     public static PlayerSpawner instance;
     private void Awake()
     {

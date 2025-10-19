@@ -8,10 +8,11 @@ public class LocalBackpack : MonoBehaviour
     public int FocusIndex = 0;
     public int SlotCount = 0;
     public List<ButtionData> buttons = new List<ButtionData>();
+    public GameObject BackPack;
 
-    private bool canInvoke = true;
+    
 
-    public PlayerInventory userInventory; // 本地玩家
+    [HideInInspector]public PlayerInventory userInventory; // 本地玩家
     public CardUseUIManager cardUseUIManager; // UI 控制器
 
     void Awake()
@@ -19,7 +20,7 @@ public class LocalBackpack : MonoBehaviour
         Instance = this;
         buttons.Clear();
 
-        foreach (Transform child in transform)
+        foreach (Transform child in BackPack.transform)
         {
             Button btn = child.GetComponent<Button>();
             if (btn != null)

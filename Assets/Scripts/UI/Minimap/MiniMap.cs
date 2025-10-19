@@ -1,8 +1,22 @@
+using CleverCrow.Fluid.BTs.Trees.Editors;
 using UnityEngine;
 
 public class MiniMap : MonoBehaviour
 {
     public Transform target;  // 追蹤的物件（例如玩家）
+    public static MiniMap instance;
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     void Update()
     {

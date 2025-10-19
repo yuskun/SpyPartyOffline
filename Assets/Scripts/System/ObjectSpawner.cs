@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Fusion;
 
 public class ObjectSpawner : MonoBehaviour
 {
@@ -39,9 +40,9 @@ public class ObjectSpawner : MonoBehaviour
         Instance = this;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        timer += Time.deltaTime;
+        timer += Time.fixedDeltaTime;
         if (timer >= spawnInterval)
         {
             timer = 0f;
@@ -93,7 +94,7 @@ public class ObjectSpawner : MonoBehaviour
 
                     if (!Physics.CheckSphere(spawnPosition, radiusCheck))
                     {
-                        GameObject newObj = Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity);
+                        GameObject newObj = NetworkManager.instance._runner.Spawn(prefabToSpawn, spawnPosition, Quaternion.identity).gameObject;
                         spawnedObjects.Add(newObj);  // ✅ 加進清單
                         spawned = true;
                     }
@@ -118,7 +119,7 @@ public class ObjectSpawner : MonoBehaviour
     public void objectToSpawn(GameObject obj, Transform position)
     {
 
-        Instantiate(obj, position.position, Quaternion.identity);
+         NetworkManager.instance._runner.Spawn(obj, position.position, Quaternion.identity);
     }
 
     private void OnDrawGizmosSelected()

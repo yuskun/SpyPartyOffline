@@ -3322,6 +3322,7 @@ GameObject:
   - component: {fileID: 8176850114375860516}
   - component: {fileID: 2513777098843179688}
   - component: {fileID: 3271950448233689213}
+  - component: {fileID: 5691458252713293251}
   m_Layer: 0
   m_Name: Ragdoll
   m_TagString: Untagged
@@ -3521,6 +3522,25 @@ MonoBehaviour:
     Position: 0.01
     Rotation: 0.01
     Scale: 0.01
+--- !u!114 &5691458252713293251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3222050022073474871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6b145cd996133146946b1aae4020bd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableScan: 1
+  scanRadius: 5
+  viewAngle: 60
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  nearbyPlayers: []
 --- !u!1 &3228675026950989759
 GameObject:
   m_ObjectHideFlags: 0
@@ -3564,6 +3584,8 @@ GameObject:
   - component: {fileID: 8798292872531349149}
   - component: {fileID: 8702510564378116962}
   - component: {fileID: 1265722341982879095}
+  - component: {fileID: 1852328537209599955}
+  - component: {fileID: 126852421486952651}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -3689,6 +3711,55 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   freezeTimer: 1
+--- !u!114 &1852328537209599955
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3373148627023324856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 865948ac4138c364faff99556dddfc82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slots:
+  - id: 0
+    type: 0
+    cooldown: 0
+  - id: 0
+    type: 0
+    cooldown: 0
+  - id: 0
+    type: 0
+    cooldown: 0
+  - id: 0
+    type: 0
+    cooldown: 0
+  - id: 0
+    type: 0
+    cooldown: 0
+  - id: 0
+    type: 0
+    cooldown: 0
+--- !u!114 &126852421486952651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3373148627023324856}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 2
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &3410726886438463932
 GameObject:
   m_ObjectHideFlags: 0

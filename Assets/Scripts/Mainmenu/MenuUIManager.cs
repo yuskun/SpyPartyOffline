@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using Fusion;
+using UnityEngine.UI;
 
 public class MenuUIManager : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class MenuUIManager : MonoBehaviour
     public TextMeshProUGUI PlayerNameInput;
     public GameObject[] Ai;
     public PlayerListManager playerlistmanager;
+    public Button StartButton;
+    public GameObject MenuScene;
     void Awake()
     {
         if (instance == null)

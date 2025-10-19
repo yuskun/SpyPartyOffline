@@ -7,7 +7,7 @@ public class PlayerInventoryManager : MonoBehaviour
     private string targetLayerName = "Player";
 
     // 所有玩家的最上層物件
-    private List<GameObject> playerParents = new List<GameObject>();
+    public List<GameObject> playerParents = new List<GameObject>();
     // 對應每個玩家的 PlayerInventory
     private List<PlayerInventory> playerInventories = new List<PlayerInventory>();
     // 集中所有玩家的 slots

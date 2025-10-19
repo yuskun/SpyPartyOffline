@@ -1,53 +1,63 @@
+using Fusion;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;   // 如果你用 TextMeshPro，改用 TMPro
 
-public class CountdownTimer : MonoBehaviour
+public class CountdownTimer : NetworkBehaviour
 {
     [Header("UI 設定")]
-    public TextMeshProUGUI timerText;   // 綁定 Unity UI 的 Text (或 TMP_Text)
+    
+    [Networked] public string TimeText { get; set; }
+    [Networked] private NetworkBool IsRunning { get; set; }
 
     [Header("時間設定")]
-    public int totalMinutes = 15; // 預設 15 分鐘
+    public int totalMinutes = 15;
+    private float remainingTime;
 
-    private float remainingTime; // 剩餘秒數
-    private bool isRunning = false;
-
-    void Start()
+    public override void Spawned()
     {
-        remainingTime = totalMinutes * 60f;
-        isRunning = true;
+        if (Runner.IsServer)
+        {
+            remainingTime = totalMinutes * 60f;
+            UpdateTimeText();
+        }
     }
 
-    void Update()
+    public override void FixedUpdateNetwork()
     {
-        if (!isRunning) return;
-
-        remainingTime -= Time.deltaTime;
-        if (remainingTime < 0)
+        if (Runner.IsServer && IsRunning)
         {
-            remainingTime = 0;
-            isRunning = false;
-            OnTimerEnd();
+            remainingTime -= Runner.DeltaTime;
+
+            if (remainingTime <= 0f)
+            {
+                remainingTime = 0f;
+                IsRunning = false;
+                OnTimerEnd();
+            }
+
+            UpdateTimeText();
         }
 
-        UpdateUI();
+        GameUIManager.Instance.timerText.text= TimeText;
     }
 
-    private void UpdateUI()
+    public void StartTimer()
     {
-        int minutes = Mathf.FloorToInt(remainingTime / 60);
-        int seconds = Mathf.FloorToInt(remainingTime % 60);
-
-        timerText.text = $"{minutes:00}:{seconds:00}";
+        if (Runner.IsServer)
+        {
+            remainingTime = totalMinutes * 60f;
+            IsRunning = true;
+        }
     }
 
-    /*private void OnTimerEnd()
+    private void UpdateTimeText()
     {
-       MissionWinSystem.Instance.GameOver();
-    }*/
+        int m = Mathf.FloorToInt(remainingTime / 60);
+        int s = Mathf.FloorToInt(remainingTime % 60);
+        TimeText = $"{m:00}:{s:00}";
+    }
 
-    private void OnTimerEnd()
+   private void OnTimerEnd()
 {
     // 1. 呼叫 TraceMission 的方法
     if (TraceMission.Instance != null)
@@ -75,6 +85,4 @@ public class CountdownTimer : MonoBehaviour
         MissionWinSystem.Instance.GameOver();
     }
 }
-
-
 }

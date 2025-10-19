@@ -3,6 +3,7 @@ using UnityEngine;
 using Fusion;
 using OodlesEngine;
 using UnityEngine.SocialPlatforms;
+using Fusion.Addons.Physics;
 
 
 public class NetworkPlayer : NetworkBehaviour
@@ -15,14 +16,26 @@ public class NetworkPlayer : NetworkBehaviour
     {
         Debug.Log($"[NetworkPlayer] 玩家 {PlayerId} 已生成。");
         characterController = GetComponent<OodlesCharacter>();
-           if (PlayerId == Runner.LocalPlayer)
+        if (PlayerId == Runner.LocalPlayer)
         {
             CameraFollow.Get().player = characterController.GetPhysicsBody().transform;
             CameraFollow.Get().enable = true;
+            MiniMap.instance.target = characterController.GetPhysicsBody().transform;
+            LocalBackpack.Instance.userInventory = this.GetComponent<PlayerInventory>();
         }
-      
+
     }
-   
+    public void TeleportTo(Vector3 position)
+    {
+        var body = this.gameObject.transform.Find("Ragdoll").GetComponent<NetworkRigidbody3D>();
+        if (body != null)
+        {
+            Debug.Log("Tp");
+            body.Teleport(position, Quaternion.identity);
+        }
+
+    }
+
 
 
     public override void FixedUpdateNetwork()

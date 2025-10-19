@@ -5,13 +5,16 @@ using System.Collections.Generic;
 using System;
 using UnityEngine.SceneManagement;
 using OodlesEngine;
+using System.Linq;
 
 public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 {
     static public NetworkManager instance;
-    private NetworkRunner _runner;
+    [HideInInspector]public NetworkRunner _runner;
     public GameObject HostSystem;
+    public NetworkObject GameManager;
     private SessionInfo RandomSeseion;
+    public NetworkObject PlayerPrefab;
 
 
     public string PlayerName;
@@ -22,6 +25,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         {
             instance = this;
 
+
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -29,6 +33,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             Destroy(gameObject);
         }
     }
+
 
     async void StartGame(GameMode mode)
     {
@@ -54,7 +59,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         var sceneInfo = new NetworkSceneInfo();
         if (scene.IsValid)
         {
-            sceneInfo.AddSceneRef(scene, LoadSceneMode.Additive);
+            sceneInfo.AddSceneRef(scene, LoadSceneMode.Single);
         }
 
         if (mode == GameMode.Host)
@@ -75,7 +80,9 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
                 MenuUIManager.instance.ShowGameroom(mode);
                 MenuUIManager.instance.CloseAi();
                 Debug.Log("✅ 建立房間成功");
-                Instantiate(HostSystem, transform);
+                Instantiate(HostSystem);
+                _runner.Spawn(GameManager);
+              
             }
         }
         else if (mode == GameMode.Client)
@@ -96,6 +103,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             {
                 MenuUIManager.instance.ShowGameroom(mode);
                 MenuUIManager.instance.CloseAi();
+                _runner.Spawn(GameManager);
             }
             else
                 Debug.LogError($"❌ 加入失敗：{result.ShutdownReason}");
@@ -105,6 +113,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     }
     public void StartAsHost() => StartGame(GameMode.Host);
     public void StartAsClient() => StartGame(GameMode.Client);
+
     // -------------------------
     // 以下為 INetworkRunnerCallbacks 介面方法的實作
     // -------------------------
@@ -126,8 +135,13 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        Debug.Log($"玩家 {player} 已加入遊戲");
-        PlayerSpawner.instance.SpawnPlayer(runner, 0, player);
+        runner.Spawn(PlayerPrefab, new Vector3(-10f, 4f, 20), Quaternion.identity, null, (NetworkRunner runner, NetworkObject obj) =>
+        {
+            var np = obj.GetComponent<NetworkPlayer>();
+            if (np != null)
+                np.PlayerId = player;
+        });
+
 
 
         if (runner.IsServer)
@@ -139,8 +153,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         {
             // Client 告訴 Host 自己的名稱
             RPC_RegisterNameOnHost(PlayerName);
-           
-            
+
+
         }
 
 
@@ -249,18 +263,14 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnSceneLoadDone(NetworkRunner runner)
     {
-        throw new NotImplementedException();
+       throw new NotImplementedException();
     }
 
     public void OnSceneLoadStart(NetworkRunner runner)
     {
-        if (runner.IsServer)
-        {
-            PlayerSpawner.instance.RefreshSpawnPoints();
-        }
+        throw new NotImplementedException();
     }
+
 }
-
-
 
 

@@ -63,6 +63,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f87859afee5e5e247b405acbe0f0bb7e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 876869300171097354}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f87859afee5e5e247b405acbe0f0bb7e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4049164292962565378}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f87859afee5e5e247b405acbe0f0bb7e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -1746283898654598791}
   m_SourcePrefab: {fileID: 100100000, guid: f87859afee5e5e247b405acbe0f0bb7e, type: 3}
 --- !u!1 &8311757162922756701 stripped
 GameObject:
@@ -84,9 +90,41 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 73.99997, y: 70, z: 73.99997}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4049164292962565378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8311757162922756701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d9df9a3adb93a74bbec98e975e2e419, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cardCatalog: {fileID: 11400000, guid: 086c7a2c8ac87e945ae37b4d20e2e5e0, type: 2}
+--- !u!114 &-1746283898654598791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8311757162922756701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 2092523086
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 4049164292962565378}
+  ForceRemoteRenderTimeframe: 0
