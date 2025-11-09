@@ -1,7 +1,13 @@
+using Fusion;
 using UnityEngine;
 
-public class PlayerIdentify : MonoBehaviour
+public class PlayerIdentify : NetworkBehaviour
 {
-    public int PlayerID;
-    public string PlayerName;
+    [Networked]public int PlayerID { get; set; }
+    [Networked] public string PlayerName { get; set; }
+    public override void Spawned()
+    {
+        base.Spawned();
+        Debug.Log("spwan");
+    }
 }

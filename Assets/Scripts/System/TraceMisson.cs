@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class TraceMission : MonoBehaviour
 {
-    //°lÂÜ¨C­Ó¥ô°È¥d¦b½Ö¨­¤W
+    //ï¿½lï¿½Ü¨Cï¿½Ó¥ï¿½ï¿½È¥dï¿½bï¿½Ö¨ï¿½ï¿½W
     public static TraceMission Instance;
 
     void Awake()
@@ -18,13 +18,14 @@ public class TraceMission : MonoBehaviour
 
     public void ProcessPlayerCards()
     {
+        Debug.Log("è¿½è¹¤æ‰€æœ‰ç©å®¶çš„ä»»å‹™å¡ç‰‡ç‹€æ…‹");
         if (PlayerInventoryManager.Instance == null || MissionWinSystem.Instance == null)
         {
-            Debug.LogWarning("§ä¤£¨ì PlayerInventoryManager ©Î MissionWinSystem");
+            Debug.LogWarning("ï¿½ä¤£ï¿½ï¿½ PlayerInventoryManager ï¿½ï¿½ MissionWinSystem");
             return;
         }
 
-        PlayerInventoryManager.Instance.Refresh(); // ½T«O¸ê®Æ³Ì·s
+        PlayerInventoryManager.Instance.Refresh(); // ï¿½Tï¿½Oï¿½ï¿½Æ³Ì·s
 
         int index = 0;
         while (true)
@@ -44,23 +45,23 @@ public class TraceMission : MonoBehaviour
 
             foreach (var c in cards)
             {
-                Debug.Log($"ª±®a {playerId} ¥d¤ù: id={c.id}, type={c.type}");
+                Debug.Log($"ï¿½ï¿½ï¿½a {playerId} ï¿½dï¿½ï¿½: id={c.id}, type={c.type}");
 
                 if (c.type == CardType.Mission)
                 {
-                    if (c.id == 1)
+                    if (c.id == 0)
                     {
-                        // ©I¥s MissionWinSystem ªº A()
+                        // ï¿½Iï¿½s MissionWinSystem ï¿½ï¿½ A()
                         MissionWinSystem.Instance.Catch(playerId);
+                    }
+                    else if (c.id == 1)
+                    {
+                        // ï¿½Iï¿½s MissionWinSystem ï¿½ï¿½ B()
+                        MissionWinSystem.Instance.Steal(playerId);
                     }
                     else if (c.id == 2)
                     {
-                        // ©I¥s MissionWinSystem ªº B()
-                        MissionWinSystem.Instance.Steal(playerId);
-                    }
-                    else if (c.id == 3)
-                    {
-                        // ©I¥s MissionWinSystem ªº B()
+                        // ï¿½Iï¿½s MissionWinSystem ï¿½ï¿½ B()
                         MissionWinSystem.Instance.Fight(playerId);
                     }
                 }

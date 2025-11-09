@@ -9,10 +9,8 @@ public class PlayerInventoryManager : MonoBehaviour
     // 所有玩家的最上層物件
     public List<GameObject> playerParents = new List<GameObject>();
     // 對應每個玩家的 PlayerInventory
-    private List<PlayerInventory> playerInventories = new List<PlayerInventory>();
+    public List<PlayerInventory> playerInventories = new List<PlayerInventory>();
     // 集中所有玩家的 slots
-    private List<CardData> allSlots = new List<CardData>();
-    // 玩家與卡片對應 (PlayerID -> List<CardData>)
     private Dictionary<int, List<CardData>> playerCards = new Dictionary<int, List<CardData>>();
 
     void Awake()
@@ -21,21 +19,17 @@ public class PlayerInventoryManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
 
-    void Start()
-    {
-        Refresh();
-    }
-
     /// <summary>
     /// 更新玩家資料與卡片對應
     /// </summary>
-    public void Refresh()
+    public void init()
     {
         FindAllPlayerParents();
         GetInventories();
-        CollectAllSlots();
+    }
+    public void Refresh()
+    {
         BuildPlayerCardMapping();
-        Debug.Log("PlayerInventoryManager 已更新");
     }
 
     private void FindAllPlayerParents()
@@ -84,17 +78,7 @@ public class PlayerInventoryManager : MonoBehaviour
         Debug.Log($"找到 {playerInventories.Count} 個 PlayerInventory");
     }
 
-    private void CollectAllSlots()
-    {
-        allSlots.Clear();
 
-        foreach (PlayerInventory inv in playerInventories)
-        {
-            allSlots.AddRange(inv.slots);
-        }
-
-        Debug.Log($"總共收集 {allSlots.Count} 格卡片");
-    }
 
     /// <summary>
     /// 建立玩家與卡片對應
@@ -125,7 +109,7 @@ public class PlayerInventoryManager : MonoBehaviour
     }
 
     // 提供外部存取
-    public List<CardData> GetAllSlots() => allSlots;
+
 
     public List<CardData> GetCardsByPlayer(int playerId)
     {

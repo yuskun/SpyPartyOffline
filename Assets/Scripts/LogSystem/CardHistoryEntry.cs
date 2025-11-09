@@ -2,63 +2,63 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// ¬ö¿ý¤@µ§¥d¤ù¨Ï¥Î¾úµ{ªº¸ê®Æµ²ºc
-/// ¥Î©ó°lÂÜ½Ö¹ï½Ö¨Ï¥Î¤F¤°»ò¥d¡B¦ó®É¨Ï¥Î¡Bµ²ªG¦p¦ó
+/// ï¿½ï¿½ï¿½ï¿½ï¿½@ï¿½ï¿½ï¿½dï¿½ï¿½ï¿½Ï¥Î¾ï¿½ï¿½{ï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½c
+/// ï¿½Î©ï¿½lï¿½Ü½Ö¹ï¿½Ö¨Ï¥Î¤Fï¿½ï¿½ï¿½ï¿½dï¿½Bï¿½ï¿½É¨Ï¥Î¡Bï¿½ï¿½ï¿½Gï¿½pï¿½ï¿½
 /// </summary>
 [Serializable]
 public class CardHistoryEntry
 {
     /// <summary>
-    /// ¨Ï¥Î¥d¤ùªºª±®a ID
-    /// ¡]¥Î¨Ó¿ëÃÑ¬O­þ¦ìª±®aµo°Ê¤F§Þ¯à©Î®ÄªG¡^
+    /// ï¿½Ï¥Î¥dï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½a ID
+    /// ï¿½]ï¿½Î¨Ó¿ï¿½ï¿½Ñ¬Oï¿½ï¿½ï¿½ìª±ï¿½aï¿½oï¿½Ê¤Fï¿½Þ¯ï¿½Î®ÄªGï¿½^
     /// </summary>
     public int userId;
 
     /// <summary>
-    /// ³Q¨Ï¥Î¡]©Î§ðÀ»¡^¥Ø¼Ðªºª±®a ID  
-    /// ¡]­Y¥d¤ùµL¥Ø¼Ð¡A«h¥i³]¬° -1 ©Î¬Û¦Pª±®a ID¡^
+    /// ï¿½Qï¿½Ï¥Î¡]ï¿½Î§ï¿½ï¿½ï¿½ï¿½^ï¿½Ø¼Ðªï¿½ï¿½ï¿½ï¿½a ID  
+    /// ï¿½]ï¿½Yï¿½dï¿½ï¿½ï¿½Lï¿½Ø¼Ð¡Aï¿½hï¿½iï¿½]ï¿½ï¿½ -1 ï¿½Î¬Û¦Pï¿½ï¿½ï¿½a IDï¿½^
     /// </summary>
     public int targetId;
 
     /// <summary>
-    /// ³Q¨Ï¥Îªº¥d¤ù¦WºÙ  
-    /// ¡]¨Ò¦p¡G¡u³´¨À¥ô°È¥d¡v¡B¡uªvÀø¹D¨ã¥d¡v¡B¡u°½¨ú¥\¯à¥d¡vµ¥¡^
+    /// ï¿½Qï¿½Ï¥Îªï¿½ï¿½dï¿½ï¿½ï¿½Wï¿½ï¿½  
+    /// ï¿½]ï¿½Ò¦pï¿½Gï¿½uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¥dï¿½vï¿½Bï¿½uï¿½vï¿½ï¿½ï¿½Dï¿½ï¿½dï¿½vï¿½Bï¿½uï¿½ï¿½ï¿½ï¿½ï¿½\ï¿½ï¿½dï¿½vï¿½ï¿½ï¿½^
     /// </summary>
     public string cardName;
 
     /// <summary>
-    /// ¥d¤ùªºÃþ«¬  
-    /// ¥i¯à­È¡G
-    /// - <see cref="CardType.Mission"/>¡G¥ô°È¥d¡A³q±`»P¥Ø¼Ð©Î±ø¥ó¦³Ãö  
-    /// - <see cref="CardType.Function"/>¡G¥\¯à¥d¡A³q±`¬O§Y®É®ÄªG¡]¦p°½¨ú¡B¥æ´«¡^  
-    /// - <see cref="CardType.Item"/>¡Gª««~¥d¡A´£¨Ñ¹D¨ã©Î¯S®í¼W¯q  
-    /// - <see cref="CardType.None"/>¡GµL®Ä©Î¼ÈµLÃþ«¬
+    /// ï¿½dï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  
+    /// ï¿½iï¿½ï¿½È¡G
+    /// - <see cref="CardType.Mission"/>ï¿½Gï¿½ï¿½ï¿½È¥dï¿½Aï¿½qï¿½`ï¿½Pï¿½Ø¼Ð©Î±ï¿½ï¿½ï¿½ï¿½ï¿½  
+    /// - <see cref="CardType.Function"/>ï¿½Gï¿½\ï¿½ï¿½dï¿½Aï¿½qï¿½`ï¿½Oï¿½Yï¿½É®ÄªGï¿½]ï¿½pï¿½ï¿½ï¿½ï¿½ï¿½Bï¿½æ´«ï¿½^  
+    /// - <see cref="CardType.Item"/>ï¿½Gï¿½ï¿½ï¿½~ï¿½dï¿½Aï¿½ï¿½ï¿½Ñ¹Dï¿½ï¿½Î¯Sï¿½ï¿½ï¿½Wï¿½q  
+    /// - <see cref="CardType.None"/>ï¿½Gï¿½Lï¿½Ä©Î¼ÈµLï¿½ï¿½ï¿½ï¿½
     /// </summary>
     public CardType cardType;
 
     /// <summary>
-    /// ¥ô°È¥dªº¨ãÅé¥ô°ÈÃþ«¬¡]Trigger / Collect µ¥¡^  
-    /// «D¥ô°È¥d®É¥i¬° null  
-    /// - Trigger¡GÄ²µo«¬¡]¨Ò¦p¬Y¨Æ¥ó¹F¦¨®É±Ò°Ê¡^  
-    /// - Collect¡G¦¬¶°«¬¡]»Ý­n¦¬¶°¯S©wª«¥ó©Î±ø¥ó¡^
+    /// ï¿½ï¿½ï¿½È¥dï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]Trigger / Collect ï¿½ï¿½ï¿½^  
+    /// ï¿½Dï¿½ï¿½ï¿½È¥dï¿½É¥iï¿½ï¿½ null  
+    /// - Triggerï¿½GÄ²ï¿½oï¿½ï¿½ï¿½]ï¿½Ò¦pï¿½Yï¿½Æ¥ï¿½Fï¿½ï¿½ï¿½É±Ò°Ê¡^  
+    /// - Collectï¿½Gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]ï¿½Ý­nï¿½ï¿½ï¿½ï¿½ï¿½Sï¿½wï¿½ï¿½ï¿½ï¿½Î±ï¿½ï¿½ï¿½^
     /// </summary>
-    public MissionType? missionType; // ¥i¬° null
+    public MissionType? missionType; // ï¿½iï¿½ï¿½ null
 
     /// <summary>
-    /// CanUse() ªºÀË¬dµ²ªG  
-    /// - true¡G¤¹³\¨Ï¥Î  
-    /// - false¡G¨Ï¥Î¥¢±Ñ¡]±ø¥ó¤£²Å¡B§N«o¤¤¡B¥Ø¼Ð¿ù»~µ¥¡^
+    /// CanUse() ï¿½ï¿½ï¿½Ë¬dï¿½ï¿½ï¿½G  
+    /// - trueï¿½Gï¿½ï¿½ï¿½\ï¿½Ï¥ï¿½  
+    /// - falseï¿½Gï¿½Ï¥Î¥ï¿½ï¿½Ñ¡]ï¿½ï¿½ï¿½ó¤£²Å¡Bï¿½Nï¿½oï¿½ï¿½ï¿½Bï¿½Ø¼Ð¿ï¿½ï¿½~ï¿½ï¿½ï¿½^
     /// </summary>
     public bool canUseResult;
 
     /// <summary>
-    /// ¦¹¦¸¥d¤ù¾Þ§@ªº®É¶¡ÂW°O  
-    /// ¡]°O¿ý°Ê§@µo¥Íªº¹ê»Ú®É¶¡¡A¥i¥Î©ó±Æ§Ç©Î²Î­p¡^
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½dï¿½ï¿½ï¿½Þ§@ï¿½ï¿½ï¿½É¶ï¿½ï¿½Wï¿½O  
+    /// ï¿½]ï¿½Oï¿½ï¿½ï¿½Ê§@ï¿½oï¿½Íªï¿½ï¿½ï¿½Ú®É¶ï¿½ï¿½Aï¿½iï¿½Î©ï¿½Æ§Ç©Î²Î­pï¿½^
     /// </summary>
     public DateTime timeStamp;
 
     /// <summary>
-    /// «Øºc¤l¡A¥Î©óªì©l¤Æ¤@µ§§¹¾ãªº¾úµ{¸ê®Æ
+    /// ï¿½Øºcï¿½lï¿½Aï¿½Î©ï¿½ï¿½lï¿½Æ¤@ï¿½ï¿½ï¿½ï¿½ï¿½ãªºï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½
     /// </summary>
     public CardHistoryEntry(int userId, int targetId, string cardName, CardType cardType, MissionType? missionType) //, bool canUseResult
     {
@@ -68,6 +68,6 @@ public class CardHistoryEntry
         this.cardType = cardType;
         this.missionType = missionType;
         //this.canUseResult = canUseResult;
-        this.timeStamp = DateTime.Now; // ¦Û°Ê°O¿ý·í¤U®É¶¡
+        this.timeStamp = DateTime.Now; // ï¿½Û°Ê°Oï¿½ï¿½ï¿½ï¿½ï¿½Uï¿½É¶ï¿½
     }
 }

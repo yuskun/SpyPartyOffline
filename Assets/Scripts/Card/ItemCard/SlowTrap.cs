@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using OodlesEngine;
+using Fusion;
 
-public class SlowTrap : MonoBehaviour
+public class SlowTrap : NetworkBehaviour
 {
     [SerializeField] private float slowMultiplier = 0.2f; // 減速倍率
     [SerializeField] private float trapLifetime = 5f;     // 陷阱存活時間
@@ -68,7 +69,7 @@ public class SlowTrap : MonoBehaviour
         // 如果陷阱已過期 & 沒有玩家再受影響 → 銷毀陷阱
         if (trapExpired && slowedPlayers.Count == 0)
         {
-            Destroy(gameObject);
+            Runner.Despawn(this.GetComponent<NetworkObject>());
         }
     }
 
@@ -81,7 +82,7 @@ public class SlowTrap : MonoBehaviour
         // 如果沒有玩家還在受影響，直接銷毀
         if (slowedPlayers.Count == 0)
         {
-            Destroy(gameObject);
+            Runner.Despawn(this.GetComponent<NetworkObject>());
         }
     }
 }

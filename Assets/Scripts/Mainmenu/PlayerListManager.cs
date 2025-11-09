@@ -31,6 +31,7 @@ public class PlayerListManager : NetworkBehaviour
 
     public void RegisterPlayer(PlayerRef player, string playerName)
     {
+       
         if (!Object.HasStateAuthority)
         {
             Debug.LogWarning("只有 StateAuthority (Host) 才能修改 NetworkArray");

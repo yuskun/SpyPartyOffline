@@ -1,9 +1,11 @@
+using Fusion;
 using OodlesEngine;
 using UnityEngine;
 
-public class Banana : MonoBehaviour
+public class Banana : NetworkBehaviour
 {
     public float pushForce = 1000f; // 額外的力
+    
 
     private void OnCollisionEnter(Collision other)
     {
@@ -38,6 +40,6 @@ public class Banana : MonoBehaviour
                 ragdollBody.AddForce(force, ForceMode.Impulse);
             }
         }
-        Destroy(gameObject);
+        Runner.Despawn(this.GetComponent<NetworkObject>());
     }
 }

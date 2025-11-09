@@ -9,8 +9,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 0ad943701cbf0044d9347a3e6e718fb6, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 126.57
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0ad943701cbf0044d9347a3e6e718fb6, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 158.75
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0ad943701cbf0044d9347a3e6e718fb6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0
+      value: -12.67
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0ad943701cbf0044d9347a3e6e718fb6, type: 3}
       propertyPath: m_LocalPosition.y
@@ -18,7 +26,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0ad943701cbf0044d9347a3e6e718fb6, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 5.22
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0ad943701cbf0044d9347a3e6e718fb6, type: 3}
       propertyPath: m_LocalRotation.w
@@ -59,5 +67,142 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0ad943701cbf0044d9347a3e6e718fb6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8779378228614277948}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0ad943701cbf0044d9347a3e6e718fb6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6337702485077180948}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0ad943701cbf0044d9347a3e6e718fb6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3339035182179909619}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0ad943701cbf0044d9347a3e6e718fb6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -8718344382756193541}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0ad943701cbf0044d9347a3e6e718fb6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -3655137108405378579}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0ad943701cbf0044d9347a3e6e718fb6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6635985878891601615}
   m_SourcePrefab: {fileID: 100100000, guid: 0ad943701cbf0044d9347a3e6e718fb6, type: 3}
+--- !u!1 &6077581097038177501 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 0ad943701cbf0044d9347a3e6e718fb6, type: 3}
+  m_PrefabInstance: {fileID: 6383445786891114892}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8779378228614277948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6077581097038177501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5093627aa3d34af4f8f73dba0812c389, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slowMultiplier: 0.2
+  trapLifetime: 5
+  slowDuration: 3
+--- !u!65 &6337702485077180948
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6077581097038177501}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.020038398, y: 0.00067271, z: 0.01080073}
+  m_Center: {x: 0.0000009001232, y: -0.000010414995, z: -0.0000026749913}
+--- !u!114 &3339035182179909619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6077581097038177501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 45935210
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 8779378228614277948}
+  - {fileID: -3655137108405378579}
+  - {fileID: 6635985878891601615}
+  ForceRemoteRenderTimeframe: 0
+--- !u!54 &-8718344382756193541
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6077581097038177501}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &-3655137108405378579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6077581097038177501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9018856f16dfbc049811c0fa3b394c9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pos: {x: 0, y: 0, z: 0}
+--- !u!114 &6635985878891601615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6077581097038177501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 0
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0

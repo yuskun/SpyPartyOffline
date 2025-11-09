@@ -6,6 +6,7 @@ namespace OodlesEngine
 {
     public class LocalGameManager : SingletonMono<LocalGameManager>
     {
+
         override protected void Awake()
         {
             base.Awake();
@@ -27,7 +28,7 @@ namespace OodlesEngine
         }
         void Update()
         {
-#if UNITY_EDITOR
+
             if (Input.GetKeyDown(KeyCode.Tab))
             {
                 if (Cursor.lockState == CursorLockMode.Locked)
@@ -41,8 +42,10 @@ namespace OodlesEngine
                     Cursor.visible = false;
                 }
             }
-#endif
+
         }
+
+
 
         private void OnSearchGrabTarget(SearchGrabTargetMessage msg)
         {
@@ -207,11 +210,22 @@ namespace OodlesEngine
         private void OnHandAttack(HandAttackMessage msg)
         {
             JointMatch animMagnet = msg.col.gameObject.GetComponent<JointMatch>();
-            if (animMagnet != null)//hit someone
+            if (animMagnet != null && MissionWinSystem.Instance != null) // hit someone
             {
-                animMagnet.oodlesCharacter.KnockDown();
+                var target = animMagnet.oodlesCharacter;
+                if (msg.pc.gameObject.GetComponent<PlayerIdentify>().PlayerID == MissionWinSystem.Instance.GetFightID())
+                {
+
+                    // 檢查是否已經擊倒過這個 target
+                    MissionWinSystem.Instance.UpdateFightCount(target);
+                }
+
+                // 最後再執行擊倒邏輯（避免重複觸發）
+                target.KnockDown();
+
             }
 
+            // 物理反作用力 (保持原本效果)
             if (msg.col.rigidbody != null)
                 msg.col.rigidbody.AddForce(-msg.col.contacts[0].normal * 1000);
         }
@@ -234,6 +248,7 @@ namespace OodlesEngine
                 if (targetPC != null)
                 {
                     targetPC.KnockDown();
+
                 }
             }
         }

@@ -1,9 +1,13 @@
 ﻿using System.Collections.Generic;
+using OodlesEngine;
 using UnityEngine;
 
 public class MissionWinSystem : MonoBehaviour
 {
     public static MissionWinSystem Instance;
+    public int FightWinCount;
+    public int FightCount;
+    private HashSet<OodlesCharacter> knockedTargets = new HashSet<OodlesCharacter>();
 
     void Awake()
     {
@@ -22,27 +26,31 @@ public class MissionWinSystem : MonoBehaviour
     public bool FightWin = false;
     int FightID;
 
-
+    public void ResetFightStats()
+    {
+        FightCount = 0;                     // 把計數歸零
+        knockedTargets.Clear();            // 清除已擊倒的列表
+    }
     public void GameOver()
     {
-        Debug.Log("StealID："+StealID);
-        Debug.Log("StealID："+CatchID);
-        Debug.Log("StealID："+FightID);
+        Debug.Log("StealID：" + StealID);
+        Debug.Log("CatchID：" + CatchID);
+        Debug.Log("FightID：" + FightID);
         Debug.Log("遊戲結束，檢查任務完成狀態");
         // 每個任務 ID 只會有一個玩家完成
         HashSet<int> completedPlayers = new HashSet<int>();
 
         // Catch 任務
         //if (CatchWin)
-            completedPlayers.Add(CatchID);
+        completedPlayers.Add(CatchID);
 
         // Steal 任務
         //if (StealWin)
-            completedPlayers.Add(StealID);
+        completedPlayers.Add(StealID);
 
         // Fight 任務
         //if (FightWin)
-            completedPlayers.Add(FightID);
+        completedPlayers.Add(FightID);
 
         // 逐個玩家判斷
         foreach (int playerId in completedPlayers)
@@ -64,9 +72,32 @@ public class MissionWinSystem : MonoBehaviour
             }
 
             if (playerWin)
+            {
                 Debug.Log($"玩家 {playerId} ✅ 完成所有任務，勝利！");
+                GameManager.instance.RPC_Gameover();
+            }
             else
                 Debug.Log($"玩家 {playerId} ❌ 尚未完成任務");
+        }
+    }
+    public int GetFightID()
+    {
+        return FightID;
+    }
+    public void UpdateFightCount(OodlesCharacter target)
+    {
+        if (!knockedTargets.Contains(target))
+        {
+            knockedTargets.Add(target); // 記錄對象
+            FightCount++;
+
+            // 任務檢查
+            if (FightCount == FightWinCount)
+            {
+                FightWin = true;
+                GameOver();
+            }
+            TraceMission.Instance.ProcessPlayerCards();
         }
     }
 
@@ -78,7 +109,8 @@ public class MissionWinSystem : MonoBehaviour
         if (CatchID != id)
         {
             CatchWin = false;  // 重置完成狀態
-            Debug.Log($"Catch 任務持有者變更，重置進度 (原玩家 {CatchID} → 新玩家 {id})");
+            GameManager.instance.RPC_UpdateMission(id, 0, "逮捕", "抓到會偷東西的人", 1, true);
+            GameManager.instance.RPC_UpdateMission(FightID, 0, "逮捕", "抓到會偷東西的人", 1, false);
         }
 
         CatchID = id; // 更新目前玩家 ID
@@ -86,10 +118,11 @@ public class MissionWinSystem : MonoBehaviour
 
     public void Steal(int id)
     {
-        if (StealID != id)
+        if (StealID != id||StealID==null)
         {
             StealWin = false;
-            Debug.Log($"Steal 任務持有者變更，重置進度 (原玩家 {StealID} → 新玩家 {id})");
+            GameManager.instance.RPC_UpdateMission(id, 1, "躲起來", "在遊戲結束前不要被逮捕到", 1, true);
+            GameManager.instance.RPC_UpdateMission(FightID, 1, "躲起來", "在遊戲結束前不要被逮捕到", 1, false);
         }
 
         StealID = id;
@@ -100,7 +133,11 @@ public class MissionWinSystem : MonoBehaviour
         if (FightID != id)
         {
             FightWin = false;
-            Debug.Log($"Fight 任務持有者變更，重置進度 (原玩家 {FightID} → 新玩家 {id})");
+            ResetFightStats();
+            GameManager.instance.RPC_UpdateMission(id, 2, "戰鬥", "擊倒所有人前不要被擊倒", FightWinCount, true);
+            GameManager.instance.RPC_UpdateMission(FightID, 2, "戰鬥", "擊倒所有人前不要被擊倒", FightWinCount, false);
+
+
         }
 
         FightID = id;

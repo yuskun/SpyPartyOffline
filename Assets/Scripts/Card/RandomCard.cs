@@ -4,7 +4,7 @@ using UnityEngine;
 public class RandomCard : NetworkBehaviour
 {
     public CardCatalog cardCatalog;
-    
+
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("Test");
@@ -17,8 +17,10 @@ public class RandomCard : NetworkBehaviour
             }
             // 隨機抽卡
             CardData randomCard = GetRandomCard();
-            other.transform.parent.gameObject.GetComponent<PlayerInventory>().AddCard(randomCard);
-            Runner.Despawn(this.GetComponent<NetworkObject>());
+            if (other.transform.parent.gameObject.GetComponent<PlayerInventory>().AddCard(randomCard))
+            {
+                Runner.Despawn(this.GetComponent<NetworkObject>());
+            }
         }
     }
 

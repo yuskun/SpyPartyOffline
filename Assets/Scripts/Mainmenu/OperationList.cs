@@ -1,68 +1,88 @@
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 
-public class MissionRotator : MonoBehaviour
+public class MissionUIManager : MonoBehaviour
 {
-    public Slider slider;
+    [Header("Prefab & 容器")]
+    public GameObject missionSlotPrefab;
+    public Transform missionContainer;
 
-    [System.Serializable]
-    public class MissionData
-    {
-        public TextMeshProUGUI title;
-        public TextMeshProUGUI text;
-        public TextMeshProUGUI score;
-    }
-
-    public MissionData[] missions;
+    private Dictionary<int, MissionSlot> missionDict = new Dictionary<int, MissionSlot>();
+    private List<int> missionOrder = new List<int>();
+    private int focusIndex = 0;
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Tab))
+            FocusNextMission();
+    }
+
+    // ✅ 新增任務
+    public void AddMission(MissionData data)
+    {
+        if (missionDict.ContainsKey(data.id))
         {
-            RotateMissions();
+            Debug.LogWarning($"任務ID {data.id} 已存在！");
+            return;
+        }
+
+        GameObject obj = Instantiate(missionSlotPrefab);
+        RectTransform rect = obj.GetComponent<RectTransform>();
+        rect.SetParent(missionContainer, false); // ✅ 確保尺寸正確
+
+        // ❌ 不用再設定縮放
+        // rect.localScale = new Vector3(0.4f, 0.4f, 1f);
+
+        MissionSlot slot = obj.GetComponent<MissionSlot>();
+        slot.Setup(data);
+
+        missionDict.Add(data.id, slot);
+        missionOrder.Add(data.id);
+        RefreshFocus();
+    }
+    // ✅ 移除任務
+    public void RemoveMission(int id)
+    {
+        if (!missionDict.ContainsKey(id)) return;
+
+        Destroy(missionDict[id].gameObject);
+        missionOrder.Remove(id);
+        missionDict.Remove(id);
+
+        focusIndex = Mathf.Clamp(focusIndex, 0, missionOrder.Count - 1);
+        RefreshFocus();
+    }
+
+    // ✅ 更新任務進度
+    public void UpdateMissionProgress(int id, int addValue)
+    {
+        if (!missionDict.ContainsKey(id)) return;
+
+        MissionSlot slot = missionDict[id];
+        slot.data.current = Mathf.Min(slot.data.current + addValue, slot.data.goal);
+        slot.Refresh();
+        if (slot.data.current >= slot.data.goal)
+        {
+            slot.MarkAsCompleted();
         }
     }
 
-    [ContextMenu("Rotate Missions")]
-    public void RotateMissions()
+    // ✅ TAB 切換焦點
+    private void FocusNextMission()
     {
-        if (missions.Length < 3) return;
-
-        // ✅ 暫存第三任務的文字資料（而非 UI 物件）
-        string tempTitle = missions[0].title.text;
-        string tempText = missions[0].text.text;
-        string tempScore = missions[0].score.text;
-         CopyMissionData(missions[0], missions[1]);
-        // 3 → 2
-        CopyMissionData(missions[1], missions[2]);
-        // 2 → 1
-        // 1 → 3（使用暫存文字）
-        missions[2].title.text = tempTitle;
-        missions[2].text.text = tempText;
-        missions[2].score.text = tempScore;
-
-        UpdateFirstMissionProgress();
+        if (missionOrder.Count <= 1) return;
+        focusIndex = (focusIndex + 1) % missionOrder.Count;
+        RefreshFocus();
     }
 
-    private void CopyMissionData(MissionData target, MissionData source)
+    // ✅ 更新所有 Slot 顯示狀態
+    private void RefreshFocus()
     {
-        target.title.text = source.title.text;
-        target.text.text = source.text.text;
-        target.score.text = source.score.text;
-    }
-
-    private void UpdateFirstMissionProgress()
-    {
-        var first = missions[0];
-        if (first.score == null) return;
-
-        string[] parts = first.score.text.Split('/');
-        if (parts.Length != 2) return;
-
-        if (float.TryParse(parts[0], out float current) && float.TryParse(parts[1], out float max))
+        for (int i = 0; i < missionOrder.Count; i++)
         {
-            slider.value = Mathf.Clamp01(current / max);
+            int id = missionOrder[i];
+            bool isFocus = (i == focusIndex);
+            missionDict[id].SetFocus(isFocus);
         }
     }
 }

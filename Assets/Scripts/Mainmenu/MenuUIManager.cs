@@ -18,6 +18,7 @@ public class MenuUIManager : MonoBehaviour
     public PlayerListManager playerlistmanager;
     public Button StartButton;
     public GameObject MenuScene;
+    public MissionUIManager missionUIManager;
     void Awake()
     {
         if (instance == null)
@@ -77,5 +78,11 @@ public class MenuUIManager : MonoBehaviour
         {
             item.SetActive(false);
         }
+    }
+    public void AllowInput(bool allow)
+    {
+
+        LocalBackpack.Instance.userInventory.gameObject.GetComponent<NetworkPlayer>().AllowInput = allow;
+
     }
 }

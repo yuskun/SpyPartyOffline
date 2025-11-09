@@ -24,5 +24,18 @@ public class Steal : MissionCard
         PlayerInventory User = PlayerInventoryManager.Instance.GetPlayer(parameters.UserId).GetComponent<PlayerInventory>();
         CardData card = Target.RandomGetCard();
         User.AddCard(card);
+         if (CardHistoryManager.Instance != null)
+        {
+            CardHistoryManager.Instance.Record(
+                new CardHistoryEntry(
+                    parameters.UserId,
+                    parameters.TargetId,
+                    "Steal",
+                    CardType.Mission,
+                    null
+                    //result
+                )
+            );
+        }
     }
 }

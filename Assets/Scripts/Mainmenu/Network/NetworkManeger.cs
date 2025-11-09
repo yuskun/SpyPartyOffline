@@ -10,11 +10,11 @@ using System.Linq;
 public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 {
     static public NetworkManager instance;
-    [HideInInspector]public NetworkRunner _runner;
+    [HideInInspector] public NetworkRunner _runner;
     public GameObject HostSystem;
-    public NetworkObject GameManager;
+    public NetworkObject gameManager;
     private SessionInfo RandomSeseion;
-    public NetworkObject PlayerPrefab;
+    public GameObject GameScene;
 
 
     public string PlayerName;
@@ -81,8 +81,9 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
                 MenuUIManager.instance.CloseAi();
                 Debug.Log("✅ 建立房間成功");
                 Instantiate(HostSystem);
-                _runner.Spawn(GameManager);
-              
+                var OBJ = _runner.Spawn(gameManager);
+                OBJ.GetComponent<GameManager>().GameScene = GameScene;
+
             }
         }
         else if (mode == GameMode.Client)
@@ -103,7 +104,6 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             {
                 MenuUIManager.instance.ShowGameroom(mode);
                 MenuUIManager.instance.CloseAi();
-                _runner.Spawn(GameManager);
             }
             else
                 Debug.LogError($"❌ 加入失敗：{result.ShutdownReason}");
@@ -127,38 +127,10 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         throw new NotImplementedException();
     }
-    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    private void RPC_RegisterNameOnHost(string name, RpcInfo info = default)
-    {
-        MenuUIManager.instance.playerlistmanager.RegisterPlayer(info.Source, name);
-    }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        runner.Spawn(PlayerPrefab, new Vector3(-10f, 4f, 20), Quaternion.identity, null, (NetworkRunner runner, NetworkObject obj) =>
-        {
-            var np = obj.GetComponent<NetworkPlayer>();
-            if (np != null)
-                np.PlayerId = player;
-        });
-
-
-
-        if (runner.IsServer)
-        {
-            // Host 直接註冊
-            MenuUIManager.instance.playerlistmanager.RegisterPlayer(player, PlayerName);
-        }
-        else if (runner.LocalPlayer == player)
-        {
-            // Client 告訴 Host 自己的名稱
-            RPC_RegisterNameOnHost(PlayerName);
-
-
-        }
-
-
-
+        GameManager.instance.RPC_PlayJoinINIT(player, PlayerName);
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
@@ -263,7 +235,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnSceneLoadDone(NetworkRunner runner)
     {
-       throw new NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public void OnSceneLoadStart(NetworkRunner runner)

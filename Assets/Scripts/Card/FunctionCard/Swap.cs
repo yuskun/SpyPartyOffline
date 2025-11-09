@@ -30,5 +30,18 @@ public class Swap : FunctionCard
         User.ReplaceCard(parameters.SelectIndex, tmp);
 
         User.RemoveCard(parameters.UseCardIndex);
+         if (CardHistoryManager.Instance != null)
+        {
+            CardHistoryManager.Instance.Record(
+                new CardHistoryEntry(
+                    parameters.UserId,
+                    parameters.TargetId,
+                    "Swap",
+                    CardType.Function,
+                    null
+                    //result
+                )
+            );
+        }
     }
 }

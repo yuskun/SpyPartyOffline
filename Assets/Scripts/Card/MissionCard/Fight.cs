@@ -6,15 +6,22 @@ public class Fight : MissionCard
 
     public override void UseSkill(CardUseParameters parameters)
     {
-        PlayerInventoryManager.Instance.GetPlayer(parameters.UserId).GetComponent<OodlesCharacter>().UpdateAttack();
+        PlayerInventoryManager.Instance.GetPlayer(parameters.UserId).GetComponent<OodlesCharacter>().Attack();
     }
     public override void CheckMission(CardUseParameters parameters)
     {
-        Count--;
-        if (Count == 0)
+       if (CardHistoryManager.Instance != null)
         {
-            Debug.Log("任務完成: " + name);
-            
-         }
+            CardHistoryManager.Instance.Record(
+                new CardHistoryEntry(
+                    parameters.UserId,
+                    parameters.TargetId,
+                    "Catch",
+                    CardType.Mission,
+                    null
+                    //result
+                )
+            );
+        }
     }
 }

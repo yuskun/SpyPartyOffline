@@ -10,6 +10,7 @@ public class NetworkPlayer : NetworkBehaviour
 {
     [Networked]
     public PlayerRef PlayerId { get; set; }
+    public bool AllowInput=true;
     public float freezeTimer = 1f; // 凍結計時器，初始值為3秒
     private OodlesCharacter characterController;
     public override void Spawned()
@@ -22,9 +23,15 @@ public class NetworkPlayer : NetworkBehaviour
             CameraFollow.Get().enable = true;
             MiniMap.instance.target = characterController.GetPhysicsBody().transform;
             LocalBackpack.Instance.userInventory = this.GetComponent<PlayerInventory>();
+            LocalBackpack.Instance.playerIdentify = this.GetComponent<PlayerIdentify>();
+            LocalBackpack.Instance.scanner = this.transform.Find("Ragdoll").GetComponent<PlayerScanner>();
+            LocalBackpack.Instance.scanner.enableScan = true;
+
+
         }
 
     }
+
     public void TeleportTo(Vector3 position)
     {
         var body = this.gameObject.transform.Find("Ragdoll").GetComponent<NetworkRigidbody3D>();
@@ -32,6 +39,7 @@ public class NetworkPlayer : NetworkBehaviour
         {
             Debug.Log("Tp");
             body.Teleport(position, Quaternion.identity);
+            freezeTimer = 5;
         }
 
     }
@@ -40,6 +48,7 @@ public class NetworkPlayer : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
+        if (!AllowInput) return;
 
         // Runner.DeltaTime 是每個網路 Tick 的時間
         if (freezeTimer > 0f)

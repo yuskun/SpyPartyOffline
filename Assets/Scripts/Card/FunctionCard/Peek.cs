@@ -20,6 +20,18 @@ public class Peek : FunctionCard
         //UIManager.Instance.SetPeekUISprites(CardManager.Instance.GetCardInfo(Target.GetAllCards()));
         //UIManager.Instance.PeekUI.SetActive(true);
         User.RemoveCard(parameters.UseCardIndex);
-        
+         if (CardHistoryManager.Instance != null)
+        {
+            CardHistoryManager.Instance.Record(
+                new CardHistoryEntry(
+                    parameters.UserId,
+                    parameters.TargetId,
+                    "Peek",
+                    CardType.Function,
+                    null
+                    //result
+                )
+            );
+        }
     }
 }

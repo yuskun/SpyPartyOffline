@@ -33,12 +33,12 @@ public class CardUseUIManager : MonoBehaviour
     {
         if (card == null)
             return;
-        
+
         currentFunctionCard = card;
         currentUser = user;
         currentTarget = target;
         currentUseCardIndex = useCardIndex;
-            
+
         if (card is Give giveCard)
         {
             if (giveCard.CanUse(user, target))
@@ -61,8 +61,10 @@ public class CardUseUIManager : MonoBehaviour
                 CardUseParameters parameters = new CardUseParameters();
                 // parameters.UserId = user.playerId;
                 parameters.UserId = user.GetComponent<PlayerIdentify>().PlayerID;
-                parameters.UseCardIndex = useCardIndex;
-                card.Execute(parameters);
+                parameters.UseCardIndex = currentUseCardIndex;
+                parameters.Card = currentUser.slots[currentUseCardIndex];
+                parameters.TargetId = target.GetComponent<PlayerIdentify>().PlayerID;
+                GameManager.instance.Rpc_RequestUseCard(parameters);
             }
             else
                 ShowFailUI(peekBlock.failUI);
@@ -80,6 +82,24 @@ public class CardUseUIManager : MonoBehaviour
             else
                 ShowFailUI(swapBlock.failUI);
         }
+    }
+       public bool TryUseMissionCard(MissionCard card, PlayerInventory user, PlayerInventory target)
+    {
+        if (card == null)
+            return false;
+
+        if (card is Steal StealCard)
+        {
+            if (!StealCard.CanUse(user, target, user.slots[currentUseCardIndex]))
+                return false;
+        }
+        else if (card is Catch CatchCard)
+        {
+            if (!CatchCard.CanUse(user, target, user.slots[currentUseCardIndex]))
+                return false;
+        }
+        return true;
+
     }
 
     // 選哪張卡
@@ -109,7 +129,7 @@ public class CardUseUIManager : MonoBehaviour
             });
         }
     }
-     // 綁定確認按鈕
+    // 綁定確認按鈕
     private void BindConfirmButton(FunctionCardUIBlock block)
     {
         block.confirmButton.onClick.RemoveAllListeners();
@@ -127,15 +147,14 @@ public class CardUseUIManager : MonoBehaviour
         parameters.UseCardIndex = currentUseCardIndex;
         parameters.SelectIndex = selectedUserIndex;
         parameters.TargetSelectIndex = selectedTargetIndex;
-
-        currentFunctionCard.Execute(parameters);
+        parameters.Card = currentUser.slots[currentUseCardIndex];
+        GameManager.instance.Rpc_RequestUseCard(parameters);
 
         // 關閉UI、重設選擇
         if (currentFunctionCard is Give)
             CloseUI(giveBlock.ui);
         else if (currentFunctionCard is Swap)
             CloseUI(swapBlock.ui);
-
         selectedUserIndex = -1;
         selectedTargetIndex = -1;
     }
@@ -170,7 +189,7 @@ public class CardUseUIManager : MonoBehaviour
 
     public void UpdateImagesByInventory(PlayerInventory inv, Image[] images)
     {
-        Sprite[] sprites = CardManager.Instance.GetCardInfo(inv.slots);
+        Sprite[] sprites = CardManager.Instance.GetCardInfo(inv.GetAllCards());
         for (int i = 0; i < images.Length; i++)
         {
             if (i < sprites.Length && sprites[i] != null)

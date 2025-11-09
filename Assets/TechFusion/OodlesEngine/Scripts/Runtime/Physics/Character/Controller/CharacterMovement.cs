@@ -90,85 +90,6 @@ namespace OodlesEngine
             jumping = controller.inputState.jumpAxis == 1;
         }
 
-        private void Movement()
-        {
-            //Debug.Log("Time delta " + Time.deltaTime.ToString());
-            //Extra gravity to make sure player isn't flying
-            rb.AddForce(Vector3.down * (Time.deltaTime * 10));
-
-            //Find the actual velocity relative to where player is lookinhg
-            Vector2 mag = FindVelRelativeToLook();
-
-            float xMag = mag.x, yMag = mag.y;
-
-
-            //Counteract sliding and sloppy movement
-            CounterMovement(x, y, mag);
-
-
-            //if Holding jump && ready to jump, then jump
-            if (readyToJump && jumping) Jump();
-
-            //Set the max speed a player can go
-            float maxSpeed = this.maxSpeed;
-
-            //if sliding down a ramp, add force down so the player stays on the ground but can also build up speed;
-            if (crouching && grounded && readyToJump)
-            {
-                //ADd a bunch of force downwards
-                rb.AddForce(Vector3.down * Time.deltaTime * 3000);
-                return;
-            }
-
-
-            //if speed is larger then maxspeed, cancel out the input so you don't go over max speed
-            //If x > 0, and the magnitude of x is greater then the max speed, then set x to 0 so player can't surpass maxSpeed
-            if (x > 0 && xMag > maxSpeed) x = 0;
-            //If x < 0, which is negative speed and is LESS then the max speed, then set x to 0 so player can't go backward in time; 
-            if (x < 0 && xMag < -maxSpeed) x = 0;
-
-            //Same as x but, replace x with Y. This is based on jump velocity.
-            if (y > 0 && yMag > maxSpeed) y = 0;
-            if (y < 0 && yMag < -maxSpeed) y = 0;
-
-
-            //Multipliers to slow down movement/increase movement control
-            float multiplier = 1f, multiplierV = 1f;
-
-            //Movement in Air
-            if (!grounded)
-            {
-                multiplier = 0.5f;
-                multiplierV = 0.5f;
-            }
-
-            //Movement while sliding
-            if (grounded && crouching) multiplierV = 0f;
-
-
-            //Apply all the forces generated to move player
-            rb.AddForce(orientation.transform.forward * y * (moveSpeed * sprintScale) * Time.deltaTime * multiplier * multiplierV);
-            rb.AddForce(orientation.transform.right * x * (moveSpeed * sprintScale) * Time.deltaTime * multiplier);
-            // if (grounded && rb.linearVelocity.magnitude > 1f)
-            // {
-            //     footstepTimer -= Time.deltaTime;
-
-            //     // 根據速度調整間隔（跑越快 → 間隔越短）
-            //     float speed = rb.linearVelocity.magnitude;
-            //     float interval = Mathf.Lerp(0.5f, 0.2f, speed / 6f); // 0.5秒到0.2秒之間
-            //     if(AudioManager.instance != null)
-            //     {
-            //             if (footstepTimer <= 0f)
-            //             {
-            //                 footstepSource.pitch = UnityEngine.Random.Range(0.9f, 1.1f);
-            //                 footstepSource.PlayOneShot(footstepClip);
-            //                 footstepTimer = interval;
-            //             }
-                    
-            //     }
-               
-            // }
-        }
 
 
         private void Jump()
@@ -276,26 +197,59 @@ namespace OodlesEngine
             return angle < maxSlopeAngle;
         }
 
+       private void Movement()
+{
+    if (!grounded)
+        rb.AddForce(Vector3.down * (Time.deltaTime * 10));
+
+    Vector2 mag = FindVelRelativeToLook();
+    CounterMovement(x, y, mag);
+
+    if (readyToJump && jumping) Jump();
+
+    // 沿地面方向計算推力
+    Vector3 moveDir = (orientation.forward * y + orientation.right * x).normalized;
+    moveDir = Vector3.ProjectOnPlane(moveDir, normalVector);
+
+    if (grounded)
+    {
+        // ✅ 只有在地面時推力才有效
+        rb.AddForce(moveDir * (moveSpeed * sprintScale) * Time.deltaTime);
+    }
+    else
+    {
+        // ✅ 空中可選擇是否允許微調方向（這段可以留或刪）
+        Vector3 horizontalVel = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+        Vector3 desiredDir = (orientation.forward * y + orientation.right * x).normalized;
+
+        if (horizontalVel.magnitude > 0.1f && desiredDir != Vector3.zero)
+        {
+            // 只改變方向，不改變速度大小
+            Vector3 newDir = Vector3.Lerp(horizontalVel.normalized, desiredDir, Time.deltaTime * 2f);
+            rb.linearVelocity = newDir * horizontalVel.magnitude + Vector3.up * rb.linearVelocity.y;
+        }
+    }
+}
+
+
         private void Update()
         {
             CapsuleCollider cc = GetComponent<CapsuleCollider>();
+            if (cc == null) return;
+
             float bias = 0.2f;
-            if (cc != null)
+            Vector3 capsuleCenter = transform.position + Vector3.up * cc.center.y;
+            float rayLength = cc.height * 0.5f + bias;
+
+            if (Physics.Raycast(capsuleCenter, Vector3.down, out RaycastHit hit, rayLength, whatIsGround))
             {
-                Vector3 capsuleCenter = transform.position + Vector3.up * cc.center.y;
-
-                Ray ray = new Ray(capsuleCenter, Vector3.down);
-
-                float rayLength = cc.height * 0.5f + bias;
-
-                if (Physics.Raycast(ray, out RaycastHit hit, rayLength, whatIsGround))
-                {
-                    grounded = true;
-                }
-                else
-                {
-                    grounded = false;
-                }
+                grounded = true;
+                normalVector = hit.normal;
+            }
+            else
+            {
+                grounded = false;
+                normalVector = Vector3.up;
             }
         }
     }

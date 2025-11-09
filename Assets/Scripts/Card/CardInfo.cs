@@ -1,3 +1,4 @@
+using Fusion;
 using UnityEngine;
 
 public class Card : ScriptableObject
@@ -8,7 +9,7 @@ public class Card : ScriptableObject
     public Sprite image;
 }
 [System.Serializable]
-public struct CardData
+public struct CardData : INetworkStruct
 {
     public int id;
     public CardType type;
@@ -41,7 +42,7 @@ public enum CardType
     Item,
     None
 }
-public struct CardUseParameters
+public struct CardUseParameters : INetworkStruct
 {
     public int UserId;                    // 使用玩家 ID
     public int TargetId;                  // 目標玩家 ID
@@ -49,4 +50,26 @@ public struct CardUseParameters
     public int UseCardIndex;              // 使用卡片所在欄位
     public int SelectIndex;         // 使用者自己要操作的卡槽
     public int TargetSelectIndex;       // 使用者選定的目標玩家卡槽
+}
+[System.Serializable]
+public class MissionData
+{
+    public int id;                // ✅ 任務唯一ID
+    public string title;
+    public string description;
+    public int current;
+    public int goal;
+
+    public bool IsComplete => current >= goal;
+    public KeyCode[] triggerKey;
+
+    public MissionData(int id, string title, string desc, int goal, KeyCode[] triggerKey = null)
+    {
+        this.id = id;
+        this.title = title;
+        this.description = desc;
+        this.goal = goal;
+        this.current = 0;
+        this.triggerKey = triggerKey ?? new KeyCode[0];
+    }
 }

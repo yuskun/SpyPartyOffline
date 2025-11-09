@@ -5,9 +5,10 @@ using UnityEngine;
 public class CountdownTimer : NetworkBehaviour
 {
     [Header("UI 設定")]
-    
-    [Networked] public string TimeText { get; set; }
-    [Networked] private NetworkBool IsRunning { get; set; }
+
+    [Networked, OnChangedRender(nameof(OnTimeTextChanged))]
+    public string TimeText { get; set; }
+    private NetworkBool IsRunning { get; set; }
 
     [Header("時間設定")]
     public int totalMinutes = 15;
@@ -20,6 +21,10 @@ public class CountdownTimer : NetworkBehaviour
             remainingTime = totalMinutes * 60f;
             UpdateTimeText();
         }
+    }
+    public void OnTimeTextChanged()
+    {
+        GameUIManager.Instance.timerText.text = TimeText;
     }
 
     public override void FixedUpdateNetwork()
@@ -38,7 +43,8 @@ public class CountdownTimer : NetworkBehaviour
             UpdateTimeText();
         }
 
-        GameUIManager.Instance.timerText.text= TimeText;
+
+
     }
 
     public void StartTimer()
@@ -57,32 +63,18 @@ public class CountdownTimer : NetworkBehaviour
         TimeText = $"{m:00}:{s:00}";
     }
 
-   private void OnTimerEnd()
-{
-    // 1. 呼叫 TraceMission 的方法
-    if (TraceMission.Instance != null)
+    private void OnTimerEnd()
     {
-        TraceMission.Instance.ProcessPlayerCards();
-    }
-    else
-    {
-        Debug.LogWarning("TraceMission.Instance 尚未初始化");
-    }
+        // 2. 將 StealWin 設為 true
+        if (MissionWinSystem.Instance != null)
+        {
+            MissionWinSystem.Instance.StealWin = true;
+            MissionWinSystem.Instance.GameOver();
+        }
+        else
+        {
+            Debug.LogWarning("MissionWinSystem.Instance 尚未初始化");
+        }
 
-    // 2. 將 StealWin 設為 true
-    if (MissionWinSystem.Instance != null)
-    {
-        MissionWinSystem.Instance.StealWin = true;
     }
-    else
-    {
-        Debug.LogWarning("MissionWinSystem.Instance 尚未初始化");
-    }
-
-    // 3. 呼叫 GameOver 判定
-    if (MissionWinSystem.Instance != null)
-    {
-        MissionWinSystem.Instance.GameOver();
-    }
-}
 }

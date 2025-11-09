@@ -7,12 +7,18 @@ namespace OodlesEngine
     public class LocalPlayer : SingletonMono<LocalPlayer>
     {
         OodlesCharacter characterController;
+        public bool AllowCamerafollow=true;
         // Start is called before the first frame update
         void Start()
         {
             characterController = GetComponent<OodlesCharacter>();
-            CameraFollow.Get().player = characterController.GetPhysicsBody().transform;
-            CameraFollow.Get().enable = true;
+            if (AllowCamerafollow)
+            {
+                CameraFollow.Get().player = characterController.GetPhysicsBody().transform;
+                CameraFollow.Get().enable = true;
+            }
+     
+            
         }
 
         // Update is called once per frame

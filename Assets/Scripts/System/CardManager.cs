@@ -14,7 +14,7 @@ public class CardManager : MonoBehaviour
     private Dictionary<int, MissionCard> missionDictionary = new();
     private Dictionary<int, ItemCard> itemDictionary = new();
 
-    public Dictionary<int, MissionCard> GetAllMissions() => missionDictionary;
+
 
     void Awake()
     {
@@ -102,7 +102,46 @@ public class CardManager : MonoBehaviour
 
         return result;
     }
+    public Card GetCardScriptObject(CardData data)
+    {
 
+
+        Card cardSO = null;
+
+        switch (data.type)
+        {
+            case CardType.Function:
+                cardSO = GetFunctionCard(data.id);
+                break;
+
+            case CardType.Mission:
+                cardSO = GetMissionCard(data.id);
+                break;
+
+            case CardType.Item:
+                cardSO = GetItemCard(data.id);
+                break;
+        }
+
+        return cardSO;
+    }
+
+
+
+    public List<CardData> GetAllMissionCardData()
+    {
+        List<CardData> missionCardDataList = new List<CardData>();
+
+        foreach (var missionCard in missionDictionary.Values)
+        {
+            if (missionCard != null)
+            {
+                missionCardDataList.Add(missionCard.cardData);
+            }
+        }
+
+        return missionCardDataList;
+    }
     // 依 ID 取卡片
     public FunctionCard GetFunctionCard(int id) =>
         funcDictionary.TryGetValue(id, out var card) ? card : null;
@@ -112,4 +151,27 @@ public class CardManager : MonoBehaviour
 
     public ItemCard GetItemCard(int id) =>
         itemDictionary.TryGetValue(id, out var card) ? card : null;
+
+    public void UseCard(CardUseParameters cardUse)
+    {
+
+        Card UseCard = GetCardScriptObject(cardUse.Card);
+        switch (UseCard.cardData.type)
+        {
+            case CardType.Function:
+                FunctionCard Card1 = GetFunctionCard(UseCard.cardData.id);
+                Card1.Execute(cardUse);
+                break;
+
+            case CardType.Mission:
+                MissionCard Card2 = GetMissionCard(UseCard.cardData.id);
+                Card2.UseSkill(cardUse);
+                break;
+
+            case CardType.Item:
+                ItemCard Card3 = GetItemCard(UseCard.cardData.id);
+                Card3.Execute(cardUse);
+                break;
+        }
+    }
 }

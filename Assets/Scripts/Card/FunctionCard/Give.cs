@@ -24,8 +24,7 @@ public class Give : FunctionCard
         Debug.Log("Give Execute");
         PlayerInventory User = PlayerInventoryManager.Instance.GetPlayer(parameters.UserId).GetComponent<PlayerInventory>();
         PlayerInventory Target = PlayerInventoryManager.Instance.GetPlayer(parameters.TargetId).GetComponent<PlayerInventory>();
-        
-        Target.AddCard(User.GetCard(parameters.SelectIndex));
+        Target.AddCard(User.slots[parameters.SelectIndex]);
         User.RemoveCard(parameters.SelectIndex);
 
         User.RemoveCard(parameters.UseCardIndex);
@@ -39,7 +38,7 @@ public class Give : FunctionCard
                     "give",
                     CardType.Function,
                     null
-                    //result
+                //result
                 )
             );
         }

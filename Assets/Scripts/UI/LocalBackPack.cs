@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using OodlesEngine;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,11 +10,16 @@ public class LocalBackpack : MonoBehaviour
     public int SlotCount = 0;
     public List<ButtionData> buttons = new List<ButtionData>();
     public GameObject BackPack;
-
+    public PlayerIdentify playerIdentify;
+    public PlayerInventory userInventory; // 本地玩家
+    [HideInInspector] public PlayerScanner scanner;
     
 
-    [HideInInspector]public PlayerInventory userInventory; // 本地玩家
     public CardUseUIManager cardUseUIManager; // UI 控制器
+
+    // ✅ 新增：可控制 Update 是否執行
+    [Header("控制項")]
+    public bool enableUpdate = false;
 
     void Awake()
     {
@@ -27,16 +33,10 @@ public class LocalBackpack : MonoBehaviour
             {
                 ButtionData data = new ButtionData();
                 data.button = btn;
-
-                // 嘗試抓 CardImage
                 data.image = btn.transform.Find("CardImage")?.GetComponent<Image>();
-
-                // 確保 Outline 存在
                 data.outline = btn.gameObject.GetComponent<UnityEngine.UI.Outline>();
                 if (data.outline == null) data.outline = btn.gameObject.AddComponent<UnityEngine.UI.Outline>();
                 data.outline.enabled = false;
-
-                // 嘗試抓 Shadow
                 data.shadow = btn.gameObject.GetComponent<Shadow>();
                 if (data.shadow != null) data.shadow.enabled = true;
 
@@ -45,27 +45,25 @@ public class LocalBackpack : MonoBehaviour
         }
 
         SlotCount = buttons.Count;
-
-        //有問題
-        if (userInventory == null)
-        {
-            var localPlayer = OodlesEngine.LocalPlayer.Instance;
-            //var localPlayer = FindObjectOfType<OodlesEngine.LocalPlayer>();
-            if (localPlayer != null)
-            {
-                userInventory = localPlayer.GetComponent<PlayerInventory>();
-            }
-        }
     }
 
     void Update()
     {
+        // ✅ 若關閉則不執行任何更新邏輯
+        if (!enableUpdate) return;
+
         HandleMouseScroll();
         HandleNumberKeys();
         UpdateButtonHighlight();
         HandleMouseClick();
     }
 
+    public void SetUpdateEnabled(bool state)
+    {
+        enableUpdate = state;
+    }
+
+    // 以下保持原本邏輯不變
     void HandleMouseScroll()
     {
         float scroll = Input.GetAxis("Mouse ScrollWheel");
@@ -97,22 +95,16 @@ public class LocalBackpack : MonoBehaviour
     {
         for (int i = 0; i < buttons.Count; i++)
         {
-
             if (i == FocusIndex)
             {
-                // 開啟 Outline
                 buttons[i].outline.enabled = true;
                 buttons[i].shadow.enabled = false;
-
-                // 放大
                 buttons[i].button.transform.localScale = Vector3.one * 1.15f;
             }
             else
             {
-                // 關閉 Outline
                 buttons[i].outline.enabled = false;
                 buttons[i].shadow.enabled = true;
-                // 恢復原始大小
                 buttons[i].button.transform.localScale = Vector3.one;
             }
         }
@@ -124,8 +116,6 @@ public class LocalBackpack : MonoBehaviour
         {
             if (FocusIndex >= 0 && FocusIndex < buttons.Count && buttons[FocusIndex].button.interactable)
             {
-                // 取得目標玩家（用 PlayerScanner）
-                var scanner = FindObjectOfType<PlayerScanner>();
                 PlayerInventory targetInventory = null;
                 if (scanner != null && scanner.currentTarget != null)
                     targetInventory = scanner.currentTarget.GetComponent<PlayerInventory>();
@@ -141,7 +131,6 @@ public class LocalBackpack : MonoBehaviour
                     return;
                 }
 
-                // 取得目前選中的卡片資料
                 var data = userInventory.slots[FocusIndex];
                 var card = CardManager.Instance.Catalog.cards.Find(c =>
                     c.cardData.id == data.id && c.cardData.type == data.type
@@ -151,10 +140,29 @@ public class LocalBackpack : MonoBehaviour
                 {
                     cardUseUIManager.TryUseFunctionCard(functionCard, userInventory, targetInventory, FocusIndex);
                 }
-                else
+                else if (card is ItemCard)
                 {
-                    // 不是功能卡就直接觸發原本的按鈕事件
-                    buttons[FocusIndex].button.onClick.Invoke();
+                    CardUseParameters UseCard = new CardUseParameters();
+                    UseCard.Card = data;
+                    UseCard.UserId = playerIdentify.PlayerID;
+                     UseCard.UseCardIndex = FocusIndex;
+                    GameManager.instance.Rpc_RequestUseCard(UseCard);
+                    
+                }
+                else if (card is MissionCard missioncard)
+                {
+                    if (!cardUseUIManager.TryUseMissionCard(missioncard, userInventory, targetInventory))
+                        return;
+                    CardUseParameters UseCard = new CardUseParameters();
+                    UseCard.Card = data;
+                    UseCard.UserId = playerIdentify.PlayerID;
+                    UseCard.UseCardIndex = FocusIndex;
+                    if (scanner.currentTarget != null)
+                    {
+                        UseCard.TargetId = scanner.currentTarget.GetComponent<PlayerIdentify>().PlayerID;
+                    }
+                    GameManager.instance.Rpc_RequestUseCard(UseCard);
+                    data.cooldown = 5;
                 }
             }
         }
@@ -176,11 +184,6 @@ public class LocalBackpack : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 根據 PlayerInventory 的 slots 內容，顯示對應卡片圖片
-    /// </summary>
-    /// <param name="inv">玩家背包</param>
-    /// <param name="allCards">所有 Card ScriptableObject 的 List</param>
     public void UpdateCardImagesByInventory(PlayerInventory inv, List<Card> allCards)
     {
         if (inv != userInventory)
@@ -191,7 +194,6 @@ public class LocalBackpack : MonoBehaviour
             var data = inv.slots[i];
             if (!data.IsEmpty())
             {
-                // 找到對應的 Card
                 var card = allCards.Find(c =>
                     c.cardData.id == data.id && c.cardData.type == data.type
                 );

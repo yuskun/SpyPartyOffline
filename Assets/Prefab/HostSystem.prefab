@@ -10,11 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 2001847554770251790}
   - component: {fileID: 7491102365048473820}
-  - component: {fileID: 8089491835316759344}
   - component: {fileID: 1381091073855155922}
   - component: {fileID: 5050789465865437786}
   - component: {fileID: 802940738326994448}
   - component: {fileID: 7865425929110464473}
+  - component: {fileID: 7142678875200994240}
   m_Layer: 0
   m_Name: HostSystem
   m_TagString: Untagged
@@ -50,26 +50,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabToSpawn: {fileID: 8311757162922756701, guid: d00104cbe373e3e418253fc1dc5ce4dc, type: 3}
-  spawnArea: {fileID: 0}
+  PlayerItem: {fileID: 4179703982041739608, guid: 8120e6e7df2882b41b82165c8d82a7dc, type: 3}
+  spawnAreas: []
   spawnInterval: 10
   spawnHeightOffset: 0.5
   maxAttempts: 30
   radiusCheck: 0.5
   rayHeight: 10
   maxTotal: 40
---- !u!114 &8089491835316759344
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3052365514708413033}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f5a114c6cdb62b4daa9d4862546c17f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  catalog: {fileID: 11400000, guid: 086c7a2c8ac87e945ae37b4d20e2e5e0, type: 2}
 --- !u!114 &1381091073855155922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -122,3 +110,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerParents: []
+--- !u!114 &7142678875200994240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3052365514708413033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02c80674165e9dc4f895e99f7e586077, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterPrefabs: []
+  spawnPoints: []

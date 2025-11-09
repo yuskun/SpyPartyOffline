@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace OodlesEngine
@@ -10,6 +11,7 @@ namespace OodlesEngine
         [HideInInspector]
         public ConfigurableJoint[] joints;
         public bool AllowAttack = false;
+        public GameObject WeaponPrefab;
 
         [HideInInspector] public HandFunction handFunctionRight, handFunctionLeft;
 
@@ -18,7 +20,7 @@ namespace OodlesEngine
         [Tooltip("Rotation range where the target direction influences arm movement.")]
         [HideInInspector] public float minTargetDirAngle = -30;
         [HideInInspector] public float maxTargetDirAngle = 60;
-        
+
         //energy
 
         public float energyTimeLength = 3.0f;
@@ -100,6 +102,21 @@ namespace OodlesEngine
             InitEffects();
             InitStateMachine();
         }
+        public void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                handFunctionRight.AddWeapon(WeaponPrefab);
+            }
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                handFunctionRight.ShowWeapon(1);
+            }
+              if(Input.GetKeyDown(KeyCode.K))
+            {
+                handFunctionRight.HideWeapon();
+            }
+        }
 
         public void ChangeSkin(int skinColor)
         {
@@ -175,7 +192,7 @@ namespace OodlesEngine
             for (int i = 0; i < jointMatchs.Length; i++)
             {
                 jointMatchs[i].oodlesCharacter = this;
-                
+
             }
         }
 
@@ -233,7 +250,7 @@ namespace OodlesEngine
 
             TickState();
         }
-      
+
 
         public void UpdateJointState()
         {
@@ -282,14 +299,14 @@ namespace OodlesEngine
 
         public void UpdateMovement()
         {
-            if (energyLeftTime > 0.1)
-            {
+            // if (energyLeftTime > 0.1)
+            // {
                 movement.moveSpeed = moveForce * runSpeedTimes;
-            }
-            else
-            {
-                movement.moveSpeed = moveForce;
-            }
+            // }
+            // else
+            // {
+            // movement.moveSpeed = moveForce;
+            // }
 
             movement.ProcessInput();
         }
@@ -392,6 +409,7 @@ namespace OodlesEngine
 
         public void KnockDown()
         {
+
             JointLoseBalanceState();
 
             ragdollMode = true;
@@ -401,7 +419,9 @@ namespace OodlesEngine
             animatorPlayer.SetFloat("BlendVertical", 0);
             handFunctionLeft.ReleaseHand();
             handFunctionRight.ReleaseHand();
+            this.GetComponent<PlayerInventory>().LostCard();
         }
+       
 
         public void SyncAnimator()
         {
@@ -743,7 +763,8 @@ namespace OodlesEngine
 
         public void UpdateAttack()
         {
-            if(AllowAttack){
+            if (AllowAttack)
+            {
                 if (inputState.fire1Axis > 0)
                 {
                     //if (!attackInput)
@@ -758,6 +779,10 @@ namespace OodlesEngine
                     attackInput = false;
                 }
             }
+        }
+        public void Attack()
+        {
+            animatorPlayer.SetTrigger("Attack");
         }
     }
 }
