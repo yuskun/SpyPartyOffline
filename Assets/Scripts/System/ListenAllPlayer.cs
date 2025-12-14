@@ -104,7 +104,7 @@ public class PlayerInventoryManager : MonoBehaviour
                 }
             }
 
-            Debug.Log($"Player {id} 擁有 {playerCards[id].Count} 張卡片");
+          
         }
     }
 

@@ -12,7 +12,7 @@ public class GameManager : NetworkBehaviour
     public static GameManager instance;
     private CountdownTimer countdownTimer;
     public GameObject AI;
-
+    public int AICount = 0;
     private void Awake()
     {
         if (instance == null)
@@ -100,13 +100,7 @@ public class GameManager : NetworkBehaviour
         {
             PlayerSpawner.instance.RefreshSpawnPoints();
             SetSpawnArea();
-            if (Runner.ActivePlayers.Count() < 6)
-            {
-                for (int i = Runner.ActivePlayers.Count(); i <= 6; i++)
-                {
-                    PlayerSpawner.instance.SpawnPlayer(Runner, null, PlayerRef.None, "AI");
-                }
-            }
+            SpawnAI();
             MissionWinSystem.Instance.FightWinCount = Runner.ActivePlayers.Count();
             MissionWinSystem.Instance.ResetFightStats();
 
@@ -116,6 +110,14 @@ public class GameManager : NetworkBehaviour
             PlayerInventoryManager.Instance.Refresh();
 
 
+        }
+
+    }
+    public void SpawnAI()
+    {
+        for (int i = 0; i < AICount; i++)
+        {
+            PlayerSpawner.instance.SpawnPlayer(Runner, null, PlayerRef.None, "AI");
         }
 
     }
@@ -175,6 +177,7 @@ public class GameManager : NetworkBehaviour
             {
                 Debug.LogWarning($"[CardManager] 玩家 {chosen.name} 無法接收卡片 ID={data.id}");
             }
+            TraceMission.Instance.ProcessPlayerCards();
         }
 
         Debug.Log("[CardManager] 任務卡公平分配完成 ✅");

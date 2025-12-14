@@ -20,11 +20,11 @@ public class MissionWinSystem : MonoBehaviour
     }
 
     public bool CatchWin = false;
-    int CatchID;
+    int CatchID=-1;
     public bool StealWin = false;
-    int StealID;
+    int StealID=-1;
     public bool FightWin = false;
-    int FightID;
+    int FightID=-1;
 
     public void ResetFightStats()
     {
@@ -105,12 +105,14 @@ public class MissionWinSystem : MonoBehaviour
     //任務追蹤器
     public void Catch(int id)
     {
+        Debug.Log("Catch 任務被玩家 " + id + " 取得");
         // 如果 Catch 任務的持有者變了，重置進度
         if (CatchID != id)
         {
+            Debug.Log("Catch 任務持有者變更，重置進度");
             CatchWin = false;  // 重置完成狀態
             GameManager.instance.RPC_UpdateMission(id, 0, "逮捕", "抓到會偷東西的人", 1, true);
-            GameManager.instance.RPC_UpdateMission(FightID, 0, "逮捕", "抓到會偷東西的人", 1, false);
+            GameManager.instance.RPC_UpdateMission(CatchID, 0, "逮捕", "抓到會偷東西的人", 1, false);
         }
 
         CatchID = id; // 更新目前玩家 ID
@@ -122,7 +124,7 @@ public class MissionWinSystem : MonoBehaviour
         {
             StealWin = false;
             GameManager.instance.RPC_UpdateMission(id, 1, "躲起來", "在遊戲結束前不要被逮捕到", 1, true);
-            GameManager.instance.RPC_UpdateMission(FightID, 1, "躲起來", "在遊戲結束前不要被逮捕到", 1, false);
+            GameManager.instance.RPC_UpdateMission(StealID, 1, "躲起來", "在遊戲結束前不要被逮捕到", 1, false);
         }
 
         StealID = id;

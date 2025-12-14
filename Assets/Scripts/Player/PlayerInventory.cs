@@ -52,6 +52,7 @@ public class PlayerInventory : NetworkBehaviour // ✅ 必須繼承 NetworkBehav
             {
                 slotsNetworked.Set(i, card);
                 Debug.Log($"[Inventory] 加到 {i}: {card.type}, ID={card.id}");
+                NotifyChange();
 
                 return true;
             }
@@ -208,7 +209,7 @@ public class PlayerInventory : NetworkBehaviour // ✅ 必須繼承 NetworkBehav
     /// <summary>Host 端修改後：增加版本號並提示本地 UI 更新</summary>
     private void NotifyChange()
     {
-        Debug.LogWarning("更新UI");
+        Debug.Log("更新UI");
         UpdateLocalSlot();
         if (PlayerInventoryManager.Instance != null)
             PlayerInventoryManager.Instance.Refresh();

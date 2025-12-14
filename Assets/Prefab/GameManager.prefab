@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 362904866543073565}
   - component: {fileID: 3050769602343109580}
   - component: {fileID: 7538684937177334173}
-  - component: {fileID: -1980079699476781007}
   - component: {fileID: 2618162331268437345}
   m_Layer: 0
   m_Name: GameManager
@@ -63,18 +62,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _TimeText: 
   totalMinutes: 15
---- !u!114 &-1980079699476781007
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7420987509940563899}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d18722d081196d049aeb05f2b5c1a575, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2618162331268437345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94,5 +81,4 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 3050769602343109580}
   - {fileID: 7538684937177334173}
-  - {fileID: -1980079699476781007}
   ForceRemoteRenderTimeframe: 0
