@@ -1,0 +1,167 @@
+VisualElement {}/* ✨ 全站設定 */
+.body-style {
+    width: 100%;
+    height: 100%;
+}
+
+/* =========================================
+   左上角任務欄 (Mission Panel)
+   ========================================= */
+.mission-panel {
+    position: absolute;
+    top: 30px;
+    left: 40px;
+    flex-direction: column;
+    align-items: flex-start; 
+}
+
+/* 任務條本體 */
+.mission-task {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    
+    width: 120px;
+    height: 30px; /* 原本高度 30 */
+    margin-bottom: 12px;
+    
+    border-radius: 12px;
+    overflow: hidden; 
+    
+    /* 關鍵修正 1：設定變形原點為「左上角」，跟 CSS 的 top left 一樣 */
+    transform-origin: left top;
+
+    /* 確保這四個屬性都有動畫 */
+    transition-property: width, height, scale, background-color;
+    transition-duration: 0.4s;
+    transition-timing-function: ease-out-back; 
+
+    /* (圖1) Normal BG */
+    background-color: #f9f1dd; 
+}
+
+/* =========================================
+   任務欄展開狀態 (.active)
+   ========================================= */
+/* 當 C# 加上 active 時才會動 */
+.mission-task.active {
+    width: 250px;
+    height: 40px; /* 展開後變高為 40 */
+    
+    /* 只有在展開時才放大 1.05 倍 */
+    scale: 1.05;
+    
+    /* (圖3) Active BG */
+    background-color: #FFF5D9;
+}
+
+/* 以下標題與內容設定維持不變 */
+.task-left {
+    flex-direction: row;
+    align-items: center;
+    height: 100%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.task-title {
+    height: 100%;
+    padding: 0 12px;
+    margin: 0;
+    -unity-font-style: bold;
+    font-size: 15px;
+    color: #7A6B52;
+    -unity-text-align: middle-center;
+    background-color: #FFD267;
+    border-radius: 12px;
+}
+
+.task-desc {
+    font-size: 15px;
+    color: #7f594a;
+    margin-left: 8px;
+    
+    /* 收起狀態 */
+    width: 0;
+    opacity: 0;
+    
+    transition-property: width, opacity;
+    transition-duration: 0.3s;
+}
+
+.mission-task.active .task-title {
+    font-size: 18px; 
+}
+
+.mission-task.active .task-desc {
+    width: 120px; 
+    opacity: 1;
+    font-size: 16px;
+}
+
+.task-progress {
+    -unity-font-style: bold;
+    color: #77B653;
+    padding-right: 10px;
+    -unity-text-align: middle-right;
+    flex-shrink: 0;
+}
+
+/* =========================================
+   右上角按鈕 (Top Right Menu)
+   ========================================= */
+.top-right-menu {
+    position: absolute;
+    top: 30px;
+    right: 50px;
+    flex-direction: row;
+}
+
+/* 按鈕通用樣式 */
+.menu-btn {
+    width: 200px;
+    height: 60px;
+    margin-left: 20px; /* gap 替代 */
+    
+    font-size: 27px;
+    -unity-font-style: bold;
+    color: #7f594a;
+    
+    /* Unity 的 letter-spacing 支援度低，若間距不夠建議直接做在圖片文字上，
+       或使用 -unity-paragraph-spacing (僅限多行) */
+    
+    border-width: 0;
+    background-color: rgba(0,0,0,0);
+    
+    transition-property: scale, translate;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
+}
+
+/* 黃色按鈕 */
+.menu-btn.yellow {
+    /* (圖4) Yellow Btn Normal */
+    background-color: #fad461; 
+    border-radius: 20px;
+    /* background-image: url("project://.../Btn_Yellow.png"); */
+}
+
+/* 橘粉色按鈕 */
+.menu-btn.orange {
+    /* (圖5) Orange Btn Normal */
+    background-color: #ffbe8e;
+    border-radius: 20px;
+    /* background-image: url("project://.../Btn_Orange.png"); */
+}
+
+/* Hover: 上浮 + 放大 */
+.menu-btn:hover {
+    scale: 1.05;
+    translate: 0 -2%;
+}
+
+/* Active: 下壓 + 縮小 (照你這次提供的 CSS) */
+.menu-btn:active {
+    scale: 0.95;
+    translate: 0 -2%; /* 保持浮起的高度，但縮小，產生按壓感 */
+}

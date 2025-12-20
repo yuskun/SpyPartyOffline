@@ -1,0 +1,40 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Scripts/USS/HostRoom.uss?fileID=7433441132597879392&amp;guid=94aaad2e4e1fa974da7c179260c14c00&amp;type=3#HostRoom" />
+    <ui:VisualElement name="body" class="body-style">
+        <ui:VisualElement name="Container" class="container">
+            <ui:VisualElement class="left-panel">
+                <ui:VisualElement class="map-preview">
+                    <ui:VisualElement class="map-image" />
+                    <ui:VisualElement class="map-name-board">
+                        <ui:Label text="地底實驗室" class="map-name-title" />
+                        <ui:Label text="Underground Laboratory" class="map-name-sub" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:Button name="StartBtn" text="開始遊戲" class="map-btn yellow" />
+                <ui:Button name="InviteBtn" text="邀請" class="map-btn yellow" />
+            </ui:VisualElement>
+            <ui:VisualElement class="right-panel">
+                <ui:Label text="自訂房間" class="panel-title" />
+                <ui:VisualElement class="slots-container">
+                    <ui:Button class="slot filled">
+                        <ui:Label text="Frank" class="player-name" />
+                    </ui:Button>
+                    <ui:Button class="slot filled">
+                        <ui:Label text="Blue" class="player-name" />
+                    </ui:Button>
+                    <ui:Button text="+" class="slot empty" />
+                    <ui:Button text="+" class="slot empty" />
+                    <ui:Button text="+" class="slot empty" />
+                    <ui:Button text="+" class="slot empty" />
+                    <ui:Button text="+" class="slot empty" />
+                    <ui:Button text="+" class="slot empty" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Button name="BackBtn" class="back-btn">
+                <ui:Label text="◀" class="back-btn-arrow" />
+                <ui:Label text="返回" class="back-btn-label" />
+            </ui:Button>
+            <ui:Button name="CloseBtn" class="triangle-btn" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

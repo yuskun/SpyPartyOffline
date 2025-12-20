@@ -1,0 +1,120 @@
+/* 全站設定 */
+.body-style {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 橫向排版容器 (關鍵修正) */
+.main-row {
+    flex-direction: row; /* 左到右排列 */
+    align-items: center; /* 垂直置中對齊 */
+    justify-content: center;
+}
+
+/* =========================================
+   返回按鈕
+   ========================================= */
+.back-btn {
+    position: absolute;
+    left: -20px; 
+    top: 50%;
+    
+    /* 關鍵：基準點設好後，之後的狀態都不要改這個值 */
+    translate: 0 -50%;
+
+    width: 80px;
+    height: 80px;
+
+    /* --- 清除預設樣式 --- */
+    background-color: rgba(0,0,0,0);
+    border-width: 0;
+    margin: 0;
+    padding: 0;
+
+    /* --- 內部排版 --- */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    color: #7f594a;
+    
+    /* --- 動態過渡 --- */
+    transition-property: scale; 
+    transition-duration: 0.15s;
+    transition-timing-function: ease-out;
+
+    background-image: url("../../Image/UIPanel/CreateRoom/Back_default.png");
+}
+
+.back-btn-arrow {
+    font-size: 30px;
+    margin-bottom: -5px;
+    padding: 0;
+    -unity-text-align: middle-center;
+}
+
+.back-btn-label {
+    font-size: 18px;
+    -unity-font-style: bold;
+    padding: 0;
+    -unity-text-align: middle-center;
+}
+.back-btn:hover {
+    scale: 1.1; 
+    background-image: url("../../Image/UIPanel/CreateRoom/Back_hover.png");
+}
+.back-btn:active {
+    scale: 1.1;
+    background-image: url("../../Image/UIPanel/CreateRoom/Back_active.png");
+}
+
+
+/* =========================================
+   背板容器
+   ========================================= */
+.container { 
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    
+    padding: 80px 80px;
+    border-radius: 36px;
+    
+    background-image: url("../../Image/UIPanel/CreateRoom/background1.png");
+}
+
+
+/* =========================================
+   大按鈕 (樣式保持不變)
+   ========================================= */
+.cute-btn {
+    width: 200px;
+    height: 220px;
+    margin: 0 15px;
+    
+    font-size: 45px;
+    -unity-font-style: bold;
+    color: #7f594a;
+    white-space: normal;
+    -unity-text-align: middle-center;
+
+    border-width: 0;
+    background-color: rgba(0,0,0,0);
+
+    transition-property: scale, translate;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
+}
+
+/* 黃色 */
+.cute-btn.yellow { background-image: url("../../Image/UIPanel/CreateRoom/Create_default.png"); }
+.cute-btn.yellow:hover { scale: 1.05; translate: 0 -2%; background-image: url("../../Image/UIPanel/CreateRoom/Create_hover.png");}
+.cute-btn.yellow:active { scale: 1.05; translate: 0 -2%; background-image: url("../../Image/UIPanel/CreateRoom/Create_active.png");}
+
+/* 粉色 */
+.cute-btn.pink { background-image: url("../../Image/UIPanel/CreateRoom/Join_default.png"); }
+.cute-btn.pink:hover { scale: 1.05; translate: 0 -2%; background-image: url("../../Image/UIPanel/CreateRoom/Join_hover.png"); }
+.cute-btn.pink:active { scale: 1.05; translate: 0 -2%; background-image: url("../../Image/UIPanel/CreateRoom/Join_active.png"); }

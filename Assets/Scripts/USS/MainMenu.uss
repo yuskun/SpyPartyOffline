@@ -1,0 +1,88 @@
+/* 全站使用 (對應 body) */
+.body-style {
+    /* Unity 使用 Font Asset，不能直接指定 font-family 字串 */
+    /*-unity-font-definition: url("project://database/Assets/Fonts/GenSenRounded-R SDF.asset"); */
+    
+    /* Flexbox 佈局 */
+    width: 100%;
+    height: 100%;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+/* 主要容器 */
+.main-menu {
+    display: flex;
+    flex-shrink: 0;
+    justify-content: flex-start; /* 靠左 */
+    height: 100%;
+
+}
+
+/* 按鈕群組 */
+.menu-container {
+    display: flex;
+    flex-direction: column; /* 垂直排列 */
+    padding-left: 13%;
+    padding-top: 10%;
+}
+
+/* 🍮 通用按鈕樣式 */
+.menu-btn {
+    width: 20%;
+    height: 25%;
+    /*font-size: 30px;*/
+    /*-unity-font-style: bold;*/ /* font-weight: 700 */
+    /* letter-spacing 在 Unity 支援度有限，通常在 Font Asset 裡設定或用 -unity-paragraph-spacing */
+
+    /* 移除預設邊框 */
+    border-width: 0; 
+    border-radius: 25px;
+    cursor: initial; /* Unity 沒有 cursor pointer 概念 */
+    
+    /* gap 的替代方案：給每個按鈕加 margin */
+    margin-bottom: 30px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+
+    /* Transition (Unity 寫法) */
+    transition-property: scale, translate;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
+}
+
+/* 藍色按鈕 */
+.menu-btn.blue {
+    background-image: url("../../Image/UIPanel/MainMenu/Blue_default.png");
+}
+.menu-btn.blue:hover {
+    background-image: url("../../Image/UIPanel/MainMenu/Blue_hover.png");
+    scale: 1.05;
+    translate: 0 -2px; /* translateY(-2px) */
+    /* 改變顏色模擬亮度變化 */
+    /*-unity-background-image-tint-color: rgb(255, 255, 255); */
+}
+.menu-btn.blue:active {
+    background-image: url("../../Image/UIPanel/MainMenu/Blue_active.png");
+    scale: 0.95;
+    translate: 0 0;
+}
+
+/* 橘粉色按鈕 (模擬) */
+.menu-btn.orange {
+    background-image: url("../../Image/UIPanel/MainMenu/default.png");
+}
+.menu-btn.orange:hover {
+    background-image: url("../../Image/UIPanel/MainMenu/hover.png");
+    scale: 1.05;
+    translate: 0 -2px; /* translateY(-2px) */
+    /* 改變顏色模擬亮度變化 */
+    /*-unity-background-image-tint-color: rgb(255, 255, 255); */
+}
+.menu-btn.orange:active {
+    background-image: url("../../Image/UIPanel/MainMenu/active.png");
+    scale: 0.95;
+    translate: 0 0;
+}

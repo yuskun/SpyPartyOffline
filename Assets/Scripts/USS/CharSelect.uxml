@@ -1,0 +1,48 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Scripts/USS/CharSelect.uss?fileID=...&amp;guid=...&amp;type=3#CharSelect" />
+
+    <ui:VisualElement name="screen" class="screen">
+        
+        <ui:VisualElement class="title-container">
+            <ui:Label text="Characters" class="title-text" />
+        </ui:VisualElement>
+
+        <ui:VisualElement class="content">
+            
+            <ui:Label name="CharName" text="S&#10;H&#10;A&#10;Y&#10;A" class="character-name" />
+
+            <ui:VisualElement class="stage">
+                <ui:VisualElement class="stage-light" />
+                <ui:VisualElement name="MainCharImage" class="main-char" />
+            </ui:VisualElement>
+
+            <ui:VisualElement class="portrait-column">
+                
+                <ui:Button name="Char1" class="portrait selected">
+                    <ui:VisualElement class="portrait-img shark" />
+                    <ui:VisualElement class="portrait-mask" />
+                </ui:Button>
+
+                <ui:Button name="Char2" class="portrait">
+                    <ui:VisualElement class="portrait-img crocodile" />
+                    <ui:VisualElement class="portrait-mask" />
+                </ui:Button>
+
+                <ui:Button name="Char3" class="portrait">
+                    <ui:VisualElement class="portrait-img snake" />
+                    <ui:VisualElement class="portrait-mask" />
+                </ui:Button>
+
+                <ui:Button name="Char4" class="portrait">
+                    <ui:VisualElement class="portrait-img mouse" />
+                    <ui:VisualElement class="portrait-mask" />
+                </ui:Button>
+
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <ui:Button name="SelectBtn" text="Select  ▶" class="select-btn" />
+        <ui:Button name="BackBtn" text="◀" class="back-btn" />
+
+    </ui:VisualElement>
+</ui:UXML>

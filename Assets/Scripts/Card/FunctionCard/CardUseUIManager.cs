@@ -12,6 +12,7 @@ public class CardUseUIManager : MonoBehaviour
         public Image[] userImages;
         public Image[] targetImages;
         public Button confirmButton;
+        public Image preselectImage; //give預選圖片
     }
 
     public FunctionCardUIBlock giveBlock;
@@ -45,11 +46,15 @@ public class CardUseUIManager : MonoBehaviour
             {
                 UpdateImagesByInventory(user, giveBlock.userImages);
                 OpenUI(giveBlock.ui);
+                DisableUsedCardButton(giveBlock);
                 ChooseCard(giveBlock);
                 BindConfirmButton(giveBlock);
             }
             else
+            {
                 ShowFailUI(giveBlock.failUI);
+            }
+
         }
         else if (card is Peek peekCard)
         {
@@ -76,6 +81,7 @@ public class CardUseUIManager : MonoBehaviour
                 UpdateImagesByInventory(user, swapBlock.userImages);
                 UpdateImagesByInventory(target, swapBlock.targetImages);
                 OpenUI(swapBlock.ui);
+                DisableUsedCardButton(swapBlock);
                 ChooseCard(swapBlock);
                 BindConfirmButton(swapBlock);
             }
@@ -114,6 +120,11 @@ public class CardUseUIManager : MonoBehaviour
             block.userImages[i].GetComponent<Button>().onClick.AddListener(() =>
             {
                 selectedUserIndex = idx;
+                if (block.ui == giveBlock.ui && block.preselectImage != null) //只有give需要顯示預選圖片
+                {
+                    block.preselectImage.sprite = block.userImages[idx].sprite;
+                    block.preselectImage.gameObject.SetActive(true);
+                }
                 Debug.Log($"[User Image Clicked] Index: {idx}");
             });
         }
@@ -202,6 +213,14 @@ public class CardUseUIManager : MonoBehaviour
                 images[i].sprite = null;
                 images[i].gameObject.SetActive(false);
             }
+        }
+    }
+    private void DisableUsedCardButton(FunctionCardUIBlock block)
+    {
+        for (int i = 0; i < block.userImages.Length; i++)
+        {
+            var btn = block.userImages[i].GetComponent<Button>();
+            btn.interactable = (i != currentUseCardIndex);
         }
     }
 }

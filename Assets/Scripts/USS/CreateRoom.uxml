@@ -1,0 +1,19 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Scripts/USS/CreateRoom.uss?fileID=...&amp;guid=...&amp;type=3#CreateRoom" />
+
+    <ui:VisualElement name="body-container" class="body-style">
+        
+        <ui:VisualElement class="container">
+            
+            <ui:Button name="BackBtn" class="back-btn">
+                <ui:Label text="◀" class="back-btn-arrow" />
+                <ui:Label text="返回" class="back-btn-label" />
+            </ui:Button>
+
+            <ui:Button name="CreateBtn" text="建立&#10;房間" class="cute-btn yellow" />
+            
+            <ui:Button name="JoinBtn" text="快速&#10;加入" class="cute-btn pink" />
+
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

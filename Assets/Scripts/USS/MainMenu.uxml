@@ -1,0 +1,13 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Scripts/USS/MainMenu.uss?fileID=7433441132597879392&amp;guid=cbac20acb1e45014b878ce7e26ef07e3&amp;type=3#MainMenu" />
+    <ui:VisualElement name="body-container" class="body-style">
+        <ui:VisualElement class="main-menu">
+            <ui:VisualElement class="menu-container">
+                <ui:Button name="StartBtn" text="開始" display-tooltip-when-elided="true" triple-click-selects-line="true" double-click-selects-word="true" selectable="true" parse-escape-sequences="true" class="menu-btn blue" style="-unity-background-scale-mode: stretch-to-fill;" />
+                <ui:Button name="settingsBtn" text="設定" class="menu-btn blue" />
+                <ui:Button name="achieveBtn" text="成就" class="menu-btn blue" />
+                <ui:Button name="exitBtn" text="離開" class="menu-btn orange" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
