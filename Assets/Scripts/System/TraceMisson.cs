@@ -28,6 +28,9 @@ public class TraceMission : MonoBehaviour
         PlayerInventoryManager.Instance.Refresh(); // �T�O��Ƴ̷s
 
         int index = 0;
+        bool HasCatch = false;
+        bool HasSteal = false;
+        bool HasFight = false;
         while (true)
         {
             GameObject player = PlayerInventoryManager.Instance.GetPlayer(index);
@@ -52,22 +55,41 @@ public class TraceMission : MonoBehaviour
                     if (c.id == 0)
                     {
                         // �I�s MissionWinSystem �� A()
+                        HasCatch = true;
                         MissionWinSystem.Instance.Catch(playerId);
                     }
                     else if (c.id == 1)
                     {
                         // �I�s MissionWinSystem �� B()
+                        HasSteal = true;
                         MissionWinSystem.Instance.Steal(playerId);
                     }
                     else if (c.id == 2)
                     {
                         // �I�s MissionWinSystem �� B()
+                        HasFight = true;
                         MissionWinSystem.Instance.Fight(playerId);
                     }
                 }
             }
 
             index++;
+        }
+        
+        if (HasCatch == false)
+        {
+            MissionWinSystem.Instance.Catch(-1);
+            Debug.Log("Catch_Lost");
+        }
+        if (HasSteal == false)
+        {
+            MissionWinSystem.Instance.Steal(-1);
+            Debug.Log("Steal_Lost");
+        }
+        if (HasFight == false)
+        {
+            MissionWinSystem.Instance.Fight(-1);
+            Debug.Log("Fight_Lost");
         }
     }
 }

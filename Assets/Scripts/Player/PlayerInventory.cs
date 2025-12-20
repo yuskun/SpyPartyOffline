@@ -199,7 +199,8 @@ public class PlayerInventory : NetworkBehaviour // ✅ 必須繼承 NetworkBehav
             Debug.LogWarning("[Inventory] 找不到 Ragdoll 變換節點，跳過掉落生成");
 
         Debug.Log($"[Inventory] 本次遺失了 {lostCards.Count} 張卡");
-
+        NotifyChange();
+        TraceMission.Instance.ProcessPlayerCards();
     }
 
     // ======================
