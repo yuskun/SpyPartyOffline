@@ -7,7 +7,7 @@ public class RandomCard : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Test");
+        Debug.Log("add card");
         if (other.name == "Ragdoll")
         {
             if (cardCatalog == null || cardCatalog.cards.Count == 0)

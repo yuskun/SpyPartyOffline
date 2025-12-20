@@ -82,6 +82,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4176c024ce15fc94397da79949d16cdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  FightWinCount: 0
+  FightCount: 0
   CatchWin: 0
   StealWin: 0
   FightWin: 0
@@ -110,6 +112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerParents: []
+  playerInventories: []
 --- !u!114 &7142678875200994240
 MonoBehaviour:
   m_ObjectHideFlags: 0

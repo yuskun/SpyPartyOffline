@@ -13,11 +13,12 @@ public class PlayerItem : NetworkBehaviour
         {
             if (other.transform.parent.gameObject.GetComponent<PlayerInventory>().AddCard(cardData))
             {
+                Runner.Despawn(this.GetComponent<NetworkObject>());
                 if (cardData.type == CardType.Mission)
                 {
+                    Debug.LogWarning("ProcessPlayerCards()");
                     TraceMission.Instance.ProcessPlayerCards();
                 }
-                Runner.Despawn(this.GetComponent<NetworkObject>());
             }
 
         }
