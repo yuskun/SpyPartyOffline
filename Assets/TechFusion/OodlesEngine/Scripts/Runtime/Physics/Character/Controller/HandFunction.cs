@@ -102,12 +102,20 @@ namespace OodlesEngine
 
         public void AddWeapon(GameObject weaponPrefab)
         {
-            // 1️⃣ 生成實例
+            // 如果手上已經有東西，先釋放
+            if (hasJoint || GrabbedObject != null)
+            {
+                ReleaseHand();
+            }
+
+            // 1️⃣ 生成武器
             GameObject weapon = Instantiate(weaponPrefab);
+
             WeaponHandler wh = weapon.GetComponentInChildren<WeaponHandler>(true);
             if (wh == null)
             {
-                Debug.LogError($"[AddWeapon] {weaponPrefab.name} 沒有 WeaponHandler！");
+                Debug.LogError($"[AddWeapon] {weaponPrefab.name} 沒有 WeaponHandler");
+                Destroy(weapon);
                 return;
             }
 
@@ -116,18 +124,40 @@ namespace OodlesEngine
             Weapon wp = wh.wepon;
             Rigidbody rb = wp.GetComponent<Rigidbody>();
 
-            // 3️⃣ 關閉渲染與碰撞（新增的武器預設為隱藏）
+            // 3️⃣ 啟用渲染與碰撞（直接顯示）
             foreach (var r in rb.GetComponentsInChildren<Renderer>(true))
-                r.enabled = false;
+                r.enabled = true;
             foreach (var c in rb.GetComponentsInChildren<Collider>(true))
-                c.enabled = false;
+                c.enabled = true;
 
-            rb.isKinematic = true;
-            rb.useGravity = false;
+            // 4️⃣ 對齊手的位置
+            rb.transform.position = transform.position;
+            rb.transform.rotation = transform.rotation * Quaternion.Euler(0, 0, -90);
+            Physics.SyncTransforms();
 
-            // 4️⃣ 加入清單
-            weaponList.Add(rb);
-            Debug.Log($"📦 [AddWeapon] {handSide} 新增武器 {weapon.name}，目前共有 {weaponList.Count} 把。");
+            // 5️⃣ 設定物理
+            rb.isKinematic = false;
+            rb.useGravity = true;
+
+            // 6️⃣ 綁 FixedJoint
+            FixedJoint fj = gameObject.AddComponent<FixedJoint>();
+            fj.breakForce = Mathf.Infinity;
+            fj.connectedBody = rb;
+
+            // 7️⃣ 設定狀態
+            catchJoint = fj;
+            hasJoint = true;
+            GrabbedObject = rb;
+
+            // 8️⃣ 通知事件系統
+            EventBetter.Raise(new GrabObjectMessage()
+            {
+                pc = oodlesCharacter,
+                hf = this,
+                obj = rb.gameObject
+            });
+
+            Debug.Log($"🖐️ [AddWeapon] {handSide} 直接拿起武器 {weapon.name}");
         }
 
         // ===========================================================

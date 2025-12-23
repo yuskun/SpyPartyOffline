@@ -463,6 +463,7 @@ MonoBehaviour:
   - {fileID: 225924283425225505}
   - {fileID: 2323446121118928649}
   AllowAttack: 0
+  WeaponPrefab: {fileID: 4007593398365635647, guid: c94867057fa5ea8428f69303707be401, type: 3}
   handFunctionRight: {fileID: 3246926298920272550}
   handFunctionLeft: {fileID: 261866802288766594}
   ignoreGroundCheckOn:
@@ -4472,6 +4473,7 @@ MonoBehaviour:
   hasJoint: 0
   GrabbedObject: {fileID: 0}
   catchJoint: {fileID: 0}
+  isWeaponHidden: 0
 --- !u!114 &6183996173049486068
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4676,6 +4678,7 @@ MonoBehaviour:
   hasJoint: 0
   GrabbedObject: {fileID: 0}
   catchJoint: {fileID: 0}
+  isWeaponHidden: 0
 --- !u!114 &5590480385122713464
 MonoBehaviour:
   m_ObjectHideFlags: 0

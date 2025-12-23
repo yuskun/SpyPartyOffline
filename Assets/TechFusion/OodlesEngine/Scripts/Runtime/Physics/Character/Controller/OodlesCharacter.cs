@@ -108,14 +108,7 @@ namespace OodlesEngine
             {
                 handFunctionRight.AddWeapon(WeaponPrefab);
             }
-            if (Input.GetKeyDown(KeyCode.L))
-            {
-                handFunctionRight.ShowWeapon(1);
-            }
-              if(Input.GetKeyDown(KeyCode.K))
-            {
-                handFunctionRight.HideWeapon();
-            }
+         
         }
 
         public void ChangeSkin(int skinColor)
