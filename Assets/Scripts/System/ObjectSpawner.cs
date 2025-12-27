@@ -9,6 +9,9 @@ public class ObjectSpawner : MonoBehaviour
     [Header("要生成的 Prefab")]
     [SerializeField] private GameObject prefabToSpawn;
     [SerializeField] private GameObject PlayerItem;
+    [SerializeField] private List<GameObject> WeaponItem;
+
+
 
 
     [Header("生成區域 (可放多個 Collider)")]
@@ -38,6 +41,7 @@ public class ObjectSpawner : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+   
     }
 
     private void FixedUpdate()
@@ -95,6 +99,23 @@ public class ObjectSpawner : MonoBehaviour
         spawnPosition = Vector3.zero;
         return false;
     }
+    GameObject GetRandomSpawnPrefab()
+    {
+        // 70% 普通道具，30% 武器（比例你可自己調）
+        float roll = Random.value;
+
+        if (roll < 0.7f)
+        {
+            return prefabToSpawn;
+        }
+        else
+        {
+            if (WeaponItem == null || WeaponItem.Count == 0)
+                return prefabToSpawn;
+
+            return WeaponItem[Random.Range(0, WeaponItem.Count)];
+        }
+    }
     public void RandomSpawnObject()
     {
         if (prefabToSpawn == null || spawnAreas.Count == 0)
@@ -116,15 +137,17 @@ public class ObjectSpawner : MonoBehaviour
                 Collider area = spawnAreas[Random.Range(0, spawnAreas.Count)];
                 if (TryFindGroundPosition(area, out Vector3 pos))
                 {
-                    GameObject newObj = NetworkManager.instance._runner.Spawn(prefabToSpawn, pos, null, null, (runner, obj) =>
-        {
-            if (obj.GetComponent<SetPosition>() != null)
-                obj.GetComponent<SetPosition>().Setpos(pos);
+                    GameObject spawnPrefab = GetRandomSpawnPrefab();
 
+                    GameObject newObj =
+                        NetworkManager.instance._runner
+                        .Spawn(spawnPrefab, pos, Quaternion.identity, null,
+                        (runner, obj) =>
+                        {
+                            if (obj.GetComponent<SetPosition>() != null)
+                                obj.GetComponent<SetPosition>().Setpos(pos);
+                        }).gameObject;
 
-
-        }).gameObject;
-                    // GameObject newObj = Instantiate(prefabToSpawn, pos, Quaternion.identity).gameObject;
                     spawnedObjects.Add(newObj);
                     spawned = true;
                 }

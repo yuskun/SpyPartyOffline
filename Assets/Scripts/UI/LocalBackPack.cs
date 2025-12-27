@@ -166,6 +166,10 @@ public class LocalBackpack : MonoBehaviour
                 }
             }
         }
+        if(Input.GetMouseButtonDown(1))
+        {
+          
+        }
     }
 
     public void DisableInteractable()

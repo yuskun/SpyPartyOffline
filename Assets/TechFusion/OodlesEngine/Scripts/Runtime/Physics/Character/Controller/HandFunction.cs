@@ -97,10 +97,10 @@ namespace OodlesEngine
             hasJoint = false;
             GrabbedObject = null;
 
-            Debug.Log($"🗑️ [ReleaseHand] {handSide} hand released and destroyed weapon");
+           
         }
 
-        public void AddWeapon(GameObject weaponPrefab)
+        public void AddWeapon(GameObject weapon)
         {
             // 如果手上已經有東西，先釋放
             if (hasJoint || GrabbedObject != null)
@@ -109,12 +109,12 @@ namespace OodlesEngine
             }
 
             // 1️⃣ 生成武器
-            GameObject weapon = Instantiate(weaponPrefab);
+        
 
             WeaponHandler wh = weapon.GetComponentInChildren<WeaponHandler>(true);
             if (wh == null)
             {
-                Debug.LogError($"[AddWeapon] {weaponPrefab.name} 沒有 WeaponHandler");
+                Debug.LogError($"[AddWeapon] {weapon.name} 沒有 WeaponHandler");
                 Destroy(weapon);
                 return;
             }

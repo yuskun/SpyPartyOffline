@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Fusion;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ namespace OodlesEngine
         [HideInInspector]
         public ConfigurableJoint[] joints;
         public bool AllowAttack = false;
-        public GameObject WeaponPrefab;
+
 
         [HideInInspector] public HandFunction handFunctionRight, handFunctionLeft;
 
@@ -102,14 +103,7 @@ namespace OodlesEngine
             InitEffects();
             InitStateMachine();
         }
-        public void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.P))
-            {
-                handFunctionRight.AddWeapon(WeaponPrefab);
-            }
-         
-        }
+
 
         public void ChangeSkin(int skinColor)
         {
@@ -294,7 +288,7 @@ namespace OodlesEngine
         {
             // if (energyLeftTime > 0.1)
             // {
-                movement.moveSpeed = moveForce * runSpeedTimes;
+            movement.moveSpeed = moveForce * runSpeedTimes;
             // }
             // else
             // {
@@ -414,7 +408,7 @@ namespace OodlesEngine
             handFunctionRight.ReleaseHand();
             this.GetComponent<PlayerInventory>().LostCard();
         }
-       
+
 
         public void SyncAnimator()
         {
@@ -731,6 +725,7 @@ namespace OodlesEngine
             else
             {
                 pickUpInput = false;
+
             }
 
             if (leftPicking)
@@ -756,22 +751,18 @@ namespace OodlesEngine
 
         public void UpdateAttack()
         {
-            if (AllowAttack)
-            {
-                if (inputState.fire1Axis > 0)
-                {
-                    //if (!attackInput)
-                    {
-                        animatorPlayer.SetTrigger("Attack");
-                    }
 
-                    attackInput = true;
-                }
-                else
-                {
-                    attackInput = false;
-                }
+            if (inputState.fire2Axis > 0 && (HoldWeapon() || AllowAttack))
+            {
+
+                animatorPlayer.SetTrigger("Attack");
+                attackInput = true;
             }
+            else
+            {
+                attackInput = false;
+            }
+
         }
         public void Attack()
         {

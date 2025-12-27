@@ -3557,7 +3557,6 @@ MonoBehaviour:
   - {fileID: 720474238}
   - {fileID: 764076459}
   AllowAttack: 1
-  WeaponPrefab: {fileID: 0}
   handFunctionRight: {fileID: 764076456}
   handFunctionLeft: {fileID: 128349826}
   ignoreGroundCheckOn:
@@ -5939,7 +5938,6 @@ MonoBehaviour:
   - {fileID: 7694508381650501252}
   - {fileID: 6366219628394508307}
   AllowAttack: 0
-  WeaponPrefab: {fileID: 0}
   handFunctionRight: {fileID: 6366219628394508304}
   handFunctionLeft: {fileID: 3784145299864214877}
   ignoreGroundCheckOn:
@@ -9067,7 +9065,6 @@ MonoBehaviour:
   - {fileID: 235073501}
   - {fileID: 131466016}
   AllowAttack: 1
-  WeaponPrefab: {fileID: 0}
   handFunctionRight: {fileID: 131466013}
   handFunctionLeft: {fileID: 1642878476}
   ignoreGroundCheckOn:
@@ -18534,7 +18531,6 @@ MonoBehaviour:
   - {fileID: 6555922082814148695}
   - {fileID: 5116334091778033181}
   AllowAttack: 0
-  WeaponPrefab: {fileID: 0}
   handFunctionRight: {fileID: 5116334091778033178}
   handFunctionLeft: {fileID: 3824452698897579153}
   ignoreGroundCheckOn:
@@ -24388,7 +24384,6 @@ MonoBehaviour:
   - {fileID: 7499827409322854156}
   - {fileID: 7756077170406455316}
   AllowAttack: 0
-  WeaponPrefab: {fileID: 0}
   handFunctionRight: {fileID: 7756077170406455313}
   handFunctionLeft: {fileID: 8760160587289249223}
   ignoreGroundCheckOn:
@@ -42983,7 +42978,6 @@ MonoBehaviour:
   - {fileID: 751549829}
   - {fileID: 1191280954}
   AllowAttack: 1
-  WeaponPrefab: {fileID: 0}
   handFunctionRight: {fileID: 1191280951}
   handFunctionLeft: {fileID: 1569504156}
   ignoreGroundCheckOn:
@@ -70989,7 +70983,6 @@ MonoBehaviour:
   - {fileID: 5078884021888280548}
   - {fileID: 4969675132121713456}
   AllowAttack: 0
-  WeaponPrefab: {fileID: 0}
   handFunctionRight: {fileID: 4969675132121713453}
   handFunctionLeft: {fileID: 7724024708916810278}
   ignoreGroundCheckOn:
@@ -75983,7 +75976,6 @@ MonoBehaviour:
   - {fileID: 76321168}
   - {fileID: 1144100337}
   AllowAttack: 1
-  WeaponPrefab: {fileID: 0}
   handFunctionRight: {fileID: 1144100336}
   handFunctionLeft: {fileID: 806009944}
   ignoreGroundCheckOn:
