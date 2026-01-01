@@ -10,7 +10,7 @@ public class NetworkPlayer : NetworkBehaviour
 {
     [Networked]
     public PlayerRef PlayerId { get; set; }
-    public bool AllowInput=true;
+    public bool AllowInput = true;
     public float freezeTimer = 1f; // 凍結計時器，初始值為3秒
     private OodlesCharacter characterController;
     public override void Spawned()
@@ -48,23 +48,34 @@ public class NetworkPlayer : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        if (!AllowInput) return;
+        if (!AllowInput)
+            return;
 
-        // Runner.DeltaTime 是每個網路 Tick 的時間
+        // 遊戲規則凍結（OK）
         if (freezeTimer > 0f)
         {
             freezeTimer -= Runner.DeltaTime;
-            return; // 還在凍結 → 不處理輸入
+            return;
         }
 
-        if (Object.HasStateAuthority) // Host 負責模擬
-        {
-            if (Runner.TryGetInputForPlayer(PlayerId, out OodlesCharacterInput data))
-            {
-                characterController.ProcessInput(data);
+        //  只讓 Host 模擬
+        if (!Object.HasStateAuthority)
+            return;
 
+        if (Runner.TryGetInputForPlayer(PlayerId, out OodlesCharacterInput data))
+        {
+            // ====== 關鍵：丟掉過期輸入 ======
+            int currentTick = Runner.Tick;   // Fusion.Tick 可直接當 int 用
+            int inputTick = data.tick;
+
+            if (currentTick - inputTick > 2)
+            {
+                // 過期輸入 → 直接忽略
+                return;
             }
 
+            // ====== 只有新鮮輸入才進物理 ======
+            characterController.ProcessInput(data);
         }
 
     }

@@ -35,7 +35,7 @@ public class MenuUIManager : MonoBehaviour
 
     void Start()
     {
-        NetworkManager.instance.PlayerName = PlayerNameInput.text;
+
         Menu.SetActive(true);
         Gameroom.SetActive(false);
         BulidOrJoin.SetActive(false);
@@ -84,5 +84,9 @@ public class MenuUIManager : MonoBehaviour
 
         LocalBackpack.Instance.userInventory.gameObject.GetComponent<NetworkPlayer>().AllowInput = allow;
 
+    }
+    public void SetPlayerName()
+    {
+        NetworkManager.instance.PlayerName = PlayerNameInput.text;
     }
 }

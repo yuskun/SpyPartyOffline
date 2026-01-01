@@ -362,7 +362,7 @@ public class InventoryInspectorWindow : EditorWindow
     private static CardData ToData(Card c)
     {
         // 目前 Card 沒有 cooldown，維持 0f；若未來加欄位，在此一併映射
-        return new CardData(c.cardData.id, c.cardData.type, 0f);
+        return new CardData( c.cardData.cardId,c.cardData.id, c.cardData.type, 0f);
     }
 
     // ====== 搜尋/映射工具 ======

@@ -11,13 +11,15 @@ public class Card : ScriptableObject
 [System.Serializable]
 public struct CardData : INetworkStruct
 {
+    public int cardId;
     public int id;
     public CardType type;
     public float cooldown;
 
     // 建構子
-    public CardData(int id, CardType type, float cooldown)
+    public CardData(int cardId, int id, CardType type, float cooldown)
     {
+        this.cardId = cardId;
         this.id = id;
         this.type = type;
         this.cooldown = cooldown;
@@ -26,7 +28,7 @@ public struct CardData : INetworkStruct
     // 取得一個「空卡」的靜態方法
     public static CardData Empty()
     {
-        return new CardData(-1, CardType.None, 0f);
+        return new CardData(-1, -1, CardType.None, 0f);
     }
 
     // 判斷是否為空

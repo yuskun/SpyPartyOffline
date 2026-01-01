@@ -6,6 +6,7 @@ using System;
 using UnityEngine.SceneManagement;
 using OodlesEngine;
 using System.Linq;
+using System.Threading.Tasks;
 
 public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -15,6 +16,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     public NetworkObject gameManager;
     private SessionInfo RandomSeseion;
     public GameObject GameScene;
+    private bool isClientJoining = false;
 
 
     public string PlayerName;
@@ -37,80 +39,91 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     async void StartGame(GameMode mode)
     {
+        // 1️⃣ Runner 初始化（只做一次）
         if (_runner == null)
         {
             _runner = gameObject.AddComponent<NetworkRunner>();
             _runner.ProvideInput = true;
             _runner.AddCallbacks(this);
-
+            gameObject.AddComponent<NetworkSceneManagerDefault>();
         }
+
         MenuUIManager.instance.showUI(MenuUIManager.instance.LoadingScreen);
-        var Lobby = await _runner.JoinSessionLobby(SessionLobby.ClientServer, null);
-        if (!Lobby.Ok)
+
+        // 2️⃣ 進 Lobby（不假設 SessionList 已存在）
+        var lobbyResult = await _runner.JoinSessionLobby(SessionLobby.ClientServer);
+        if (!lobbyResult.Ok)
         {
+            Debug.LogError("❌ Join Lobby 失敗");
             await _runner.Shutdown();
             MenuUIManager.instance.showUI(MenuUIManager.instance.Menu);
             return;
         }
 
-
-
-        var scene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex);
-        var sceneInfo = new NetworkSceneInfo();
-        if (scene.IsValid)
-        {
-            sceneInfo.AddSceneRef(scene, LoadSceneMode.Single);
-        }
-
+        // 3️⃣ Host / Client 分流
         if (mode == GameMode.Host)
         {
-            var result = await _runner.StartGame(new StartGameArgs()
-            {
-                GameMode = mode,
-                SessionName = "TestRoom",
-                Scene = scene,
-                SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
-                IsVisible = true,
-                IsOpen = true,
-
-            });
-
-            if (result.Ok)
-            {
-                MenuUIManager.instance.ShowGameroom(mode);
-                MenuUIManager.instance.CloseAi();
-                Debug.Log("✅ 建立房間成功");
-                Instantiate(HostSystem);
-                var OBJ = _runner.Spawn(gameManager);
-                OBJ.GetComponent<GameManager>().GameScene = GameScene;
-
-            }
+            await StartAsHostInternal();
         }
-        else if (mode == GameMode.Client)
+        else
         {
-            if (RandomSeseion == null)
-            {
-                Debug.Log("❌ 沒有可加入的房間");
-                MenuUIManager.instance.showUI(MenuUIManager.instance.Menu);
-                return;
-            }
-            var result = await _runner.StartGame(new StartGameArgs()
-            {
-                GameMode = GameMode.Client,              // ✅ 固定為 Client
-                SessionName = RandomSeseion.Name,                 // ✅ 使用該房名稱
-                SceneManager = _runner.GetComponent<NetworkSceneManagerDefault>()
-            });
-            if (result.Ok)
-            {
-                MenuUIManager.instance.ShowGameroom(mode);
-                MenuUIManager.instance.CloseAi();
-            }
-            else
-                Debug.LogError($"❌ 加入失敗：{result.ShutdownReason}");
-
+            // Client 不在這裡直接 StartGame
+            Debug.Log("🟡 Client 已進 Lobby，等待房間列表");
         }
 
     }
+    async void JoinAsClientInternal()
+    {
+        var result = await _runner.StartGame(new StartGameArgs()
+        {
+            GameMode = GameMode.Client, 
+            SessionName = RandomSeseion.Name,
+            SceneManager = GetComponent<NetworkSceneManagerDefault>()
+        });
+
+        if (!result.Ok)
+        {
+            Debug.LogError($"❌ Client 加入失敗：{result.ShutdownReason}");
+            isClientJoining = false;
+            return;
+        }
+
+        Debug.Log("✅ Client 成功加入房間");
+
+        MenuUIManager.instance.ShowGameroom(GameMode.Client);
+        MenuUIManager.instance.CloseAi();
+    }
+    async Task StartAsHostInternal()
+    {
+        var scene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex);
+
+        var result = await _runner.StartGame(new StartGameArgs()
+        {
+            GameMode = GameMode.Host,
+            SessionName = Guid.NewGuid().ToString(),
+            Scene = scene,
+            SceneManager = GetComponent<NetworkSceneManagerDefault>(),
+            IsVisible = true,
+            IsOpen = true
+        });
+
+        if (!result.Ok)
+        {
+            Debug.LogError("❌ Host StartGame 失敗");
+            return;
+        }
+
+        Debug.Log("✅ 建立房間成功");
+
+        MenuUIManager.instance.ShowGameroom(GameMode.Host);
+        MenuUIManager.instance.CloseAi();
+
+        Instantiate(HostSystem);
+
+        var obj = _runner.Spawn(gameManager);
+        obj.GetComponent<GameManager>().GameScene = GameScene;
+    }
+
     public void StartAsHost() => StartGame(GameMode.Host);
     public void StartAsClient() => StartGame(GameMode.Client);
 
@@ -184,7 +197,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
                      InputManager.Get().GetRightHandUse(),
                      InputManager.Get().GetDoAction1(),
                      InputManager.Get().GetCameraLook(),
-                     Time.fixedDeltaTime, 0);
+                     Time.fixedDeltaTime, runner.Tick);
 
         input.Set(pci);
     }
@@ -202,25 +215,20 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
 
+        if (isClientJoining) return;
 
-        if (sessionList.Count > 0)
+        var target = sessionList.FirstOrDefault(s => s.IsOpen && s.IsVisible);
+        if (target == null)
         {
-            // 隨機挑一個房
-            var target = sessionList[UnityEngine.Random.Range(0, sessionList.Count)];
+            Debug.Log("❌ 沒有可加入的房間");
+            MenuUIManager.instance.showUI(MenuUIManager.instance.Menu);
+            return;
+        }
 
-            if (target.IsOpen && target.IsVisible)
-            {
-                RandomSeseion = target;
-            }
-            else
-            {
-                Debug.Log("⚠️ 找到的房間已關閉或不可見");
-            }
-        }
-        else
-        {
-            Debug.Log("❌ 大廳目前沒有任何可加入的房間");
-        }
+        RandomSeseion = target;
+        isClientJoining = true;
+
+        JoinAsClientInternal();
     }
 
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data)

@@ -11,10 +11,10 @@ namespace OodlesEngine
             set { deltaTime = value; }
         }
             
-        public uint Tick => tick;
+        public int Tick => tick;
         
         public float deltaTime;
-        public uint tick;
+        public int tick;
 
         public float forwardAxis;
         public float leftAxis;
@@ -33,7 +33,7 @@ namespace OodlesEngine
         float fire2Axis,
         float doAction1,
         Vector3 cameraForward,
-        float deltaTime, uint tick)
+        float deltaTime, int tick)
         {
             this.forwardAxis = forwardAxis;
             this.leftAxis = leftAxis;
