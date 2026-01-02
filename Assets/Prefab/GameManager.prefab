@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GameScene: {fileID: 9144972735815448076, guid: 3561a3fa9b68c834ba2ed942940efc65, type: 3}
   AI: {fileID: 2238780322483866809, guid: be21e7aaae1e7f74cad31b81a452e63a, type: 3}
+  AICount: 0
 --- !u!114 &7538684937177334173
 MonoBehaviour:
   m_ObjectHideFlags: 0

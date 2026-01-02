@@ -101,7 +101,7 @@ public class GameManager : NetworkBehaviour
             PlayerSpawner.instance.RefreshSpawnPoints();
             SetSpawnArea();
             SpawnAI();
-            MissionWinSystem.Instance.FightWinCount = Runner.ActivePlayers.Count();
+            MissionWinSystem.Instance.FightWinCount = Runner.ActivePlayers.Count() - 1;
             MissionWinSystem.Instance.ResetFightStats();
 
             AllPlayerTeleport();

@@ -11,6 +11,18 @@ public class MissionUIManager : MonoBehaviour
     private List<int> missionOrder = new List<int>();
     private int focusIndex = 0;
 
+    public static MissionUIManager Instance;
+
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Tab))

@@ -8,7 +8,8 @@ public class MissionWinSystem : MonoBehaviour
     public int FightWinCount;
     public int FightCount;
     private HashSet<OodlesCharacter> knockedTargets = new HashSet<OodlesCharacter>();
-
+    
+    private MissionUIManager missionUIManager;
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -17,6 +18,11 @@ public class MissionWinSystem : MonoBehaviour
             return;
         }
         Instance = this;
+    }
+
+    public void Start()
+    {
+        missionUIManager = GetComponentInParent<MissionUIManager>();
     }
 
     public bool CatchWin = false;
@@ -30,6 +36,7 @@ public class MissionWinSystem : MonoBehaviour
     {
         FightCount = 0;                     // 把計數歸零
         knockedTargets.Clear();            // 清除已擊倒的列表
+        Debug.LogWarning(FightCount+ "/" +  FightWinCount);
     }
     public void GameOver()
     {
@@ -91,6 +98,11 @@ public class MissionWinSystem : MonoBehaviour
             knockedTargets.Add(target); // 記錄對象
             FightCount++;
 
+            if (MissionUIManager.Instance != null)
+        {
+            MissionUIManager.Instance.UpdateMissionProgress(2, 1);
+        }
+        
             // 任務檢查
             if (FightCount == FightWinCount)
             {
