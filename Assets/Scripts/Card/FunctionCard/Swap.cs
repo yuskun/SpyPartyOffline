@@ -7,6 +7,8 @@ public class Swap : FunctionCard
     {
         if (target == null)
             return false;
+        else if (user.CanUse(this.cardData) == false)
+            return false;
 
         int userCount = 0,
             targetCount = 0;
@@ -43,5 +45,6 @@ public class Swap : FunctionCard
                 )
             );
         }
+         User.SetCooldownEnd(this.cardData);
     }
 }

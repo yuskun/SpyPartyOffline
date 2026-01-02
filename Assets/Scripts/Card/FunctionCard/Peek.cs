@@ -7,7 +7,9 @@ public class Peek : FunctionCard
     {
         if (target == null)
             return false;
-        else
+        else if (user.CanUse(this.cardData) == false)
+            return false;
+        else 
             return true;
     }
 
@@ -33,5 +35,6 @@ public class Peek : FunctionCard
                 )
             );
         }
+        User.SetCooldownEnd(this.cardData);
     }
 }

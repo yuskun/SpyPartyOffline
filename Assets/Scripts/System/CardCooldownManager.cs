@@ -4,7 +4,6 @@ using UnityEngine;
 public class CardCooldownManager : NetworkBehaviour
 {
 
-    public CardCatalog cardCatalog;
     [Networked]
     public NetworkDictionary<int, int> CardCooldownEndTick => default;
     void SetCooldownEnd(CardData card)

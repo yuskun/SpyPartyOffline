@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using OodlesEngine;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,7 +14,7 @@ public class LocalBackpack : MonoBehaviour
     public PlayerIdentify playerIdentify;
     public PlayerInventory userInventory; // 本地玩家
     [HideInInspector] public PlayerScanner scanner;
-    
+
 
     public CardUseUIManager cardUseUIManager; // UI 控制器
 
@@ -34,6 +35,7 @@ public class LocalBackpack : MonoBehaviour
                 ButtionData data = new ButtionData();
                 data.button = btn;
                 data.image = btn.transform.Find("CardImage")?.GetComponent<Image>();
+                data.cooldownText = btn.transform.Find("CooldownText")?.GetComponent<TextMeshProUGUI>();
                 data.outline = btn.gameObject.GetComponent<UnityEngine.UI.Outline>();
                 if (data.outline == null) data.outline = btn.gameObject.AddComponent<UnityEngine.UI.Outline>();
                 data.outline.enabled = false;
@@ -52,6 +54,7 @@ public class LocalBackpack : MonoBehaviour
         // ✅ 若關閉則不執行任何更新邏輯
         if (!enableUpdate) return;
 
+        CardCooldownUpdate();
         HandleMouseScroll();
         HandleNumberKeys();
         UpdateButtonHighlight();
@@ -61,6 +64,25 @@ public class LocalBackpack : MonoBehaviour
     public void SetUpdateEnabled(bool state)
     {
         enableUpdate = state;
+    }
+    void CardCooldownUpdate()
+    {
+        for (int i = 0; i < buttons.Count; i++)
+        {
+            float cooldown = userInventory.GetRemainingCooldown(i);
+            if (cooldown > 0)
+            {
+                buttons[i].cooldownText.text = Mathf.CeilToInt(cooldown).ToString();
+                buttons[i].cooldownText.gameObject.SetActive(true);
+                buttons[i].button.interactable = false;
+            }
+            else
+            {
+                buttons[i].cooldownText.text = "";
+                buttons[i].cooldownText.gameObject.SetActive(false);
+                buttons[i].button.interactable = true;
+            }
+        }
     }
 
     // 以下保持原本邏輯不變
@@ -145,9 +167,9 @@ public class LocalBackpack : MonoBehaviour
                     CardUseParameters UseCard = new CardUseParameters();
                     UseCard.Card = data;
                     UseCard.UserId = playerIdentify.PlayerID;
-                     UseCard.UseCardIndex = FocusIndex;
+                    UseCard.UseCardIndex = FocusIndex;
                     GameManager.instance.Rpc_RequestUseCard(UseCard);
-                    
+
                 }
                 else if (card is MissionCard missioncard)
                 {
@@ -162,13 +184,13 @@ public class LocalBackpack : MonoBehaviour
                         UseCard.TargetId = scanner.currentTarget.GetComponent<PlayerIdentify>().PlayerID;
                     }
                     GameManager.instance.Rpc_RequestUseCard(UseCard);
-                    data.cooldown = 5;
+
                 }
             }
         }
-        if(Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1))
         {
-          
+
         }
     }
 
@@ -227,4 +249,5 @@ public class ButtionData
     public Image image;
     public UnityEngine.UI.Outline outline;
     public Shadow shadow;
+    public TextMeshProUGUI cooldownText;
 }

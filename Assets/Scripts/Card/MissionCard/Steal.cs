@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 [CreateAssetMenu(menuName = "Card/MissionCard/Steal")]
 public class Steal : MissionCard
@@ -5,6 +6,8 @@ public class Steal : MissionCard
     public override bool CanUse(PlayerInventory user, PlayerInventory target, CardData card)
     {
         if (target == null)
+            return false;
+        else if (user.CanUse(card) == false)
             return false;
 
         int userCount = 0,
@@ -37,5 +40,6 @@ public class Steal : MissionCard
                 )
             );
         }
+        User.SetCooldownEnd(card);
     }
 }

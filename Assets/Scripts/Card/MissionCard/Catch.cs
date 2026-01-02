@@ -5,7 +5,7 @@ public class Catch : MissionCard
     public Card targetCard;
       public override bool CanUse(PlayerInventory user, PlayerInventory target, CardData card)
     {
-        if (target == null&& card.cooldown <= 0)
+        if (target == null && user.CanUse(card) == false)
             return false;
         return true;
     }
@@ -23,6 +23,10 @@ public class Catch : MissionCard
             MissionWinSystem.Instance.CatchWin = true;
             MissionWinSystem.Instance.GameOver();
         }
+        else
+        {
+            PlayerInventoryManager.Instance.GetPlayer(parameters.UserId).GetComponent<PlayerInventory>().SetCooldownEnd(parameters.Card);
+        }
          if (CardHistoryManager.Instance != null)
         {
             CardHistoryManager.Instance.Record(
@@ -36,6 +40,7 @@ public class Catch : MissionCard
                 )
             );
         }
+        
         
     }
 }

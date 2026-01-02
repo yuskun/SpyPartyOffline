@@ -7,25 +7,17 @@ public class PlayerInventory : NetworkBehaviour // ✅ 必須繼承 NetworkBehav
 {
     public const int MaxSlots = 6; // 6 格背包
 
-    // ✅ NetworkArray 正確宣告方式（不能 new；由 Fusion 負責分配）
-    // ⚠️ 前提：CardData 為 [NetworkStruct] 的 struct，且可被序列化
     [Networked, OnChangedRender(nameof(NotifyChange)), Capacity(MaxSlots)]
     public NetworkArray<CardData> slotsNetworked => default;
 
     public CardData[] slots = new CardData[MaxSlots];
 
-    // ✅ 版本號：Host 每次改動背包時自增，Client 用來觸發本地 UI 更新
-
-
-    // ⬇︎ 僅本地端用來判斷是否需要重繪 UI（不會同步）
-
     public List<CardData> lostCards = new List<CardData>();
 
 
-    // ✅ 在 Spawned() 初始化，確保網路一致
     public override void Spawned()
     {
-        
+
         if (Object.HasStateAuthority) // 只有 Host 初始化欄位，Client 會自動收到同步值
         {
             for (int i = 0; i < MaxSlots; i++)
@@ -88,6 +80,7 @@ public class PlayerInventory : NetworkBehaviour // ✅ 必須繼承 NetworkBehav
 
         slotsNetworked.Set(index, newCard);
         Debug.Log($"[Inventory] 置換第 {index} 格為: {newCard.type}, ID={newCard.id}");
+        NotifyChange();
 
     }
 
@@ -202,12 +195,6 @@ public class PlayerInventory : NetworkBehaviour // ✅ 必須繼承 NetworkBehav
         NotifyChange();
         TraceMission.Instance.ProcessPlayerCards();
     }
-
-    // ======================
-    // 🔽 內部輔助：修訂版本 + 本地 UI 更新
-    // ======================
-
-    /// <summary>Host 端修改後：增加版本號並提示本地 UI 更新</summary>
     private void NotifyChange()
     {
         Debug.Log("更新UI");
@@ -224,6 +211,38 @@ public class PlayerInventory : NetworkBehaviour // ✅ 必須繼承 NetworkBehav
             slots[i] = slotsNetworked[i];
         }
     }
+    // Cooldown System------------------------------------------------------------------------
+    [Networked, Capacity(10)]
+    public NetworkDictionary<int, int> CardCooldownEndTick => default;
+    public void SetCooldownEnd(CardData card)
+    {
+        if (!Object.HasStateAuthority)
+            return;
 
+        int cooldownTicks =
+            Mathf.CeilToInt(card.cooldown / Runner.DeltaTime);
+
+        int endTick = Runner.Tick + cooldownTicks;
+
+        Debug.Assert(card.cardId >= 0 && card.cardId < 50,
+            $"非法 cardId: {card.cardId}");
+        CardCooldownEndTick.Set(card.cardId, endTick);
+        Debug.Log($"[Inventory] 卡片 {card.type} (ID={card.id}) 進入冷卻，結束於 Tick {endTick}");
+    }
+    public bool CanUse(CardData card)
+    {
+        if (!CardCooldownEndTick.TryGet(card.cardId, out int endTick))
+            return true; // 從未進 CD
+
+        return Runner.Tick >= endTick;
+    }
+    public float GetRemainingCooldown(int index)
+    {
+        if (!CardCooldownEndTick.TryGet(slotsNetworked[index].cardId, out int endTick))
+            return 0f;
+
+        int remainingTicks = Mathf.Max(0, endTick - Runner.Tick);
+        return remainingTicks * Runner.DeltaTime;
+    }
 
 }

@@ -76,7 +76,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         var result = await _runner.StartGame(new StartGameArgs()
         {
-            GameMode = GameMode.Client, 
+            GameMode = GameMode.Client,
             SessionName = RandomSeseion.Name,
             SceneManager = GetComponent<NetworkSceneManagerDefault>()
         });
@@ -214,6 +214,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
+        
 
         if (isClientJoining) return;
 
@@ -221,7 +222,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         if (target == null)
         {
             Debug.Log("❌ 沒有可加入的房間");
-            MenuUIManager.instance.showUI(MenuUIManager.instance.Menu);
+           
             return;
         }
 

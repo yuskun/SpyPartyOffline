@@ -1,6 +1,7 @@
 
 using UnityEngine;
 using Fusion;
+using Unity.VisualScripting;
 
 [CreateAssetMenu(menuName = "Card/ItemCard")]
 public class ItemCard : Card
@@ -60,6 +61,7 @@ public class ItemCard : Card
                 )
             );
         }
+        User.SetCooldownEnd(this.cardData);
         
     }
 }

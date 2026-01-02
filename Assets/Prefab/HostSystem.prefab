@@ -53,7 +53,12 @@ MonoBehaviour:
   PlayerItem: {fileID: 4179703982041739608, guid: 8120e6e7df2882b41b82165c8d82a7dc, type: 3}
   WeaponItem:
   - {fileID: 4007593398365635647, guid: c94867057fa5ea8428f69303707be401, type: 3}
-  spawnAreas: []
+  spawnAreas:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   spawnInterval: 10
   spawnHeightOffset: 0.5
   maxAttempts: 30

@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Card/FunctionCard/Give")]
@@ -7,7 +8,10 @@ public class Give : FunctionCard
     {
         if (target == null)
             return false;
-
+        else if (user.CanUse(this.cardData) == false)
+        {
+            return false;
+        }
         int userCount = 0,
             targetCount = 0;
         foreach (var c in user.slots)
@@ -42,5 +46,6 @@ public class Give : FunctionCard
                 )
             );
         }
+        User.SetCooldownEnd(this.cardData);
     }
 }

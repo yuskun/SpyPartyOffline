@@ -41,7 +41,7 @@ public class ObjectSpawner : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-   
+
     }
 
     private void FixedUpdate()
@@ -76,7 +76,15 @@ public class ObjectSpawner : MonoBehaviour
             // 可視化偵測線（方便 Debug）
             Debug.DrawRay(origin, Vector3.down * (rayHeight * 2), Color.yellow, 2f);
 
-            if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, rayHeight * 2))
+
+            if (Physics.Raycast(
+    origin,
+    Vector3.down,
+    out RaycastHit hit,
+    rayHeight * 2,
+    ~0,
+    QueryTriggerInteraction.Ignore
+))
             {
                 // 🟢 同時支援 Tag 或 Layer
                 bool isGroundTag = hit.collider.CompareTag("SpawnArea");
@@ -214,7 +222,14 @@ public class ObjectSpawner : MonoBehaviour
                 Debug.DrawRay(origin, Vector3.down * (rayHeight * 2), Color.yellow, 2f);
 
                 // 打到任何東西
-                if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, rayHeight * 2))
+                if (Physics.Raycast(
+     origin,
+     Vector3.down,
+     out RaycastHit hit,
+     rayHeight * 2,
+     ~0,
+     QueryTriggerInteraction.Ignore
+ ))
                 {
                     // 🎨 顏色顯示狀態
                     if (hit.collider.CompareTag("SpawnArea"))

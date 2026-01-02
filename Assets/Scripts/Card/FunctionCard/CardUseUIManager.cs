@@ -94,14 +94,9 @@ public class CardUseUIManager : MonoBehaviour
         if (card == null)
             return false;
 
-        if (card is Steal StealCard)
+        if (card is MissionCard MissionCard)
         {
-            if (!StealCard.CanUse(user, target, user.slots[currentUseCardIndex]))
-                return false;
-        }
-        else if (card is Catch CatchCard)
-        {
-            if (!CatchCard.CanUse(user, target, user.slots[currentUseCardIndex]))
+            if (!MissionCard.CanUse(user, target, user.slots[currentUseCardIndex]))
                 return false;
         }
         return true;
