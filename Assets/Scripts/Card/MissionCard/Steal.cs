@@ -40,6 +40,6 @@ public class Steal : MissionCard
                 )
             );
         }
-        User.SetCooldownEnd(card);
+        User.SetCooldownEnd(this.cardData);
     }
 }

@@ -5,7 +5,7 @@ public class Catch : MissionCard
     public Card targetCard;
       public override bool CanUse(PlayerInventory user, PlayerInventory target, CardData card)
     {
-        if (target == null && user.CanUse(card) == false)
+        if (target == null || user.CanUse(card) == false)
             return false;
         return true;
     }
