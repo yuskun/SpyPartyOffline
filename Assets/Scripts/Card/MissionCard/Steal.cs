@@ -7,7 +7,7 @@ public class Steal : MissionCard
     {
         if (target == null)
             return false;
-        else if (user.CanUse(card) == false)
+        else if (user.CanUse(this.cardData) == false)
             return false;
 
         int userCount = 0,
@@ -19,7 +19,7 @@ public class Steal : MissionCard
             if (!c.IsEmpty())
                 targetCount++;
 
-        return userCount <= 5 && targetCount >= 1 && card.cooldown <= 0;
+        return userCount <= 5 && targetCount >= 1 ;
     }
     public override void UseSkill(CardUseParameters parameters)
     {
