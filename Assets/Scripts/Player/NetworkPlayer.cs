@@ -64,15 +64,15 @@ public class NetworkPlayer : NetworkBehaviour
 
         if (Runner.TryGetInputForPlayer(PlayerId, out OodlesCharacterInput data))
         {
-            // ====== 關鍵：丟掉過期輸入 ======
-            int currentTick = Runner.Tick;   // Fusion.Tick 可直接當 int 用
-            int inputTick = data.tick;
+            // // ====== 關鍵：丟掉過期輸入 ======
+            // int currentTick = Runner.Tick;   // Fusion.Tick 可直接當 int 用
+            // int inputTick = data.tick;
 
-            if (currentTick - inputTick > 2)
-            {
-                // 過期輸入 → 直接忽略
-                return;
-            }
+            // if (currentTick - inputTick > 2)
+            // {
+            //     // 過期輸入 → 直接忽略
+            //     return;
+            // }
 
             // ====== 只有新鮮輸入才進物理 ======
             characterController.ProcessInput(data);

@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using Fusion;
 using UnityEngine.UI;
+using System;
 
 public class MenuUIManager : MonoBehaviour
 {
@@ -24,8 +25,8 @@ public class MenuUIManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            if (playerlistmanager == null)
-                DontDestroyOnLoad(gameObject);
+
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -41,6 +42,11 @@ public class MenuUIManager : MonoBehaviour
         BulidOrJoin.SetActive(false);
         LoadingScreen.SetActive(false);
         JoinRoomList.SetActive(false);
+    }
+    void Update()
+    {
+        if (playerlistmanager != null)
+            playerlistmanager.Check();
     }
     public void showUI(GameObject target)
     {
@@ -87,6 +93,9 @@ public class MenuUIManager : MonoBehaviour
     }
     public void SetPlayerName()
     {
-        NetworkManager.instance.PlayerName = PlayerNameInput.text;
+
+
+        NetworkManager.instance.PlayerName = $"Player_{Guid.NewGuid().ToString()[..6]}";
+
     }
 }

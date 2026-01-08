@@ -19,9 +19,9 @@ public class GameManager : NetworkBehaviour
         {
             instance = this;
             MenuUIManager.instance.StartButton.onClick.AddListener(OnHostPressStart);
-            MenuUIManager.instance.missionUIManager.AddMission(new MissionData(1, "切換", "使用Tab切換任務。", 1, new KeyCode[] { KeyCode.Tab }));
-            MenuUIManager.instance.missionUIManager.AddMission(new MissionData(2, "移動", "WASD進行移動。", 4, new KeyCode[] { KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D }));
-            MenuUIManager.instance.missionUIManager.AddMission(new MissionData(3, "跳躍", "Space進行跳躍。", 1, new KeyCode[] { KeyCode.Space }));
+            MenuUIManager.instance.missionUIManager.AddMission(new MissionData(1, "切換", "使用Tab切換任務。", 1));
+            MenuUIManager.instance.missionUIManager.AddMission(new MissionData(2, "移動", "WASD進行移動。", 4));
+            MenuUIManager.instance.missionUIManager.AddMission(new MissionData(3, "跳躍", "Space進行跳躍。", 1));
             countdownTimer = GetComponent<CountdownTimer>();
             DontDestroyOnLoad(gameObject);
         }
@@ -49,8 +49,14 @@ public class GameManager : NetworkBehaviour
         }
     }
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void RPC_Gameover()
+    public void RPC_Gameover(int winnerID)
     {
+        if(LocalBackpack.Instance.userInventory.gameObject.GetComponent<PlayerIdentify>().PlayerID== winnerID)
+        {
+            GameUIManager.Instance.Win();
+            Debug.Log("你贏了！");
+        }
+        else
         GameUIManager.Instance.Gameover();
     }
 
@@ -62,16 +68,7 @@ public class GameManager : NetworkBehaviour
     {
         GameStart();
     }
-    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void RPC_PlayJoinINIT(PlayerRef player, string name)
-    {
-        Debug.Log("TEST");
-        if (Runner.IsServer)
-        {
-            PlayerSpawner.instance.SpawnPlayer(Runner, 2, player, name);
-            MenuUIManager.instance.playerlistmanager.RegisterPlayer(player, name);
-        }
-    }
+
     void SetSpawnArea()
     {
         GameObject[] spawnAreaObjs = GameObject.FindGameObjectsWithTag("SpawnArea");
@@ -101,11 +98,10 @@ public class GameManager : NetworkBehaviour
             PlayerSpawner.instance.RefreshSpawnPoints();
             SetSpawnArea();
             SpawnAI();
-            MissionWinSystem.Instance.FightWinCount = Runner.ActivePlayers.Count() - 1;
-            MissionWinSystem.Instance.ResetFightStats();
-
             AllPlayerTeleport();
             countdownTimer.StartTimer();
+            MissionWinSystem.Instance.FightWinCount = PlayerInventoryManager.Instance.playerInventories.Count-1;
+            MissionWinSystem.Instance.ResetFightStats();
             RandomAssignMissionCard();
             PlayerInventoryManager.Instance.Refresh();
 
@@ -115,9 +111,9 @@ public class GameManager : NetworkBehaviour
     }
     public void SpawnAI()
     {
-        for (int i = 0; i < AICount; i++)
+        for (int i = 0; i < 4 - Runner.ActivePlayers.Count(); i++)
         {
-            PlayerSpawner.instance.SpawnPlayer(Runner, null, PlayerRef.None, "AI");
+            PlayerSpawner.instance.SpawnPlayer(Runner, null, PlayerRef.None, "AI_" + i);
         }
 
     }
@@ -182,21 +178,6 @@ public class GameManager : NetworkBehaviour
 
         Debug.Log("[CardManager] 任務卡公平分配完成 ✅");
     }
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void RPC_UpdateMission(int playerID, int missionID, string Title, string desc, int Value, bool isAdd)
-    {
-        if (LocalBackpack.Instance.userInventory.gameObject.GetComponent<PlayerIdentify>().PlayerID != playerID)
-            return;
-        if (isAdd)
-            GameUIManager.Instance.missionUIManager.AddMission(new MissionData(missionID, Title, desc, Value, null));
-        else
-            GameUIManager.Instance.missionUIManager.RemoveMission(missionID);
-    }
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void RPC_ProgressMission(int playerID, int missionID, int Value)
-    {
-        if (LocalBackpack.Instance.userInventory.gameObject.GetComponent<PlayerIdentify>().PlayerID != playerID)
-            return;
-        GameUIManager.Instance.missionUIManager.UpdateMissionProgress(missionID, Value);
-    }
+    
+ 
 }

@@ -4,8 +4,12 @@ using TMPro;
 
 public class PlayerListManager : NetworkBehaviour
 {
-    [Networked, Capacity(8), OnChangedRender(nameof(RPC_NotifyPlayerListChanged))]
-    public NetworkArray<NetworkString<_16>> PlayerNames { get; }
+    [Networked, Capacity(8)]
+    public NetworkDictionary<int, NetworkString<_16>> PlayerNames { get; }
+    [Networked] public int PlayerVersion { get; set; }
+    public int lastRevision = 0;
+    public GameObject ParentObject;
+    private int Mine;
 
     public Color otherPlayerColor;
     public Color myPlayerColor;
@@ -13,59 +17,62 @@ public class PlayerListManager : NetworkBehaviour
 
     private TextMeshProUGUI[] nameTexts;
 
-    void Awake()
+
+    public override void Spawned()
     {
-        int count = transform.childCount;
+        MenuUIManager.instance.playerlistmanager= this;
+        ParentObject = GameObject.Find("Players");
+        int count = ParentObject.transform.childCount;
         nameTexts = new TextMeshProUGUI[count];
         for (int i = 0; i < count; i++)
         {
-            nameTexts[i] = transform.GetChild(i).GetComponentInChildren<TextMeshProUGUI>(true);
+            nameTexts[i] =  ParentObject.transform.GetChild(i).GetComponentInChildren<TextMeshProUGUI>(true);
             nameTexts[i].text = "空間";
         }
+        PlayerVersion = 0;
     }
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void RPC_NotifyPlayerListChanged()
+    public void Check()
     {
-        OnPlayerListChanged();
-    }
 
+        if (PlayerVersion != lastRevision)
+        {
+            lastRevision = PlayerVersion;
+            OnPlayerListChanged();
+        }
+    }
     public void RegisterPlayer(PlayerRef player, string playerName)
     {
-       
+
         if (!Object.HasStateAuthority)
         {
             Debug.LogWarning("只有 StateAuthority (Host) 才能修改 NetworkArray");
             return;
         }
 
-        for (int i = 0; i < PlayerNames.Length; i++)
+        if (!string.IsNullOrEmpty(playerName))
         {
-            if (string.IsNullOrEmpty(PlayerNames.Get(i).ToString()))
-            {
-                PlayerNames.Set(i, playerName);
-                Debug.Log($"✅ 註冊玩家 {playerName} 到索引 {i}");
-                return;
-            }
+            PlayerNames.Set(player.AsIndex, playerName);
+            Debug.Log($"✅ 註冊玩家 {playerName} 到索引 {player.AsIndex}");
+            PlayerVersion++;
         }
     }
 
     public void OnPlayerListChanged()
     {
         Debug.Log("玩家列表已更新");
-        for (int i = 0; i < nameTexts.Length; i++)
-        {
-            string name = PlayerNames.Get(i).ToString();
+        int Slotindex=0;
 
-            if (string.IsNullOrEmpty(name))
-            {
+        for (int i = 0; i < 8; i++)
+        {
                 nameTexts[i].text = "空間";
                 nameTexts[i].color = Color.black;
-            }
-            else
-            {
-                nameTexts[i].text = name;
-                nameTexts[i].color = name == NetworkManager.instance.PlayerName ? myPlayerColor : otherPlayerColor;
-            }
+        }
+        foreach (var kvp in PlayerNames)
+        {
+            string name = kvp.Value.ToString();
+            nameTexts[Slotindex].text = name;
+            nameTexts[Slotindex].color = kvp.Key == Runner.LocalPlayer.AsIndex ? myPlayerColor : otherPlayerColor;
+            Slotindex++;
         }
     }
 

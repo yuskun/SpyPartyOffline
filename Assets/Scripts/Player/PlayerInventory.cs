@@ -1,14 +1,17 @@
 using System;
 using System.Collections.Generic;
 using Fusion;
+using NUnit.Framework;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerInventory : NetworkBehaviour // ✅ 必須繼承 NetworkBehaviour 才能使用 [Networked]
 {
     public const int MaxSlots = 6; // 6 格背包
 
-    [Networked, OnChangedRender(nameof(NotifyChange)), Capacity(MaxSlots)]
+    [Networked, Capacity(MaxSlots)]
     public NetworkArray<CardData> slotsNetworked => default;
+    [Networked, OnChangedRender(nameof(NotifyChange))] public int InventoryVersion { get; set; }
 
     public CardData[] slots = new CardData[MaxSlots];
 
@@ -26,6 +29,8 @@ public class PlayerInventory : NetworkBehaviour // ✅ 必須繼承 NetworkBehav
             }
             UpdateLocalSlot();  // 本地初始化
             NotifyChange();
+            InventoryVersion = 0;
+            
         }
 
 
@@ -45,6 +50,7 @@ public class PlayerInventory : NetworkBehaviour // ✅ 必須繼承 NetworkBehav
                 slotsNetworked.Set(i, card);
                 Debug.Log($"[Inventory] 加到 {i}: {card.type}, ID={card.id}");
                 NotifyChange();
+                InventoryVersion++;
 
                 return true;
             }
@@ -69,6 +75,8 @@ public class PlayerInventory : NetworkBehaviour // ✅ 必須繼承 NetworkBehav
 
         Debug.Log($"[Inventory] 移除第 {index} 格: {slots[index].type}, ID={slots[index].id}");
         slotsNetworked.Set(index, CardData.Empty());
+        NotifyChange();
+        InventoryVersion++;
 
     }
 
@@ -81,6 +89,7 @@ public class PlayerInventory : NetworkBehaviour // ✅ 必須繼承 NetworkBehav
         slotsNetworked.Set(index, newCard);
         Debug.Log($"[Inventory] 置換第 {index} 格為: {newCard.type}, ID={newCard.id}");
         NotifyChange();
+        InventoryVersion++;
 
     }
 
@@ -126,19 +135,24 @@ public class PlayerInventory : NetworkBehaviour // ✅ 必須繼承 NetworkBehav
     /// <summary>隨機取一張卡（Client 可讀）</summary>
     public CardData RandomGetCard()
     {
-        System.Random rand = new System.Random();
-        int index = rand.Next(0, MaxSlots);
-        if (slots[index].IsEmpty())
+        List<int> validIndices = new List<int>();
+
+        for (int i = 0; i < MaxSlots; i++)
         {
-            for (int i = 0; i < MaxSlots; i++)
-                if (!slots[i].IsEmpty())
-                {
-                    RemoveCard(i);
-                    return slots[i];
-                }
-            return CardData.Empty();
+            if (!slots[i].IsEmpty())
+                validIndices.Add(i);
         }
-        return slots[index];
+
+        if (validIndices.Count == 0)
+            return CardData.Empty();
+
+        int randomIndex = UnityEngine.Random.Range(0, validIndices.Count);
+        int slotIndex = validIndices[randomIndex];
+
+        CardData result = slots[slotIndex];
+        RemoveCard(slotIndex);
+
+        return result;
     }
 
     /// <summary>是否擁有該卡（Client 可讀）</summary>
@@ -193,6 +207,7 @@ public class PlayerInventory : NetworkBehaviour // ✅ 必須繼承 NetworkBehav
 
         Debug.Log($"[Inventory] 本次遺失了 {lostCards.Count} 張卡");
         NotifyChange();
+        InventoryVersion++;
         TraceMission.Instance.ProcessPlayerCards();
     }
     private void NotifyChange()
@@ -244,5 +259,11 @@ public class PlayerInventory : NetworkBehaviour // ✅ 必須繼承 NetworkBehav
         int remainingTicks = Mathf.Max(0, endTick - Runner.Tick);
         return remainingTicks * Runner.DeltaTime;
     }
+    //Mission UI------------------------------------------------------------------------
+    [Networked, Capacity(20)]
+    public NetworkDictionary<int, int> MissionStates => default;
+   
+   
+
 
 }

@@ -40,8 +40,7 @@ public class Give : FunctionCard
                     parameters.UserId,
                     parameters.TargetId,
                     "give",
-                    CardType.Function,
-                    null
+                    CardType.Function
                 //result
                 )
             );

@@ -59,7 +59,7 @@ public class PlayerSpawner : MonoBehaviour
         {
             spawnPoints[i] = spawnPointObjects[i].transform;
         }
-        Debug.Log(spawnPointObjects.Length);
+       
     }
 
 }

@@ -25,8 +25,24 @@ public class MissionUIManager : MonoBehaviour
 
     void Update()
     {
+        foreach(var Mission in LocalBackpack.Instance.userInventory.MissionStates)
+        {
+             UpdateMissions(Mission.Key, Mission.Value);
+        }
+        
         if (Input.GetKeyDown(KeyCode.Tab))
             FocusNextMission();
+    }
+    public void UpdateMissions(int missionID,int addValue)
+    {
+        if (missionDict.ContainsKey(missionID))
+        {
+            UpdateMissionProgress(missionID, addValue);
+           
+        }else
+        {
+            AddMission(CardManager.Instance.GetMissionCard(missionID).data);
+        }
     }
 
     // ✅ 新增任務

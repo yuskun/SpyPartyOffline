@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 [CreateAssetMenu(menuName = "Card/MissionCard/Catch")]
 public class Catch : MissionCard
@@ -21,6 +22,7 @@ public class Catch : MissionCard
         if (PlayerInventoryManager.Instance.GetPlayer(parameters.TargetId).GetComponent<PlayerInventory>().HasCard(targetCard.cardData))
         {
             MissionWinSystem.Instance.CatchWin = true;
+            PlayerInventoryManager.Instance.GetPlayer(parameters.UserId).GetComponent<PlayerInventory>().MissionStates.Set(this.cardData.id, 1);
             MissionWinSystem.Instance.GameOver();
         }
         else
@@ -34,8 +36,7 @@ public class Catch : MissionCard
                     parameters.UserId,
                     parameters.TargetId,
                     "Catch",
-                    CardType.Mission,
-                    null
+                    CardType.Mission
                     //result
                 )
             );

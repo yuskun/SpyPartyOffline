@@ -29,7 +29,7 @@ namespace OodlesEngine
         void Update()
         {
 
-            if (Input.GetKeyDown(KeyCode.Tab))
+            if (Input.GetKeyDown(KeyCode.LeftAlt))
             {
                 if (Cursor.lockState == CursorLockMode.Locked)
                 {
@@ -245,6 +245,11 @@ namespace OodlesEngine
             if (msg.obj.layer == LayerMask.NameToLayer(player))
             {
                 OodlesCharacter targetPC = msg.obj.GetComponentInParent<OodlesCharacter>();
+                if(msg.pc.gameObject.GetComponent<PlayerIdentify>().PlayerID == MissionWinSystem.Instance.GetFightID())
+                {
+                    // 檢查是否已經擊倒過這個 target
+                    MissionWinSystem.Instance.UpdateFightCount(targetPC);
+                }
                 if (targetPC != null)
                 {
                     targetPC.KnockDown();

@@ -48,7 +48,7 @@ public class TraceMission : MonoBehaviour
 
             foreach (var c in cards)
             {
-                Debug.Log($"PlayerID {playerId} CARD: id={c.id}, type={c.type}");
+                // Debug.Log($"PlayerID {playerId} CARD: id={c.id}, type={c.type}");
 
                 if (c.type == CardType.Mission)
                 {

@@ -42,7 +42,7 @@ public class CardHistoryEntry
     /// - Trigger�GĲ�o���]�Ҧp�Y�ƥ�F���ɱҰʡ^  
     /// - Collect�G�������]�ݭn�����S�w����α���^
     /// </summary>
-    public MissionType? missionType; // �i�� null
+     // �i�� null
 
     /// <summary>
     /// CanUse() ���ˬd���G  
@@ -60,13 +60,13 @@ public class CardHistoryEntry
     /// <summary>
     /// �غc�l�A�Ω��l�Ƥ@�����㪺���{���
     /// </summary>
-    public CardHistoryEntry(int userId, int targetId, string cardName, CardType cardType, MissionType? missionType) //, bool canUseResult
+    public CardHistoryEntry(int userId, int targetId, string cardName, CardType cardType) //, bool canUseResult
     {
         this.userId = userId;
         this.targetId = targetId;
         this.cardName = cardName;
         this.cardType = cardType;
-        this.missionType = missionType;
+        ;
         //this.canUseResult = canUseResult;
         this.timeStamp = DateTime.Now; // �۰ʰO�����U�ɶ�
     }

@@ -17,8 +17,7 @@ public class Fight : MissionCard
                     parameters.UserId,
                     parameters.TargetId,
                     "Catch",
-                    CardType.Mission,
-                    null
+                    CardType.Mission
                     //result
                 )
             );

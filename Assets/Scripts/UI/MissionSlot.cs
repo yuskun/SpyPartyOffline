@@ -65,11 +65,5 @@ public class MissionSlot : MonoBehaviour
         data.current = data.goal;
         Refresh();
     }
-    public void Update()
-    {
-        if (data != null && data.triggerKey.Any(key => Input.GetKeyDown(key)))
-        {
-            missionUIManager.UpdateMissionProgress(data.id, 1);
-        }
-    }
+  
 }

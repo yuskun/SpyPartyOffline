@@ -8,6 +8,7 @@ public class GameUIManager : MonoBehaviour
     public static GameUIManager Instance;
 
     public GameObject GameoverText;
+    public GameObject WinText;
     public GameObject HUDUI;
     public TextMeshProUGUI timerText;
     public MissionUIManager missionUIManager;
@@ -20,6 +21,10 @@ public class GameUIManager : MonoBehaviour
     public void Gameover()
     {
         GameoverText.SetActive(true);
+    }
+       public void Win()
+    {
+        WinText.SetActive(true);
     }
    
     

@@ -39,8 +39,7 @@ public class Swap : FunctionCard
                     parameters.UserId,
                     parameters.TargetId,
                     "Swap",
-                    CardType.Function,
-                    null
+                    CardType.Function
                     //result
                 )
             );

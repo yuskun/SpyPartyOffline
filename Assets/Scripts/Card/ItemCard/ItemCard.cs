@@ -55,8 +55,7 @@ public class ItemCard : Card
                     parameters.UserId,
                     parameters.TargetId,
                     name,
-                    CardType.Item,
-                    null
+                    CardType.Item
                     //result
                 )
             );

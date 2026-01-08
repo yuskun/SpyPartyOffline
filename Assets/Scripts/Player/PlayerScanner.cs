@@ -40,7 +40,13 @@ public class PlayerScanner : MonoBehaviour
         currentRagdoll = GetWeightedBestTarget();
         UpdateOutlineState();
         if (currentRagdoll != null)
+        {
             currentTarget = currentRagdoll.transform.parent.gameObject;
+        }
+        else
+        {
+            currentTarget = null;
+        }
     }
 
     private void ScanNearbyPlayers()

@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class MissionCard : Card
 {
-    public MissionType missionType;
-    public int Count;
-    public int totalCount;
+
+
+    public MissionData data;
 
     public virtual bool CanUse(PlayerInventory user, PlayerInventory target, CardData card)
     {
@@ -24,8 +24,4 @@ public class MissionCard : Card
     public virtual void ResetMission(CardUseParameters parameters) { }
 }
 
-public enum MissionType
-{
-    Trigger,
-    Collect,
-}
+

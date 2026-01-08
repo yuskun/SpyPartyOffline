@@ -54,7 +54,7 @@ public struct CardUseParameters : INetworkStruct
     public int TargetSelectIndex;       // 使用者選定的目標玩家卡槽
 }
 [System.Serializable]
-public class MissionData
+public class MissionData: INetworkStruct
 {
     public int id;                // ✅ 任務唯一ID
     public string title;
@@ -63,15 +63,15 @@ public class MissionData
     public int goal;
 
     public bool IsComplete => current >= goal;
-    public KeyCode[] triggerKey;
+    
 
-    public MissionData(int id, string title, string desc, int goal, KeyCode[] triggerKey = null)
+    public MissionData(int id, string title, string desc, int goal)
     {
         this.id = id;
         this.title = title;
         this.description = desc;
         this.goal = goal;
         this.current = 0;
-        this.triggerKey = triggerKey ?? new KeyCode[0];
+        
     }
 }

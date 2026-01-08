@@ -13,6 +13,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     static public NetworkManager instance;
     [HideInInspector] public NetworkRunner _runner;
     public GameObject HostSystem;
+    private GameObject Host;
     public NetworkObject gameManager;
     private SessionInfo RandomSeseion;
     public GameObject GameScene;
@@ -118,7 +119,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         MenuUIManager.instance.ShowGameroom(GameMode.Host);
         MenuUIManager.instance.CloseAi();
 
-        Instantiate(HostSystem);
+        Host = Instantiate(HostSystem);
 
         var obj = _runner.Spawn(gameManager);
         obj.GetComponent<GameManager>().GameScene = GameScene;
@@ -126,6 +127,33 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void StartAsHost() => StartGame(GameMode.Host);
     public void StartAsClient() => StartGame(GameMode.Client);
+    public void Leave() => LeaveRoom();
+    public async void LeaveRoom()
+    {
+        if (_runner == null)
+            return;
+
+        Debug.Log("🔴 離開房間中...");
+
+        MenuUIManager.instance.showUI(MenuUIManager.instance.LoadingScreen);
+
+        // 防止 SessionList callback 又亂觸發
+        isClientJoining = false;
+        RandomSeseion = null;
+        if (Host != null)
+        {
+            Destroy(Host);
+            Host = null;
+        }
+        await _runner.Shutdown(false);
+
+        Destroy(_runner);
+        _runner = null;
+
+        Debug.Log("✅ 已成功離線");
+
+        MenuUIManager.instance.showUI(MenuUIManager.instance.Menu);
+    }
 
     // -------------------------
     // 以下為 INetworkRunnerCallbacks 介面方法的實作
@@ -143,7 +171,13 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        GameManager.instance.RPC_PlayJoinINIT(player, PlayerName);
+        Debug.Log($"🟢 玩家 {player} 已加入");
+        if (_runner.IsServer)
+        {
+            Debug.Log("TEST");
+            PlayerSpawner.instance.SpawnPlayer(_runner, 2, player, PlayerName);
+            MenuUIManager.instance.playerlistmanager.RegisterPlayer(player, PlayerName);
+        }
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
@@ -153,12 +187,13 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
-        throw new NotImplementedException();
+        Debug.Log($"🔴 Runner Shutdown: {shutdownReason}");
     }
 
     public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
     {
-        throw new NotImplementedException();
+        Debug.Log($"🔴 與伺服器斷線: {reason}");
+        LeaveRoom();
     }
 
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
@@ -214,7 +249,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
-        
+
 
         if (isClientJoining) return;
 
@@ -222,7 +257,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         if (target == null)
         {
             Debug.Log("❌ 沒有可加入的房間");
-           
+
             return;
         }
 

@@ -41,6 +41,7 @@ public class ObjectSpawner : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        this.enabled = false;
 
     }
 

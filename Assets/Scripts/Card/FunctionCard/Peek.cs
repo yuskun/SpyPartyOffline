@@ -29,8 +29,7 @@ public class Peek : FunctionCard
                     parameters.UserId,
                     parameters.TargetId,
                     "Peek",
-                    CardType.Function,
-                    null
+                    CardType.Function
                     //result
                 )
             );
