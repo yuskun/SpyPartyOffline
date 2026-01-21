@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: fc13b761e229e9d4b84a3326cd2b5066
+guid: bf13a01f6a848f7459a607baac1ff6ae
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,23 +97,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Create_hover_0
+      name: Back_active_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 840
-        height: 924
+        width: 304
+        height: 304
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 80, y: 80, z: 80, w: 80}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 48, y: 48, z: 48, w: 48}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 11efdd55872f1b641a9f9805c0f534a5
-      internalID: 1696924876
+      spriteID: 6a52391d1f61ad542b7216acc3f47baa
+      internalID: -1135230191
       vertices: []
       indices: 
       edges: []
@@ -122,7 +122,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 70c6b085434940741be432aead0c26d3
+    spriteID: f41de91813eaee0499d1284344a2f6c7
     internalID: 0
     vertices: []
     indices: 
@@ -132,7 +132,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Create_hover_0: 1696924876
+      Back_active_0: -1135230191
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

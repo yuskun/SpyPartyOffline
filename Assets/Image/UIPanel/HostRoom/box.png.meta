@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: fc13b761e229e9d4b84a3326cd2b5066
+guid: 2f19ea59013054748af6507bae31e995
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,23 +97,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Create_hover_0
+      name: box_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 840
-        height: 924
+        width: 576
+        height: 296
       alignment: 0
       pivot: {x: 0, y: 0}
-      border: {x: 80, y: 80, z: 80, w: 80}
+      border: {x: 40, y: 40, z: 40, w: 40}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 11efdd55872f1b641a9f9805c0f534a5
-      internalID: 1696924876
+      spriteID: a109addcd9019a2498ba63c6c08bbb83
+      internalID: -1496700914
       vertices: []
       indices: 
       edges: []
@@ -122,7 +122,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 70c6b085434940741be432aead0c26d3
+    spriteID: ccb3ac97e11323b41aad273736e669dc
     internalID: 0
     vertices: []
     indices: 
@@ -132,7 +132,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Create_hover_0: 1696924876
+      box_0: -1496700914
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
