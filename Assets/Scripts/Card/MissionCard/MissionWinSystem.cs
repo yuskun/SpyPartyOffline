@@ -23,8 +23,9 @@ public class MissionWinSystem : MonoBehaviour
 
     public void Start()
     {
-        missionUIManager = GetComponentInParent<MissionUIManager>();
-        CardManager.Instance.GetMissionCard(2).data.goal = FightCount;
+        GameObject hud = GameObject.Find("HUDMissionlist");
+        missionUIManager = hud.GetComponent<MissionUIManager>();
+       
     }
 
     public bool CatchWin = false;
@@ -100,10 +101,7 @@ public class MissionWinSystem : MonoBehaviour
             knockedTargets.Add(target); // 記錄對象
             FightCount++;
 
-            if (MissionUIManager.Instance != null)
-            {
-                MissionUIManager.Instance.UpdateMissionProgress(2, 1);
-            }
+            PlayerInventoryManager.Instance.playerInventories[FightID].MissionStates.Set(2, 1);
 
             // 任務檢查
             if (FightCount == FightWinCount)

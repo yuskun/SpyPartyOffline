@@ -22,6 +22,11 @@ public class MissionCard : Card
     }
 
     public virtual void ResetMission(CardUseParameters parameters) { }
+    public virtual void UpdateGoal(int newGoal)
+    {
+       data.goal = newGoal;
+       data.current=0;
+    }
 }
 
 

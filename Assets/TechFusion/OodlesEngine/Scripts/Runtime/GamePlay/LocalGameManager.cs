@@ -209,9 +209,11 @@ namespace OodlesEngine
 
         private void OnHandAttack(HandAttackMessage msg)
         {
+           
             JointMatch animMagnet = msg.col.gameObject.GetComponent<JointMatch>();
             if (animMagnet != null && MissionWinSystem.Instance != null) // hit someone
             {
+                
                 var target = animMagnet.oodlesCharacter;
                 if (msg.pc.gameObject.GetComponent<PlayerIdentify>().PlayerID == MissionWinSystem.Instance.GetFightID())
                 {

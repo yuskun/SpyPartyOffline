@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MissionUIManager : MonoBehaviour
@@ -11,28 +12,43 @@ public class MissionUIManager : MonoBehaviour
     private List<int> missionOrder = new List<int>();
     private int focusIndex = 0;
 
-    public static MissionUIManager Instance;
 
     void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
+       
     }
 
-    void Update()
+  void Update()
+{
+    var missionStates = LocalBackpack.Instance.userInventory.MissionStates;
+
+    // 1️⃣ 更新與新增
+    foreach (var mission in missionStates)
     {
-        foreach(var Mission in LocalBackpack.Instance.userInventory.MissionStates)
+        if (missionDict.ContainsKey(mission.Key))
         {
-             UpdateMissions(Mission.Key, Mission.Value);
+            UpdateMissionProgress(mission.Key, mission.Value);
         }
-        
-        if (Input.GetKeyDown(KeyCode.Tab))
-            FocusNextMission();
+        else
+        {
+            AddMission(CardManager.Instance.GetMissionCard(mission.Key).data);
+        }
     }
+
+    // 2️⃣ 找出需要被移除的 Mission
+    var removeList = missionDict.Keys
+        .Where(id => !missionStates.ContainsKey(id))
+        .ToList();
+
+    // 3️⃣ 執行移除
+    foreach (var missionID in removeList)
+    {
+        RemoveMission(missionID);
+    }
+
+    if (Input.GetKeyDown(KeyCode.Tab))
+        FocusNextMission();
+}
     public void UpdateMissions(int missionID,int addValue)
     {
         if (missionDict.ContainsKey(missionID))

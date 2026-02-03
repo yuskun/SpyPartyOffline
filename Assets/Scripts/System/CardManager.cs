@@ -174,4 +174,17 @@ public class CardManager : MonoBehaviour
                 break;
         }
     }
+    public void UpdateMissionData(int missionID, int newGoal)
+    {
+        MissionCard missionCard = GetMissionCard(missionID);
+        if (missionCard != null)
+        {
+            missionCard.UpdateGoal(newGoal);
+            Debug.Log($"[CardManager] 已更新任務卡(ID={missionID})的目標值為 {newGoal}");
+        }
+        else
+        {
+            Debug.LogWarning($"[CardManager] 找不到任務卡 ID={missionID} 以更新目標值");
+        }
+    }
 }
