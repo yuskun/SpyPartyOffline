@@ -1,255 +1,154 @@
-/* ======== 全域字體 ======== */
-.screen {
-    /* -unity-font-definition: url(".../LilitaOne-Regular SDF.asset"); */
+/* ✨ 全畫面設定 */
+.body-style {
     width: 100%;
     height: 100%;
-    display: flex;
-    /* 確保內容不會跑出去 */
-    overflow: hidden; 
-    
-    /* 背景設定 */
-    background-color: #0e1627;
-    /* background-image: url("project://.../Underwater_BG.png"); */
-    -unity-background-scale-mode: scale-and-crop;
 }
 
 /* =========================================
-   返回按鈕
+   🔙 左上返回按鈕 (膠囊)
    ========================================= */
 .back-btn {
     position: absolute;
-    left: 40px;
-    top: 48px;
-    
-    width: 60px;
-    height: 50px;
-    
-    font-size: 20px;
-    color: #5c4631;
-    -unity-font-style: bold;
-    
-    border-width: 0;
-    margin: 0; padding: 0;
-    background-color: rgba(0,0,0,0);
-    
-    transition-property: scale, translate;
-    transition-duration: 0.1s;
-
-    /* (圖1) Back Normal */
-    background-color: #ffe8b8;
-    border-radius: 12px;
-}
-
-.back-btn:hover {
-    scale: 1.05;
-    translate: 0 -2%;
-    /* (圖2) Back Hover */
-    background-color: #fff2d1;
-}
-
-.back-btn:active {
-    scale: 0.95;
-    translate: 0 -2%;
-    /* (圖3) Back Active */
-    background-color: #e0cc9e;
-}
-
-/* =========================================
-   標題文字
-   ========================================= */
-.title-container {
-    position: absolute;
-    top: 40px;
-    left: 50%;
-    translate: -50% 0; /* 水平置中 */
-    align-items: center;
-    justify-content: center;
-}
-
-.title-text {
-    font-size: 50px;
-    color: #fdf5e3;
-    -unity-font-style: bold;
-    /* letter-spacing 在 Unity 支援有限，建議直接包含在字體或圖片中 */
-    
-    /* Unity 文字描邊 (取代 -webkit-text-stroke) */
-    -unity-text-outline-width: 2px;
-    -unity-text-outline-color: #093e7a;
-}
-
-/* =========================================
-   中央內容區
-   ========================================= */
-.content {
+    top: 30px;
+    left: 30px;
+    height: 44px;
+    padding: 0 20px;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
+    border-radius: 22px;
+    border-width: 0;
+    background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/back_default.png");
     
+    /* 立體陰影 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition-property: scale, translate;
+    transition-duration: 0.1s;
+}
+
+.back-arrow { font-size: 18px; color: white; margin-right: 8px; }
+.back-label { font-size: 16px; color: white; -unity-font-style: bold; letter-spacing: 2px; }
+
+.back-btn:hover { scale: 1.05; translate: 0 -1px; background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/back_hover.png");}
+.back-btn:active { scale: 0.95; translate: 0 2px; background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/back_active.png");}
+
+/* =========================================
+   🎭 中央內容與角色舞台
+   ========================================= */
+.content {
     width: 100%;
-    height: 100%;
-    
-    /* 留出上下空間給標題和按鈕 */
-    padding-top: 100px; 
-    padding-bottom: 100px;
-    padding-left: 50px;
-    padding-right: 50px;
-}
-
-/* 角色名字 (直排模擬) */
-.character-name {
-    font-size: 60px;
-    -unity-font-style: bold;
-    color: #fdf5e3;
-    -unity-text-align: middle-center;
-    
-    /* 關鍵：讓換行符號生效 */
-    white-space: normal; 
-    
-    margin-right: -50px; /* 稍微往右擠一點 */
-    margin-left: 50px;
-}
-
-/* 舞台區 */
-.stage {
-    flex-grow: 1;
     height: 100%;
     align-items: center;
-    justify-content: center;
-    position: relative;
 }
 
-/* 地板光圈 */
 .stage-light {
     position: absolute;
-    bottom: 10%;
-    width: 300px;
-    height: 80px;
-    
-    /* 模擬光圈模糊 (Unity USS blur 支援度看版本，通常用半透明圖比較好) */
-    background-color: rgba(0, 0, 0, 0.25);
-    border-radius: 100px; /* 橢圓 */
-    
-    /* 建議直接換成光圈圖片 */
-    /* background-image: url(".../StageLight.png"); */
+    bottom: 15%;
+    width: 450px;
+    height: 120px;
+    background-image: url("project://database/Assets/Image/ShadowEllipse.png"); /* 建議用一張圓形漸層圖 */
+    -unity-background-image-tint-color: rgba(0, 0, 0, 0.3);
 }
 
-/* 角色全身圖 */
-.main-char {
-    width: 400px;
-    height: 400px;
-    /* 預設全身圖 */
-    /* background-image: url("project://.../shark_full.png"); */
-    -unity-background-scale-mode: scale-and-crop;
-    translate: 20px 0;
-}
-
-/* =========================================
-   右側頭像欄
-   ========================================= */
+/* 角色頭像列 */
 .portrait-column {
-    flex-direction: column;
-    justify-content: center;
-    margin-right: 40px;
+    flex-direction: row;
+    top: 50px;
+    padding: 10px;
 }
 
-/* 頭像按鈕框 */
 .portrait {
-    width: 96px;
-    height: 96px;
-    margin-bottom: 16px;
-    
-    padding: 8px; /* 內縮給圖片用 */
-    
-    background-color: rgba(0,0,0,0);
+    width: 120px;
+    height: 120px;
+    margin: 0 20px;
+    background-color: rgba(0, 0, 0, 0);
     border-width: 0;
-    
-    transition-property: scale, translate;
-    transition-duration: 0.15s;
+    padding: 0;
+    /* 外框圖片 */
+    background-image: url("project://database/Assets/Image/UIPanel/CharSelect/Image.png");
+    -unity-background-scale-mode: stretch-to-fill;
 
-    /* (圖1) Frame Normal: 奶油色外框圖 */
-    background-color: #ffe7be;
-    border-radius: 26px;
+    transition-property: scale, translate, -unity-background-image-tint-color;
+    transition-duration: 0.1s;
+    transition-timing-function: ease-out;
 }
 
-/* 選中狀態 (Selected) */
-.portrait.selected {
-    /* (圖2) Frame Selected: 亮黃色 + 藍邊框圖 */
-    background-color: #fff3c9;
-    
-    /* 模擬 CSS 的 box-shadow: 0 0 0 4px #4fc3ff */
-    border-width: 4px;
-    border-color: #4fc3ff;
+/* 內嵌頭像容器 */
+.avatar {
+    position: absolute;
+    /* 對應你的 inset: 16px 15px 16px 14px */
+    top: 16px;
+    left: 14px;
+    right: 15px;
+    bottom: 16px;
+    border-radius: 18px;
+    overflow: hidden;
 }
 
-/* 內部圖片設定 */
-.portrait-img {
+.char-img {
     width: 100%;
     height: 100%;
-    border-radius: 22px; /* 稍微比外框小一點 */
-    background-color: #9edfff; /* 預設藍底 */
     -unity-background-scale-mode: scale-and-crop;
 }
 
-/* 各角色頭像圖 (透過 class 切換) */
-.shark     { background-image: url("../../Image/Character1.png"); }
-.crocodile { background-image: url("../../Image/Character2.png"); }
-.snake     { background-image: url("../../Image/Character3.png"); }
-.mouse     { background-image: url("../../Image/Character4.png"); }
+/* 圖片定義 */
+.shark { background-image: url("project://database/Assets/Image/Character/Shaya.png"); }
+.crocodile { background-image: url("project://database/Assets/Image/Character/Burr.png"); }
+.snake { background-image: url("project://database/Assets/Image/Character/Syboo.png"); }
+.mouse { background-image: url("project://database/Assets/Image/Character/Robert.png"); }
 
-/* 遮罩層 (Hover 效果) */
-.portrait-mask {
-    position: absolute;
-    top: 8px; left: 8px; right: 8px; bottom: 8px; /* 貼合內縮 */
-    border-radius: 22px;
-    background-color: rgba(0, 0, 0, 0.35);
-    opacity: 0;
-    transition-property: opacity;
-    transition-duration: 0.2s;
+/* Hover 遮罩效果 */
+.portrait:hover {
+    -unity-background-image-tint-color: rgb(200, 200, 200);
+    scale: 1;
 }
-
-.portrait:hover .portrait-mask {
-    opacity: 1; /* 滑鼠移過變暗 */
-}
-
 .portrait:active {
-    scale: 0.95;
+    /* 模擬按下去的感覺：縮小一點點並往下位移 */
+    scale: 0.92; 
+    translate: 0 5px;
+    /* 點擊時可以再暗一點 */
+    -unity-background-image-tint-color: rgb(150, 150, 150);
 }
-
 /* =========================================
-   ▶ Select 按鈕
+   🍊 右下角確認選擇按鈕 (果凍感)
    ========================================= */
-.select-btn {
+.bottom-right-menu {
     position: absolute;
     bottom: 30px;
-    left: 50%;
-    translate: -50% 0;
-    
-    width: 220px;
-    height: 60px;
-    
-    font-size: 25px;
-    -unity-font-style: bold;
-    color: #5c4631;
-    
+    right: 50px;
+}
+
+.menu-btn {
+    width: 200px;
+    height: 70px;
+    border-radius: 30px;
     border-width: 0;
-    background-color: rgba(0,0,0,0);
+    justify-content: center;
+    align-items: center;
+    /* 橘色漸層底 */
+    background-image: url("project://database/Assets/Image/UIPanel/CharSelect/orange_default.png");
     
     transition-property: scale, translate;
-    transition-duration: 0.15s;
-
-    /* (圖1) Select Normal */
-    background-color: #ffe8b8;
-    border-radius: 12px;
+    transition-duration: 0.12s;
 }
 
-.select-btn:hover {
+.select-label {
+    color: white;
+    font-size: 30px;
+    -unity-font-style: bold;
+    letter-spacing: 3px;
+    /* 模擬 text-shadow */
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgba(0, 0, 0, 0.2);
+}
+
+.menu-btn:hover {
     scale: 1.05;
-    translate: -50% -2%;
-    background-color: #fff2d1;
+    translate: 0 -3px;
+    background-image: url("project://database/Assets/Image/UIPanel/CharSelect/orange_hover.png");
 }
 
-.select-btn:active {
+.menu-btn:active {
     scale: 0.95;
-    translate: -50% -2%;
-    background-color: #e0cc9e;
+    translate: 0 4px;
+    background-image: url("project://database/Assets/Image/UIPanel/CharSelect/orange_active.png");
 }
