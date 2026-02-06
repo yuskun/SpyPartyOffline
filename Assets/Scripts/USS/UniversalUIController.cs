@@ -13,9 +13,15 @@ public class UniversalUIController : MonoBehaviour
         [HideInInspector] public Button loadedButton;
     }
 
+    [Tooltip("勾選後，此 UI 在啟動時會自動隱藏")]
+    public bool hideOnStart = false;
     public List<ButtonBinding> buttonSettings = new List<ButtonBinding>();
     private UIDocument _doc;
 
+    private void Start()
+    {
+        if (hideOnStart) HideCurrentUI();
+    }
     private void OnEnable()
     {
         _doc = GetComponent<UIDocument>();

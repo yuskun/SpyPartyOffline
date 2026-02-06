@@ -1,0 +1,117 @@
+.body-style {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.back-btn {
+    position: absolute;
+    left: -20px;
+    top: 50%;
+    translate: 0 -50%;
+    width: 80px;
+    height: 80px;
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+    margin: 0;
+    padding: 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: rgb(127, 89, 74);
+    transition-property: scale;
+    transition-duration: 0.15s;
+    transition-timing-function: ease-out;
+    background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/Back_default.png?fileID=-887552957&guid=7a5271a201a702c4fa968f9639b57a5f&type=3#Back_default_0");
+}
+
+.back-btn-arrow {
+    font-size: 30px;
+    margin-bottom: -5px;
+    padding: 0;
+    -unity-text-align: middle-center;
+}
+
+.back-btn-label {
+    font-size: 18px;
+    -unity-font-style: bold;
+    padding: 0;
+    -unity-text-align: middle-center;
+}
+
+.back-btn:hover {
+    scale: 1.1;
+    background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/Back_hover.png?fileID=509385600&guid=c60028e246776754ea55c77fde294e45&type=3#Back_hover_0");
+}
+
+.back-btn:active {
+    scale: 1.1;
+    background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/Back_active.png?fileID=-1135230191&guid=939a0a9c632758d46b20d5fd99be5469&type=3#Back_active_0");
+}
+
+.container {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 80px 80px;
+    border-radius: 36px;
+    background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/background.png?fileID=2800000&guid=c87059ac4e0cfc842ba7a39417c501f7&type=3#background");
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&guid=3d5723d09fd5e9a4f97a9f3e046bbb90&type=3#GenSenRounded2TW-R");
+    -unity-font-style: normal;
+}
+
+.cute-btn {
+    width: 200px;
+    height: 220px;
+    margin: 0 15px;
+    font-size: 45px;
+    -unity-font-style: bold;
+    color: rgb(127, 89, 74);
+    white-space: normal;
+    -unity-text-align: middle-center;
+    border-width: 0;
+    background-color: rgba(0, 0, 0, 0);
+    transition-property: scale, translate;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
+}
+
+.cute-btn.yellow {
+    background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/Create_default.png?fileID=2016385333&guid=24343b4d549f2044ca5f37f6b43efd51&type=3#Create_default_0");
+}
+
+.cute-btn.yellow:hover {
+    scale: 1.05;
+    translate: 0 -2%;
+    background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/Create_hover.png?fileID=1696924876&guid=fc13b761e229e9d4b84a3326cd2b5066&type=3#Create_hover_0");
+}
+
+.cute-btn.yellow:active {
+    scale: 1.05;
+    translate: 0 -2%;
+    background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/Create_active.png?fileID=-1278635645&guid=094ef0ae8ff9c2645abc14acc1ede343&type=3#Create_active_0");
+}
+
+.cute-btn.pink {
+    background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/Join_default.png?fileID=-802753408&guid=006f19795eb20154aae5c05e9a9b6c1d&type=3#Join_default_0");
+}
+
+.cute-btn.pink:hover {
+    scale: 1.05;
+    translate: 0 -2%;
+    background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/Join_hover.png?fileID=-983646742&guid=eabe2a78816865244b4703385b778edd&type=3#Join_hover_0");
+}
+
+.cute-btn.pink:active {
+    scale: 1.05;
+    translate: 0 -2%;
+    background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/Join_active.png?fileID=-416464528&guid=d84178430512d714098a5a27f546fb85&type=3#Join_active_0");
+}

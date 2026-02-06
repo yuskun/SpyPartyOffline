@@ -1,40 +1,59 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Assets/Scripts/USS/Practice.uss?fileID=...&amp;guid=...&amp;type=3#Practice" />
-
+    <Style src="project://database/Assets/Scripts/USS/Practice.uss?fileID=7433441132597879392&amp;guid=8c745766ba374e743a6a9cbcf84e1332&amp;type=3#Practice" />
     <ui:VisualElement name="body" class="body-style">
-        
-        <ui:VisualElement name="MissionPanel" class="mission-panel">
-            
-            <ui:VisualElement name="Task1" class="mission-task">
-                <ui:VisualElement class="task-left">
-                    <ui:Label text="逮捕" class="task-title" />
-                    <ui:Label text="逮捕偷東西的人" class="task-desc" />
+        <ui:VisualElement class="top-left-ui">
+            <ui:Button name="BackBtn" class="back-pill-btn" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&amp;guid=3d5723d09fd5e9a4f97a9f3e046bbb90&amp;type=3#GenSenRounded2TW-R&quot;);">
+                <ui:Label text="◀" class="back-arrow" />
+                <ui:Label text="返回" class="back-label" />
+            </ui:Button>
+            <ui:VisualElement name="MissionPanel" class="mission-panel">
+                <ui:VisualElement name="Task1" class="mission-task">
+                    <ui:VisualElement class="task-left">
+                        <ui:Label text="逮捕" class="task-title" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&amp;guid=3d5723d09fd5e9a4f97a9f3e046bbb90&amp;type=3#GenSenRounded2TW-R&quot;);" />
+                        <ui:Label text="逮捕偷東西的人" class="task-desc" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;);" />
+                    </ui:VisualElement>
+                    <ui:Label text="0/1" class="task-progress" />
                 </ui:VisualElement>
-                <ui:Label text="0/1" class="task-progress" />
-            </ui:VisualElement>
-
-            <ui:VisualElement name="Task2" class="mission-task">
-                <ui:VisualElement class="task-left">
-                    <ui:Label text="移動" class="task-title" />
-                    <ui:Label text="WASD 控制角色" class="task-desc" />
+                <ui:VisualElement name="Task2" class="mission-task">
+                    <ui:VisualElement class="task-left">
+                        <ui:Label text="移動" class="task-title" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&amp;guid=3d5723d09fd5e9a4f97a9f3e046bbb90&amp;type=3#GenSenRounded2TW-R&quot;);" />
+                        <ui:Label text="WASD 控制角色" class="task-desc" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;);" />
+                    </ui:VisualElement>
+                    <ui:Label text="0/1" class="task-progress" />
                 </ui:VisualElement>
-                <ui:Label text="0/1" class="task-progress" />
-            </ui:VisualElement>
-
-            <ui:VisualElement name="Task3" class="mission-task">
-                <ui:VisualElement class="task-left">
-                    <ui:Label text="行動" class="task-title" />
-                    <ui:Label text="互動操作" class="task-desc" />
+                <ui:VisualElement name="Task2" class="mission-task">
+                    <ui:VisualElement class="task-left">
+                        <ui:Label text="行動" class="task-title" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&amp;guid=3d5723d09fd5e9a4f97a9f3e046bbb90&amp;type=3#GenSenRounded2TW-R&quot;);" />
+                        <ui:Label text="互動操作" class="task-desc" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;);" />
+                    </ui:VisualElement>
+                    <ui:Label text="0/1" class="task-progress" />
                 </ui:VisualElement>
-                <ui:Label text="0/1" class="task-progress" />
             </ui:VisualElement>
-
         </ui:VisualElement>
-
-        <ui:VisualElement name="TopRightMenu" class="top-right-menu">
-            <ui:Button name="RoomBtn" text="房間" class="menu-btn yellow" />
-            <ui:Button name="CharBtn" text="更換角色" class="menu-btn orange" />
+        <ui:VisualElement class="top-right-menu">
+            <ui:Button name="InfoBtn" text="房間資訊" class="menu-btn jelly-btn" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;); -unity-font-style: normal;" />
         </ui:VisualElement>
-
+        <ui:VisualElement class="hud-bottom" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&amp;guid=3d5723d09fd5e9a4f97a9f3e046bbb90&amp;type=3#GenSenRounded2TW-R&quot;);">
+            <ui:VisualElement class="playerbar">
+                <ui:VisualElement class="avatar-wrap">
+                    <ui:VisualElement class="avatar" />
+                </ui:VisualElement>
+                <ui:VisualElement class="player-meta">
+                    <ui:Label text="shaya" class="player-name" />
+                    <ui:VisualElement class="level-line">
+                        <ui:Label text="7" class="level-bubble" />
+                        <ui:VisualElement class="level-track">
+                            <ui:VisualElement name="LevelFill" class="level-fill" style="width: 65%;" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement class="player-actions">
+                    <ui:Button name="MicBtn" class="icon-btn mic-btn is-open">
+                        <ui:VisualElement class="mic-icon mic-open" />
+                        <ui:VisualElement class="mic-icon mic-off" />
+                    </ui:Button>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

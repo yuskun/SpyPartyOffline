@@ -1,120 +1,167 @@
-/* 全站設定 */
+/* ✨ 全站設定 */
 .body-style {
     width: 100%;
     height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* 橫向排版容器 (關鍵修正) */
-.main-row {
-    flex-direction: row; /* 左到右排列 */
-    align-items: center; /* 垂直置中對齊 */
-    justify-content: center;
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/GenSenRounded-B SDF.asset");
 }
 
 /* =========================================
-   返回按鈕
+   🔙 左上返回按鈕 (膠囊)
    ========================================= */
-.back-btn {
+.back-pill {
     position: absolute;
-    left: -20px; 
-    top: 50%;
-    
-    /* 關鍵：基準點設好後，之後的狀態都不要改這個值 */
-    translate: 0 -50%;
-
-    width: 80px;
-    height: 80px;
-
-    /* --- 清除預設樣式 --- */
-    background-color: rgba(0,0,0,0);
+    top: 30px;
+    left: 30px;
+    width: 100px;
+    height: 44px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-radius: 22px;
     border-width: 0;
-    margin: 0;
-    padding: 0;
+    background-color: rgba(0,0,0,0);
+    background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/back_default.png");
+    transition-property: scale, translate;
+    transition-duration: 0.12s;
+}
 
-    /* --- 內部排版 --- */
+.back-arrow { font-size: 18px; color: white; margin-right: 5px; }
+.back-label { font-size: 16px; color: white; -unity-font-style: bold; }
+
+.back-pill:hover {
+    scale: 1.05;
+    translate: 0 -2px;
+    background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/back_hover.png");
+}
+.back-pill:active {
+    scale: 0.98;
+    translate: 0 2px;
+    background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/back_active.png");
+}
+
+/* =========================================
+   🏠 中央按鈕群 (果凍按鈕)
+   ========================================= */
+.container {
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.room-actions { align-items: center; }
+.room-main { flex-direction: row; }
+
+.jelly-btn {
+    border-width: 0;
+    background-color: rgba(0,0,0,0);
+    transition-property: scale, translate;
+    transition-duration: 0.12s;
+}
+.jelly-btn:hover { scale: 1.05; translate: 0 -2px; }
+.jelly-btn:active { scale: 0.98; translate: 0 2px; }
+
+.cute-btn {
+    width: 250px;
+    height: 250px;
+    margin: 0 14px;
+}
+
+.cute-btn.vertical {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
-    color: #7f594a;
-    
-    /* --- 動態過渡 --- */
-    transition-property: scale; 
-    transition-duration: 0.15s;
-    transition-timing-function: ease-out;
-
-    background-image: url("../../Image/UIPanel/CreateRoom/Back_default.png");
 }
 
-.back-btn-arrow {
-    font-size: 30px;
-    margin-bottom: -5px;
-    padding: 0;
-    -unity-text-align: middle-center;
-}
+/* 🟦 藍色與粉色 */
+.cute-btn.blue { background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/blue_default.png"); }
+.cute-btn.blue:hover { background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/blue_hover.png"); }
+.cute-btn.blue:active { background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/blue_active.png"); }
 
-.back-btn-label {
-    font-size: 18px;
+.cute-btn.pink { background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/pink_default.png"); }
+.cute-btn.pink:hover { background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/pink_hover.png"); }
+.cute-btn.pink:active { background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/pink_active.png"); }
+
+.btn-text {
+    font-size: 50px;
+    color: #ffffff;
     -unity-font-style: bold;
-    padding: 0;
     -unity-text-align: middle-center;
-}
-.back-btn:hover {
-    scale: 1.1; 
-    background-image: url("../../Image/UIPanel/CreateRoom/Back_hover.png");
-}
-.back-btn:active {
-    scale: 1.1;
-    background-image: url("../../Image/UIPanel/CreateRoom/Back_active.png");
+    margin-bottom: 10px;
+    -unity-paragraph-spacing: 28px;
 }
 
+.btn-icon { width: 36px; height: 36px; -unity-background-scale-mode: scale-to-fit; }
+.icon-room { background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/icon_room.png"); } 
+.icon-join { background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/icon_join.png"); } 
 
-/* =========================================
-   背板容器
-   ========================================= */
-.container { 
+/* 🟩 下方新手教學按鈕 */
+.room-sub { margin-top: 40px; }
+.new-btn {
+    width: 250px;
+    height: 60px;
     flex-direction: row;
-    justify-content: center;
     align-items: center;
-    
-    padding: 80px 80px;
-    border-radius: 36px;
-    
-    background-image: url("../../Image/UIPanel/CreateRoom/background1.png");
+    justify-content: center;
+    background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/green_default.png");
 }
+.new-btn:hover { background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/green_hover.png"); }
+.new-btn:active { background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/green_active.png"); }
 
+.btn-text-sub { font-size: 25px; color: #ffffff; -unity-font-style: bold; margin-left: 12px; }
+.icon-book { background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/icon_book.png"); } 
 
 /* =========================================
-   大按鈕 (樣式保持不變)
+   👤 右下角 HUD (玩家資訊)
    ========================================= */
-.cute-btn {
-    width: 200px;
-    height: 220px;
-    margin: 0 15px;
-    
-    font-size: 45px;
-    -unity-font-style: bold;
-    color: #7f594a;
-    white-space: normal;
-    -unity-text-align: middle-center;
-
-    border-width: 0;
-    background-color: rgba(0,0,0,0);
-
-    transition-property: scale, translate;
-    transition-duration: 0.2s;
-    transition-timing-function: ease-out;
+.hud-bottom {
+    position: absolute;
+    bottom: 18px;
+    right: 18px;
+    align-items: flex-end;
 }
 
-/* 黃色 */
-.cute-btn.yellow { background-image: url("../../Image/UIPanel/CreateRoom/Create_default.png"); }
-.cute-btn.yellow:hover { scale: 1.05; translate: 0 -2%; background-image: url("../../Image/UIPanel/CreateRoom/Create_hover.png");}
-.cute-btn.yellow:active { scale: 1.05; translate: 0 -2%; background-image: url("../../Image/UIPanel/CreateRoom/Create_active.png");}
+.playerbar {
+    width: 300px;
+    height: 80px;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 40px;
+    background-color: rgba(246, 235, 207, 0.95);
+    border-width: 2px;
+    border-color: rgba(255,255,255,0.8);
+}
 
-/* 粉色 */
-.cute-btn.pink { background-image: url("../../Image/UIPanel/CreateRoom/Join_default.png"); }
-.cute-btn.pink:hover { scale: 1.05; translate: 0 -2%; background-image: url("../../Image/UIPanel/CreateRoom/Join_hover.png"); }
-.cute-btn.pink:active { scale: 1.05; translate: 0 -2%; background-image: url("../../Image/UIPanel/CreateRoom/Join_active.png"); }
+.avatar-wrap { width: 52px; height: 52px; margin-right: 14px; }
+.avatar {
+    width: 100%; height: 100%;
+    border-radius: 26px;
+    border-width: 3px;
+    border-color: rgba(255,255,255,0.9);
+    background-image: url("project://database/Assets/Image/Character/Shaya.png");
+    -unity-background-scale-mode: scale-and-crop;
+}
+
+.player-meta { flex-grow: 1; justify-content: center; }
+.player-name { font-size: 16px; -unity-font-style: bold; color: #8b6a2b; margin-bottom: 6px; }
+
+.level-line { flex-direction: row; align-items: center; }
+.level-bubble {
+    width: 26px; height: 26px; border-radius: 13px;
+    background-color: #4fc7ff; border-width: 2px; border-color: rgba(255,255,255,0.9);
+    color: #ffffff; font-size: 12px; -unity-font-style: bold; -unity-text-align: middle-center;
+    margin-right: -10px; z-index: 2;
+}
+
+.level-track { width: 120px; height: 10px; background-color: #ffffff; border-radius: 5px; overflow: hidden; }
+.level-fill { height: 100%; background-color: #3fafff; border-radius: 5px; }
+
+.icon-btn {
+    width: 38px; height: 38px; border-radius: 15px;
+    background-color: #ffffff; border-width: 0;
+    align-items: center; justify-content: center;
+}
+.mic-icon { width: 20px; height: 20px; display: none; }
+.mic-btn.is-open .mic-open { display: flex; background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/mic-open.png"); }
+.mic-btn.is-off .mic-off { display: flex; background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/mic-off.png"); }

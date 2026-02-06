@@ -1,0 +1,40 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Scripts/USS/Practice.uss?fileID=...&amp;guid=...&amp;type=3#Practice" />
+
+    <ui:VisualElement name="body" class="body-style">
+        
+        <ui:VisualElement name="MissionPanel" class="mission-panel">
+            
+            <ui:VisualElement name="Task1" class="mission-task">
+                <ui:VisualElement class="task-left">
+                    <ui:Label text="逮捕" class="task-title" />
+                    <ui:Label text="逮捕偷東西的人" class="task-desc" />
+                </ui:VisualElement>
+                <ui:Label text="0/1" class="task-progress" />
+            </ui:VisualElement>
+
+            <ui:VisualElement name="Task2" class="mission-task">
+                <ui:VisualElement class="task-left">
+                    <ui:Label text="移動" class="task-title" />
+                    <ui:Label text="WASD 控制角色" class="task-desc" />
+                </ui:VisualElement>
+                <ui:Label text="0/1" class="task-progress" />
+            </ui:VisualElement>
+
+            <ui:VisualElement name="Task3" class="mission-task">
+                <ui:VisualElement class="task-left">
+                    <ui:Label text="行動" class="task-title" />
+                    <ui:Label text="互動操作" class="task-desc" />
+                </ui:VisualElement>
+                <ui:Label text="0/1" class="task-progress" />
+            </ui:VisualElement>
+
+        </ui:VisualElement>
+
+        <ui:VisualElement name="TopRightMenu" class="top-right-menu">
+            <ui:Button name="RoomBtn" text="房間" class="menu-btn yellow" />
+            <ui:Button name="CharBtn" text="更換角色" class="menu-btn orange" />
+        </ui:VisualElement>
+
+    </ui:VisualElement>
+</ui:UXML>
