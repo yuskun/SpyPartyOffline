@@ -1,88 +1,87 @@
-/* 全站使用 (對應 body) */
+/* ✨ 全站基礎設定 */
 .body-style {
-    /* Unity 使用 Font Asset，不能直接指定 font-family 字串 */
-    /*-unity-font-definition: url("project://database/Assets/Fonts/GenSenRounded-R SDF.asset"); */
-    
-    /* Flexbox 佈局 */
     width: 100%;
     height: 100%;
-    display: flex;
-    margin: 0;
-    padding: 0;
+    flex-direction: row;
+    align-items: center; /* 垂直置中 */
+    justify-content: flex-start; /* 靠左排列 */
 }
 
-/* 主要容器 */
+/* 👈 主要容器：對應 HTML .main-menu */
 .main-menu {
-    display: flex;
-    flex-shrink: 0;
-    justify-content: flex-start; /* 靠左 */
     height: 100%;
-
+    justify-content: center;
+    padding-left: 10%; /* 使用百分比確保不同解析度下的間距 */
 }
 
-/* 按鈕群組 */
+/* 📦 按鈕群組容器 */
 .menu-container {
-    display: flex;
-    flex-direction: column; /* 垂直排列 */
-    padding-left: 13%;
-    padding-top: 10%;
+    flex-direction: column;
 }
 
-/* 🍮 通用按鈕樣式 */
+/* 🍮 通用按鈕基底 */
 .menu-btn {
-    width: 20%;
-    height: 25%;
-    /*font-size: 30px;*/
-    /*-unity-font-style: bold;*/ /* font-weight: 700 */
-    /* letter-spacing 在 Unity 支援度有限，通常在 Font Asset 裡設定或用 -unity-paragraph-spacing */
-
-    /* 移除預設邊框 */
-    border-width: 0; 
-    border-radius: 25px;
-    cursor: initial; /* Unity 沒有 cursor pointer 概念 */
-    
-    /* gap 的替代方案：給每個按鈕加 margin */
+    width: 280px;
+    height: 90px;
     margin-bottom: 30px;
-    margin-top: 10px;
-    margin-left: 10px;
-    margin-right: 10px;
-
-    /* Transition (Unity 寫法) */
+    flex-direction: row; /* 水平排列圖示與文字 */
+    align-items: center;
+    padding-left: 25px;
+    border-width: 0;
+    background-color: rgba(0, 0, 0, 0); /* 隱藏預設底色 */
+    
+    /* 動畫過渡 */
     transition-property: scale, translate;
     transition-duration: 0.2s;
-    transition-timing-function: ease-out;
 }
 
-/* 藍色按鈕 */
+/* 🔵 藍色按鈕狀態 */
 .menu-btn.blue {
-    background-image: url("../../Image/UIPanel/MainMenu/Blue_default.png");
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/blue_default.png");
 }
 .menu-btn.blue:hover {
-    background-image: url("../../Image/UIPanel/MainMenu/Blue_hover.png");
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/blue_hover.png");
     scale: 1.05;
-    translate: 0 -2px; /* translateY(-2px) */
-    /* 改變顏色模擬亮度變化 */
-    /*-unity-background-image-tint-color: rgb(255, 255, 255); */
+    translate: 0 -2px;
 }
 .menu-btn.blue:active {
-    background-image: url("../../Image/UIPanel/MainMenu/Blue_active.png");
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/blue_active.png");
     scale: 0.95;
     translate: 0 0;
 }
 
-/* 橘粉色按鈕 (模擬) */
+/* 🟠 橘粉色按鈕狀態 */
 .menu-btn.orange {
-    background-image: url("../../Image/UIPanel/MainMenu/default.png");
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/orange_default.png");
 }
 .menu-btn.orange:hover {
-    background-image: url("../../Image/UIPanel/MainMenu/hover.png");
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/orange_hover.png");
     scale: 1.05;
-    translate: 0 -2px; /* translateY(-2px) */
-    /* 改變顏色模擬亮度變化 */
-    /*-unity-background-image-tint-color: rgb(255, 255, 255); */
+    translate: 0 -2px;
 }
 .menu-btn.orange:active {
-    background-image: url("../../Image/UIPanel/MainMenu/active.png");
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/orange_active.png");
     scale: 0.95;
-    translate: 0 0;
+}
+
+/* 🖼️ 按鈕內的圖示 */
+.icon-img {
+    width: 32px;
+    height: 32px;
+    margin-right: 15px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+/* 具體 Icon 圖片路徑 */
+.icon-play { background-image: url("project://database/Assets/Image/UIPanel/MainMenu/icon_play.png"); }
+.icon-settings { background-image: url("project://database/Assets/Image/UIPanel/MainMenu/icon_settings.png"); }
+.icon-trophy { background-image: url("project://database/Assets/Image/UIPanel/MainMenu/icon_trophy.png"); }
+.icon-back { background-image: url("project://database/Assets/Image/UIPanel/MainMenu/icon_back.png"); }
+
+/* 📝 文字標籤 */
+.label {
+    color: white;
+    font-size: 30px;
+    -unity-font-style: bold;
+    letter-spacing: 5px; /* Unity 中微調文字間距 */
 }

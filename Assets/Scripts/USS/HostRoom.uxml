@@ -1,40 +1,117 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+
     <Style src="project://database/Assets/Scripts/USS/HostRoom.uss?fileID=7433441132597879392&amp;guid=94aaad2e4e1fa974da7c179260c14c00&amp;type=3#HostRoom" />
+
     <ui:VisualElement name="body" class="body-style">
-        <ui:VisualElement name="Container" class="container">
-            <ui:VisualElement class="left-panel">
-                <ui:VisualElement class="map-preview">
-                    <ui:VisualElement class="map-image" />
-                    <ui:VisualElement class="map-name-board">
-                        <ui:Label text="地底實驗室" class="map-name-title" />
-                        <ui:Label text="Underground Laboratory" class="map-name-sub" />
+
+        <ui:VisualElement picking-mode="Ignore" class="bg-blur" />
+
+        <ui:VisualElement class="room-window">
+
+            <ui:VisualElement class="container">
+
+                <ui:VisualElement class="left-panel">
+
+                    <ui:VisualElement class="map-preview">
+
+                        <ui:Image class="map-image" />
+
+                        <ui:VisualElement class="map-name-board" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&amp;guid=3d5723d09fd5e9a4f97a9f3e046bbb90&amp;type=3#GenSenRounded2TW-R&quot;);">
+
+                            <ui:Label text="地底實驗室" class="map-name-title" style="-unity-font-style: normal; -unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;);" />
+
+                            <ui:Label text="Underground Laboratory" class="map-name-sub" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;);" />
+
+                        </ui:VisualElement>
+
                     </ui:VisualElement>
-                </ui:VisualElement>
-                <ui:Button name="StartBtn" text="開始遊戲" class="map-btn yellow" />
-                <ui:Button name="InviteBtn" text="邀請" class="map-btn yellow" />
-            </ui:VisualElement>
-            <ui:VisualElement class="right-panel">
-                <ui:Label text="自訂房間" class="panel-title" />
-                <ui:VisualElement class="slots-container">
-                    <ui:Button class="slot filled">
-                        <ui:Label text="Frank" class="player-name" />
+
+                    <ui:Button name="StartGameBtn" class="map-btn green" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&amp;guid=3d5723d09fd5e9a4f97a9f3e046bbb90&amp;type=3#GenSenRounded2TW-R&quot;);">
+
+                        <ui:Image class="btn-icon icon-arrow" />
+
+                        <ui:Label text="開始遊戲" class="btn-text" />
+
                     </ui:Button>
-                    <ui:Button class="slot filled">
-                        <ui:Label text="Blue" class="player-name" />
+
+                    <ui:Button name="InviteFriendBtn" class="map-btn yellow" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&amp;guid=3d5723d09fd5e9a4f97a9f3e046bbb90&amp;type=3#GenSenRounded2TW-R&quot;);">
+
+                        <ui:Image class="btn-icon icon-add" />
+
+                        <ui:Label text="邀請好友" class="btn-text" />
+
                     </ui:Button>
-                    <ui:Button text="+" class="slot empty" />
-                    <ui:Button text="+" class="slot empty" />
-                    <ui:Button text="+" class="slot empty" />
-                    <ui:Button text="+" class="slot empty" />
-                    <ui:Button text="+" class="slot empty" />
-                    <ui:Button text="+" class="slot empty" />
+
                 </ui:VisualElement>
+
+                <ui:VisualElement class="right-panel">
+
+                    <ui:Label text="房號：1234567" class="room-title" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&amp;guid=3d5723d09fd5e9a4f97a9f3e046bbb90&amp;type=3#GenSenRounded2TW-R&quot;); text-shadow: 0 0 0 rgba(0, 0, 0, 0); -unity-font-style: bold;" />
+
+                    <ui:VisualElement class="slots-grid" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&amp;guid=3d5723d09fd5e9a4f97a9f3e046bbb90&amp;type=3#GenSenRounded2TW-R&quot;);">
+
+                        <ui:Button class="slot jelly is-host">
+
+                            <ui:VisualElement class="avatar-wrap">
+
+                                <ui:Image class="avatar-img Shaya" />
+
+                                <ui:VisualElement class="host-badge">
+
+                                    <ui:Image class="host-icon" />
+
+                                </ui:VisualElement>
+
+                            </ui:VisualElement>
+
+                            <ui:VisualElement class="name-wrap">
+
+                                <ui:Label text="shaya" class="player-name" />
+
+                                <ui:Label text="YOU" class="you-tag" />
+
+                            </ui:VisualElement>
+
+                        </ui:Button>
+
+                        <ui:Button class="slot jelly">
+
+                            <ui:VisualElement class="avatar-wrap">
+
+                                <ui:Image class="avatar-img Burr" />
+
+                            </ui:VisualElement>
+
+                            <ui:Label text="syboo" class="player-name" />
+
+                        </ui:Button>
+
+                        <ui:Button text="空閒" class="slot jelly empty" />
+
+                        <ui:Button text="空閒" class="slot jelly empty" />
+
+                        <ui:Button text="空閒" class="slot jelly empty" />
+
+                        <ui:Button text="空閒" class="slot jelly empty" />
+
+                        <ui:Button text="空閒" class="slot jelly empty" />
+
+                        <ui:Button text="空閒" class="slot jelly empty" />
+
+                    </ui:VisualElement>
+
+                </ui:VisualElement>
+
             </ui:VisualElement>
-            <ui:Button name="BackBtn" class="back-btn">
-                <ui:Label text="◀" class="back-btn-arrow" />
-                <ui:Label text="返回" class="back-btn-label" />
-            </ui:Button>
-            <ui:Button name="CloseBtn" class="triangle-btn" />
+
         </ui:VisualElement>
+
+        <ui:Button name="CloseBtn" class="top-right-menu jelly-btn" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;); -unity-font-style: normal;">
+
+            <ui:Label text="隱藏資訊" class="menu-text" />
+
+        </ui:Button>
+
     </ui:VisualElement>
+
 </ui:UXML>

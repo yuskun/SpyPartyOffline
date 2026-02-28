@@ -1,0 +1,73 @@
+.body-style {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.main-menu {
+    display: flex;
+    flex-shrink: 0;
+    justify-content: flex-start;
+    height: 100%;
+}
+
+.menu-container {
+    display: flex;
+    flex-direction: column;
+    padding-left: 13%;
+    padding-top: 10%;
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&guid=6f1375bf9fa261a40b77477d1fef5011&type=3#GenSenRounded2TW-B");
+    -unity-font-style: normal;
+}
+
+.menu-btn {
+    width: 20%;
+    height: 25%;
+    font-size: 26px;
+    color: rgb(127, 89, 74);
+    -unity-font-style: normal;
+    border-width: 0;
+    border-radius: 25px;
+    cursor: initial;
+    margin-bottom: 30px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    transition-property: scale, translate;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
+}
+
+.menu-btn.blue {
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/Blue_default.png?fileID=230370970&guid=e7ac8d9e97e5c934f819a05320de166c&type=3#Blue_default_0");
+}
+
+.menu-btn.blue:hover {
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/Blue_hover.png?fileID=1532190549&guid=c7dc0dd4f00aa35478325f6702242a9e&type=3#Blue_hover_0");
+    scale: 1.05;
+    translate: 0 -2px;
+}
+
+.menu-btn.blue:active {
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/Blue_active.png?fileID=1359565606&guid=a4d2e76c1e6d129439025261fff3da53&type=3#Blue_active_0");
+    scale: 0.95;
+    translate: 0 0;
+}
+
+.menu-btn.orange {
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/default.png?fileID=-1544195404&guid=d1c0478599b05a1458a971b19a68cf2b&type=3#default_0");
+}
+
+.menu-btn.orange:hover {
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/hover.png?fileID=-259968463&guid=fe36cfc7651e4b7488faa6f1f46423d2&type=3#hover_0");
+    scale: 1.05;
+    translate: 0 -2px;
+}
+
+.menu-btn.orange:active {
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/active.png?fileID=1403500320&guid=3473a00bafb037343ba820434d78303b&type=3#active_0");
+    scale: 0.95;
+    translate: 0 0;
+}

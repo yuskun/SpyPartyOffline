@@ -1,243 +1,462 @@
-/* ======== 全域設定 ======== */
+/* ✨ 全站設定 */
+
 .body-style {
+
     width: 100%;
+
     height: 100%;
-    display: flex;
-    justify-content: center;
+
+    -unity-background-scale-mode: scale-and-crop;
+
     align-items: center;
-    
+
+    justify-content: center;
+
 }
 
-/* ======== 主容器 (1.3倍放大) ======== */
+
+
+/* 🌫️ 模糊遮罩 (模擬) */
+
+.bg-blur {
+
+    position: absolute;
+
+    top: 0; left: 0; right: 0; bottom: 0;
+
+    background-color: rgba(255, 255, 255, 0.22);
+
+}
+
+
+
+/* 🏠 房間視窗容器 */
+
+.room-window {
+
+    align-items: center;
+
+    justify-content: center;
+
+    /* 確保在遮罩之上 */
+
+    z-index: 10; 
+
+}
+
+
+
 .container {
-    /* 關鍵：允許子元素(返回鍵)超出邊界顯示，解決被切掉的問題 */
-    overflow: visible; 
 
     flex-direction: row;
-    align-items: center;
-    justify-content: center; /* 左右內容置中 */
-    width: 910px; 
-    height: 600px;
-    padding: 50px 80px; 
+
+
+
+    padding: 40px 60px;
+
     
-    border-radius: 26px; /* 20 * 1.3 */
-    
-    /* 漸層與陰影替代 */
-    background-color: #fef1c5;
-    /* background-image: url("project://.../Container_Bg.png"); */
+
+    background-image: url("project://database/Assets/Image/UIPanel/HostRoom/big_background1.png"); 
+
+    border-radius: 20px;
+
 }
 
-/* =========================================
-   返回按鈕 (Back Button)
-   ========================================= */
-.back-btn {
-    position: absolute;
-    /* 貼在容器左側外部 -65px (原-50 * 1.3) */
-    left: -75px; 
-    top: 50%;
-    
-    /* 鎖定基準點，之後 hover 不要動這個 */
-    translate: 0 -50%;
-    
-    /* 確保在最上層，不會跑到背板後面 */
-    z-index: 100;
 
-    width: 90px; 
-    height: 90px;
+
+/* =========================================
+
+   ↗ 右上選單
+
+   ========================================= */
+
+.top-right-menu {
+
+    position: absolute;
+
+    top: 30px; right: 30px;
+
+    z-index: 20;
+
+    
+
+    width: 200px;
+
+    height: 70px;
+
+    border-radius: 30px;
+
+    
+
+    /* 📸 (圖) Blue Menu Bg */
+
+    background-image: url("project://database/Assets/Image/UIPanel/HostRoom/blue_default.png"); 
+
+    
+
+    align-items: center;
+
+    justify-content: center;
+
+    
+
+    font-size: 30px;
+
+    color: rgba(255,255,255,0.95);
+
+    -unity-font-style: bold;
+
+    transition-property: scale, translate;
+
+    transition-duration: 0.12s;
+
+}
+
+.top-right-menu:hover { scale: 1.05; translate: 0 -2px; background-image: url("project://database/Assets/Image/UIPanel/HostRoom/blue_hover.png"); }
+
+.top-right-menu:active { scale: 0.98; translate: 0 2px; background-image: url("project://database/Assets/Image/UIPanel/HostRoom/blue_active.png");}
+
+
+
+/* =========================================
+
+   👈 左側面板
+
+   ========================================= */
+
+.left-panel {
+
+    flex-direction: column;
+
+    align-items: center;
+
+    margin-right: 60px; /* Unity USS margin-left 改為推開右邊元素 */
+
+}
+
+
+
+.map-preview {
+
+    width: 250px;
+
+    height: 300px;
+
+    background-color: #dddddd;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+
+    margin-bottom: 20px;
+
+}
+
+
+
+.map-image {
+
+    width: 100%; height: 100%;
+
+    /* 📸 地圖圖 */
+
+    background-image: url("project://database/Assets/Image/2.png");
+
+    -unity-background-scale-mode: scale-and-crop;
+
+}
+
+
+
+.map-name-board {
+
+    position: absolute; bottom: 0; left: 0; right: 0;
+
+    background-color: rgba(0, 0, 0, 0.25);
+
+    padding: 10px 0;
+
+    align-items: center; justify-content: center;
+
+}
+
+
+
+.map-name-title { color: #fff; font-size: 16px; -unity-font-style: bold; }
+
+.map-name-sub   { color: #fff; font-size: 13px; opacity: 0.9; }
+
+
+
+/* 地圖按鈕通用 */
+
+.map-btn {
+
+    width: 250px;
+
+    height: 60px; /* 根據 padding 推算 */
+
+    margin-top: 10px;
+
+    flex-direction: row;
+
+    align-items: center;
+
+    justify-content: center;
+
+    
+
+    border-width: 0;
 
     background-color: rgba(0,0,0,0);
-    border-width: 0;
-    margin: 0; padding: 0;
+
     
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    
-    color: #7f594a;
-    transition-property: scale;
-    transition-duration: 0.15s;
-    transition-timing-function: ease-out;
 
-    /* (圖1) Normal */
-    background-color: #ffeec8; 
-    border-radius: 16px;
+    font-size: 25px;
+
+    color: #ffffff;
+
+    -unity-font-style: bold;
+
 }
 
-.back-btn-arrow { font-size: 34px; margin-bottom: -5px; padding: 0; -unity-text-align: middle-center; }
-.back-btn-label { font-size: 20px; -unity-font-style: bold; padding: 0; -unity-text-align: middle-center; }
 
-.back-btn:hover {
-    scale: 1.1; /* 放大 */
-    background-color: #fff5d7; /* (圖2) Hover */
-}
 
-.back-btn:active {
-    scale: 1.1; /* 保持放大 */
-    background-color: #e6d5b0; /* (圖3) Active */
-}
+.map-btn.green { transition-property: scale, translate; transition-duration: 0.15s; background-image: url("project://database/Assets/Image/UIPanel/HostRoom/green_default.png"); }
+
+.map-btn.green:hover { scale: 1.05; translate: 0 -2px; background-image: url("project://database/Assets/Image/UIPanel/HostRoom/green_hover.png"); }
+
+.map-btn.green:active { scale: 0.98; translate: 0 2px; background-image: url("project://database/Assets/Image/UIPanel/HostRoom/green_active.png"); }
+
+
+
+.map-btn.yellow { transition-property: scale, translate; transition-duration: 0.15s; background-image: url("project://database/Assets/Image/UIPanel/HostRoom/yellow_default.png"); }
+
+.map-btn.yellow:hover { scale: 1.05; translate: 0 -2px; background-image: url("project://database/Assets/Image/UIPanel/HostRoom/yellow_hover.png"); }
+
+.map-btn.yellow:active { scale: 0.98; translate: 0 2px;background-image: url("project://database/Assets/Image/UIPanel/HostRoom/yellow_active.png"); }
+
+
+
+.btn-icon { width: 20px; height: 20px; margin-right: 10px; }
+
+.icon-arrow { background-image: url("project://database/Assets/Image/UIPanel/HostRoom/arrow.png"); }
+
+.icon-add { background-image: url("project://database/Assets/Image/UIPanel/HostRoom/add-friend.png"); }
+
+
 
 /* =========================================
-   左側面板 (Left Panel)
+
+   👉 右側面板
+
    ========================================= */
-.left-panel {
+
+.right-panel {
+
     flex-direction: column;
+
     align-items: center;
-    /* 與右邊的間距 (原 40 -> 52) */
-    margin-right: 52px; 
+
 }
 
-/* 地圖預覽框 (原 200x250 -> 260x325) */
-.map-preview {
-    width: 260px;
-    height: 325px;
-    border-radius: 13px;
-    overflow: hidden;
-    margin-bottom: 26px; /* gap */
+
+
+.room-title {
+
+    font-size: 35px;
+
+    -unity-font-style: bold;
+
+    color: #f9f8f7;
+
+    -unity-text-align: middle-center;
+
+    width: 350px;
+
+    margin-bottom: 2px;
+
+}
+
+
+
+.slots-grid {
+
+    width: 420px;
+
+    height: 380px;
+
+    margin-top: 20px;
+
     
-    background-color: #dddddd;
+
+    background-image: url("project://database/Assets/Image/UIPanel/HostRoom/background.png"); 
+
+    border-radius: 15px;
+
+    padding: 20px 15px;
+
+    
+
+    /* Grid 模擬 */
+
+    flex-direction: row;
+
+    flex-wrap: wrap;
+
+    justify-content: space-between;
+
+    align-content: flex-start;
+
+}
+
+
+
+/* Slot 格子 */
+
+.slot {
+
+    width: 185px; /* (420 - 40padding - 10gap)/2 */
+
+    height: 70px;
+
+    margin-bottom: 15px;
+
+    
+
+    flex-direction: row;
+
+    align-items: center;
+
+    justify-content: center;
+
+    
+
+    border-width: 0;
+
+    background-color: rgba(0,0,0,0);
+
+    
+
+    background-image: url("project://database/Assets/Image/UIPanel/HostRoom/player_default.png");
+
+    
+
+    transition-property: translate;
+
+    transition-duration: 0.15s;
+
+}
+
+
+
+.slot:hover { translate: 0 -2px; background-image: url("project://database/Assets/Image/UIPanel/HostRoom/player_hover.png");}
+
+.slot:active { translate: 0 2px; background-image: url("project://database/Assets/Image/UIPanel/HostRoom/player_active.png");}
+
+
+
+/* Empty Slot */
+
+.slot.empty {
+
+    /* 📸 (圖) Slot Bg Empty */
+
+    background-image: url("project://database/Assets/Image/UIPanel/HostRoom/player_default.png");
+
+    color: rgba(120, 120, 120, 0.5);
+
+    font-size: 20px;
+
+    -unity-font-style: bold;
+
+    -unity-text-align: middle-center;
+
+}
+
+
+
+/* 頭像 */
+.avatar-wrap {
+    width: 40px; height: 40px;
+    margin-right: 10px;
     position: relative;
 }
 
-.map-image {
+.avatar-img {
     width: 100%; height: 100%;
-    background-image: url("../../Image/2.png");
-    -unity-background-scale-mode: scale-and-crop;
-}
-
-.map-name-board {
-    position: absolute; bottom: 0; left: 0; width: 100%;
-    background-color: rgba(0, 0, 0, 0.25);
-    padding: 13px 0;
-    align-items: center; justify-content: center;
-}
-
-.map-name-title { color: #ffffff; font-size: 21px; -unity-font-style: bold; margin: 0; }
-.map-name-sub   { color: #ffffff; font-size: 16px; opacity: 0.9; margin: 0; }
-
-/* 黃色功能按鈕 (原 200 -> 260寬) */
-.map-btn {
-    width: 260px;
-    height: 60px; /* 稍微加高 */
-    margin-top: 13px;
-    
-    font-size: 26px; /* 字體加大 */
-    -unity-font-style: bold;
-    color: #ffffff;
-    
-    border-width: 0;
-    background-color: rgba(0,0,0,0);
-    transition-property: scale;
-    transition-duration: 0.15s;
-
-    background-color: #f6c750; /* (圖1) */
-    border-radius: 16px;
-}
-
-.map-btn:hover { scale: 1.05; background-color: #ffda6a; /* (圖2) */ }
-.map-btn:active { scale: 1.05; background-color: #e0ac3a; /* (圖3) */ }
-
-/* =========================================
-   右側面板 (Right Panel)
-   ========================================= */
-.right-panel {
-    flex-direction: column;
-    align-items: center;
-    /* 右側不需太多設定，靠內容撐開 */
-}
-
-/* 標題 */
-.panel-title {
-    font-size: 36px;
-    -unity-font-style: bold;
-    color: #f6c750;
-    -unity-text-align: middle-center;
-    
-    width: 455px;
-    padding-bottom: 6px;
-    margin-bottom: 13px;
-    
-    border-bottom-width: 5px;
-    border-bottom-color: #f6c750;
-}
-
-/* 槽位容器 (原 350x280 -> 455x364) */
-.slots-container {
-    width: 455px;
-    height: 364px;
-    
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between; 
-    align-content: flex-start;
-    
-    background-color: #ffe4ad;
     border-radius: 20px;
-    padding: 26px; /* 原 20 -> 26 */
+    border-width: 3px;
+    border-color: rgba(255,255,255,0.9);
+    -unity-background-scale-mode: scale-and-crop;
+
+}
+.avatar-img.Shaya { 
+    background-image: url("project://database/Assets/Image/Character/Shaya.png");
+} 
+
+.avatar-img.Burr { 
+    background-image: url("project://database/Assets/Image/Character/Burr.png");
 }
 
-/* =========================================
-   格子 (Slot) - 完美對齊版
-   ========================================= */
-.slot {
-    /* 計算寬度：(455 - padding*2 - gap) / 2 */
-    /* 大約設為 48% 讓 Flexbox 自動算，或寫死像素 */
-    width: 190px; 
-    height: 65px; 
-    margin-bottom: 20px;
-    
-    border-width: 0;
-    border-radius: 13px;
-    
-    justify-content: center;
-    align-items: center;
-    
-    font-size: 24px;
-    -unity-font-style: bold;
-    
-    /* 只動 translate，不動 Layout */
-    transition-property: translate;
-    transition-duration: 0.15s;
-    
-    /* 底部陰影 (用 border 模擬) */
-    border-bottom-width: 5px;
-    border-bottom-color: #c9a46b;
-    background-color: #fff5da;
-}
 
-.slot.empty { color: #b3b2b1; }
-.slot.filled { color: #719ffa; }
-.player-name { color: #719ffa; -unity-font-style: bold; }
 
-/* 互動：只浮動，不動邊框，解決跑版問題 */
-.slot:hover {
-    translate: 0 -2px;
-}
+/* 房主標記 */
 
-.slot:active {
-    translate: 0 3px; /* 向下壓 */
-    /* 保持 border-width 不變，避免推擠其他格子 */
-}
+.host-badge {
 
-/* =========================================
-   底部三角形
-   ========================================= */
-.triangle-btn {
     position: absolute;
-    bottom: -20px;
-    left: 50%;
-    translate: -50% 0;
-    
-    width: 50px;
-    height: 40px;
-    
-    border-width: 0;
-    background-color: rgba(0,0,0,0);
-    transition-property: translate;
-    
-    /* 暫時用顏色佔位 */
-    background-color: #ff9138; 
-    /* background-image: url("project://.../Icon_Triangle.png"); */
+
+    top: -8px; right: -8px;
+
+    width: 18px; height: 18px;
+
+    background-color: #FFD267;
+
+    border-radius: 9px;
+
+    border-width: 2px;
+
+    border-color: #FFF5DA;
+
+    align-items: center; justify-content: center;
+
 }
 
-.triangle-btn:hover { translate: -50% 3px; }
-.triangle-btn:active { translate: -50% 0; }
+
+
+.host-icon {
+
+    width: 10px; height: 10px;
+    background-image: url("project://database/Assets/Image/UIPanel/HostRoom/icon-home.png");
+}
+
+
+
+/* 名字與標籤 */
+
+.name-wrap {
+    flex-direction: row;
+    align-items: center;
+}
+
+
+
+.player-name {
+    font-size: 20px;
+    color: #535457;
+    -unity-font-style: bold;
+}
+
+
+
+.you-tag {
+    background-color: #fbc156;
+    color: #fff;
+    font-size: 12px;
+    -unity-font-style: bold;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: 8px;
+
+}

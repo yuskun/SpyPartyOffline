@@ -1,0 +1,130 @@
+VisualElement {
+}
+
+.body-style {
+    width: 100%;
+    height: 100%;
+}
+
+.mission-panel {
+    position: absolute;
+    top: 30px;
+    left: 40px;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.mission-task {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 120px;
+    height: 30px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    overflow: hidden;
+    transform-origin: left top;
+    transition-property: width, height, scale, background-color;
+    transition-duration: 0.4s;
+    transition-timing-function: ease-out-back;
+    background-color: rgb(249, 241, 221);
+}
+
+.mission-task.active {
+    width: 250px;
+    height: 40px;
+    scale: 1.05;
+    background-color: rgb(255, 245, 217);
+}
+
+.task-left {
+    flex-direction: row;
+    align-items: center;
+    height: 100%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.task-title {
+    height: 100%;
+    padding: 0 12px;
+    margin: 0;
+    -unity-font-style: bold;
+    font-size: 15px;
+    color: rgb(122, 107, 82);
+    -unity-text-align: middle-center;
+    background-color: rgb(255, 210, 103);
+    border-radius: 12px;
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&guid=3d5723d09fd5e9a4f97a9f3e046bbb90&type=3#GenSenRounded2TW-R");
+}
+
+.task-desc {
+    font-size: 15px;
+    color: rgb(127, 89, 74);
+    margin-left: 8px;
+    width: 0;
+    opacity: 0;
+    transition-property: width, opacity;
+    transition-duration: 0.3s;
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&guid=6f1375bf9fa261a40b77477d1fef5011&type=3#GenSenRounded2TW-B");
+}
+
+.mission-task.active .task-title {
+    font-size: 18px;
+}
+
+.mission-task.active .task-desc {
+    width: 120px;
+    opacity: 1;
+    font-size: 16px;
+}
+
+.task-progress {
+    -unity-font-style: bold;
+    color: rgb(119, 182, 83);
+    padding-right: 10px;
+    -unity-text-align: middle-right;
+    flex-shrink: 0;
+}
+
+.top-right-menu {
+    position: absolute;
+    top: 30px;
+    right: 50px;
+    flex-direction: row;
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&guid=3d5723d09fd5e9a4f97a9f3e046bbb90&type=3#GenSenRounded2TW-R");
+}
+
+.menu-btn {
+    width: 200px;
+    height: 60px;
+    margin-left: 20px;
+    font-size: 27px;
+    -unity-font-style: bold;
+    color: rgb(127, 89, 74);
+    border-width: 0;
+    background-color: rgba(0, 0, 0, 0);
+    transition-property: scale, translate;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
+}
+
+.menu-btn.yellow {
+    background-color: rgb(250, 212, 97);
+    border-radius: 20px;
+}
+
+.menu-btn.orange {
+    background-color: rgb(255, 190, 142);
+    border-radius: 20px;
+}
+
+.menu-btn:hover {
+    scale: 1.05;
+    translate: 0 -2%;
+}
+
+.menu-btn:active {
+    scale: 0.95;
+    translate: 0 -2%;
+}

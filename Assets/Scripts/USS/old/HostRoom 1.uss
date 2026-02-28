@@ -1,0 +1,235 @@
+.body-style {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    overflow: visible;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 910px;
+    height: 600px;
+    padding: 50px 80px;
+    border-radius: 26px;
+    background-image: url("project://database/Assets/Image/UIPanel/HostRoom/big_background.png?fileID=2800000&guid=80775030624be1543a4f5bbc63547a39&type=3#big_background");
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&guid=3d5723d09fd5e9a4f97a9f3e046bbb90&type=3#GenSenRounded2TW-R");
+}
+
+.back-btn {
+    position: absolute;
+    left: -75px;
+    top: 50%;
+    translate: 0 -50%;
+    z-index: 100;
+    width: 90px;
+    height: 90px;
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+    margin: 0;
+    padding: 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: rgb(127, 89, 74);
+    transition-property: scale;
+    transition-duration: 0.15s;
+    transition-timing-function: ease-out;
+    background-image: url("project://database/Assets/Image/UIPanel/HostRoom/Back_default.png?fileID=-887552957&guid=7e268c49fd96ab943b8d7765ceb0b530&type=3#Back_default_0");
+    border-radius: 16px;
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&guid=3d5723d09fd5e9a4f97a9f3e046bbb90&type=3#GenSenRounded2TW-R");
+}
+
+.back-btn-arrow {
+    font-size: 34px;
+    margin-bottom: -5px;
+    padding: 0;
+    -unity-text-align: middle-center;
+}
+
+.back-btn-label {
+    font-size: 20px;
+    -unity-font-style: bold;
+    padding: 0;
+    -unity-text-align: middle-center;
+}
+
+.back-btn:hover {
+    scale: 1.1;
+    background-image: url("project://database/Assets/Image/UIPanel/HostRoom/Back_hover.png?fileID=509385600&guid=83b8b17cb2a4965469c6f486c209f021&type=3#Back_hover_0");
+}
+
+.back-btn:active {
+    scale: 1.1;
+    background-image: url("project://database/Assets/Image/UIPanel/HostRoom/Back_active.png?fileID=-1135230191&guid=bf13a01f6a848f7459a607baac1ff6ae&type=3#Back_active_0");
+}
+
+.left-panel {
+    flex-direction: column;
+    align-items: center;
+    margin-right: 52px;
+}
+
+.map-preview {
+    width: 260px;
+    height: 325px;
+    border-radius: 13px;
+    overflow: hidden;
+    margin-bottom: 26px;
+    background-color: rgb(221, 221, 221);
+    position: relative;
+}
+
+.map-image {
+    width: 100%;
+    height: 100%;
+    background-image: url("project://database/Assets/Image/2.png?fileID=21300000&guid=ac1189bdaeb79fe4481f864cb60d1a15&type=3#2");
+    -unity-background-scale-mode: scale-and-crop;
+}
+
+.map-name-board {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.25);
+    padding: 13px 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.map-name-title {
+    color: rgb(255, 255, 255);
+    font-size: 21px;
+    -unity-font-style: bold;
+    margin: 0;
+}
+
+.map-name-sub {
+    color: rgb(255, 255, 255);
+    font-size: 16px;
+    opacity: 0.9;
+    margin: 0;
+}
+
+.map-btn {
+    width: 260px;
+    height: 60px;
+    margin-top: 13px;
+    font-size: 26px;
+    -unity-font-style: bold;
+    color: rgb(255, 255, 255);
+    border-width: 0;
+    background-color: rgba(0, 0, 0, 0);
+    transition-property: scale;
+    transition-duration: 0.15s;
+    background-image: url("project://database/Assets/Image/UIPanel/HostRoom/default.png?fileID=-1139367511&guid=4cc2e77fda94a8342b2713f22f2874ef&type=3#default_0");
+    border-radius: 12px;
+}
+
+.map-btn:hover {
+    scale: 1.05;
+    background-image: url("project://database/Assets/Image/UIPanel/HostRoom/hover.png?fileID=2049537167&guid=2e61ed59b02e93f44b09e9e4da1ad505&type=3#hover_0");
+}
+
+.map-btn:active {
+    scale: 1.05;
+    background-image: url("project://database/Assets/Image/UIPanel/HostRoom/active.png?fileID=-2134831659&guid=7b076c946aaf62946a482d645565c924&type=3#active_0");
+}
+
+.right-panel {
+    flex-direction: column;
+    align-items: center;
+}
+
+.panel-title {
+    font-size: 36px;
+    -unity-font-style: bold;
+    color: rgb(246, 199, 80);
+    -unity-text-align: middle-center;
+    width: 455px;
+    padding-bottom: 6px;
+    margin-bottom: 13px;
+    border-bottom-width: 5px;
+    border-bottom-color: rgb(246, 199, 80);
+}
+
+.slots-container {
+    width: 455px;
+    height: 400px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-content: flex-start;
+    background-image: url("project://database/Assets/Image/UIPanel/HostRoom/small_background.png?fileID=2800000&guid=53f0b8ff4e3315e4087a0e4522dd88f4&type=3#small_background");
+    border-radius: 20px;
+    padding: 26px;
+}
+
+.slot {
+    width: 190px;
+    height: 70px;
+    margin-bottom: 20px;
+    border-width: 0;
+    border-radius: 10px;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    -unity-font-style: bold;
+    transition-property: translate;
+    transition-duration: 0.15s;
+    border-bottom-width: 4px;
+    border-bottom-color: rgb(201, 164, 107);
+    background-image: url("project://database/Assets/Image/UIPanel/HostRoom/box.png?fileID=-1496700914&guid=2f19ea59013054748af6507bae31e995&type=3#box_0");
+}
+
+.slot.empty .player-name {
+    color: rgb(179, 178, 177);
+}
+
+.slot.other .player-name {
+    color: rgb(113, 159, 250);
+}
+
+.slot.self .player-name {
+    color: rgb(246, 199, 80);
+}
+
+.player-name {
+    -unity-font-style: bold;
+    font-size: 24px;
+    margin: 0;
+    padding: 0;
+}
+
+.slot:hover {
+    translate: 0 -2px;
+}
+
+.slot:active {
+    translate: 0 3px;
+}
+
+.triangle-btn {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    translate: -50% 0;
+    width: 50px;
+    height: 40px;
+    border-width: 0;
+    background-color: rgba(0, 0, 0, 0);
+    transition-property: translate;
+    background-color: rgb(255, 145, 56);
+}
+
+.triangle-btn:hover {
+    translate: -50% 3px;
+}
+
+.triangle-btn:active {
+    translate: -50% 0;
+}

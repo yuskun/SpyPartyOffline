@@ -1,19 +1,51 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Assets/Scripts/USS/CreateRoom.uss?fileID=...&amp;guid=...&amp;type=3#CreateRoom" />
-
+    <Style src="project://database/Assets/Scripts/USS/CreateRoom.uss?fileID=7433441132597879392&amp;guid=da4026c7e377e174aafe3bd6d227fac1&amp;type=3#CreateRoom" />
     <ui:VisualElement name="body-container" class="body-style">
-        
         <ui:VisualElement class="container">
-            
-            <ui:Button name="BackBtn" class="back-btn">
-                <ui:Label text="◀" class="back-btn-arrow" />
-                <ui:Label text="返回" class="back-btn-label" />
-            </ui:Button>
-
-            <ui:Button name="CreateBtn" text="建立&#10;房間" class="cute-btn yellow" />
-            
-            <ui:Button name="JoinBtn" text="快速&#10;加入" class="cute-btn pink" />
-
+            <ui:VisualElement class="room-actions" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&amp;guid=3d5723d09fd5e9a4f97a9f3e046bbb90&amp;type=3#GenSenRounded2TW-R&quot;); -unity-font-style: normal;">
+                <ui:VisualElement class="room-main">
+                    <ui:Button name="CreateBtn" class="cute-btn blue vertical jelly-btn">
+                        <ui:Label text="建立&#10;房間" class="btn-text" />
+                        <ui:VisualElement class="btn-icon icon-room" />
+                    </ui:Button>
+                    <ui:Button name="JoinBtn" class="cute-btn pink vertical jelly-btn">
+                        <ui:Label text="快速&#10;加入" class="btn-text" />
+                        <ui:VisualElement class="btn-icon icon-join" />
+                    </ui:Button>
+                </ui:VisualElement>
+                <ui:VisualElement class="room-sub">
+                    <ui:Button name="TutorialBtn" class="new-btn jelly-btn">
+                        <ui:VisualElement class="btn-icon icon-book" />
+                        <ui:Label text="新手教學" class="btn-text-sub" />
+                    </ui:Button>
+                </ui:VisualElement>
+            </ui:VisualElement>
         </ui:VisualElement>
+        <ui:VisualElement class="hud-bottom" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&amp;guid=3d5723d09fd5e9a4f97a9f3e046bbb90&amp;type=3#GenSenRounded2TW-R&quot;);">
+            <ui:VisualElement class="playerbar">
+                <ui:VisualElement class="avatar-wrap">
+                    <ui:VisualElement class="avatar" />
+                </ui:VisualElement>
+                <ui:VisualElement class="player-meta">
+                    <ui:Label text="shaya" class="player-name" />
+                    <ui:VisualElement class="level-line">
+                        <ui:Label text="7" class="level-bubble" />
+                        <ui:VisualElement class="level-track">
+                            <ui:VisualElement name="LevelFill" class="level-fill" style="width: 65%;" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement class="player-actions">
+                    <ui:Button name="MicBtn" class="icon-btn mic-btn is-open">
+                        <ui:VisualElement class="mic-icon mic-open" />
+                        <ui:VisualElement class="mic-icon mic-off" />
+                    </ui:Button>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:Button name="BackBtn" class="back-pill jelly-btn" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&amp;guid=3d5723d09fd5e9a4f97a9f3e046bbb90&amp;type=3#GenSenRounded2TW-R&quot;); -unity-font-style: normal;">
+            <ui:Label text="◀" class="back-arrow" />
+            <ui:Label text="返回" class="back-label" />
+        </ui:Button>
     </ui:VisualElement>
 </ui:UXML>

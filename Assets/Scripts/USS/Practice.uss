@@ -1,167 +1,185 @@
-VisualElement {}/* ✨ 全站設定 */
+/* ✨ 全站設定 */
 .body-style {
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
 }
 
 /* =========================================
-   左上角任務欄 (Mission Panel)
+   🔙 左上角整組 (返回鍵 + 任務欄)
    ========================================= */
-.mission-panel {
+.top-left-ui {
     position: absolute;
-    top: 30px;
-    left: 40px;
+    top: 30px; left: 30px;
     flex-direction: column;
-    align-items: flex-start; 
+    align-items: flex-start;
+    z-index: 50;
 }
 
-/* 任務條本體 */
+.back-pill-btn {
+    flex-direction: row;
+    align-items: center;
+    padding: 0 14px;
+    height: 44px;
+    border-radius: 22px;
+    background-image: url("project://database/Assets/Image/UIPanel/Practice/back_default.png");
+    border-width: 0;
+    margin-bottom: 14px;
+    transition-property: scale, translate;
+    transition-duration: 0.12s;
+}
+.back-arrow { font-size: 18px; color: white; margin-right: 5px; }
+.back-label { font-size: 16px; color: white; -unity-font-style: bold; }
+
+.back-pill-btn:hover {
+    scale: 1.05;
+    translate: 0 -2px;
+    background-image: url("project://database/Assets/Image/UIPanel/Practice/back_hover.png");
+}
+.back-pill-btn:active {
+    scale: 0.98;
+    translate: 0 2px;
+    background-image: url("project://database/Assets/Image/UIPanel/Practice/back_active.png");
+}
+
+/* =========================================
+   📜 任務欄 (Mission Panel)
+   ========================================= */
+.mission-panel { flex-direction: column; }
+
 .mission-task {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    
-    width: 120px;
-    height: 30px; /* 原本高度 30 */
+    width: 150px;
+    height: 40px;
     margin-bottom: 12px;
-    
-    border-radius: 12px;
-    overflow: hidden; 
-    
-    /* 關鍵修正 1：設定變形原點為「左上角」，跟 CSS 的 top left 一樣 */
+    background-image: url("project://database/Assets/Image/UIPanel/Practice/default-t2.png");
+    overflow: hidden;
+    /* 變形原點設為左上 */
     transform-origin: left top;
-
-    /* 確保這四個屬性都有動畫 */
     transition-property: width, height, scale, background-color;
-    transition-duration: 0.4s;
-    transition-timing-function: ease-out-back; 
-
-    /* (圖1) Normal BG */
-    background-color: #f9f1dd; 
+    transition-duration: 0.3s;
 }
 
-/* =========================================
-   任務欄展開狀態 (.active)
-   ========================================= */
-/* 當 C# 加上 active 時才會動 */
+/* 展開狀態 */
 .mission-task.active {
-    width: 250px;
-    height: 40px; /* 展開後變高為 40 */
-    
-    /* 只有在展開時才放大 1.05 倍 */
+    width: 280px;
+    height: 50px;
     scale: 1.05;
-    
-    /* (圖3) Active BG */
-    background-color: #FFF5D9;
+    padding: 0;
+    background-image: url("project://database/Assets/Image/UIPanel/Practice/active-t2.png");
 }
 
-/* 以下標題與內容設定維持不變 */
 .task-left {
     flex-direction: row;
-    align-items: center;
-    height: 100%;
-    overflow: hidden;
+    align-items: center;       /* ✅ 確保標題與描述在同一條水平線上 */
+    height: 100%;              /* 撐滿高度以便對齊 */
+    padding: 0; /* 確保這裡沒有 left padding */
+    margin: 0;
     flex-shrink: 0;
 }
 
 .task-title {
     height: 100%;
-    padding: 0 12px;
     margin: 0;
-    -unity-font-style: bold;
-    font-size: 15px;
-    color: #7A6B52;
+    padding: 0 12px;
+    background-image: url("project://database/Assets/Image/UIPanel/Practice/default-t.png");
+    color: white;
     -unity-text-align: middle-center;
-    background-color: #FFD267;
-    border-radius: 12px;
+    -unity-font-style: bold;
+    font-size: 18px;
 }
 
 .task-desc {
     font-size: 15px;
-    color: #7f594a;
+    color: #5F7F8D;
     margin-left: 8px;
-    
-    /* 收起狀態 */
-    width: 0;
     opacity: 0;
-    
-    transition-property: width, opacity;
-    transition-duration: 0.3s;
+    width: 0;
+    transition-property: opacity, width;
+    transition-duration: 0.2s;
 }
 
-.mission-task.active .task-title {
-    font-size: 18px; 
-}
-
-.mission-task.active .task-desc {
-    width: 120px; 
-    opacity: 1;
-    font-size: 16px;
-}
+.mission-task.active .task-desc { opacity: 1; width: auto; }
 
 .task-progress {
-    -unity-font-style: bold;
-    color: #77B653;
     padding-right: 10px;
-    -unity-text-align: middle-right;
-    flex-shrink: 0;
+    color: #4F7F8D;
+    -unity-font-style: bold;
 }
 
 /* =========================================
-   右上角按鈕 (Top Right Menu)
+   ↗ 右上角選單
    ========================================= */
 .top-right-menu {
     position: absolute;
-    top: 30px;
-    right: 50px;
-    flex-direction: row;
+    top: 30px; right: 30px;
 }
 
-/* 按鈕通用樣式 */
 .menu-btn {
-    width: 200px;
-    height: 60px;
-    margin-left: 20px; /* gap 替代 */
-    
-    font-size: 27px;
-    -unity-font-style: bold;
-    color: #7f594a;
-    
-    /* Unity 的 letter-spacing 支援度低，若間距不夠建議直接做在圖片文字上，
-       或使用 -unity-paragraph-spacing (僅限多行) */
-    
+    width: 200px; height: 70px;
+    border-radius: 30px;
     border-width: 0;
-    background-color: rgba(0,0,0,0);
-    
+    color: white; font-size: 28px; -unity-font-style: bold;
+    background-image: url("project://database/Assets/Image/UIPanel/Practice/blue_default.png");
+
     transition-property: scale, translate;
-    transition-duration: 0.2s;
-    transition-timing-function: ease-out;
+    transition-duration: 0.12s;
 }
 
-/* 黃色按鈕 */
-.menu-btn.yellow {
-    /* (圖4) Yellow Btn Normal */
-    background-color: #fad461; 
-    border-radius: 20px;
-    /* background-image: url("project://.../Btn_Yellow.png"); */
+.menu-btn:hover { scale: 1.05; translate: 0 -3px; background-image: url("project://database/Assets/Image/UIPanel/Practice/blue_hover.png"); }
+.menu-btn:active { scale: 0.98; translate: 0 2px; background-image: url("project://database/Assets/Image/UIPanel/Practice/blue_active.png");}
+
+/* =========================================
+   👤 右下角 HUD (與之前版本一致)
+   ========================================= */
+.hud-bottom {
+    position: absolute;
+    bottom: 18px;
+    right: 18px;
+    align-items: flex-end;
 }
 
-/* 橘粉色按鈕 */
-.menu-btn.orange {
-    /* (圖5) Orange Btn Normal */
-    background-color: #ffbe8e;
-    border-radius: 20px;
-    /* background-image: url("project://.../Btn_Orange.png"); */
+.playerbar {
+    width: 300px;
+    height: 80px;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 40px;
+    background-color: rgba(246, 235, 207, 0.95);
+    border-width: 2px;
+    border-color: rgba(255,255,255,0.8);
 }
 
-/* Hover: 上浮 + 放大 */
-.menu-btn:hover {
-    scale: 1.05;
-    translate: 0 -2%;
+.avatar-wrap { width: 52px; height: 52px; margin-right: 14px; }
+.avatar {
+    width: 100%; height: 100%;
+    border-radius: 26px;
+    border-width: 3px;
+    border-color: rgba(255,255,255,0.9);
+    background-image: url("project://database/Assets/Image/Character/Shaya.png");
+    -unity-background-scale-mode: scale-and-crop;
 }
 
-/* Active: 下壓 + 縮小 (照你這次提供的 CSS) */
-.menu-btn:active {
-    scale: 0.95;
-    translate: 0 -2%; /* 保持浮起的高度，但縮小，產生按壓感 */
+.player-meta { flex-grow: 1; justify-content: center; }
+.player-name { font-size: 16px; -unity-font-style: bold; color: #8b6a2b; margin-bottom: 6px; }
+
+.level-line { flex-direction: row; align-items: center; }
+.level-bubble {
+    width: 26px; height: 26px; border-radius: 13px;
+    background-color: #4fc7ff; border-width: 2px; border-color: rgba(255,255,255,0.9);
+    color: #ffffff; font-size: 12px; -unity-font-style: bold; -unity-text-align: middle-center;
+    margin-right: -10px; z-index: 2;
 }
+
+.level-track { width: 120px; height: 10px; background-color: #ffffff; border-radius: 5px; overflow: hidden; }
+.level-fill { height: 100%; background-color: #3fafff; border-radius: 5px; }
+
+.icon-btn {
+    width: 38px; height: 38px; border-radius: 15px;
+    background-color: #ffffff; border-width: 0;
+    align-items: center; justify-content: center;
+}
+.mic-icon { width: 20px; height: 20px; display: none; }
+.mic-btn.is-open .mic-open { display: flex; background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/mic-open.png"); }
+.mic-btn.is-off .mic-off { display: flex; background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/mic-off.png"); }

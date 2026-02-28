@@ -1,48 +1,41 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Assets/Scripts/USS/CharSelect.uss?fileID=...&amp;guid=...&amp;type=3#CharSelect" />
-
-    <ui:VisualElement name="screen" class="screen">
-        
-        <ui:VisualElement class="title-container">
-            <ui:Label text="Characters" class="title-text" />
-        </ui:VisualElement>
-
+    <Style src="project://database/Assets/Scripts/USS/CharSelect.uss?fileID=7433441132597879392&amp;guid=00f2ce26bd24eb946b92b808bfb94461&amp;type=3#CharSelect" />
+    <ui:VisualElement name="screen-root" class="body-style">
         <ui:VisualElement class="content">
-            
-            <ui:Label name="CharName" text="S&#10;H&#10;A&#10;Y&#10;A" class="character-name" />
-
-            <ui:VisualElement class="stage">
-                <ui:VisualElement class="stage-light" />
-                <ui:VisualElement name="MainCharImage" class="main-char" />
-            </ui:VisualElement>
-
+            <ui:VisualElement class="stage-light" />
             <ui:VisualElement class="portrait-column">
-                
-                <ui:Button name="Char1" class="portrait selected">
-                    <ui:VisualElement class="portrait-img shark" />
-                    <ui:VisualElement class="portrait-mask" />
+                <ui:Button class="portrait selected">
+                    <ui:VisualElement class="avatar">
+                        <ui:VisualElement name="ShayaImg" class="char-img shark" />
+                    </ui:VisualElement>
                 </ui:Button>
-
-                <ui:Button name="Char2" class="portrait">
-                    <ui:VisualElement class="portrait-img crocodile" />
-                    <ui:VisualElement class="portrait-mask" />
+                <ui:Button class="portrait">
+                    <ui:VisualElement class="avatar">
+                        <ui:VisualElement name="BurrImg" class="char-img crocodile" />
+                    </ui:VisualElement>
                 </ui:Button>
-
-                <ui:Button name="Char3" class="portrait">
-                    <ui:VisualElement class="portrait-img snake" />
-                    <ui:VisualElement class="portrait-mask" />
+                <ui:Button class="portrait">
+                    <ui:VisualElement class="avatar">
+                        <ui:VisualElement name="SybooImg" class="char-img snake" />
+                    </ui:VisualElement>
                 </ui:Button>
-
-                <ui:Button name="Char4" class="portrait">
-                    <ui:VisualElement class="portrait-img mouse" />
-                    <ui:VisualElement class="portrait-mask" />
+                <ui:Button class="portrait">
+                    <ui:VisualElement class="avatar">
+                        <ui:VisualElement name="RobertImg" class="char-img mouse" />
+                    </ui:VisualElement>
                 </ui:Button>
-
             </ui:VisualElement>
         </ui:VisualElement>
-
-        <ui:Button name="SelectBtn" text="Select  ▶" class="select-btn" />
-        <ui:Button name="BackBtn" text="◀" class="back-btn" />
-
+        <ui:Button name="BackBtn" class="back-btn back-pill" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&amp;guid=3d5723d09fd5e9a4f97a9f3e046bbb90&amp;type=3#GenSenRounded2TW-R&quot;); -unity-font-style: bold;">
+            <ui:Label text="◀" class="back-arrow" />
+            <ui:Label text="返回" class="back-label" />
+        </ui:Button>
+        <ui:VisualElement class="bottom-right-menu">
+            <ui:Button name="SelectBtn" class="menu-btn orange-jelly" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;); -unity-font-style: normal;">
+                <ui:Label text="選擇" class="select-label" />
+                <ui:VisualElement class="gloss-top" />
+            </ui:Button>
+        </ui:VisualElement>
+        
     </ui:VisualElement>
 </ui:UXML>
