@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using ExitGames.Client.Photon.StructWrapping;
 using Fusion;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -12,8 +13,8 @@ namespace OodlesEngine
         [HideInInspector]
         public ConfigurableJoint[] joints;
         public bool AllowAttack = false;
-
-
+        public float Delatime;
+        
         [HideInInspector] public HandFunction handFunctionRight, handFunctionLeft;
 
         [HideInInspector][SerializeField] private LayerMask ignoreGroundCheckOn;
@@ -74,6 +75,16 @@ namespace OodlesEngine
 
         void Awake()
         {
+            if(NetworkManager.instance != null && NetworkManager.instance._runner != null)
+            {
+               Delatime = NetworkManager.instance._runner.DeltaTime; 
+                
+            }
+            else
+            {
+                Delatime = Time.fixedDeltaTime;
+            }
+          
             physicsBody = ragdollPlayer.GetComponent<Rigidbody>();
             physicsBodyJoint = ragdollPlayer.GetComponent<ConfigurableJoint>();
 
@@ -302,12 +313,12 @@ namespace OodlesEngine
         {
             if ((inputState.leftAxis != 0 || inputState.forwardAxis != 0) && movement.grounded)
             {
-                energyLeftTime -= Time.deltaTime;
+                energyLeftTime -= Delatime;
                 energyLeftTime = Mathf.Clamp(energyLeftTime, 0, energyTimeLength);
             }
             else
             {
-                energyLeftTime += Time.deltaTime;
+                energyLeftTime += Delatime;
                 energyLeftTime = Mathf.Clamp(energyLeftTime, 0, energyTimeLength);
             }
         }
@@ -319,7 +330,7 @@ namespace OodlesEngine
 
             if (waitingGetUp)
             {
-                getUpTime += Time.deltaTime;
+                getUpTime += Delatime;
 
                 if (getUpTime >= 2.5f && getUpTime < 5f)
                 {
@@ -396,6 +407,8 @@ namespace OodlesEngine
 
         public void KnockDown()
         {
+            
+            
 
             JointLoseBalanceState();
 

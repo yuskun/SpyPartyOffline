@@ -12,7 +12,7 @@ namespace OodlesEngine
         private Quaternion Rotation;
         private Quaternion startRotation;
         private Quaternion currentRotation;
-
+        
         void Start()
         {
             ComputeStartRotation();

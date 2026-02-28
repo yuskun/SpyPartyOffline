@@ -56,7 +56,7 @@ public struct CardUseParameters : INetworkStruct
 [System.Serializable]
 public class MissionData: INetworkStruct
 {
-    public int id;                // ✅ 任務唯一ID
+
     public string title;
     public string description;
     public int current;
@@ -65,9 +65,9 @@ public class MissionData: INetworkStruct
     public bool IsComplete => current >= goal;
     
 
-    public MissionData(int id, string title, string desc, int goal)
+    public MissionData( string title, string desc, int goal)
     {
-        this.id = id;
+
         this.title = title;
         this.description = desc;
         this.goal = goal;

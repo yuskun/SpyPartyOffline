@@ -1,3 +1,4 @@
+using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
 public class MissionCard : Card
@@ -5,6 +6,8 @@ public class MissionCard : Card
 
 
     public MissionData data;
+    
+    public bool isHoldingUse = false; // 是否正在長按
 
     public virtual bool CanUse(PlayerInventory user, PlayerInventory target, CardData card)
     {

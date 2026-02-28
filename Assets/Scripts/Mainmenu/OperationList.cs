@@ -13,62 +13,60 @@ public class MissionUIManager : MonoBehaviour
     private int focusIndex = 0;
 
 
-    void Awake()
-    {
-       
-    }
 
-  void Update()
-{
-    var missionStates = LocalBackpack.Instance.userInventory.MissionStates;
-
-    // 1️⃣ 更新與新增
-    foreach (var mission in missionStates)
+    void Update()
     {
-        if (missionDict.ContainsKey(mission.Key))
+        var missionStates = LocalBackpack.Instance.userInventory.MissionStates;
+
+        // 1️⃣ 更新與新增
+        foreach (var mission in missionStates)
         {
-            UpdateMissionProgress(mission.Key, mission.Value);
+            if (missionDict.ContainsKey(mission.Key))
+            {
+                UpdateMissionProgress(mission.Key, mission.Value);
+            }
+            else
+            {
+                AddMission(CardManager.Instance.GetMissionCard(mission.Key));
+            }
         }
-        else
+
+        // 2️⃣ 找出需要被移除的 Mission
+        var removeList = missionDict.Keys
+            .Where(id => !missionStates.ContainsKey(id))
+            .ToList();
+
+        // 3️⃣ 執行移除
+        foreach (var missionID in removeList)
         {
-            AddMission(CardManager.Instance.GetMissionCard(mission.Key).data);
+            RemoveMission(missionID);
         }
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+            FocusNextMission();
     }
-
-    // 2️⃣ 找出需要被移除的 Mission
-    var removeList = missionDict.Keys
-        .Where(id => !missionStates.ContainsKey(id))
-        .ToList();
-
-    // 3️⃣ 執行移除
-    foreach (var missionID in removeList)
-    {
-        RemoveMission(missionID);
-    }
-
-    if (Input.GetKeyDown(KeyCode.Tab))
-        FocusNextMission();
-}
-    public void UpdateMissions(int missionID,int addValue)
+    public void UpdateMissions(int missionID, int addValue)
     {
         if (missionDict.ContainsKey(missionID))
         {
             UpdateMissionProgress(missionID, addValue);
-           
-        }else
+
+        }
+        else
         {
-            AddMission(CardManager.Instance.GetMissionCard(missionID).data);
+            AddMission(CardManager.Instance.GetMissionCard(missionID));
         }
     }
 
     // ✅ 新增任務
-    public void AddMission(MissionData data)
+    public void AddMission(MissionCard data)
     {
-        if (missionDict.ContainsKey(data.id))
+        if (missionDict.ContainsKey(data.cardData.id))
         {
-            Debug.LogWarning($"任務ID {data.id} 已存在！");
+            Debug.LogWarning($"任務ID {data.cardData.id} 已存在！");
             return;
         }
+        MissionData Data = data.data;
 
         GameObject obj = Instantiate(missionSlotPrefab);
         RectTransform rect = obj.GetComponent<RectTransform>();
@@ -78,12 +76,13 @@ public class MissionUIManager : MonoBehaviour
         // rect.localScale = new Vector3(0.4f, 0.4f, 1f);
 
         MissionSlot slot = obj.GetComponent<MissionSlot>();
-        slot.Setup(data);
+        slot.Setup(Data);
 
-        missionDict.Add(data.id, slot);
-        missionOrder.Add(data.id);
+        missionDict.Add(data.cardData.id, slot);
+        missionOrder.Add(data.cardData.id);
         RefreshFocus();
     }
+    
     // ✅ 移除任務
     public void RemoveMission(int id)
     {

@@ -122,7 +122,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         Host = Instantiate(HostSystem);
 
         var obj = _runner.Spawn(gameManager);
-        obj.GetComponent<GameManager>().GameScene = GameScene;
+     
     }
 
     public void StartAsHost() => StartGame(GameMode.Host);
@@ -232,7 +232,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
                      InputManager.Get().GetRightHandUse(),
                      InputManager.Get().GetDoAction1(),
                      InputManager.Get().GetCameraLook(),
-                     Time.fixedDeltaTime, runner.Tick);
+                     runner.DeltaTime, runner.Tick);
 
         input.Set(pci);
     }

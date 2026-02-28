@@ -6,10 +6,10 @@ using OodlesEngine;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
 
-public class GameManager : NetworkBehaviour
+public class GameManager1 : NetworkBehaviour
 {
     public GameObject GameScene;
-    public static GameManager instance;
+    public static GameManager1 instance;
     private CountdownTimer countdownTimer;
     public GameObject AI;
     public int AICount = 0;
@@ -19,9 +19,6 @@ public class GameManager : NetworkBehaviour
         {
             instance = this;
             MenuUIManager.instance.StartButton.onClick.AddListener(OnHostPressStart);
-            MenuUIManager.instance.missionUIManager.AddMission(new MissionData(1, "切換", "使用Tab切換任務。", 1));
-            MenuUIManager.instance.missionUIManager.AddMission(new MissionData(2, "移動", "WASD進行移動。", 4));
-            MenuUIManager.instance.missionUIManager.AddMission(new MissionData(3, "跳躍", "Space進行跳躍。", 1));
             countdownTimer = GetComponent<CountdownTimer>();
             DontDestroyOnLoad(gameObject);
         }
@@ -87,7 +84,6 @@ public class GameManager : NetworkBehaviour
     private void GameStart()
     {
         MenuUIManager.instance.Gameroom.SetActive(false);
-        MenuUIManager.instance.MenuScene.SetActive(false);
         GameUIManager.Instance.HUDUI.SetActive(true);
         NetworkManager.instance.GameScene.SetActive(true);
         LocalBackpack.Instance.SetUpdateEnabled(true);

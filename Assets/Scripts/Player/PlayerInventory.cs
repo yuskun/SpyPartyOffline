@@ -16,6 +16,10 @@ public class PlayerInventory : NetworkBehaviour // ✅ 必須繼承 NetworkBehav
     public CardData[] slots = new CardData[MaxSlots];
 
     public List<CardData> lostCards = new List<CardData>();
+    public bool IsProtecting = false;
+    private float ProtectingTime = 0f;
+    public bool dropAll = false;
+
 
 
     public override void Spawned()
@@ -30,10 +34,23 @@ public class PlayerInventory : NetworkBehaviour // ✅ 必須繼承 NetworkBehav
             UpdateLocalSlot();  // 本地初始化
             NotifyChange();
             InventoryVersion = 0;
-            
+
         }
 
 
+    }
+    public override void FixedUpdateNetwork()
+    {
+        if (IsProtecting)
+        {
+            ProtectingTime += Runner.DeltaTime;
+            if (ProtectingTime >= 10f)
+            {
+                IsProtecting = false;
+                ProtectingTime = 0f;
+            }
+
+        }
     }
 
 
@@ -168,6 +185,12 @@ public class PlayerInventory : NetworkBehaviour // ✅ 必須繼承 NetworkBehav
     public void LostCard()
     {
         if (!Object.HasStateAuthority) { Debug.LogWarning("[Inventory] LostCard 僅 Host 可寫"); return; }
+        if (IsProtecting)
+        {
+            Debug.Log("[Inventory] 正在保護中，無法遺失卡片");
+            Protect(false);
+            return;
+        }
 
         // 清除上次紀錄
         lostCards.Clear();
@@ -182,7 +205,20 @@ public class PlayerInventory : NetworkBehaviour // ✅ 必須繼承 NetworkBehav
         }
 
         System.Random rand = new System.Random();
-        int lostCount = Mathf.Min(rand.Next(1, 4), nonEmptyIndexes.Count);
+        int lostCount;
+
+        if (dropAll)
+        {
+            // ✅ 噴光全部
+            lostCount = nonEmptyIndexes.Count;
+            dropAll = false; 
+        }
+        else
+        {
+
+            lostCount = Mathf.Min(rand.Next(1, 4), nonEmptyIndexes.Count);
+        }
+
 
         for (int i = 0; i < lostCount; i++)
         {
@@ -259,11 +295,24 @@ public class PlayerInventory : NetworkBehaviour // ✅ 必須繼承 NetworkBehav
         int remainingTicks = Mathf.Max(0, endTick - Runner.Tick);
         return remainingTicks * Runner.DeltaTime;
     }
+    public void Protect(bool value)
+    {
+        if (value)
+        {
+            IsProtecting = true;
+            ProtectingTime = 0f;
+        }
+        else
+        {
+            IsProtecting = false;
+            ProtectingTime = 0f;
+        }
+    }
     //Mission UI------------------------------------------------------------------------
     [Networked, Capacity(20)]
     public NetworkDictionary<int, int> MissionStates => default;
-   
-   
+
+
 
 
 }

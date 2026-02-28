@@ -9,7 +9,7 @@ namespace OodlesEngine
         [HideInInspector]
         public OodlesCharacter owner;
 
-        public float hitForce = 15000;
+        public float hitForce = 10000;
 
         void OnCollisionEnter(Collision col)
         {

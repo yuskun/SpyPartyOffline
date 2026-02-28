@@ -12,6 +12,10 @@ public class GameUIManager : MonoBehaviour
     public GameObject HUDUI;
     public TextMeshProUGUI timerText;
     public MissionUIManager missionUIManager;
+    public GameObject PauseUI;
+    public Image progressfill;
+    public GameObject progressBar;
+    public Image UserCardUI;
 
     private void Awake()
     {
@@ -22,11 +26,28 @@ public class GameUIManager : MonoBehaviour
     {
         GameoverText.SetActive(true);
     }
-       public void Win()
+    public void Win()
     {
         WinText.SetActive(true);
     }
-   
-    
+    void FixedUpdate()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (HUDUI.activeSelf)
+            {
+                if (PauseUI.activeSelf)
+                {
+                    PauseUI.SetActive(false);
+                }
+                else
+                {
+                    PauseUI.SetActive(true);
+                }
+            }
+        }
+    }
+
+
 }
 

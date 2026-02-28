@@ -23,9 +23,9 @@ public class MissionWinSystem : MonoBehaviour
 
     public void Start()
     {
-        GameObject hud = GameObject.Find("HUDMissionlist");
+        GameObject hud = GameUIManager.Instance.HUDUI.transform.Find("HUDMissionlist").gameObject;
         missionUIManager = hud.GetComponent<MissionUIManager>();
-       
+
     }
 
     public bool CatchWin = false;

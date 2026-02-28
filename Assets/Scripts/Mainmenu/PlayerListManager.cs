@@ -8,8 +8,8 @@ public class PlayerListManager : NetworkBehaviour
     public NetworkDictionary<int, NetworkString<_16>> PlayerNames { get; }
     [Networked] public int PlayerVersion { get; set; }
     public int lastRevision = 0;
-    public GameObject ParentObject;
-    private int Mine;
+
+
 
     public Color otherPlayerColor;
     public Color myPlayerColor;
@@ -21,12 +21,11 @@ public class PlayerListManager : NetworkBehaviour
     public override void Spawned()
     {
         MenuUIManager.instance.playerlistmanager= this;
-        ParentObject = GameObject.Find("Players");
-        int count = ParentObject.transform.childCount;
+        int count = MenuUIManager.instance.PlayerList.transform.childCount;
         nameTexts = new TextMeshProUGUI[count];
         for (int i = 0; i < count; i++)
         {
-            nameTexts[i] =  ParentObject.transform.GetChild(i).GetComponentInChildren<TextMeshProUGUI>(true);
+            nameTexts[i] =  MenuUIManager.instance.PlayerList.transform.GetChild(i).GetComponentInChildren<TextMeshProUGUI>(true);
             nameTexts[i].text = "空間";
         }
         PlayerVersion = 0;
@@ -38,6 +37,10 @@ public class PlayerListManager : NetworkBehaviour
         {
             lastRevision = PlayerVersion;
             OnPlayerListChanged();
+        }
+        if (PlayerVersion == 1)
+        {
+            MenuUIManager.instance.ShowGameroom(GameMode.Host);
         }
     }
     public void RegisterPlayer(PlayerRef player, string playerName)

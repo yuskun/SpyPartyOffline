@@ -46,6 +46,7 @@ public class ItemCard : Card
         PlayerInventory User = PlayerInventoryManager.Instance.GetPlayer(parameters.UserId).GetComponent<PlayerInventory>();
 
         // ✅ 呼叫 ObjectSpawner 生成（Host 負責 Spawn，同步到所有 Client）
+        Debug.Log(ObjectSpawner.Instance);
         ObjectSpawner.Instance.objectToSpawn(itemPrefab, spawnPoint.transform);
         User.RemoveCard(parameters.UseCardIndex);
         if (CardHistoryManager.Instance != null)

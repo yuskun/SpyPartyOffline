@@ -18,8 +18,8 @@ public class MenuUIManager : MonoBehaviour
     public GameObject[] Ai;
     public PlayerListManager playerlistmanager;
     public Button StartButton;
-    public GameObject MenuScene;
     public MissionUIManager missionUIManager;
+    public GameObject PlayerList;
     void Awake()
     {
         if (instance == null)
@@ -93,8 +93,6 @@ public class MenuUIManager : MonoBehaviour
     }
     public void SetPlayerName()
     {
-
-
         NetworkManager.instance.PlayerName = $"Player_{Guid.NewGuid().ToString()[..6]}";
 
     }

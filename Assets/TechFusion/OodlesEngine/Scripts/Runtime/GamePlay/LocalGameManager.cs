@@ -6,7 +6,7 @@ namespace OodlesEngine
 {
     public class LocalGameManager : SingletonMono<LocalGameManager>
     {
-
+       
         override protected void Awake()
         {
             base.Awake();
@@ -24,6 +24,7 @@ namespace OodlesEngine
         // Start is called before the first frame update
         void Start()
         {
+            
 
         }
         void Update()
@@ -209,11 +210,11 @@ namespace OodlesEngine
 
         private void OnHandAttack(HandAttackMessage msg)
         {
-           
+
             JointMatch animMagnet = msg.col.gameObject.GetComponent<JointMatch>();
             if (animMagnet != null && MissionWinSystem.Instance != null) // hit someone
             {
-                
+
                 var target = animMagnet.oodlesCharacter;
                 if (msg.pc.gameObject.GetComponent<PlayerIdentify>().PlayerID == MissionWinSystem.Instance.GetFightID())
                 {
@@ -247,7 +248,7 @@ namespace OodlesEngine
             if (msg.obj.layer == LayerMask.NameToLayer(player))
             {
                 OodlesCharacter targetPC = msg.obj.GetComponentInParent<OodlesCharacter>();
-                if(msg.pc.gameObject.GetComponent<PlayerIdentify>().PlayerID == MissionWinSystem.Instance.GetFightID())
+                if (msg.pc.gameObject.GetComponent<PlayerIdentify>().PlayerID == MissionWinSystem.Instance.GetFightID())
                 {
                     // 檢查是否已經擊倒過這個 target
                     MissionWinSystem.Instance.UpdateFightCount(targetPC);

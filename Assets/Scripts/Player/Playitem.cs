@@ -13,6 +13,7 @@ public class PlayerItem : NetworkBehaviour
         {
             if (other.transform.parent.gameObject.GetComponent<PlayerInventory>().AddCard(cardData))
             {
+                this.gameObject.SetActive(false);
                 if (cardData.type == CardType.Mission)
                 {
                     Debug.LogWarning("ProcessPlayerCards()");

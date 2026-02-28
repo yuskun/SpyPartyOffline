@@ -21,7 +21,8 @@ public class NetworkPlayer : NetworkBehaviour
         {
             CameraFollow.Get().player = characterController.GetPhysicsBody().transform;
             CameraFollow.Get().enable = true;
-            MiniMap.instance.target = characterController.GetPhysicsBody().transform;
+            if (MiniMap.instance != null)
+                MiniMap.instance.target = characterController.GetPhysicsBody().transform;
             LocalBackpack.Instance.userInventory = this.GetComponent<PlayerInventory>();
             LocalBackpack.Instance.playerIdentify = this.GetComponent<PlayerIdentify>();
             LocalBackpack.Instance.scanner = this.transform.Find("Ragdoll").GetComponent<PlayerScanner>();

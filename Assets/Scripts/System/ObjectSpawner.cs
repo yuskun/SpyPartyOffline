@@ -38,11 +38,11 @@ public class ObjectSpawner : MonoBehaviour
     private float timer;
     private List<GameObject> spawnedObjects = new List<GameObject>();
 
-    private void Awake()
+
+
+    void Awake()
     {
         Instance = this;
-        this.enabled = false;
-
     }
 
     private void FixedUpdate()
@@ -61,6 +61,7 @@ public class ObjectSpawner : MonoBehaviour
     }
     bool TryFindGroundPosition(Collider area, out Vector3 spawnPosition)
     {
+        Debug.Log($"嘗試在區域 {area.name} 中尋找生成點...");
         Bounds bounds = area.bounds;
         int attempts = 0;
 
@@ -149,7 +150,7 @@ public class ObjectSpawner : MonoBehaviour
                     GameObject spawnPrefab = GetRandomSpawnPrefab();
 
                     GameObject newObj =
-                        NetworkManager.instance._runner
+                        NetworkManager2.Instance.runner
                         .Spawn(spawnPrefab, pos, Quaternion.identity, null,
                         (runner, obj) =>
                         {
@@ -180,7 +181,7 @@ public class ObjectSpawner : MonoBehaviour
 
     public void objectToSpawn(GameObject obj, Transform position)
     {
-        NetworkManager.instance._runner.Spawn(obj, position.position, null, null, (runner, obj) =>
+        NetworkManager2.Instance.runner.Spawn(obj, position.position, null, null, (runner, obj) =>
         {
             if (obj.GetComponent<SetPosition>() != null)
                 obj.GetComponent<SetPosition>().Setpos(position.position);
@@ -244,7 +245,7 @@ public class ObjectSpawner : MonoBehaviour
 
                         // ✅ 生成掉落物
                         // var obj = Instantiate(PlayerItem, spawnPos, Quaternion.identity);
-                        var obj = NetworkManager.instance._runner.Spawn(PlayerItem, spawnPos, null, null, (runner, obj) =>
+                        var obj = NetworkManager2.Instance.runner.Spawn(PlayerItem, spawnPos, null, null, (runner, obj) =>
         {
             if (obj.GetComponent<SetPosition>() != null)
                 obj.GetComponent<SetPosition>().Setpos(spawnPos);
