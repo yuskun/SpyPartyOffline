@@ -1,11 +1,13 @@
 using UnityEngine;
 using Fusion;
+using System.Collections.Generic;
 
 public class PlayerSpawner : MonoBehaviour
 {
 
     public GameObject[] characterPrefabs; // 四個造型
     public Transform[] spawnPoints;
+ 
     public static PlayerSpawner instance;
     private void Awake()
     {
@@ -47,6 +49,8 @@ public class PlayerSpawner : MonoBehaviour
             Debug.Log($"[PlayerSpawner] 玩家 {player} 生成於 {chosenSpawnPoint.position}，使用角色 {chosenCharacterPrefab.name}。");
             obj.GetComponent<NetworkPlayer>().PlayerId = player;
             obj.GetComponent<PlayerIdentify>().name = name;
+
+            SkinChange.instance.SetSpawnedPlayer(obj.GetComponent<NetworkObject>());
 
         });
 

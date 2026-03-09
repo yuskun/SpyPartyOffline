@@ -25,6 +25,8 @@ public class NetworkPlayer : NetworkBehaviour
                 MiniMap.instance.target = characterController.GetPhysicsBody().transform;
             LocalBackpack.Instance.userInventory = this.GetComponent<PlayerInventory>();
             LocalBackpack.Instance.playerIdentify = this.GetComponent<PlayerIdentify>();
+            LocalBackpack.Instance.character = this.GetComponent<OodlesCharacter>();
+
             LocalBackpack.Instance.scanner = this.transform.Find("Ragdoll").GetComponent<PlayerScanner>();
             LocalBackpack.Instance.scanner.enableScan = true;
 

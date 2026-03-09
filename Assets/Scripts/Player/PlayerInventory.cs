@@ -19,6 +19,8 @@ public class PlayerInventory : NetworkBehaviour // ✅ 必須繼承 NetworkBehav
     public bool IsProtecting = false;
     private float ProtectingTime = 0f;
     public bool dropAll = false;
+    public bool CanUseCard = true;
+    
 
 
 

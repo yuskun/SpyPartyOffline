@@ -6,7 +6,8 @@ public class MissionCard : Card
 
 
     public MissionData data;
-    
+    public bool needTarget = false;
+
     public bool isHoldingUse = false; // 是否正在長按
 
     public virtual bool CanUse(PlayerInventory user, PlayerInventory target, CardData card)
@@ -27,8 +28,8 @@ public class MissionCard : Card
     public virtual void ResetMission(CardUseParameters parameters) { }
     public virtual void UpdateGoal(int newGoal)
     {
-       data.goal = newGoal;
-       data.current=0;
+        data.goal = newGoal;
+        data.current = 0;
     }
 }
 

@@ -317,6 +317,7 @@ namespace OodlesEngine
             }
             else
             {
+                
                 return Input.GetAxisRaw("Jump");
             }
         }
@@ -363,7 +364,14 @@ namespace OodlesEngine
             }
             else
             {
-                return Input.GetAxisRaw("Fire1");
+                if (Input.GetKeyDown(KeyCode.Mouse0))
+                {
+                    return 1;
+                }
+                else
+                {
+                    return 0;
+                }
             }
         }
 
@@ -389,7 +397,7 @@ namespace OodlesEngine
             }
             else
             {
-                if (Input.GetKey(KeyCode.T))
+                if (Input.GetKey(KeyCode.LeftShift))
                 {
                     return 1;
                 }
@@ -399,6 +407,28 @@ namespace OodlesEngine
                 }
             }
         }
+         public float GetDoAction2()
+        {
+            if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
+            //if (true)
+            {
+                return action1Down;
+            }
+            else
+            {
+                if (Input.GetKeyDown(KeyCode.Mouse1))
+                {
+                    return 1;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
+       
+     
+    
 
         public Vector3 GetCameraLook()
         {

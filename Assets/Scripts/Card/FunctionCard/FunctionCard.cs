@@ -2,8 +2,7 @@ using UnityEngine;
 
 public class FunctionCard : Card
 {
-    public int Step = 0;
-    public int totalSteps = 0;
+     public bool needTarget = false;
 
     public virtual bool CanUse(PlayerInventory user, PlayerInventory target)
     {
@@ -12,10 +11,5 @@ public class FunctionCard : Card
 
     public virtual void Execute(CardUseParameters parameters) { }
 
-    public virtual void SetParameter() { }
 
-    public virtual void Reset()
-    {
-        Step = 0;
-    }
 }

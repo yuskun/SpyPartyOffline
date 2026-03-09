@@ -564,7 +564,7 @@ GameObject:
   - component: {fileID: 4601333307024563074}
   m_Layer: 0
   m_Name: "\u8001\u9F20"
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -626,7 +626,7 @@ MonoBehaviour:
   minTargetDirAngle: -30
   maxTargetDirAngle: 60
   energyTimeLength: 3
-  moveForce: 50000
+  moveForce: 100000
   jumpForce: 22000
   runSpeedTimes: 2
   minArmsAngle: -70
@@ -698,6 +698,9 @@ MonoBehaviour:
     type: 3
     cooldown: 0
   lostCards: []
+  IsProtecting: 0
+  dropAll: 0
+  CanUseCard: 1
 --- !u!114 &2332593447904172981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2443,6 +2446,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ragdoll
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 9f134400f1a76684d84eb9d9623cdeaa, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 6300111784500738556, guid: 9f134400f1a76684d84eb9d9623cdeaa, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.036
@@ -3086,10 +3093,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.27
-  m_Height: 1.23
+  m_Radius: 0.24
+  m_Height: 1.19
   m_Direction: 1
-  m_Center: {x: 0, y: 0.52, z: 0}
+  m_Center: {x: 0, y: 0.45, z: -0.06}
 --- !u!114 &7264368586887321998
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3483,7 +3490,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.246
+  m_Radius: 0.368
   m_Height: 0.66155195
   m_Direction: 1
   m_Center: {x: 0.0013189837, y: 0.33069998, z: 0.006966068}
@@ -4394,7 +4401,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.246
+  m_Radius: 0.368
   m_Height: 0.66155213
   m_Direction: 1
   m_Center: {x: -0.0013188571, y: 0.33070007, z: 0.0069660177}
@@ -5720,6 +5727,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   oodlesCharacter: {fileID: 767527063899762673}
+  currentHoldType: 0
   handSide: 1
   hasJoint: 0
   GrabbedObject: {fileID: 0}
@@ -6113,6 +6121,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   oodlesCharacter: {fileID: 767527063899762673}
+  currentHoldType: 0
   handSide: 0
   hasJoint: 0
   GrabbedObject: {fileID: 0}

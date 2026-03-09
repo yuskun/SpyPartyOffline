@@ -100,6 +100,7 @@ namespace OodlesEngine
 
             //Get Jump Button;
             jumping = controller.inputState.jumpAxis == 1;
+            
         }
 
 

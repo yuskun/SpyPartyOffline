@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using OodlesEngine;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,8 +12,9 @@ public class LocalBackpack : MonoBehaviour
     public int SlotCount = 0;
     public List<ButtionData> buttons = new List<ButtionData>();
     public GameObject BackPack;
-    public PlayerIdentify playerIdentify;
-    public PlayerInventory userInventory; // 本地玩家
+    [HideInInspector] public PlayerIdentify playerIdentify;
+    [HideInInspector] public PlayerInventory userInventory; // 本地玩家
+    [HideInInspector] public OodlesCharacter character;
     [HideInInspector] public PlayerScanner scanner;
     // ========= 長按設定 =========
     [SerializeField] private float holdSeconds = 1f;
@@ -34,7 +36,7 @@ public class LocalBackpack : MonoBehaviour
     // ✅ 新增：可控制 Update 是否執行
     [Header("控制項")]
     public bool enableUpdate = false;
-    public bool canUseCard = true;
+
 
     void Awake()
     {
@@ -86,30 +88,31 @@ public class LocalBackpack : MonoBehaviour
         if (FocusIndex < 0 || FocusIndex >= buttons.Count) return;
         if (!buttons[FocusIndex].button.interactable) return;
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             OnMouseDownUse();
         }
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetKey(KeyCode.E))
         {
             OnMouseHoldUse();
         }
 
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetKeyUp(KeyCode.E))
         {
             OnMouseUpUse();
         }
     }
     void OnMouseDownUse()
     {
-        if (!canUseCard)
+        if (!userInventory.CanUseCard)
             return;
 
         // 找 targetInventory（你原本的邏輯）
         PlayerInventory targetInventory = null;
         if (scanner != null && scanner.currentTarget != null)
             targetInventory = scanner.currentTarget.GetComponent<PlayerInventory>();
+
 
         // 基本檢查
         if (userInventory == null)
@@ -137,13 +140,25 @@ public class LocalBackpack : MonoBehaviour
         // FunctionCard：仍然瞬發（你原本邏輯）
         if (card is FunctionCard functionCard)
         {
+            if (functionCard.needTarget && targetInventory == null)
+            {
+                character.animatorPlayer.SetTrigger("DoScratch");
+                Debug.Log("此功能卡需要目標，但沒有掃描到有效目標");
+                return;
+            }
             cardUseUIManager.TryUseFunctionCard(functionCard, userInventory, targetInventory, FocusIndex);
             return;
         }
 
         // ItemCard：仍然瞬發（你原本邏輯）
-        if (card is ItemCard)
+        if (card is ItemCard itemCard)
         {
+            if (itemCard.needTarget && targetInventory == null)
+            {
+                character.animatorPlayer.SetTrigger("DoScratch");
+                Debug.Log("此物品卡需要目標，但沒有掃描到有效目標");
+                return;
+            }
             SendUseCardRpc(data, FocusIndex, targetInventory);
             return;
         }
@@ -151,12 +166,19 @@ public class LocalBackpack : MonoBehaviour
         // MissionCard：判斷要不要長按
         if (card is MissionCard missionCard)
         {
+            if (missionCard.needTarget && targetInventory == null)
+            {
+                character.animatorPlayer.SetTrigger("DoScratch");
+                Debug.Log("此任務卡需要目標，但沒有掃描到有效目標");
+                return;
+            }
             bool requireHold = missionCard.isHoldingUse; // 直接從卡片屬性讀取是否需要長按
+
 
             if (!requireHold)
             {
                 // 不需要長按：照原本瞬發流程
-                if (!cardUseUIManager.TryUseMissionCard(missionCard, userInventory, targetInventory)|| !IsCardReady(FocusIndex))
+                if (!cardUseUIManager.TryUseMissionCard(missionCard, userInventory, targetInventory) || !IsCardReady(FocusIndex))
                     return;
 
                 SendUseCardRpc(data, FocusIndex, targetInventory);
@@ -183,8 +205,14 @@ public class LocalBackpack : MonoBehaviour
     {
         if (!isHolding) return;
 
+        if (scanner.currentTarget == null)
+        {
+            character.animatorPlayer.SetTrigger("DoScratch");
+            CancelHold("scanner.currentTarget 為 null，取消長按");
+            return;
+        }
         // 長按期間狀態改變 → 直接取消
-        if (!canUseCard)
+        if (!userInventory.CanUseCard)
         {
             CancelHold("canUseCard 為 false，取消長按");
             return;
@@ -273,6 +301,7 @@ public class LocalBackpack : MonoBehaviour
     void CancelHold(string reason)
     {
         Debug.Log($"[Hold] {reason}");
+        GameUIManager.Instance.progressBar.SetActive(false);
         isHolding = false;
         holdTimer = 0f;
         holdingIndex = -1;
@@ -311,8 +340,11 @@ public class LocalBackpack : MonoBehaviour
     bool IsCardReady(int index)
     {
         if (index < 0 || index >= userInventory.slots.Length)
-            return false;
+        {
 
+            character.animatorPlayer.SetTrigger("DoShake");
+            return false;
+        }
         var slot = userInventory.slots[index];
         return userInventory.CanUse(slot); // 確保冷卻狀態更新
 
@@ -412,6 +444,15 @@ public class LocalBackpack : MonoBehaviour
                 buttons[i].image.gameObject.SetActive(false);
             }
         }
+    }
+    public void ClearCardImages()
+    {
+        for (int i = 0; i < buttons.Count; i++)
+        {
+            buttons[i].image.sprite = null;
+            buttons[i].image.gameObject.SetActive(false);
+        }
+        enableUpdate = false; // ✅ 清空後關閉 Update
     }
 }
 [System.Serializable]

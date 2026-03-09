@@ -26,7 +26,7 @@ namespace OodlesEngine
 
         private void Awake()
         {
-            aiInput = new OodlesCharacterInput(0, 0, 0, 0, 0, 0, 0, Vector3.forward, 0, 0);
+            aiInput = new OodlesCharacterInput(0, 0, 0, 0, 0, 0,0, 0, Vector3.forward, 0, 0);
 
             enemyBrain = new BehaviorTreeBuilder(gameObject)
                 .Selector("AI Brain")

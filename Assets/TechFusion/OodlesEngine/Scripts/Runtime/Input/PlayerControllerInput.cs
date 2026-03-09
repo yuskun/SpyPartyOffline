@@ -23,6 +23,7 @@ namespace OodlesEngine
         public float fire1Axis;
         public float fire2Axis;
         public float doAction1;
+        public float doAction2;
         public Vector3 cameraForward;
 
         public OodlesCharacterInput(float forwardAxis,
@@ -32,6 +33,7 @@ namespace OodlesEngine
         float fire1Axis,
         float fire2Axis,
         float doAction1,
+        float doAction2,
         Vector3 cameraForward,
         float deltaTime, int tick)
         {
@@ -42,6 +44,7 @@ namespace OodlesEngine
             this.fire1Axis = fire1Axis;
             this.fire2Axis = fire2Axis;
             this.doAction1 = doAction1;
+            this.doAction2 = doAction2;
             this.cameraForward = cameraForward;
 
             this.deltaTime = deltaTime;
@@ -57,6 +60,7 @@ namespace OodlesEngine
             this.fire1Axis = 0;
             this.fire2Axis = 0;
             this.doAction1 = 0;
+            this.doAction2 = 0;
             this.cameraForward = Vector3.forward;
 
             this.deltaTime = 0;

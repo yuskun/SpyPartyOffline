@@ -117,26 +117,63 @@ public class MissionWinSystem : MonoBehaviour
     //任務追蹤器
     public void Catch(int id)
     {
+        var inventories = PlayerInventoryManager.Instance.playerInventories;
+
+        if (inventories == null)
+        {
+            Debug.LogError("[Catch] playerInventories is null");
+            return;
+        }
+
+        if (id < 0 || id >= inventories.Count)
+        {
+            Debug.LogError($"[Catch] invalid id: {id}, inventories.Count: {inventories.Count}");
+            return;
+        }
+
+        if (CatchID != -1 && (CatchID < 0 || CatchID >= inventories.Count))
+        {
+            Debug.LogError($"[Catch] invalid previous CatchID: {CatchID}, inventories.Count: {inventories.Count}");
+            CatchID = -1;
+        }
 
         // 如果 Catch 任務的持有者變了，重置進度
         if (CatchID != id)
         {
             Debug.Log("Catch 任務持有者變更，重置進度");
-            CatchWin = false;  // 重置完成狀態
-            PlayerInventoryManager.Instance.playerInventories[id].MissionStates.Set(0, 0);
-            if (CatchID != -1)
-                PlayerInventoryManager.Instance.playerInventories[CatchID].MissionStates.Remove(0);
+            CatchWin = false;
 
-            // GameManager.instance.RPC_UpdateMission(id, 0, "逮捕", "抓到會偷東西的人", 1, true);
-            // GameManager.instance.RPC_UpdateMission(CatchID, 0, "逮捕", "抓到會偷東西的人", 1, false);
+            inventories[id].MissionStates.Set(0, 0);
+
+            if (CatchID != -1)
+                inventories[CatchID].MissionStates.Remove(0);
         }
 
-        CatchID = id; // 更新目前玩家 ID
+        CatchID = id;
     }
 
     public void Steal(int id)
     {
-        if (StealID != id || StealID == null)
+        var inventories = PlayerInventoryManager.Instance.playerInventories;
+
+        if (inventories == null)
+        {
+            Debug.LogError("[Catch] playerInventories is null");
+            return;
+        }
+
+        if (id < 0 || id >= inventories.Count)
+        {
+            Debug.LogError($"[Catch] invalid id: {id}, inventories.Count: {inventories.Count}");
+            return;
+        }
+       
+        if (CatchID != -1 && (CatchID < 0 || CatchID >= inventories.Count))
+        {
+            Debug.LogError($"[Catch] invalid previous CatchID: {CatchID}, inventories.Count: {inventories.Count}");
+            CatchID = -1;
+        }
+        if (StealID != id)
         {
             StealWin = false;
             PlayerInventoryManager.Instance.playerInventories[id].MissionStates.Set(1, 0);
@@ -151,6 +188,25 @@ public class MissionWinSystem : MonoBehaviour
 
     public void Fight(int id)
     {
+        var inventories = PlayerInventoryManager.Instance.playerInventories;
+
+        if (inventories == null)
+        {
+            Debug.LogError("[Catch] playerInventories is null");
+            return;
+        }
+
+        if (id < 0 || id >= inventories.Count)
+        {
+            Debug.LogError($"[Catch] invalid id: {id}, inventories.Count: {inventories.Count}");
+            return;
+        }
+
+        if (CatchID != -1 && (CatchID < 0 || CatchID >= inventories.Count))
+        {
+            Debug.LogError($"[Catch] invalid previous CatchID: {CatchID}, inventories.Count: {inventories.Count}");
+            CatchID = -1;
+        }
         if (FightID != id)
         {
             FightWin = false;

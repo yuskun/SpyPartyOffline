@@ -16,10 +16,15 @@ public class MenuUIManager : MonoBehaviour
     public GameObject JoinRoomList;
     public TextMeshProUGUI PlayerNameInput;
     public GameObject[] Ai;
-    public PlayerListManager playerlistmanager;
+   [HideInInspector] public PlayerListManager playerlistmanager;
     public Button StartButton;
     public MissionUIManager missionUIManager;
     public GameObject PlayerList;
+    public GameObject ChooseCharacterUI;
+    public GameObject Practice;
+    public Button ConfirmCharcterBtn;
+    public Button[] CharacterButtons;
+
     void Awake()
     {
         if (instance == null)

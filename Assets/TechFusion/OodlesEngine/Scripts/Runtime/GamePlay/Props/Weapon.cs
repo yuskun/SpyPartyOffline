@@ -8,6 +8,7 @@ namespace OodlesEngine
     {
         [HideInInspector]
         public OodlesCharacter owner;
+        public int Time;
 
         public float hitForce = 10000;
 
@@ -32,5 +33,6 @@ namespace OodlesEngine
                 });
             }
         }
+
     }
 }

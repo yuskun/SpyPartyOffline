@@ -9,6 +9,7 @@ public class ItemCard : Card
     [Header("生成的物件 Prefab (必須帶有 NetworkObject)")]
     public GameObject itemPrefab;
     public bool WeaponItem = false;
+    public bool needTarget = false;
 
   
 

@@ -231,6 +231,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
                      InputManager.Get().GetLeftHandUse(),
                      InputManager.Get().GetRightHandUse(),
                      InputManager.Get().GetDoAction1(),
+                      InputManager.Get().GetDoAction2(),
                      InputManager.Get().GetCameraLook(),
                      runner.DeltaTime, runner.Tick);
 

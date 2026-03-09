@@ -78,7 +78,7 @@ GameObject:
   - component: {fileID: 4458448911091908190}
   m_Layer: 0
   m_Name: "\u86C7"
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -140,7 +140,7 @@ MonoBehaviour:
   minTargetDirAngle: -30
   maxTargetDirAngle: 60
   energyTimeLength: 3
-  moveForce: 50000
+  moveForce: 100000
   jumpForce: 22000
   runSpeedTimes: 2
   minArmsAngle: -70
@@ -214,6 +214,7 @@ MonoBehaviour:
   lostCards: []
   IsProtecting: 0
   dropAll: 0
+  CanUseCard: 1
 --- !u!114 &1383344109652482918
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2445,6 +2446,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ragdoll
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 28c5b080c361ef346ac8717c4e8a3a87, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5866666021909216657, guid: 28c5b080c361ef346ac8717c4e8a3a87, type: 3}
     m_RemovedGameObjects: []
@@ -3478,6 +3483,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   oodlesCharacter: {fileID: 6487266114433470740}
+  currentHoldType: 0
   handSide: 0
   hasJoint: 0
   GrabbedObject: {fileID: 0}
@@ -4211,6 +4217,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   oodlesCharacter: {fileID: 6487266114433470740}
+  currentHoldType: 0
   handSide: 1
   hasJoint: 0
   GrabbedObject: {fileID: 0}
@@ -6014,10 +6021,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.27
-  m_Height: 1.23
+  m_Radius: 0.24
+  m_Height: 1.19
   m_Direction: 1
-  m_Center: {x: 0, y: 0.48, z: 0}
+  m_Center: {x: 0, y: 0.48, z: -0.06}
 --- !u!114 &8484353098199080188
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -14,7 +14,8 @@ namespace OodlesEngine
         public ConfigurableJoint[] joints;
         public bool AllowAttack = false;
         public float Delatime;
-        
+        private float ragdollTimer = 0f;
+
         [HideInInspector] public HandFunction handFunctionRight, handFunctionLeft;
 
         [HideInInspector][SerializeField] private LayerMask ignoreGroundCheckOn;
@@ -75,16 +76,16 @@ namespace OodlesEngine
 
         void Awake()
         {
-            if(NetworkManager.instance != null && NetworkManager.instance._runner != null)
+            if (NetworkManager.instance != null && NetworkManager.instance._runner != null)
             {
-               Delatime = NetworkManager.instance._runner.DeltaTime; 
-                
+                Delatime = NetworkManager.instance._runner.DeltaTime;
+
             }
             else
             {
                 Delatime = Time.fixedDeltaTime;
             }
-          
+
             physicsBody = ragdollPlayer.GetComponent<Rigidbody>();
             physicsBodyJoint = ragdollPlayer.GetComponent<ConfigurableJoint>();
 
@@ -282,8 +283,9 @@ namespace OodlesEngine
             }
             else
             {
-                if (physicsBody.linearVelocity.y < -10)
+                if (physicsBody.linearVelocity.y < -15)
                 {
+                    ragdollTimer = 0f;
                     ragdollMode = true;
                     JointLoseBalanceState();
                     ChangeState(State.LostControl);
@@ -297,21 +299,21 @@ namespace OodlesEngine
 
         public void UpdateMovement()
         {
-            // if (energyLeftTime > 0.1)
-            // {
-            movement.moveSpeed = moveForce * runSpeedTimes;
-            // }
-            // else
-            // {
-            // movement.moveSpeed = moveForce;
-            // }
+            if (inputState.doAction1 > 0 && energyLeftTime > 0)
+            {
+                movement.moveSpeed = moveForce * runSpeedTimes;
+            }
+            else
+            {
+                movement.moveSpeed = moveForce;
+            }
 
             movement.ProcessInput();
         }
 
         public void UpdateEnergy()
         {
-            if ((inputState.leftAxis != 0 || inputState.forwardAxis != 0) && movement.grounded)
+            if ((inputState.doAction1 != 0) && movement.grounded)
             {
                 energyLeftTime -= Delatime;
                 energyLeftTime = Mathf.Clamp(energyLeftTime, 0, energyTimeLength);
@@ -321,37 +323,35 @@ namespace OodlesEngine
                 energyLeftTime += Delatime;
                 energyLeftTime = Mathf.Clamp(energyLeftTime, 0, energyTimeLength);
             }
+            if (Grabsomething() && (inputState.forwardAxis != 0 || inputState.leftAxis != 0))
+            {
+                energyLeftTime -= Delatime;
+                energyLeftTime = Mathf.Clamp(energyLeftTime, 0, energyTimeLength);
+            }
         }
 
-        float getUpTime = 0;
         public void UpdateStandUp()
         {
             if (!ragdollMode) return;
 
-            if (waitingGetUp)
+            ragdollTimer += Delatime;
+
+            // 2.5秒進入暈眩姿勢
+            if (ragdollTimer >= 2.5f && ragdollTimer < 5f)
             {
-                getUpTime += Delatime;
-
-                if (getUpTime >= 2.5f && getUpTime < 5f)
-                {
-                    JointDizzyState();
-                }
-                else if (getUpTime >= 5f)
-                {
-                    JointIdleState();
-
-                    waitingGetUp = false;
-                    getUpTime = 0;
-
-                    ragdollMode = false;
-                    ChangeState(State.Control);
-                    return;
-                }
+                JointDizzyState();
             }
 
-            if (physicsBody.linearVelocity.magnitude < 0.2f)
+            // 5秒直接站起來
+            if (ragdollTimer >= 5f)
             {
-                waitingGetUp = true;
+                JointIdleState();
+
+                ragdollMode = false;
+                ragdollTimer = 0f;
+                this.GetComponent<PlayerInventory>().CanUseCard = true;
+
+                ChangeState(State.Control);
             }
         }
 
@@ -407,11 +407,9 @@ namespace OodlesEngine
 
         public void KnockDown()
         {
-            
-            
 
+            ragdollTimer = 0f;
             JointLoseBalanceState();
-
             ragdollMode = true;
             waitingGetUp = false;
             ChangeState(State.LostControl);
@@ -419,6 +417,7 @@ namespace OodlesEngine
             animatorPlayer.SetFloat("BlendVertical", 0);
             handFunctionLeft.ReleaseHand();
             handFunctionRight.ReleaseHand();
+            this.GetComponent<PlayerInventory>().CanUseCard = false;
             this.GetComponent<PlayerInventory>().LostCard();
         }
 
@@ -587,15 +586,16 @@ namespace OodlesEngine
 
         public void UpdateThrow()
         {
-            if (inputState.doAction1 == 1)
+            if (inputState.doAction2 > 0 && (LeftHandGrabObject() != null || RightHandGrabObject() != null) )
             {
+                
                 if (!isThrowing)
                 {
                     Vector3 hor = physicsBody.transform.forward;
                     hor.y = 0;
                     hor.Normalize();
 
-                    if (LeftHandGrabObject() && LeftHandGrabObject() == RightHandGrabObject())
+                    if (LeftHandGrabObject() &&  RightHandGrabObject())
                     {
                         Rigidbody rb = LeftHandGrabObject();
 
@@ -696,8 +696,7 @@ namespace OodlesEngine
             float timeLeft = 1;
             SearchPickTarget();
             JointActionState();
-            //UseLeftArm(1);
-            //UseRightArm(1);
+
             UseLeftArm(1);
             UseRightArm(1);
 
@@ -721,12 +720,19 @@ namespace OodlesEngine
 
             return false;
         }
+        bool Grabsomething()
+        {
+            if (handFunctionLeft.currentHoldType == HoldType.GrabObject || handFunctionRight.currentHoldType == HoldType.GrabObject) return true;
+
+            return false;
+        }
 
 
         public void UpdatePickUp()
         {
-            if (inputState.fire2Axis > 0 && !HoldWeapon())
+            if (inputState.doAction2 > 0 && !HoldWeapon())
             {
+              
                 if (!pickUpInput)
                 {
                     if (coroutinePickUp != null) { StopCoroutine(coroutinePickUp); }
@@ -741,15 +747,15 @@ namespace OodlesEngine
 
             }
 
-            if (leftPicking)
-            {
-                if (pickTargetLeftHand != null)
-                {
-                    handFunctionLeft.GetComponent<Rigidbody>().AddForce(
-                        (pickTargetLeftHand.position - handFunctionLeft.GetComponent<Rigidbody>().position).normalized * 14,
-                        ForceMode.VelocityChange);
-                }
-            }
+            // if (leftPicking)
+            // {
+            //     if (pickTargetLeftHand != null)
+            //     {
+            //         handFunctionLeft.GetComponent<Rigidbody>().AddForce(
+            //             (pickTargetLeftHand.position - handFunctionLeft.GetComponent<Rigidbody>().position).normalized * 14,
+            //             ForceMode.VelocityChange);
+            //     }
+            // }
 
             if (rightPicking)
             {
@@ -765,21 +771,72 @@ namespace OodlesEngine
         public void UpdateAttack()
         {
 
-            if (inputState.fire2Axis > 0 && (HoldWeapon() || AllowAttack))
+            if (inputState.fire1Axis > 0 && (HoldWeapon() || AllowAttack))
             {
 
                 animatorPlayer.SetTrigger("Attack");
                 attackInput = true;
-            }
-            else
-            {
-                attackInput = false;
-            }
+                if (HoldWeapon())
+                {
+                    if (handFunctionLeft.HoldWeapon())
+                    {
+                        Weapon wp = handFunctionLeft.GrabbedObject.GetComponent<Weapon>();
+                        wp.Time--;
+                        if (wp.Time <= 0)
+                        {
+                            handFunctionLeft.ReleaseHand();
+                            leftPicking = false;
+                        }
+                    }
+                    if (handFunctionRight.HoldWeapon())
+                    {
+                        Weapon wp = handFunctionRight.GrabbedObject.GetComponent<Weapon>();
+                        wp.Time--;
+                        if (wp.Time <= 0)
+                        {
+                            handFunctionRight.ReleaseHand();
+                            rightPicking = false;
+                            wp.gameObject.gameObject.SetActive(false);
+                        }
+                    }
+                }
+                else
+                {
+                    attackInput = false;
+                }
 
+            }
         }
         public void Attack()
         {
             animatorPlayer.SetTrigger("Attack");
+        }
+        public void OnAttackFinish()
+        {
+             if (HoldWeapon())
+                {
+                    if (handFunctionLeft.HoldWeapon())
+                    {
+                        Weapon wp = handFunctionLeft.GrabbedObject.GetComponent<Weapon>();
+                        wp.Time--;
+                        if (wp.Time <= 0)
+                        {
+                            handFunctionLeft.ReleaseHand();
+                            leftPicking = false;
+                        }
+                    }
+                    if (handFunctionRight.HoldWeapon())
+                    {
+                        Weapon wp = handFunctionRight.GrabbedObject.GetComponent<Weapon>();
+                        wp.Time--;
+                        if (wp.Time <= 0)
+                        {
+                            handFunctionRight.ReleaseHand();
+                            rightPicking = false;
+                            wp.gameObject.gameObject.SetActive(false);
+                        }
+                    }
+                }
         }
     }
 }

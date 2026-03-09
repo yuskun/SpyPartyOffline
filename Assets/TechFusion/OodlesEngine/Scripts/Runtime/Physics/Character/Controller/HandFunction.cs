@@ -3,7 +3,7 @@ using System.Drawing;
 using UnityEngine;
 
 namespace OodlesEngine
-{ 
+{
     public enum HandSide
     {
         HandLeft = 0,
@@ -15,6 +15,8 @@ namespace OodlesEngine
         [SerializeField]
         [HideInInspector]
         public OodlesCharacter oodlesCharacter;
+        [HideInInspector]
+        public HoldType currentHoldType = HoldType.None;
 
         public HandSide handSide;
 
@@ -39,6 +41,7 @@ namespace OodlesEngine
 
         public void ReleaseHand()
         {
+            Debug.Log("Release");
             if (GrabbedObject != null)
             {
                 EventBetter.Raise(new ReleaseObjectMessage()
@@ -64,7 +67,7 @@ namespace OodlesEngine
                     wp.owner = null;
                 }
             }
-            
+
             hasJoint = false;
             GrabbedObject = null;
         }
@@ -78,6 +81,7 @@ namespace OodlesEngine
 
             return true;
         }
+      
 
         void SetFixedJoint(GameObject obj)
         {
@@ -92,6 +96,7 @@ namespace OodlesEngine
             catchJoint = obj.AddComponent<FixedJoint>();
             catchJoint.breakForce = Mathf.Infinity;
             catchJoint.connectedBody = gameObject.GetComponent<Rigidbody>();
+            catchJoint.massScale = 4f;
             catchJoint.connectedBody.linearVelocity = Vector3.zero;
             catchJoint.connectedBody.angularVelocity = Vector3.zero;
         }
@@ -104,7 +109,7 @@ namespace OodlesEngine
             cJoint.zMotion = ConfigurableJointMotion.Locked;
 
             catchJoint = cJoint;
-            catchJoint.breakForce =  Mathf.Infinity;
+            catchJoint.breakForce = Mathf.Infinity;
             catchJoint.connectedBody = obj.GetComponent<Rigidbody>();
         }
 
@@ -123,7 +128,8 @@ namespace OodlesEngine
                 {
                     pc = null,//not used
                     obj = col.gameObject,
-                    callback = (bool b) => {
+                    callback = (bool b) =>
+                    {
                         Grabable = b;
                     }
                 });
@@ -133,6 +139,7 @@ namespace OodlesEngine
                     SetConfigurableJoint(col.gameObject);
 
                     hasJoint = true;
+                    currentHoldType = HoldType.GrabObject;
 
                     EventBetter.Raise(new GrabObjectMessage()
                     {
@@ -192,6 +199,7 @@ namespace OodlesEngine
                 SetFixedJoint(wp.gameObject);
 
                 hasJoint = true;
+                currentHoldType = HoldType.Weapon;
                 GrabbedObject = wp.GetComponent<Rigidbody>();
             }
         }
@@ -224,7 +232,12 @@ namespace OodlesEngine
 
         private void OnTriggerEnter(Collider other)
         {
-            OnTouchSomething(other);
+            if ((handSide == HandSide.HandLeft ? oodlesCharacter.IsLeftArmWorking() : oodlesCharacter.IsRightArmWorking()) &&
+               !hasJoint)
+            {
+                OnTouchSomething(other);
+
+            }
         }
 
         //public void GrabSomething(GameObject go)
@@ -247,5 +260,11 @@ namespace OodlesEngine
         //        OnGrabSomething(go);
         //    }
         //}
+    }
+    public enum HoldType
+    {
+        None = 0,
+        GrabObject = 1,
+        Weapon = 2
     }
 }
