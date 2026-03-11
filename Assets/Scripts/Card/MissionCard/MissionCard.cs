@@ -1,4 +1,4 @@
-using Unity.Android.Gradle.Manifest;
+
 using UnityEngine;
 
 public class MissionCard : Card

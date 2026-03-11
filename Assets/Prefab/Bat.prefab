@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   owner: {fileID: 0}
-  Time: 1000000
+  Time: 2
   hitForce: 15000
 --- !u!114 &-5497487439667136304
 MonoBehaviour:

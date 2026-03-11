@@ -16,6 +16,7 @@ namespace OodlesEngine
             if (character != null)
             {
                 character.isAttacking = true;
+                
             }
         }
 
@@ -34,6 +35,7 @@ namespace OodlesEngine
             OodlesCharacter character = animator.GetComponentInParent<OodlesCharacter>();
             if (character != null)
             {
+                character.OnAttackFinish();
                 character.isAttacking = false;
             }
         }

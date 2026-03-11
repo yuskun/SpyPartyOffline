@@ -776,35 +776,11 @@ namespace OodlesEngine
 
                 animatorPlayer.SetTrigger("Attack");
                 attackInput = true;
-                if (HoldWeapon())
-                {
-                    if (handFunctionLeft.HoldWeapon())
-                    {
-                        Weapon wp = handFunctionLeft.GrabbedObject.GetComponent<Weapon>();
-                        wp.Time--;
-                        if (wp.Time <= 0)
-                        {
-                            handFunctionLeft.ReleaseHand();
-                            leftPicking = false;
-                        }
-                    }
-                    if (handFunctionRight.HoldWeapon())
-                    {
-                        Weapon wp = handFunctionRight.GrabbedObject.GetComponent<Weapon>();
-                        wp.Time--;
-                        if (wp.Time <= 0)
-                        {
-                            handFunctionRight.ReleaseHand();
-                            rightPicking = false;
-                            wp.gameObject.gameObject.SetActive(false);
-                        }
-                    }
-                }
-                else
-                {
-                    attackInput = false;
-                }
+            
 
+            }
+            else{
+                attackInput = false;
             }
         }
         public void Attack()
