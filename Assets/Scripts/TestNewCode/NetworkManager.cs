@@ -225,6 +225,7 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
         }
 
         // 5️⃣ 真正切場景（Fusion 同步）
+        
         await runner.LoadScene(SceneRef.FromIndex(buildIndex), LoadSceneMode.Single);
 
         Debug.Log($"Scene switched to index {buildIndex}");

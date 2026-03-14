@@ -591,6 +591,9 @@ MonoBehaviour:
   - {fileID: 3339248034219331647}
   - {fileID: 2481461041336390357}
   - {fileID: 6183996173049486068}
+  - {fileID: 6755277517763359118}
+  - {fileID: 517456022531497265}
+  - {fileID: 7563235239048586545}
   - {fileID: 6639108565731330368}
   - {fileID: 4273233100247485607}
   - {fileID: 285972446939283244}
@@ -1922,6 +1925,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -7907167875582158131, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 285496319498736786}
+    - targetCorrespondingSourceObject: {fileID: -7907167875582158131, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6755277517763359118}
     - targetCorrespondingSourceObject: {fileID: 2942414129964606161, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5207720147717555868}
@@ -1931,6 +1937,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2942414129964606161, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5554879626964236238}
+    - targetCorrespondingSourceObject: {fileID: 2942414129964606161, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 517456022531497265}
     - targetCorrespondingSourceObject: {fileID: -9081029896761614793, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1971383801713481118}
@@ -1940,6 +1949,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -9081029896761614793, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3915364284454282211}
+    - targetCorrespondingSourceObject: {fileID: -9081029896761614793, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7563235239048586545}
     - targetCorrespondingSourceObject: {fileID: -5514703592036177229, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8369675652762474892}
@@ -2784,6 +2796,23 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &7563235239048586545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 702812017826566613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 0
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!1 &762887316185908459 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 193374798252231433, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
@@ -3322,6 +3351,23 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &6755277517763359118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1908761069660427567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 0
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!1 &2372515941081591091 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2942414129964606161, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
@@ -3477,6 +3523,23 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &517456022531497265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2372515941081591091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 0
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!1 &2787750995735175184 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3353286580112895986, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}

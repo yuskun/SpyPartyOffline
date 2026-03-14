@@ -37,7 +37,7 @@ public class GameManager : NetworkBehaviour
         if (!Runner.IsServer) return;
 
         if (HasStarted) return;
-        Debug.Log("Test3");
+       
 
         StartDelay = TickTimer.CreateFromSeconds(Runner, 1f);
     }
@@ -54,6 +54,7 @@ public class GameManager : NetworkBehaviour
         PlayerInventoryManager.Instance.Refresh();
         MissionWinSystem.Instance.FightWinCount = PlayerInventoryManager.Instance.playerInventories.Count - 1;
         InitMissionData();
+        MenuUIManager.instance.LoadingScreen.SetActive(false);
 
     }
     public override void FixedUpdateNetwork()

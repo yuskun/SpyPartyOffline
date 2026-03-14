@@ -13,6 +13,7 @@ public class PlayerListManager : NetworkBehaviour
 
     public Color otherPlayerColor;
     public Color myPlayerColor;
+    private bool hasOpenedGameRoom = false;
 
 
     private TextMeshProUGUI[] nameTexts;
@@ -38,9 +39,10 @@ public class PlayerListManager : NetworkBehaviour
             lastRevision = PlayerVersion;
             OnPlayerListChanged();
         }
-        if (PlayerVersion == 1)
+        if (PlayerVersion == 1&&!hasOpenedGameRoom)
         {
             MenuUIManager.instance.ShowGameroom(GameMode.Host);
+            hasOpenedGameRoom=true;
         }
     }
     public void RegisterPlayer(PlayerRef player, string playerName)

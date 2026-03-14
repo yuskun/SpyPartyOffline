@@ -9,6 +9,7 @@ using UnityEngine.UIElements;
 
 public class SkinChange : NetworkBehaviour
 {
+    public Sprite SkinChangeImage;
     public static SkinChange instance;
     public GameObject[] Skins;
     private int currentSkinIndex;
@@ -69,16 +70,14 @@ public class SkinChange : NetworkBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            GameUIManager.Instance.progressBar.SetActive(true);
+            Rpc_ChangeSkinProcess(true,collision.gameObject.transform.parent.GetComponent<NetworkObject>());
 
         }
     }
     void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.tag == "Player")
-        {
-            GameUIManager.Instance.progressBar.SetActive(false);
-        }
+         Rpc_ChangeSkinProcess(true,collision.gameObject.transform.parent.GetComponent<NetworkObject>());
+
     }
 
     void Update()
@@ -167,6 +166,16 @@ public class SkinChange : NetworkBehaviour
                 }
             }
         }
+    }
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
+    void Rpc_ChangeSkinProcess( bool open,NetworkObject Player)
+    {
+        if(Player.GetComponent<NetworkPlayer>().PlayerId==Runner.LocalPlayer){
+            GameUIManager.Instance.UserCardUI.sprite=SkinChangeImage;
+            GameUIManager.Instance.progressBar.SetActive(open);
+                
+            }
+            
     }
     public void SetSpawnedPlayer(NetworkObject playerObj)
     {
