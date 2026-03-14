@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: 1ebf245d879223247acc1cbfde7da2c0
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - sfxSource: {instanceID: 0}
+  - attackClip: {fileID: 8300000, guid: 9e960e59b6751794badde915bae34ba7, type: 3}
+  - breakClip: {fileID: 8300000, guid: 4fe12dbf913d25f42b024fc5ee924f78, type: 3}
+  - punchClip: {fileID: 8300000, guid: b076abbecd84e0a44a0204c96e9d9df9, type: 3}
+  - jumpClip: {instanceID: 0}
+  - pickUpClip: {instanceID: 0}
+  - BananaClip: {fileID: 8300000, guid: d78aa862b90dde241a77ed6635ef9373, type: 3}
+  - OpenUIClip: {fileID: 8300000, guid: 5c3bf8b6e9e57bb439492215ad7a4d59, type: 3}
+  - UseCardClip: {fileID: 8300000, guid: c1f21be46525fee479c1256cace3c3e3, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

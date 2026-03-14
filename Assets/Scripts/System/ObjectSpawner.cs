@@ -185,6 +185,7 @@ public class ObjectSpawner : MonoBehaviour
         {
             if (obj.GetComponent<SetPosition>() != null)
                 obj.GetComponent<SetPosition>().Setpos(position.position);
+                CharacterSFXManager.Instance?.PlayUseCard();
         });
     }
 

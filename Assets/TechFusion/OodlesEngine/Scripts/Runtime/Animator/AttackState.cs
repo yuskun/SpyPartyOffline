@@ -16,7 +16,16 @@ namespace OodlesEngine
             if (character != null)
             {
                 character.isAttacking = true;
-                
+                if(character.HoldWeapon() == true)
+                {
+                CharacterSFXManager.Instance?.PlayAttack();
+                Debug.LogWarning("播放攻擊音效");
+                }
+                else
+                {
+                CharacterSFXManager.Instance?.PlayPunch();
+                Debug.LogWarning("播放拳頭音效");
+                }
             }
         }
 

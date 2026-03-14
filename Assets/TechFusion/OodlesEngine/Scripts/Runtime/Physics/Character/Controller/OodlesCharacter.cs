@@ -8,6 +8,10 @@ namespace OodlesEngine
 {
     public partial class OodlesCharacter : MonoBehaviour
     {
+        [Header("Footstep")]
+        public AudioSource footstepSource;
+        public AudioClip footstepClip;
+
         [HideInInspector] public Animator animatorPlayer;
         [HideInInspector] public GameObject ragdollPlayer;
         [HideInInspector]
@@ -96,6 +100,15 @@ namespace OodlesEngine
 
             movement = ragdollPlayer.AddComponent<CharacterMovement>();
             movement.controller = this;
+
+            footstepSource = GetComponent<AudioSource>();
+            if (footstepSource == null)
+            {
+                footstepSource = gameObject.AddComponent<AudioSource>();
+            }
+
+            footstepSource.playOnAwake = false;
+            footstepSource.loop = true;
 
             string[] buildInIgnore = { OodlesSetting.Instance.PlayerLayerName, OodlesSetting.Instance.RagdollLayerName, OodlesSetting.Instance.RagdollHandsLayerName };
             LayerMask buildInIgnoreMask = LayerMask.GetMask(buildInIgnore);
@@ -309,6 +322,26 @@ namespace OodlesEngine
             }
 
             movement.ProcessInput();
+            UpdateFootstep();
+        }
+
+        void UpdateFootstep()
+        {
+            bool isMoving = inputState.forwardAxis != 0 || inputState.leftAxis != 0;
+            bool isGrounded = movement.grounded;
+
+            if (isMoving && isGrounded)
+            {
+                if (!footstepSource.isPlaying)
+                {
+                    footstepSource.clip = footstepClip;
+                    footstepSource.Play();
+                }
+            }
+            else
+            {
+                footstepSource.Stop();
+            }
         }
 
         public void UpdateEnergy()
@@ -419,6 +452,8 @@ namespace OodlesEngine
             handFunctionRight.ReleaseHand();
             this.GetComponent<PlayerInventory>().CanUseCard = false;
             this.GetComponent<PlayerInventory>().LostCard();
+            
+            footstepSource.Stop();
         }
 
 
@@ -714,7 +749,7 @@ namespace OodlesEngine
             ClearPickTarget();
         }
 
-        bool HoldWeapon()
+        public bool HoldWeapon()
         {
             if (handFunctionLeft.HoldWeapon() || handFunctionRight.HoldWeapon()) return true;
 

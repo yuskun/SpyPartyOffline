@@ -19,6 +19,7 @@ public class RandomCard : NetworkBehaviour
             CardData randomCard = GetRandomCard();
             if (other.transform.parent.gameObject.GetComponent<PlayerInventory>().AddCard(randomCard))
             {
+                CharacterSFXManager.Instance?.PlayPickUp();
                 Runner.Despawn(this.GetComponent<NetworkObject>());
             }
         }

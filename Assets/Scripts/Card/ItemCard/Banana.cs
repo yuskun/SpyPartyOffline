@@ -41,5 +41,7 @@ public class Banana : NetworkBehaviour
             }
         }
         Runner.Despawn(this.GetComponent<NetworkObject>());
+        
+        CharacterSFXManager.Instance?.PlayBanana(); // 呼叫角色音效
     }
 }

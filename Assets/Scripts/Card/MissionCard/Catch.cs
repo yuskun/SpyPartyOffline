@@ -18,6 +18,7 @@ public class Catch : MissionCard
     }
     public override void CheckMission(CardUseParameters parameters)
     {
+        CharacterSFXManager.Instance?.PlayUseCard();
 
         if (PlayerInventoryManager.Instance.GetPlayer(parameters.TargetId).GetComponent<PlayerInventory>().HasCard(targetCard.cardData))
         {
