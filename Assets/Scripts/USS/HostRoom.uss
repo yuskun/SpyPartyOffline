@@ -146,7 +146,7 @@
     margin-bottom: 15px;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     border-width: 0;
     background-color: rgba(0,0,0,0);
     background-image: url("project://database/Assets/Image/UIPanel/HostRoom/player_default.png");
@@ -189,17 +189,17 @@
 /* 房主標記 */
 .host-badge {
     position: absolute;
-    top: -8px; right: -8px;
+    top: -5px; right: -5px;
     width: 18px; height: 18px;
     background-color: #FFD267;
     border-radius: 9px;
-    border-width: 2px;
+    border-width: 1.5px;
     border-color: #FFF5DA;
     align-items: center; justify-content: center;
 }
 
 .host-icon {
-    width: 10px; height: 10px;
+    width: 8px; height: 8px;
     background-image: url("project://database/Assets/Image/UIPanel/HostRoom/icon-home.png");
 }
 

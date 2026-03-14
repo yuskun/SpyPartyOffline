@@ -5,14 +5,14 @@
             <ui:Label name="TopTime" text="14:30" class="top-time-text" style="top: -8px; position: relative; -unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&amp;guid=3d5723d09fd5e9a4f97a9f3e046bbb90&amp;type=3#GenSenRounded2TW-R&quot;); -unity-font-style: bold; transform-origin: 50px; align-content: flex-start; justify-content: flex-start;" />
         </ui:VisualElement>
         <ui:VisualElement name="MissionPanel" class="mission-panel">
-            <ui:VisualElement class="mission-task">
+            <ui:VisualElement name="Task1" class="mission-task">
                 <ui:VisualElement class="task-left">
                     <ui:Label text="逮捕" picking-mode="Ignore" class="task-title" />
                     <ui:Label text="逮捕偷東西的人" picking-mode="Ignore" class="task-desc" />
                 </ui:VisualElement>
                 <ui:Label text="0/1" class="task-progress" />
             </ui:VisualElement>
-            <ui:VisualElement class="mission-task">
+            <ui:VisualElement name="Task2" class="mission-task">
                 <ui:VisualElement class="task-left">
                     <ui:Label text="KO王" class="task-title" />
                     <ui:Label text="揍扁人8次" class="task-desc" />

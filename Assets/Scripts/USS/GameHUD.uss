@@ -20,35 +20,64 @@
 }
 
 .mission-task {
-    flex-direction: row; align-items: center; justify-content: space-between;
-    width: 150px; height: 40px; margin-bottom: 12px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 150px;
+    height: 40px;
+    margin-bottom: 12px;
     background-image: url("project://database/Assets/Image/UIPanel/GameHUD/default-t2.png");
-    overflow: hidden; transform-origin: left top;
-    transition-property: width, height, scale;
+    overflow: hidden;
+    /* 變形原點設為左上 */
+    transform-origin: left top;
+    transition-property: width, height, scale, background-color;
     transition-duration: 0.3s;
 }
 
+/* 展開狀態 */
 .mission-task.active {
-    width: 280px; height: 50px; scale: 1.05;
+    width: 280px;
+    height: 50px;
+    scale: 1.05;
+    padding: 0;
     background-image: url("project://database/Assets/Image/UIPanel/GameHUD/active-t2.png");
 }
 
-.task-left { flex-direction: row; align-items: center; height: 100%; }
+.task-left {
+    flex-direction: row;
+    align-items: center;       /* 確保標題與描述在同一條水平線上 */
+    height: 100%;              /* 撐滿高度以便對齊 */
+    padding: 0; /* 確保這裡沒有 left padding */
+    margin: 0;
+    flex-shrink: 0;
+}
 
 .task-title {
-    height: 100%; padding: 0 12px; color: white; font-size: 18px;
-    -unity-text-align: middle-center; -unity-font-style: bold;
+    height: 100%;
+    margin: 0;
+    padding: 0 12px;
     background-image: url("project://database/Assets/Image/UIPanel/GameHUD/default-t.png");
+    color: white;
+    -unity-text-align: middle-center;
+    font-size: 18px;
 }
 
 .task-desc {
-    font-size: 15px; color: #5F7F8D; margin-left: 8px;
-    opacity: 0; width: 0;
-    transition-property: opacity, width; transition-duration: 0.2s;
+    font-size: 15px;
+    color: #5F7F8D;
+    margin-left: 8px;
+    opacity: 0;
+    width: 0;
+    transition-property: opacity, width;
+    transition-duration: 0.2s;
 }
 
 .mission-task.active .task-desc { opacity: 1; width: auto; }
-.task-progress { padding-right: 10px; color: #4F7F8D; -unity-font-style: bold; }
+
+.task-progress {
+    padding-right: 10px;
+    color: #4F7F8D;
+}
 
 /* 道具欄 (Inventory) */
 .inventory {
