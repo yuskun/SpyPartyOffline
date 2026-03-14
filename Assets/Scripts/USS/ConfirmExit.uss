@@ -1,0 +1,63 @@
+.overlay {
+    flex-grow: 1;
+    background-color: rgba(0, 0, 0, 0.6); /* 稍微調亮一點點，保持層次感 */
+    justify-content: center;
+    align-items: center;
+}
+
+.dialog-box {
+    width: 550px; 
+    background-color: rgb(245, 245, 245);
+    border-radius: 35px; /* 增加圓角半徑 */
+    padding: 35px; /* 增加內邊距 */
+    align-items: center;
+    /* 加入微陰影感 */
+    border-width: 1px;
+    border-color: rgb(210, 210, 210);
+    border-bottom-width: 4px;
+    border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+.dialog-title {
+    font-size: 38px;
+    color: rgb(40, 40, 40);
+    margin-bottom: 40px; /* 增加下邊距 */
+}
+
+.dialog-message {
+    font-size: 20px; 
+    color: rgb(100, 100, 100);
+    margin-bottom: 55px; /* 增加與按鈕的距離 */
+    -unity-text-align: middle-center;
+}
+
+/* 按鈕排列 */
+.button-group {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.dialog-button {
+    width: 45%;
+    height: 75px; 
+    border-radius: 18px; /* 增加按鈕圓角 */
+    font-size: 20px;
+    transition: scale 0.1s, background-color 0.2s; /* 加入平滑過渡 */
+}
+
+.dialog-button:hover {
+    scale: 1.03; /* 稍微縮小縮放比例，避免太大 */
+}
+
+.cancel {
+    background-color: white;
+    color: rgb(50, 50, 50);
+    border-width: 1px;
+    border-color: rgb(200, 200, 200);
+}
+
+.confirm {
+    background-color: rgb(255, 235, 59);
+    color: black;
+}

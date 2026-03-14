@@ -1,0 +1,13 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Scripts/USS/ConfirmExit.uss?fileID=7433441132597879392&amp;guid=5b29da82ff8470a438bfffaa9bc2a316&amp;type=3#ConfirmExit" />
+    <ui:VisualElement class="overlay">
+        <ui:VisualElement class="dialog-box" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;); -unity-font-style: normal;">
+            <ui:Label text="離開房間" class="dialog-title" />
+            <ui:Label text="你確定要離開目前的房間嗎？" class="dialog-message" />
+            <ui:VisualElement class="button-group">
+                <ui:Button text="取消" name="CancelButton" class="dialog-button cancel" />
+                <ui:Button text="確定離開" name="ConfirmButton" class="dialog-button confirm" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

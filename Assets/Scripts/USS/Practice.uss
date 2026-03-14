@@ -1,11 +1,9 @@
-/* ✨ 全站設定 */
+/* 全站設定 */
 .body-style {
     width: 100%; height: 100%;
 }
 
-/* =========================================
-   🔙 左上角整組 (返回鍵 + 任務欄)
-   ========================================= */
+/* 左上角 (返回鍵 + 任務欄) */
 .top-left-ui {
     position: absolute;
     top: 30px; left: 30px;
@@ -40,9 +38,7 @@
     background-image: url("project://database/Assets/Image/UIPanel/Practice/back_active.png");
 }
 
-/* =========================================
-   📜 任務欄 (Mission Panel)
-   ========================================= */
+/* 任務欄 (Mission Panel) */
 .mission-panel { flex-direction: column; }
 
 .mission-task {
@@ -71,7 +67,7 @@
 
 .task-left {
     flex-direction: row;
-    align-items: center;       /* ✅ 確保標題與描述在同一條水平線上 */
+    align-items: center;       /* 確保標題與描述在同一條水平線上 */
     height: 100%;              /* 撐滿高度以便對齊 */
     padding: 0; /* 確保這裡沒有 left padding */
     margin: 0;
@@ -85,7 +81,6 @@
     background-image: url("project://database/Assets/Image/UIPanel/Practice/default-t.png");
     color: white;
     -unity-text-align: middle-center;
-    -unity-font-style: bold;
     font-size: 18px;
 }
 
@@ -104,34 +99,33 @@
 .task-progress {
     padding-right: 10px;
     color: #4F7F8D;
-    -unity-font-style: bold;
 }
 
-/* =========================================
-   ↗ 右上角選單
-   ========================================= */
+/* 右上角選單 */
 .top-right-menu {
     position: absolute;
     top: 30px; right: 30px;
 }
 
 .menu-btn {
-    width: 200px; height: 70px;
+    width: 200px; 
+    height: 70px;
     border-radius: 30px;
     border-width: 0;
-    color: white; font-size: 28px; -unity-font-style: bold;
+    color: white; 
+    font-size: 30px; 
+    -unity-font-style: bold;
+
     background-image: url("project://database/Assets/Image/UIPanel/Practice/blue_default.png");
 
     transition-property: scale, translate;
     transition-duration: 0.12s;
 }
 
-.menu-btn:hover { scale: 1.05; translate: 0 -3px; background-image: url("project://database/Assets/Image/UIPanel/Practice/blue_hover.png"); }
+.menu-btn:hover { scale: 1.05; translate: 0 -2px; background-image: url("project://database/Assets/Image/UIPanel/Practice/blue_hover.png"); }
 .menu-btn:active { scale: 0.98; translate: 0 2px; background-image: url("project://database/Assets/Image/UIPanel/Practice/blue_active.png");}
 
-/* =========================================
-   👤 右下角 HUD (與之前版本一致)
-   ========================================= */
+/* 右下角 HUD (與之前版本一致) */
 .hud-bottom {
     position: absolute;
     bottom: 18px;
@@ -162,17 +156,19 @@
 }
 
 .player-meta { flex-grow: 1; justify-content: center; }
-.player-name { font-size: 16px; -unity-font-style: bold; color: #8b6a2b; margin-bottom: 6px; }
+.player-name { font-size: 16px; -unity-font-style: bold; color: #8b6a2b; margin-bottom: 10px; margin-top: -6px;}
 
 .level-line { flex-direction: row; align-items: center; }
 .level-bubble {
     width: 26px; height: 26px; border-radius: 13px;
     background-color: #4fc7ff; border-width: 2px; border-color: rgba(255,255,255,0.9);
     color: #ffffff; font-size: 12px; -unity-font-style: bold; -unity-text-align: middle-center;
-    margin-right: -10px; z-index: 2;
+    z-index: 2;
+    position: absolute;
+    left: 0;
 }
 
-.level-track { width: 120px; height: 10px; background-color: #ffffff; border-radius: 5px; overflow: hidden; }
+.level-track { width: 120px; height: 10px; background-color: #ffffff; border-radius: 5px; overflow: hidden; margin-left: 20px; }
 .level-fill { height: 100%; background-color: #3fafff; border-radius: 5px; }
 
 .icon-btn {

@@ -1,0 +1,115 @@
+/* 全站設定 */
+.body-style {
+    width: 100%; height: 100%;
+}
+
+/* 上方時間*/
+.top-time-container {
+    position: absolute; top: 18px; left: 50%; translate: -50% 0;
+    width: 10%; height: 10%;
+    align-items: center; justify-content: center;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/time.png");
+}
+.top-time-text { color: white; font-size: 22px; -unity-font-style: bold; }
+
+/* 任務欄 */
+.mission-panel {
+    position: absolute; top: 30px; left: 40px;
+    flex-direction: column; align-items: flex-start;
+    z-index: 50;
+}
+
+.mission-task {
+    flex-direction: row; align-items: center; justify-content: space-between;
+    width: 150px; height: 40px; margin-bottom: 12px;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/default-t2.png");
+    overflow: hidden; transform-origin: left top;
+    transition-property: width, height, scale;
+    transition-duration: 0.3s;
+}
+
+.mission-task.active {
+    width: 280px; height: 50px; scale: 1.05;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/active-t2.png");
+}
+
+.task-left { flex-direction: row; align-items: center; height: 100%; }
+
+.task-title {
+    height: 100%; padding: 0 12px; color: white; font-size: 18px;
+    -unity-text-align: middle-center; -unity-font-style: bold;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/default-t.png");
+}
+
+.task-desc {
+    font-size: 15px; color: #5F7F8D; margin-left: 8px;
+    opacity: 0; width: 0;
+    transition-property: opacity, width; transition-duration: 0.2s;
+}
+
+.mission-task.active .task-desc { opacity: 1; width: auto; }
+.task-progress { padding-right: 10px; color: #4F7F8D; -unity-font-style: bold; }
+
+/* 道具欄 (Inventory) */
+.inventory {
+    position: absolute; bottom: 20px; left: 50%; translate: -50% 0;
+    flex-direction: row; align-items: flex-end;
+}
+
+.slot { width: 90px; height: 90px; margin: 0 8px; position: relative; }
+/* 特別處理：已選中的框可能比較大或是位置不同 */
+.slot.selected { width: 100px; height: 100px; margin-bottom: 10px; }
+
+.slot-frame {
+    position: absolute; width: 100%; height: 100%;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/inventory.png");
+}
+
+.slot.selected .slot-frame {
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/inventory_select.png");
+}
+
+.item-icon {
+    position: absolute; top: 50%; left: 50%; translate: -50% -50%;
+    width: 70%; height: 70%; -unity-background-scale-mode: scale-to-fit;
+}
+
+/* 右上小地圖 */
+.minimap-container {
+    position: absolute; top: 40px; right: 40px;
+    width: 200px; height: 200px;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/minimap_bg.png");
+    padding: 6px; /* 留出外框厚度 */
+}
+
+.minimap-inner { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; }
+.map-content { width: 140%; height: 140%; translate: -15% -15%; }
+
+/* 玩家標記 (小箭頭) */
+.marker.player {
+    position: absolute; top: 50%; left: 50%; translate: -50% -50%;
+    width: 20px; height: 20px;
+    background-image: url("project://database/Assets/Image/GameHUD/player_bg.png");
+}
+
+/* 右下玩家資訊列 (HUD)*/
+.hud-bottom { position: absolute; bottom: 18px; right: 18px; }
+.playerbar {
+    flex-direction: row; align-items: center; padding: 10px 14px;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/player_bar.png");
+}
+
+.avatar-img { width: 52px; height: 52px; border-radius: 26px; border-width: 3px; border-color: white; background-image: url("project://database/Assets/Image/Character/Shaya.png"); }
+
+
+/* 麥克風切換 */
+.icon-btn {
+    width: 38px; height: 38px; border-radius: 15px;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/mic_bg.png");
+    border-width: 0;
+    background-color: rgba(0, 0, 0, 0);
+    align-items: center; justify-content: center;
+}
+.mic-icon { width: 20px; height: 20px; display: none; }
+.mic-btn.is-open .mic-open { display: flex; background-image: url("project://database/Assets/Image/UIPanel/GameHUD/mic-open.png"); }
+.mic-btn.is-off .mic-off { display: flex; background-image: url("project://database/Assets/Image/UIPanel/GameHUD/mic-off.png"); }

@@ -1,18 +1,14 @@
-/* ✨ 全站設定 */
+/* 全站設定 */
 .body-style {
     width: 100%;
     height: 100%;
-    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/GenSenRounded-B SDF.asset");
 }
 
-/* =========================================
-   🔙 左上返回按鈕 (膠囊)
-   ========================================= */
+/* 左上返回按鈕 (膠囊) */
 .back-pill {
     position: absolute;
     top: 30px;
     left: 30px;
-    width: 100px;
     height: 44px;
     flex-direction: row;
     align-items: center;
@@ -26,7 +22,7 @@
 }
 
 .back-arrow { font-size: 18px; color: white; margin-right: 5px; }
-.back-label { font-size: 16px; color: white; -unity-font-style: bold; }
+.back-label { font-size: 16px; color: white; }
 
 .back-pill:hover {
     scale: 1.05;
@@ -39,9 +35,7 @@
     background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/back_active.png");
 }
 
-/* =========================================
-   🏠 中央按鈕群 (果凍按鈕)
-   ========================================= */
+/* 中央按鈕群 */
 .container {
     width: 100%;
     height: 100%;
@@ -73,7 +67,7 @@
     align-items: center;
 }
 
-/* 🟦 藍色與粉色 */
+/* 藍色與粉色 */
 .cute-btn.blue { background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/blue_default.png"); }
 .cute-btn.blue:hover { background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/blue_hover.png"); }
 .cute-btn.blue:active { background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/blue_active.png"); }
@@ -85,7 +79,6 @@
 .btn-text {
     font-size: 50px;
     color: #ffffff;
-    -unity-font-style: bold;
     -unity-text-align: middle-center;
     margin-bottom: 10px;
     -unity-paragraph-spacing: 28px;
@@ -95,7 +88,7 @@
 .icon-room { background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/icon_room.png"); } 
 .icon-join { background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/icon_join.png"); } 
 
-/* 🟩 下方新手教學按鈕 */
+/* 下方新手教學按鈕 */
 .room-sub { margin-top: 40px; }
 .new-btn {
     width: 250px;
@@ -108,12 +101,10 @@
 .new-btn:hover { background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/green_hover.png"); }
 .new-btn:active { background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/green_active.png"); }
 
-.btn-text-sub { font-size: 25px; color: #ffffff; -unity-font-style: bold; margin-left: 12px; }
+.btn-text-sub { font-size: 25px; color: #ffffff; margin-left: 12px; }
 .icon-book { background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/icon_book.png"); } 
 
-/* =========================================
-   👤 右下角 HUD (玩家資訊)
-   ========================================= */
+/* 右下角 HUD (玩家資訊) */
 .hud-bottom {
     position: absolute;
     bottom: 18px;
@@ -144,17 +135,19 @@
 }
 
 .player-meta { flex-grow: 1; justify-content: center; }
-.player-name { font-size: 16px; -unity-font-style: bold; color: #8b6a2b; margin-bottom: 6px; }
+.player-name { font-size: 16px; -unity-font-style: bold; color: #8b6a2b; margin-bottom: 10px; margin-top: -6px;}
 
 .level-line { flex-direction: row; align-items: center; }
 .level-bubble {
     width: 26px; height: 26px; border-radius: 13px;
     background-color: #4fc7ff; border-width: 2px; border-color: rgba(255,255,255,0.9);
     color: #ffffff; font-size: 12px; -unity-font-style: bold; -unity-text-align: middle-center;
-    margin-right: -10px; z-index: 2;
+    z-index: 2;
+    position: absolute;
+    left: 0;
 }
 
-.level-track { width: 120px; height: 10px; background-color: #ffffff; border-radius: 5px; overflow: hidden; }
+.level-track { width: 120px; height: 10px; background-color: #ffffff; border-radius: 5px; overflow: hidden; margin-left: 20px;}
 .level-fill { height: 100%; background-color: #3fafff; border-radius: 5px; }
 
 .icon-btn {

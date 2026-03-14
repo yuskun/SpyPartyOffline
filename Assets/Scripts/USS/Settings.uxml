@@ -1,0 +1,29 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Scripts/USS/Settings.uss?fileID=7433441132597879392&amp;guid=44506ea2b4b7bcf49bc411773e3ed5a1&amp;type=3#Settings" />
+    <ui:VisualElement class="settings-root">
+        <ui:VisualElement class="settings-container" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;); -unity-font-style: normal;">
+            <ui:Label text="遊戲設定" class="main-title" />
+            <ui:ScrollView class="content-area">
+                <ui:VisualElement class="section">
+                    <ui:Label text="畫面品質" class="section-title" />
+                    <ui:DropdownField name="QualityDropdown" choices="極低, 中等, 極高" index="1" class="setting-item" />
+                </ui:VisualElement>
+                <ui:VisualElement class="section">
+                    <ui:Label text="聲音設定" class="section-title" />
+                    <ui:Slider label="主音量" name="MasterVolume" value="80" high-value="100" class="setting-item" />
+                    <ui:Slider label="音樂音量" name="MusicVolume" value="70" high-value="100" class="setting-item" />
+                    <ui:Slider label="特效音量" name="SFXVolume" value="90" high-value="100" class="setting-item" />
+                </ui:VisualElement>
+                <ui:VisualElement class="section">
+                    <ui:Label text="其他" class="section-title" />
+                    <ui:Button text="提交遊戲反饋" name="FeedbackButton" class="feedback-button" />
+                </ui:VisualElement>
+            </ui:ScrollView>
+            <ui:VisualElement class="footer">
+                <ui:Button text="取消" name="CancelButton" class="footer-button" />
+                <ui:Button text="重製" name="ResetButton" class="footer-button" />
+                <ui:Button text="應用" name="ApplyButton" class="footer-button apply-button" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

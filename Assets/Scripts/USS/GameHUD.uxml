@@ -1,0 +1,71 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Scripts/USS/GameHUD.uss?fileID=7433441132597879392&amp;guid=66d7d108cd902544ead603a70d9e8215&amp;type=3#GameHUD" />
+    <ui:VisualElement name="body" class="body-style">
+        <ui:VisualElement class="top-time-container">
+            <ui:Label name="TopTime" text="14:30" class="top-time-text" style="top: -8px; position: relative; -unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&amp;guid=3d5723d09fd5e9a4f97a9f3e046bbb90&amp;type=3#GenSenRounded2TW-R&quot;); -unity-font-style: bold; transform-origin: 50px; align-content: flex-start; justify-content: flex-start;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="MissionPanel" class="mission-panel">
+            <ui:VisualElement class="mission-task">
+                <ui:VisualElement class="task-left">
+                    <ui:Label text="逮捕" picking-mode="Ignore" class="task-title" />
+                    <ui:Label text="逮捕偷東西的人" picking-mode="Ignore" class="task-desc" />
+                </ui:VisualElement>
+                <ui:Label text="0/1" class="task-progress" />
+            </ui:VisualElement>
+            <ui:VisualElement class="mission-task">
+                <ui:VisualElement class="task-left">
+                    <ui:Label text="KO王" class="task-title" />
+                    <ui:Label text="揍扁人8次" class="task-desc" />
+                </ui:VisualElement>
+                <ui:Label text="1/8" class="task-progress" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement class="minimap-container">
+            <ui:VisualElement class="minimap-inner">
+                <ui:VisualElement class="map-content">
+                    <ui:VisualElement name="PlayerMarker" class="marker player" />
+                    <ui:VisualElement class="marker poi poi-1" />
+                    <ui:VisualElement class="marker poi poi-2" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="Inventory" picking-mode="Ignore" class="inventory">
+            <ui:VisualElement class="slot selected">
+                <ui:Image class="slot-frame" />
+                <ui:Image class="item-icon icon-magnifier" />
+            </ui:VisualElement>
+            <ui:VisualElement class="slot">
+                <ui:Image class="slot-frame" />
+                <ui:Image class="item-icon icon-gift" />
+            </ui:VisualElement>
+            <ui:VisualElement class="slot">
+                <ui:Image class="slot-frame" />
+            </ui:VisualElement>
+            <ui:VisualElement class="slot">
+                <ui:Image class="slot-frame" />
+            </ui:VisualElement>
+            <ui:VisualElement class="slot">
+                <ui:Image class="slot-frame" />
+            </ui:VisualElement>
+            <ui:VisualElement class="slot">
+                <ui:Image class="slot-frame" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement class="hud-bottom">
+            <ui:VisualElement name="VisualElement" class="playerbar" style="top: auto; bottom: 0; scale: 1.2 1.25;">
+                <ui:VisualElement class="avatar-wrap">
+                    <ui:Image class="avatar-img" style="scale: 0.8 0.8; bottom: auto; top: -8%;" />
+                </ui:VisualElement>
+                <ui:VisualElement class="player-meta">
+                    <ui:Label text="shaya" class="player-name" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&amp;guid=3d5723d09fd5e9a4f97a9f3e046bbb90&amp;type=3#GenSenRounded2TW-R&quot;); -unity-font-style: bold; color: rgb(255, 255, 255); top: -4px;" />
+                </ui:VisualElement>
+                <ui:VisualElement class="player-actions">
+                    <ui:Button name="MicBtn" class="icon-btn mic-btn is-open" style="scale: 1.2 1.2;">
+                        <ui:VisualElement class="mic-icon mic-open" style="scale: 0.8 0.8; top: -1px;" />
+                        <ui:VisualElement class="mic-icon mic-off" />
+                    </ui:Button>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

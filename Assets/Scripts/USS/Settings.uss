@@ -1,0 +1,54 @@
+/* 背景遮罩 */
+.settings-root {
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* 主容器 */
+.settings-container {
+    width: 500px;
+    background-color: rgb(240, 240, 240);
+    border-radius: 30px;
+    padding: 25px;
+}
+
+/* 標題 */
+.main-title {
+    font-size: 24px;
+    -unity-text-align: middle-center;
+    margin-bottom: 20px;
+}
+
+/* 區塊（圖像、聲音） */
+.section {
+    background-color: white;
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 20px;
+}
+
+.section-title {
+    font-size: 14px;
+    color: gray;
+    margin-bottom: 10px;
+}
+
+/* 底部按鈕 */
+.footer {
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.footer-button {
+    width: 30%;
+    height: 45px;
+    border-radius: 12px;
+    background-color: white;
+}
+
+.apply-button {
+    background-color: rgb(255, 235, 59);
+}

@@ -1,4 +1,4 @@
-/* ✨ 全站基礎設定 */
+/* 全站基礎設定 */
 .body-style {
     width: 100%;
     height: 100%;
@@ -7,22 +7,22 @@
     justify-content: flex-start; /* 靠左排列 */
 }
 
-/* 👈 主要容器：對應 HTML .main-menu */
+/* 主要容器 */
 .main-menu {
     height: 100%;
     justify-content: center;
     padding-left: 10%; /* 使用百分比確保不同解析度下的間距 */
 }
 
-/* 📦 按鈕群組容器 */
+/* 按鈕群組容器 */
 .menu-container {
     flex-direction: column;
 }
 
-/* 🍮 通用按鈕基底 */
+/* 通用按鈕基底 */
 .menu-btn {
-    width: 280px;
-    height: 90px;
+    width: 100%;
+    height: 90px; /*90px*/
     margin-bottom: 30px;
     flex-direction: row; /* 水平排列圖示與文字 */
     align-items: center;
@@ -35,7 +35,7 @@
     transition-duration: 0.2s;
 }
 
-/* 🔵 藍色按鈕狀態 */
+/* 藍色按鈕 */
 .menu-btn.blue {
     background-image: url("project://database/Assets/Image/UIPanel/MainMenu/blue_default.png");
 }
@@ -50,7 +50,7 @@
     translate: 0 0;
 }
 
-/* 🟠 橘粉色按鈕狀態 */
+/* 橘粉色按鈕 */
 .menu-btn.orange {
     background-image: url("project://database/Assets/Image/UIPanel/MainMenu/orange_default.png");
 }
@@ -64,7 +64,7 @@
     scale: 0.95;
 }
 
-/* 🖼️ 按鈕內的圖示 */
+/* 按鈕內的圖示 */
 .icon-img {
     width: 32px;
     height: 32px;
@@ -72,16 +72,15 @@
     -unity-background-scale-mode: scale-to-fit;
 }
 
-/* 具體 Icon 圖片路徑 */
+/* Icon 圖片路徑 */
 .icon-play { background-image: url("project://database/Assets/Image/UIPanel/MainMenu/icon_play.png"); }
 .icon-settings { background-image: url("project://database/Assets/Image/UIPanel/MainMenu/icon_settings.png"); }
 .icon-trophy { background-image: url("project://database/Assets/Image/UIPanel/MainMenu/icon_trophy.png"); }
 .icon-back { background-image: url("project://database/Assets/Image/UIPanel/MainMenu/icon_back.png"); }
 
-/* 📝 文字標籤 */
+/* 文字標籤 */
 .label {
     color: white;
     font-size: 30px;
-    -unity-font-style: bold;
     letter-spacing: 5px; /* Unity 中微調文字間距 */
 }
