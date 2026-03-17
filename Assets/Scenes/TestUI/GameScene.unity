@@ -219,7 +219,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 603989471
+  SortKey: 2172737134
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
@@ -367,7 +367,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 1801342945
+  SortKey: 3370090608
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
@@ -586,14 +586,14 @@ Light:
   m_Enabled: 1
   serializedVersion: 11
   m_Type: 1
-  m_Color: {r: 0.9811321, g: 0.8360938, b: 0.7534354, a: 1}
+  m_Color: {r: 1, g: 0.8909198, b: 0.8254717, a: 1}
   m_Intensity: 0.8
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -810,7 +810,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 241496187
+  SortKey: 1810243850
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
@@ -940,7 +940,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 1521876844
+  SortKey: 3090624507
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
@@ -2060,7 +2060,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 3180598684
+  SortKey: 454379051
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
@@ -2378,7 +2378,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 3055006950
+  SortKey: 328787317
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
@@ -2755,7 +2755,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 631507450
+  SortKey: 2200255113
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
@@ -2889,7 +2889,8 @@ PrefabInstance:
       value: warehouse_object
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 7869873546869171050, guid: 55a412948d11a20439781edfafd1020c, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 55a412948d11a20439781edfafd1020c, type: 3}
@@ -2948,7 +2949,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 1356632431
+  SortKey: 2925380094
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
@@ -3394,7 +3395,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 3395498764
+  SortKey: 669279131
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
@@ -3501,7 +3502,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 4113998507
+  SortKey: 1387778874
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
@@ -9836,7 +9837,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 1164999894
+  SortKey: 2733747557
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []

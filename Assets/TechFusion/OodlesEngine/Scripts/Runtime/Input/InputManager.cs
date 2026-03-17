@@ -39,6 +39,10 @@ namespace OodlesEngine
         private Vector3 cachedInputAim;
         public float aimSensitive = 3.0f;
 
+        // 緩存 GetKeyDown，避免 Fusion tick 錯過一幀的 GetKeyDown
+        private bool _action2Queued = false;
+        private bool _leftHandQueued = false;
+
         public static InputManager Get()
         {
             return _instance;
@@ -47,6 +51,13 @@ namespace OodlesEngine
         void Awake()
         {
             _instance = this;
+        }
+
+        void Update()
+        {
+            // 在 Unity Update 緩存，Fusion tick 來讀時不會錯過
+            if (Input.GetKeyDown(KeyCode.Mouse1)) _action2Queued = true;
+            if (Input.GetKeyDown(KeyCode.Mouse0)) _leftHandQueued = true;
         }
 
         private void Start()
@@ -364,14 +375,12 @@ namespace OodlesEngine
             }
             else
             {
-                if (Input.GetKeyDown(KeyCode.Mouse0))
+                if (_leftHandQueued)
                 {
+                    _leftHandQueued = false;
                     return 1;
                 }
-                else
-                {
-                    return 0;
-                }
+                return 0;
             }
         }
 
@@ -416,14 +425,12 @@ namespace OodlesEngine
             }
             else
             {
-                if (Input.GetKeyDown(KeyCode.Mouse1))
+                if (_action2Queued)
                 {
+                    _action2Queued = false;
                     return 1;
                 }
-                else
-                {
-                    return 0;
-                }
+                return 0;
             }
         }
        

@@ -11,6 +11,7 @@ public class MissionWinSystem : MonoBehaviour
     private HashSet<OodlesCharacter> knockedTargets = new HashSet<OodlesCharacter>();
 
     private MissionUIManager missionUIManager;
+
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -25,7 +26,6 @@ public class MissionWinSystem : MonoBehaviour
     {
         GameObject hud = GameUIManager.Instance.HUDUI.transform.Find("HUDMissionlist").gameObject;
         missionUIManager = hud.GetComponent<MissionUIManager>();
-
     }
 
     public bool CatchWin = false;
@@ -37,40 +37,41 @@ public class MissionWinSystem : MonoBehaviour
 
     public void ResetFightStats()
     {
-        FightCount = 0;                     // 把計數歸零
-        knockedTargets.Clear();            // 清除已擊倒的列表
+        FightCount = 0;
+        knockedTargets.Clear();
         Debug.LogWarning(FightCount + "/" + FightWinCount);
     }
+
     public void GameOver()
     {
         Debug.Log("StealID：" + StealID);
         Debug.Log("CatchID：" + CatchID);
         Debug.Log("FightID：" + FightID);
         Debug.Log("遊戲結束，檢查任務完成狀態");
-        // 每個任務 ID 只會有一個玩家完成
+
         HashSet<int> completedPlayers = new HashSet<int>();
 
-        // Catch 任務
-        //if (CatchWin)
         completedPlayers.Add(CatchID);
-
-        // Steal 任務
-        //if (StealWin)
         completedPlayers.Add(StealID);
-
-        // Fight 任務
-        //if (FightWin)
         completedPlayers.Add(FightID);
 
-        // 逐個玩家判斷
+        // ✅ 修正：移除無效 ID（-1 = 沒人持有該任務）
+        completedPlayers.Remove(-1);
+
         foreach (int playerId in completedPlayers)
         {
             var missionCards = PlayerInventoryManager.Instance.GetCardsByPlayer(playerId)
                 .FindAll(c => c.type == CardType.Mission);
 
-            // 如果該玩家所有 mission 都完成
+            // 如果該玩家沒有任何任務卡，跳過
+            if (missionCards.Count == 0)
+            {
+                Debug.Log($"玩家 {playerId} 沒有任務卡，跳過");
+                continue;
+            }
+
             bool playerWin = true;
-            //判定是否完成所有卡牌
+
             foreach (var c in missionCards)
             {
                 if (c.id == 0 && (!CatchWin || CatchID != playerId))
@@ -87,23 +88,27 @@ public class MissionWinSystem : MonoBehaviour
                 GameManager.instance.RPC_Gameover(playerId);
             }
             else
+            {
                 Debug.Log($"玩家 {playerId} ❌ 尚未完成任務");
+            }
         }
     }
+
     public int GetFightID()
     {
         return FightID;
     }
+
     public void UpdateFightCount(OodlesCharacter target)
     {
         if (!knockedTargets.Contains(target))
         {
-            knockedTargets.Add(target); // 記錄對象
+            knockedTargets.Add(target);
             FightCount++;
+            Debug.Log("FightCount"+FightCount);
 
-            PlayerInventoryManager.Instance.playerInventories[FightID].MissionStates.Set(2, 1);
+            PlayerInventoryManager.Instance.playerInventories[FightID].MissionStates.Set(2, FightCount);
 
-            // 任務檢查
             if (FightCount == FightWinCount)
             {
                 FightWin = true;
@@ -113,8 +118,6 @@ public class MissionWinSystem : MonoBehaviour
         }
     }
 
-
-    //任務追蹤器
     public void Catch(int id)
     {
         var inventories = PlayerInventoryManager.Instance.playerInventories;
@@ -131,13 +134,13 @@ public class MissionWinSystem : MonoBehaviour
             return;
         }
 
+        // ✅ 修正：檢查 CatchID 的合法性，而不是誤用其他 ID
         if (CatchID != -1 && (CatchID < 0 || CatchID >= inventories.Count))
         {
             Debug.LogError($"[Catch] invalid previous CatchID: {CatchID}, inventories.Count: {inventories.Count}");
             CatchID = -1;
         }
 
-        // 如果 Catch 任務的持有者變了，重置進度
         if (CatchID != id)
         {
             Debug.Log("Catch 任務持有者變更，重置進度");
@@ -158,29 +161,30 @@ public class MissionWinSystem : MonoBehaviour
 
         if (inventories == null)
         {
-            Debug.LogError("[Catch] playerInventories is null");
+            Debug.LogError("[Steal] playerInventories is null");
             return;
         }
 
         if (id < 0 || id >= inventories.Count)
         {
-            Debug.LogError($"[Catch] invalid id: {id}, inventories.Count: {inventories.Count}");
+            Debug.LogError($"[Steal] invalid id: {id}, inventories.Count: {inventories.Count}");
             return;
         }
-       
-        if (CatchID != -1 && (CatchID < 0 || CatchID >= inventories.Count))
+
+        // ✅ 修正：檢查 StealID 的合法性（原本錯誤檢查了 CatchID）
+        if (StealID != -1 && (StealID < 0 || StealID >= inventories.Count))
         {
-            Debug.LogError($"[Catch] invalid previous CatchID: {CatchID}, inventories.Count: {inventories.Count}");
-            CatchID = -1;
+            Debug.LogError($"[Steal] invalid previous StealID: {StealID}, inventories.Count: {inventories.Count}");
+            StealID = -1;
         }
+
         if (StealID != id)
         {
             StealWin = false;
-            PlayerInventoryManager.Instance.playerInventories[id].MissionStates.Set(1, 0);
+            inventories[id].MissionStates.Set(1, 0);
+
             if (StealID != -1)
-                PlayerInventoryManager.Instance.playerInventories[StealID].MissionStates.Remove(1);
-            // GameManager.instance.RPC_UpdateMission(id, 1, "躲起來", "在遊戲結束前不要被逮捕到", 1, true);
-            // GameManager.instance.RPC_UpdateMission(StealID, 1, "躲起來", "在遊戲結束前不要被逮捕到", 1, false);
+                inventories[StealID].MissionStates.Remove(1);
         }
 
         StealID = id;
@@ -192,37 +196,33 @@ public class MissionWinSystem : MonoBehaviour
 
         if (inventories == null)
         {
-            Debug.LogError("[Catch] playerInventories is null");
+            Debug.LogError("[Fight] playerInventories is null");
             return;
         }
 
         if (id < 0 || id >= inventories.Count)
         {
-            Debug.LogError($"[Catch] invalid id: {id}, inventories.Count: {inventories.Count}");
+            Debug.LogError($"[Fight] invalid id: {id}, inventories.Count: {inventories.Count}");
             return;
         }
 
-        if (CatchID != -1 && (CatchID < 0 || CatchID >= inventories.Count))
+        // ✅ 修正：檢查 FightID 的合法性（原本錯誤檢查了 CatchID）
+        if (FightID != -1 && (FightID < 0 || FightID >= inventories.Count))
         {
-            Debug.LogError($"[Catch] invalid previous CatchID: {CatchID}, inventories.Count: {inventories.Count}");
-            CatchID = -1;
+            Debug.LogError($"[Fight] invalid previous FightID: {FightID}, inventories.Count: {inventories.Count}");
+            FightID = -1;
         }
+
         if (FightID != id)
         {
             FightWin = false;
             ResetFightStats();
-            PlayerInventoryManager.Instance.playerInventories[id].MissionStates.Set(2, 0);
+            inventories[id].MissionStates.Set(2, 0);
+
             if (FightID != -1)
-                PlayerInventoryManager.Instance.playerInventories[FightID].MissionStates.Remove(2);
-            // GameManager.instance.RPC_UpdateMission(id, 2, "戰鬥", "擊倒所有人前不要被擊倒", FightWinCount, true);
-            // GameManager.instance.RPC_UpdateMission(FightID, 2, "戰鬥", "擊倒所有人前不要被擊倒", FightWinCount, false);
-
-
+                inventories[FightID].MissionStates.Remove(2);
         }
 
         FightID = id;
     }
-
-
-
 }

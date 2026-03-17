@@ -1,70 +1,65 @@
-/* 全站基礎設定 */
 .body-style {
     width: 100%;
     height: 100%;
     flex-direction: row;
-    align-items: center; /* 垂直置中 */
-    justify-content: flex-start; /* 靠左排列 */
+    align-items: center;
+    justify-content: flex-start;
 }
 
-/* 主要容器 */
 .main-menu {
     height: 100%;
     justify-content: center;
-    padding-left: 10%; /* 使用百分比確保不同解析度下的間距 */
+    padding-left: 10%;
 }
 
-/* 按鈕群組容器 */
 .menu-container {
     flex-direction: column;
 }
 
-/* 通用按鈕基底 */
 .menu-btn {
     width: 100%;
-    height: 90px; /*90px*/
+    height: 90px;
     margin-bottom: 30px;
-    flex-direction: row; /* 水平排列圖示與文字 */
+    flex-direction: row;
     align-items: center;
     padding-left: 25px;
     border-width: 0;
-    background-color: rgba(0, 0, 0, 0); /* 隱藏預設底色 */
-    
-    /* 動畫過渡 */
+    background-color: rgba(0, 0, 0, 0);
     transition-property: scale, translate;
     transition-duration: 0.2s;
 }
 
-/* 藍色按鈕 */
 .menu-btn.blue {
-    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/blue_default.png");
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/Blue_default.png?fileID=21300000&guid=e01263220d897ce40a77c84ba434a1ea&type=3#Blue_default");
 }
+
 .menu-btn.blue:hover {
-    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/blue_hover.png");
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/Blue_hover.png?fileID=21300000&guid=06d1f097e01a99f40b560c81e2d305bc&type=3#Blue_hover");
     scale: 1.05;
     translate: 0 -2px;
 }
+
 .menu-btn.blue:active {
-    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/blue_active.png");
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/Blue_active.png?fileID=21300000&guid=ddc6e20624fa3a04ab37b3cc7fe01d91&type=3#Blue_active");
     scale: 0.95;
     translate: 0 0;
 }
 
-/* 橘粉色按鈕 */
 .menu-btn.orange {
-    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/orange_default.png");
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/orange_default.png?fileID=21300000&guid=25a85a6815e848549b52da4aee6b5a30&type=3#orange_default");
 }
+
 .menu-btn.orange:hover {
-    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/orange_hover.png");
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/orange_hover.png?fileID=21300000&guid=f852e54561e551941b6df6a718b40948&type=3#orange_hover");
     scale: 1.05;
     translate: 0 -2px;
 }
+
 .menu-btn.orange:active {
-    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/orange_active.png");
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/orange_active.png?fileID=21300000&guid=81a7bb1fa40148a41adad2cdb29d5b98&type=3#orange_active");
     scale: 0.95;
 }
 
-/* 按鈕內的圖示 */
 .icon-img {
     width: 32px;
     height: 32px;
@@ -72,15 +67,25 @@
     -unity-background-scale-mode: scale-to-fit;
 }
 
-/* Icon 圖片路徑 */
-.icon-play { background-image: url("project://database/Assets/Image/UIPanel/MainMenu/icon_play.png"); }
-.icon-settings { background-image: url("project://database/Assets/Image/UIPanel/MainMenu/icon_settings.png"); }
-.icon-trophy { background-image: url("project://database/Assets/Image/UIPanel/MainMenu/icon_trophy.png"); }
-.icon-back { background-image: url("project://database/Assets/Image/UIPanel/MainMenu/icon_back.png"); }
+.icon-play {
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/icon_play.png?fileID=2800000&guid=327850caa80d4ab49acba58dae7781e0&type=3#icon_play");
+}
 
-/* 文字標籤 */
+.icon-settings {
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/icon_settings.png?fileID=2800000&guid=a390eb5f8e5be1742aa76c4da1a95654&type=3#icon_settings");
+}
+
+.icon-trophy {
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/icon_trophy.png?fileID=2800000&guid=0097d329a2c4ad94c92647131a19c2a5&type=3#icon_trophy");
+}
+
+.icon-back {
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/icon_back.png?fileID=2800000&guid=7892b4cba9353184c862ae74902e0999&type=3#icon_back");
+}
+
 .label {
     color: white;
     font-size: 30px;
-    letter-spacing: 5px; /* Unity 中微調文字間距 */
+    letter-spacing: 5px;
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&guid=6f1375bf9fa261a40b77477d1fef5011&type=3#GenSenRounded2TW-B");
 }

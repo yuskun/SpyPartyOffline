@@ -30,6 +30,11 @@ public class NetworkPlayer : NetworkBehaviour
             LocalBackpack.Instance.scanner = this.transform.Find("Ragdoll").GetComponent<PlayerScanner>();
             LocalBackpack.Instance.scanner.enableScan = true;
 
+            // 生成後立即刷新背包 UI（對應已有卡片的情況，例如遊戲開始時分配任務卡）
+            LocalBackpack.Instance.UpdateCardImagesByInventory(
+                LocalBackpack.Instance.userInventory,
+                CardManager.Instance.Catalog.cards);
+
 
         }
 

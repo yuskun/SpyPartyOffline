@@ -131,7 +131,7 @@ public class LocalBackpack : MonoBehaviour
             return;
         }
 
-        var data = userInventory.slots[FocusIndex];
+        var data = userInventory.slotsNetworked[FocusIndex];
         var card = CardManager.Instance.Catalog.cards.Find(c =>
             c.cardData.id == data.id && c.cardData.type == data.type
         );
@@ -242,7 +242,7 @@ public class LocalBackpack : MonoBehaviour
 
         if (holdTimer >= holdSeconds)
         {
-            var data = userInventory.slots[holdingIndex];
+            var data = userInventory.slotsNetworked[holdingIndex];
 
             if (!cardUseUIManager.TryUseMissionCard(
                 holdingMissionCard,
@@ -339,13 +339,12 @@ public class LocalBackpack : MonoBehaviour
     // 以下保持原本邏輯不變
     bool IsCardReady(int index)
     {
-        if (index < 0 || index >= userInventory.slots.Length)
+        if (index < 0 || index >= PlayerInventory.MaxSlots)
         {
-
             character.animatorPlayer.SetTrigger("DoShake");
             return false;
         }
-        var slot = userInventory.slots[index];
+        var slot = userInventory.slotsNetworked[index];
         return userInventory.CanUse(slot); // 確保冷卻狀態更新
 
 
@@ -421,7 +420,7 @@ public class LocalBackpack : MonoBehaviour
 
         for (int i = 0; i < buttons.Count; i++)
         {
-            var data = inv.slots[i];
+            var data = inv.slotsNetworked[i]; // 直接讀網路狀態，確保 Client 端同步正確
             if (!data.IsEmpty())
             {
                 var card = allCards.Find(c =>

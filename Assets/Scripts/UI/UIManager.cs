@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.UI;
 
 public class GameUIManager : MonoBehaviour
@@ -16,6 +17,7 @@ public class GameUIManager : MonoBehaviour
     public Image progressfill;
     public GameObject progressBar;
     public Image UserCardUI;
+    public GameObject Notification;
 
     private void Awake()
     {
@@ -29,6 +31,13 @@ public class GameUIManager : MonoBehaviour
     public void Win()
     {
         WinText.SetActive(true);
+    }
+    public void init()
+    {
+         WinText.SetActive(false);
+         GameoverText.SetActive(false);
+         HUDUI.SetActive(false);
+         PauseUI.SetActive(false);
     }
     void FixedUpdate()
     {

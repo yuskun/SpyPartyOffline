@@ -186,7 +186,7 @@ public class SkinChange : NetworkBehaviour
             {
                 SpawnedPlayers.Set(index, playerObj);
                 break;
-            }
+            } 
         }
 
     }

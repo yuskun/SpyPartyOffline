@@ -26,20 +26,17 @@ public class PlayerInventory : NetworkBehaviour // ✅ 必須繼承 NetworkBehav
 
     public override void Spawned()
     {
-
-        if (Object.HasStateAuthority) // 只有 Host 初始化欄位，Client 會自動收到同步值
+        if (Object.HasStateAuthority) // 只有 Host 初始化欄位
         {
             for (int i = 0; i < MaxSlots; i++)
             {
                 slotsNetworked.Set(i, CardData.Empty());
             }
-            UpdateLocalSlot();  // 本地初始化
-            NotifyChange();
             InventoryVersion = 0;
-
         }
 
-
+        // Host 和 Client 都需要從網路狀態初始化本地 slots[]
+        UpdateLocalSlot();
     }
     public override void FixedUpdateNetwork()
     {

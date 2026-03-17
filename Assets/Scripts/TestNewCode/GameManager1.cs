@@ -20,13 +20,14 @@ public class GameManager : NetworkBehaviour
 
     public override void Spawned()
     {
+         instance = this;
         Rpc_Ready(PlayerPrefs.GetInt("Choosenindex"), default);
         MenuUIManager.instance.Gameroom.SetActive(false);
         GameUIManager.Instance.HUDUI.SetActive(true);
         LocalBackpack.Instance.SetUpdateEnabled(true);
         if (Runner.IsServer)
         {
-            instance = this;
+           
             HasStarted = false;
 
         }
@@ -168,6 +169,13 @@ public class GameManager : NetworkBehaviour
     public void RPC_InitMissionData(int missionID, int newGoal)
     {
         CardManager.Instance.UpdateMissionData(missionID, newGoal);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void Rpc_SetWiretap(PlayerRef tapperRef, int targetId, float duration)
+    {
+        if (Runner.LocalPlayer != tapperRef) return;
+        WiretapManager.Instance?.StartWiretap(targetId, duration);
     }
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void Rpc_RequestUseCard(CardUseParameters cardUseParameters)

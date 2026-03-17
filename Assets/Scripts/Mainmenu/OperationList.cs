@@ -96,22 +96,20 @@ public class MissionUIManager : MonoBehaviour
         RefreshFocus();
     }
 
-    // ✅ 更新任務進度
-    public void UpdateMissionProgress(int id, int addValue)
+    // ✅ 更新任務進度MissionStates
+   public void UpdateMissionProgress(int id, int setValue)
+{
+    if (!missionDict.ContainsKey(id)) return;
+
+    MissionSlot slot = missionDict[id];
+    slot.data.current = Mathf.Min(setValue, slot.data.goal); // ← 直接設，不累加
+    slot.Refresh();
+
+    if (slot.data.current >= slot.data.goal)
     {
-        Debug.LogWarning("UpdateMissionProgress呼叫");
-        if (!missionDict.ContainsKey(id)) return;
-        Debug.LogWarning("!missionDict.ContainsKey(id)");
-        MissionSlot slot = missionDict[id];
-        slot.data.current = Mathf.Min(slot.data.current + addValue, slot.data.goal);
-        slot.Refresh();
-        Debug.LogWarning("slot.Refresh()");
-        if (slot.data.current >= slot.data.goal)
-        {
-            slot.MarkAsCompleted();
-            Debug.LogWarning("MarkAsCompleted()");
-        }
+        slot.MarkAsCompleted();
     }
+}
 
     // ✅ TAB 切換焦點
     private void FocusNextMission()

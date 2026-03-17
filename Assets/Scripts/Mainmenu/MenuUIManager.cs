@@ -39,7 +39,7 @@ public class MenuUIManager : MonoBehaviour
         }
     }
 
-    void Start()
+    public void Start()
     {
 
         Menu.SetActive(true);

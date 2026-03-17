@@ -724,21 +724,19 @@ namespace OodlesEngine
         private IEnumerator PickUpAction(float pickAngle)
         {
             curPickAngle = pickAngle;
-            //curPickAngle = 20;
             leftPicking = true;
             rightPicking = true;
 
-            float timeLeft = 1;
             SearchPickTarget();
             JointActionState();
 
             UseLeftArm(1);
             UseRightArm(1);
 
-            // for simple
-            while (curPickAngle >= 20)//20
+            // 延長手臂伸出窗口：每次 0.05s，讓物理碰撞更容易觸發
+            while (curPickAngle >= 20)
             {
-                yield return new WaitForSeconds(0.02f);//0.02
+                yield return new WaitForSeconds(0.05f);
                 curPickAngle -= 30;
             }
 

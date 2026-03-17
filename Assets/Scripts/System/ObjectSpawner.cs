@@ -35,6 +35,12 @@ public class ObjectSpawner : MonoBehaviour
     [Header("最大生成數量")]
     [SerializeField] private int maxTotal = 40;
 
+    [Header("初始生成數量")]
+    [SerializeField] private int initialSpawnCount = 10;
+
+    [Header("武器生成機率 (0~1)")]
+    [SerializeField] private float weaponSpawnChance = 0.15f;
+
     private float timer;
     private List<GameObject> spawnedObjects = new List<GameObject>();
 
@@ -43,6 +49,12 @@ public class ObjectSpawner : MonoBehaviour
     void Awake()
     {
         Instance = this;
+    }
+
+    private void OnEnable()
+    {
+        for (int i = 0; i < initialSpawnCount; i++)
+            RandomSpawnObject(1);
     }
 
     private void FixedUpdate()
@@ -111,10 +123,9 @@ public class ObjectSpawner : MonoBehaviour
     }
     GameObject GetRandomSpawnPrefab()
     {
-        // 70% 普通道具，30% 武器（比例你可自己調）
         float roll = Random.value;
 
-        if (roll < 0.7f)
+        if (roll >= weaponSpawnChance)
         {
             return prefabToSpawn;
         }
@@ -126,12 +137,14 @@ public class ObjectSpawner : MonoBehaviour
             return WeaponItem[Random.Range(0, WeaponItem.Count)];
         }
     }
-    public void RandomSpawnObject()
+    public void RandomSpawnObject(int spawnCount = -1)
     {
         if (prefabToSpawn == null || spawnAreas.Count == 0)
             return;
 
-        int spawnCount = Random.Range(1, 3);
+        if (spawnCount < 0)
+            spawnCount = Random.Range(1, 3);
+
         for (int i = 0; i < spawnCount; i++)
         {
             if (spawnedObjects.Count >= maxTotal)

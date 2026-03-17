@@ -7,7 +7,7 @@ public class RandomCard : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("add card");
+        
         if (other.name == "Ragdoll")
         {
             if (cardCatalog == null || cardCatalog.cards.Count == 0)
@@ -17,6 +17,7 @@ public class RandomCard : NetworkBehaviour
             }
             // 隨機抽卡
             CardData randomCard = GetRandomCard();
+            Debug.Log(randomCard.type+" "+randomCard.cardId);
             if (other.transform.parent.gameObject.GetComponent<PlayerInventory>().AddCard(randomCard))
             {
                 CharacterSFXManager.Instance?.PlayPickUp();
@@ -28,6 +29,6 @@ public class RandomCard : NetworkBehaviour
     private CardData GetRandomCard()
     {
         int index = Random.Range(0, cardCatalog.CanSpwanCard.Count);
-        return cardCatalog.cards[index].cardData;
+        return cardCatalog.CanSpwanCard[index].cardData;
     }
 }
