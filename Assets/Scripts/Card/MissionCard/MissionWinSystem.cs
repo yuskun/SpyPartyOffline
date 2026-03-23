@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using ExitGames.Client.Photon.StructWrapping;
 using OodlesEngine;
 using UnityEngine;
 
 public class MissionWinSystem : MonoBehaviour
 {
+    public bool isGameOver=false;
     public static MissionWinSystem Instance;
     public int FightWinCount;
     public int FightCount;
@@ -44,18 +46,8 @@ public class MissionWinSystem : MonoBehaviour
 
     public void GameOver()
     {
-        Debug.Log("StealID：" + StealID);
-        Debug.Log("CatchID：" + CatchID);
-        Debug.Log("FightID：" + FightID);
-        Debug.Log("遊戲結束，檢查任務完成狀態");
-
+        if(!isGameOver)return;
         HashSet<int> completedPlayers = new HashSet<int>();
-
-        completedPlayers.Add(CatchID);
-        completedPlayers.Add(StealID);
-        completedPlayers.Add(FightID);
-
-        // ✅ 修正：移除無效 ID（-1 = 沒人持有該任務）
         completedPlayers.Remove(-1);
 
         foreach (int playerId in completedPlayers)
@@ -86,12 +78,18 @@ public class MissionWinSystem : MonoBehaviour
             {
                 Debug.Log($"玩家 {playerId} ✅ 完成所有任務，勝利！");
                 GameManager.instance.RPC_Gameover(playerId);
+                isGameOver=true;
             }
             else
             {
                 Debug.Log($"玩家 {playerId} ❌ 尚未完成任務");
             }
         }
+    }
+    public void Draw()
+    {
+        GameManager.instance.RPC_Draw();
+        isGameOver=true;
     }
 
     public int GetFightID()

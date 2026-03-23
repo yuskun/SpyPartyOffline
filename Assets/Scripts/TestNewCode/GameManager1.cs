@@ -205,6 +205,12 @@ public class GameManager : NetworkBehaviour
         else
             GameUIManager.Instance.Gameover();
     }
+     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_Draw()
+    {
+       
+            GameUIManager.Instance.Draw();
+    }
     private void SpawnAllPlayers()
     {
         foreach (PlayerRef player in Runner.ActivePlayers)

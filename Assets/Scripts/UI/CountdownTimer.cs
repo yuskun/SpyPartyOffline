@@ -70,7 +70,7 @@ public class CountdownTimer : NetworkBehaviour
         {
             MissionWinSystem.Instance.StealWin = true;
             PlayerInventoryManager.Instance.playerInventories[MissionWinSystem.Instance.StealID].MissionStates.Set(1, 1);
-            MissionWinSystem.Instance.GameOver();
+            MissionWinSystem.Instance.Draw();
         }
         else
         {

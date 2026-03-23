@@ -18,6 +18,7 @@ public class GameUIManager : MonoBehaviour
     public GameObject progressBar;
     public Image UserCardUI;
     public GameObject Notification;
+    public GameObject DrawUI;
 
     private void Awake()
     {
@@ -38,6 +39,10 @@ public class GameUIManager : MonoBehaviour
          GameoverText.SetActive(false);
          HUDUI.SetActive(false);
          PauseUI.SetActive(false);
+    }
+    public void Draw()
+    {
+     DrawUI.SetActive(true);   
     }
     void FixedUpdate()
     {
