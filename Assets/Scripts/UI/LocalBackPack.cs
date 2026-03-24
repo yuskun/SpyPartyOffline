@@ -29,6 +29,13 @@ public class LocalBackpack : MonoBehaviour
     private MissionCard holdingMissionCard = null;
     private PlayerInventory holdingTargetInventory = null;
 
+    // ========= ItemCard 預覽狀態 =========
+    private bool isPreviewingItem = false;
+    private int previewingIndex = -1;
+    private ItemCard previewingItemCard = null;
+    private CardData previewingCardData;
+    private PlayerInventory previewingTargetInventory = null;
+
 
 
     public CardUseUIManager cardUseUIManager; // UI 控制器
@@ -88,6 +95,10 @@ public class LocalBackpack : MonoBehaviour
         // 取得目前 Focus 的卡（如果 Focus 不合法，直接不做事）
         if (FocusIndex < 0 || FocusIndex >= buttons.Count) return;
         if (!buttons[FocusIndex].button.interactable) return;
+
+        // FocusIndex 換格子時取消 ItemCard 預覽
+        if (isPreviewingItem && FocusIndex != previewingIndex)
+            CancelItemPreview();
 
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -151,7 +162,7 @@ public class LocalBackpack : MonoBehaviour
             return;
         }
 
-        // ItemCard：仍然瞬發（你原本邏輯）
+        // ItemCard：第一次 E 顯示預覽，第二次 E 才使用
         if (card is ItemCard itemCard)
         {
             if (itemCard.needTarget && targetInventory == null)
@@ -160,7 +171,24 @@ public class LocalBackpack : MonoBehaviour
                 Debug.Log("此物品卡需要目標，但沒有掃描到有效目標");
                 return;
             }
-            SendUseCardRpc(data, FocusIndex, targetInventory);
+
+            if (!isPreviewingItem || previewingIndex != FocusIndex)
+            {
+                // 第一次按：顯示預覽
+                CancelItemPreview(); // 先取消舊的（換格子的情況）
+                isPreviewingItem = true;
+                previewingIndex = FocusIndex;
+                previewingItemCard = itemCard;
+                previewingCardData = data;
+                previewingTargetInventory = targetInventory;
+                CardPreviewSystem.Instance.ShowPreview(card);
+                return;
+            }
+
+            // 第二次按：真正使用
+            CardPreviewSystem.Instance.HidePreview();
+            SendUseCardRpc(previewingCardData, previewingIndex, previewingTargetInventory);
+            ClearItemPreviewState();
             return;
         }
 
@@ -297,6 +325,22 @@ public class LocalBackpack : MonoBehaviour
 
         // TODO: 關閉長按 UI
         // cardUseUIManager.ShowHoldUI(false);
+    }
+
+    void CancelItemPreview()
+    {
+        if (!isPreviewingItem) return;
+        CardPreviewSystem.Instance.HidePreview();
+        ClearItemPreviewState();
+    }
+
+    void ClearItemPreviewState()
+    {
+        isPreviewingItem = false;
+        previewingIndex = -1;
+        previewingItemCard = null;
+        previewingCardData = default;
+        previewingTargetInventory = null;
     }
 
     void CancelHold(string reason)
