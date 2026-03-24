@@ -65,17 +65,13 @@ public class CountdownTimer : NetworkBehaviour
 
     private void OnTimerEnd()
     {
-        // 2. 將 StealWin 設為 true
         if (MissionWinSystem.Instance != null)
         {
-            MissionWinSystem.Instance.StealWin = true;
-            PlayerInventoryManager.Instance.playerInventories[MissionWinSystem.Instance.StealID].MissionStates.Set(1, 1);
-            MissionWinSystem.Instance.Draw();
+            MissionWinSystem.Instance.StealTimerWin();
         }
         else
         {
             Debug.LogWarning("MissionWinSystem.Instance 尚未初始化");
         }
-
     }
 }

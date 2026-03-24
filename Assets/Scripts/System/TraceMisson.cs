@@ -91,5 +91,18 @@ public class TraceMission : MonoBehaviour
             MissionWinSystem.Instance.Fight(-1);
             Debug.Log("Fight_Lost");
         }
+
+        // 每次背包更新後，檢查所有玩家的收集勝利條件
+        int checkIndex = 0;
+        while (true)
+        {
+            GameObject checkPlayer = PlayerInventoryManager.Instance.GetPlayer(checkIndex);
+            if (checkPlayer == null) break;
+
+            PlayerIdentify checkIdentify = checkPlayer.GetComponent<PlayerIdentify>();
+            MissionWinSystem.Instance.CheckCollectWin(checkIdentify.PlayerID);
+
+            checkIndex++;
+        }
     }
 }

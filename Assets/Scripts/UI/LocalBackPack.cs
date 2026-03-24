@@ -81,6 +81,7 @@ public class LocalBackpack : MonoBehaviour
         HandleNumberKeys();
         UpdateButtonHighlight();
         HandleCardInput();
+        UpdateCardImagesByInventory();
     }
     void HandleCardInput()
     {
@@ -318,6 +319,8 @@ public class LocalBackpack : MonoBehaviour
     }
     void CardCooldownUpdate()
     {
+        if (userInventory == null)
+        return;
         for (int i = 0; i < buttons.Count; i++)
         {
             float cooldown = userInventory.GetRemainingCooldown(i);
@@ -413,14 +416,17 @@ public class LocalBackpack : MonoBehaviour
         }
     }
 
-    public void UpdateCardImagesByInventory(PlayerInventory inv, List<Card> allCards)
+    public void UpdateCardImagesByInventory()
     {
-        if (inv != userInventory)
+        if (userInventory == null)
+            return;
+        if (CardManager.Instance == null)
             return;
 
+        var allCards = CardManager.Instance.Catalog.cards;
         for (int i = 0; i < buttons.Count; i++)
         {
-            var data = inv.slotsNetworked[i]; // 直接讀網路狀態，確保 Client 端同步正確
+            var data = userInventory.slotsNetworked[i]; // 直接讀網路狀態，確保 Client 端同步正確
             if (!data.IsEmpty())
             {
                 var card = allCards.Find(c =>

@@ -54,7 +54,7 @@ public struct CardUseParameters : INetworkStruct
     public int TargetSelectIndex;       // 使用者選定的目標玩家卡槽
 }
 [System.Serializable]
-public class MissionData: INetworkStruct
+public class MissionData
 {
 
     public string title;

@@ -54,20 +54,22 @@ public class GameManager : NetworkBehaviour
         PlayerInventoryManager.Instance.init();
         PlayerInventoryManager.Instance.Refresh();
         MissionWinSystem.Instance.FightWinCount = PlayerInventoryManager.Instance.playerInventories.Count - 1;
-        InitMissionData();
         MenuUIManager.instance.LoadingScreen.SetActive(false);
 
     }
     public override void FixedUpdateNetwork()
     {
-        
+        // 押送系統 Tick（Host 驅動，遊戲進行中持續執行）
+        if (HasStarted && Runner.IsServer && MissionWinSystem.Instance != null)
+            MissionWinSystem.Instance.TickEscort(Runner.DeltaTime);
+
         if (HasStarted) return;
-     
+
         if (!StartDelay.IsRunning) return;
-    
+
         if (StartDelay.Expired(Runner))
         {
-            HasStarted = true;                   // 這行是「全局鎖」
+            HasStarted = true;
             GameInit();
             GameStart();
         }
@@ -98,12 +100,6 @@ public class GameManager : NetworkBehaviour
 
         }
 
-    }
-    public void InitMissionData()
-    {
-        RPC_InitMissionData(0, 1);
-        RPC_InitMissionData(1, 1);
-        RPC_InitMissionData(2, MissionWinSystem.Instance.FightWinCount);
     }
     public void SpawnAI()
     {
@@ -166,12 +162,6 @@ public class GameManager : NetworkBehaviour
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void RPC_InitMissionData(int missionID, int newGoal)
-    {
-        CardManager.Instance.UpdateMissionData(missionID, newGoal);
-    }
-
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void Rpc_SetWiretap(PlayerRef tapperRef, int targetId, float duration)
     {
         if (Runner.LocalPlayer != tapperRef) return;
@@ -225,7 +215,7 @@ public class GameManager : NetworkBehaviour
                 Runner,
                 playerCharacterIndex[player],
                 player,
-                "Player_" + player.PlayerId
+                NetworkManager2.Instance.PlayerName
             );
         }
     }

@@ -4,15 +4,19 @@ using Fusion;
 using OodlesEngine;
 using UnityEngine.SocialPlatforms;
 using Fusion.Addons.Physics;
+using TMPro;
 
 
 public class NetworkPlayer : NetworkBehaviour
 {
     [Networked]
     public PlayerRef PlayerId { get; set; }
+
+    
     public bool AllowInput = true;
     public float freezeTimer = 1f; // 凍結計時器，初始值為3秒
     private OodlesCharacter characterController;
+    public bool isPrepare=false;
     public override void Spawned()
     {
         Debug.Log($"[NetworkPlayer] 玩家 {PlayerId} 已生成。");
@@ -21,6 +25,7 @@ public class NetworkPlayer : NetworkBehaviour
         {
             CameraFollow.Get().player = characterController.GetPhysicsBody().transform;
             CameraFollow.Get().enable = true;
+            if(isPrepare)return;
             if (MiniMap.instance != null)
                 MiniMap.instance.target = characterController.GetPhysicsBody().transform;
             LocalBackpack.Instance.userInventory = this.GetComponent<PlayerInventory>();
@@ -29,11 +34,8 @@ public class NetworkPlayer : NetworkBehaviour
 
             LocalBackpack.Instance.scanner = this.transform.Find("Ragdoll").GetComponent<PlayerScanner>();
             LocalBackpack.Instance.scanner.enableScan = true;
+            this.GetComponent<PlayerIdentify>().Text.gameObject.SetActive(false);
 
-            // 生成後立即刷新背包 UI（對應已有卡片的情況，例如遊戲開始時分配任務卡）
-            LocalBackpack.Instance.UpdateCardImagesByInventory(
-                LocalBackpack.Instance.userInventory,
-                CardManager.Instance.Catalog.cards);
 
 
         }

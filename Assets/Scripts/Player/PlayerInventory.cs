@@ -251,8 +251,6 @@ public class PlayerInventory : NetworkBehaviour // ✅ 必須繼承 NetworkBehav
         UpdateLocalSlot();
         if (PlayerInventoryManager.Instance != null)
             PlayerInventoryManager.Instance.Refresh();
-        if (Runner.LocalPlayer == this.GetComponent<NetworkPlayer>().PlayerId)
-            LocalBackpack.Instance.UpdateCardImagesByInventory(this, CardManager.Instance.Catalog.cards);
     }
     private void UpdateLocalSlot()
     {
@@ -308,8 +306,13 @@ public class PlayerInventory : NetworkBehaviour // ✅ 必須繼承 NetworkBehav
         }
     }
     //Mission UI------------------------------------------------------------------------
+    // current 進度（隨遊戲變動）
     [Networked, Capacity(20)]
     public NetworkDictionary<int, int> MissionStates => default;
+
+    // 目標值（分配任務時設一次，之後不再改動）
+    [Networked, Capacity(20)]
+    public NetworkDictionary<int, int> MissionGoals => default;
 
 
 

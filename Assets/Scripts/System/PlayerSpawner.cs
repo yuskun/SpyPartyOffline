@@ -7,7 +7,7 @@ public class PlayerSpawner : MonoBehaviour
 
     public GameObject[] characterPrefabs; // 四個造型
     public Transform[] spawnPoints;
- 
+
     public static PlayerSpawner instance;
     private void Awake()
     {
@@ -34,7 +34,7 @@ public class PlayerSpawner : MonoBehaviour
         else
             Debug.Log($"[PlayerSpawner] 已載入 {characterPrefabs.Length} 個角色 Prefab。");
     }
-    public void SpawnPlayer(NetworkRunner runner, int? index, PlayerRef player, string name)
+    public void SpawnPlayer(NetworkRunner runner, int? index, PlayerRef player, string name, bool IsPrepare = false)
     {
         // 隨機選擇一個生成點
         Transform chosenSpawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)];
@@ -42,18 +42,19 @@ public class PlayerSpawner : MonoBehaviour
         int chosenIndex = (index.HasValue && index.Value >= 0 && index.Value < characterPrefabs.Length)
              ? index.Value
              : UnityEngine.Random.Range(0, characterPrefabs.Length);
+
         // 隨機選擇一個角色造型
         GameObject chosenCharacterPrefab = characterPrefabs[chosenIndex];
+
         runner.Spawn(chosenCharacterPrefab, chosenSpawnPoint.position, Quaternion.identity, null, (runner, obj) =>
         {
             Debug.Log($"[PlayerSpawner] 玩家 {player} 生成於 {chosenSpawnPoint.position}，使用角色 {chosenCharacterPrefab.name}。");
             obj.GetComponent<NetworkPlayer>().PlayerId = player;
-            obj.GetComponent<PlayerIdentify>().name = name;
+            obj.GetComponent<NetworkPlayer>().isPrepare = IsPrepare;  // 直接使用 IsPrepare，預設就是 false
+            obj.GetComponent<PlayerIdentify>().PlayerName = name;
 
             SkinChange.instance.SetSpawnedPlayer(obj.GetComponent<NetworkObject>());
-
         });
-
     }
     public void RefreshSpawnPoints()
     {
@@ -63,7 +64,7 @@ public class PlayerSpawner : MonoBehaviour
         {
             spawnPoints[i] = spawnPointObjects[i].transform;
         }
-       
+
     }
 
 }

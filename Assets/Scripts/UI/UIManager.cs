@@ -42,8 +42,9 @@ public class GameUIManager : MonoBehaviour
     }
     public void Draw()
     {
-     DrawUI.SetActive(true);   
+        DrawUI.SetActive(true);
     }
+
     void FixedUpdate()
     {
         if (Input.GetKeyDown(KeyCode.Escape))

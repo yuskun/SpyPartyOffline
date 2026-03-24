@@ -22,9 +22,8 @@ public class Catch : MissionCard
 
         if (PlayerInventoryManager.Instance.GetPlayer(parameters.TargetId).GetComponent<PlayerInventory>().HasCard(targetCard.cardData))
         {
-            MissionWinSystem.Instance.CatchWin = true;
-            PlayerInventoryManager.Instance.GetPlayer(parameters.UserId).GetComponent<PlayerInventory>().MissionStates.Set(this.cardData.id, 1);
-            MissionWinSystem.Instance.GameOver();
+            // 目標持有 Steal 卡 → 進入押送流程（MissionStates 由 StartEscort 重置，TickEscort 每秒更新）
+            MissionWinSystem.Instance.StartEscort(parameters.UserId, parameters.TargetId);
         }
         else
         {

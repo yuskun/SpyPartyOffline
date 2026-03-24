@@ -100,18 +100,11 @@ public class GameManager1 : NetworkBehaviour
             RandomAssignMissionCard();
             PlayerInventoryManager.Instance.Refresh();
             MissionWinSystem.Instance.FightWinCount = PlayerInventoryManager.Instance.playerInventories.Count - 1;
-            InitMissionData();
             ObjectSpawner.Instance.enabled = true;
 
 
         }
 
-    }
-    public void InitMissionData()
-    {
-        RPC_InitMissionData(0, 1);
-        RPC_InitMissionData(1, 1);
-        RPC_InitMissionData(2, MissionWinSystem.Instance.FightWinCount);
     }
     public void SpawnAI()
     {
@@ -181,12 +174,6 @@ public class GameManager1 : NetworkBehaviour
         }
 
         Debug.Log("[CardManager] 任務卡公平分配完成 ✅");
-    }
-
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void RPC_InitMissionData(int missionID, int newGoal)
-    {
-        CardManager.Instance.UpdateMissionData(missionID, newGoal);
     }
 
 }

@@ -154,6 +154,12 @@ public class CardManager : MonoBehaviour
 
     public void UseCard(CardUseParameters cardUse)
     {
+        // 正在被押送的玩家無法使用任何卡片
+        if (MissionWinSystem.Instance != null && MissionWinSystem.Instance.IsEscortTarget(cardUse.UserId))
+        {
+            Debug.Log($"[CardManager] 玩家 {cardUse.UserId} 正在被押送，無法使用卡片");
+            return;
+        }
 
         Card UseCard = GetCardScriptObject(cardUse.Card);
         switch (UseCard.cardData.type)
@@ -172,19 +178,6 @@ public class CardManager : MonoBehaviour
                 ItemCard Card3 = GetItemCard(UseCard.cardData.id);
                 Card3.Execute(cardUse);
                 break;
-        }
-    }
-    public void UpdateMissionData(int missionID, int newGoal)
-    {
-        MissionCard missionCard = GetMissionCard(missionID);
-        if (missionCard != null)
-        {
-            missionCard.UpdateGoal(newGoal);
-            Debug.Log($"[CardManager] 已更新任務卡(ID={missionID})的目標值為 {newGoal}");
-        }
-        else
-        {
-            Debug.LogWarning($"[CardManager] 找不到任務卡 ID={missionID} 以更新目標值");
         }
     }
 }

@@ -79,8 +79,9 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
 
         // 3) SceneManager 也掛在同一個 RunnerRoot 上（推薦）
         sceneManager = runnerRoot.AddComponent<NetworkSceneManagerDefault>();
-
+        if(PlayerName==""){
         PlayerName = "1234";
+        }
 
         return Task.CompletedTask;
     }
@@ -236,6 +237,11 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
     {
         return Guid.NewGuid().ToString("N").Substring(0, 6).ToUpper();
     }
+    public void PlayerNamgeChanged()
+    {
+        PlayerName=MenuUIManager.instance.PlayerNameInput.text;
+        
+    }
 
     // =============================
     // Callbacks
@@ -262,7 +268,7 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
 
         Debug.Log($"Player joined: {player}");
 
-        PlayerSpawner.instance.SpawnPlayer(runner, PlayerPrefs.GetInt("Choosenindex"), player, PlayerName);
+        PlayerSpawner.instance.SpawnPlayer(runner, PlayerPrefs.GetInt("Choosenindex"), player, PlayerName,true);
         MenuUIManager.instance.playerlistmanager.RegisterPlayer(player, PlayerName);
     }
 

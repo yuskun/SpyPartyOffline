@@ -59,27 +59,31 @@ public class MissionUIManager : MonoBehaviour
     }
 
     // ✅ 新增任務
-    public void AddMission(MissionCard data)
+    public void AddMission(MissionCard card)
     {
-        if (missionDict.ContainsKey(data.cardData.id))
+        int missionId = card.cardData.id;
+        if (missionDict.ContainsKey(missionId))
         {
-            Debug.LogWarning($"任務ID {data.cardData.id} 已存在！");
+            Debug.LogWarning($"任務ID {missionId} 已存在！");
             return;
         }
-        MissionData Data = data.data;
+
+        // goal 從本地玩家的 MissionGoals 讀取（由 Host 分配任務時寫入）
+        // 若尚未收到網路資料則 fallback 為 1
+        int goal = 1;
+        LocalBackpack.Instance.userInventory.MissionGoals.TryGet(missionId, out goal);
+
+        MissionData displayData = new MissionData(card.data.title, card.data.description, goal);
 
         GameObject obj = Instantiate(missionSlotPrefab);
         RectTransform rect = obj.GetComponent<RectTransform>();
-        rect.SetParent(missionContainer, false); // ✅ 確保尺寸正確
-
-        // ❌ 不用再設定縮放
-        // rect.localScale = new Vector3(0.4f, 0.4f, 1f);
+        rect.SetParent(missionContainer, false);
 
         MissionSlot slot = obj.GetComponent<MissionSlot>();
-        slot.Setup(Data);
+        slot.Setup(displayData);
 
-        missionDict.Add(data.cardData.id, slot);
-        missionOrder.Add(data.cardData.id);
+        missionDict.Add(missionId, slot);
+        missionOrder.Add(missionId);
         RefreshFocus();
     }
     

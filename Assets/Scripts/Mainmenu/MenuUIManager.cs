@@ -96,9 +96,4 @@ public class MenuUIManager : MonoBehaviour
         LocalBackpack.Instance.userInventory.gameObject.GetComponent<NetworkPlayer>().AllowInput = allow;
 
     }
-    public void SetPlayerName()
-    {
-        NetworkManager.instance.PlayerName = $"Player_{Guid.NewGuid().ToString()[..6]}";
-
-    }
 }
