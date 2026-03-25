@@ -103,22 +103,35 @@
     width: 70%; height: 70%; -unity-background-scale-mode: scale-to-fit;
 }
 
-/* 右上小地圖 */
 .minimap-container {
     position: absolute; top: 40px; right: 40px;
-    width: 200px; height: 200px;
+    width: 250px; height: 250px;
     background-image: url("project://database/Assets/Image/UIPanel/GameHUD/minimap_bg.png");
-    padding: 6px; /* 留出外框厚度 */
+    background-size: 100% 100%;
+    align-items: center;
+    justify-content: center;
 }
 
-.minimap-inner { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; }
-.map-content { width: 140%; height: 140%; translate: -15% -15%; }
+.minimap-inner {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    translate: 0 -15px;
+}
+
+.map-content {
+    width: 100%;
+    height: 100%;
+}
 
 /* 玩家標記 (小箭頭) */
 .marker.player {
     position: absolute; top: 50%; left: 50%; translate: -50% -50%;
     width: 20px; height: 20px;
-    background-image: url("project://database/Assets/Image/GameHUD/player_bg.png");
+    /*background-image: url("project://database/Assets/Image/GameHUD/player_bg.png");*/
 }
 
 /* 右下玩家資訊列 (HUD)*/
@@ -128,7 +141,7 @@
     background-image: url("project://database/Assets/Image/UIPanel/GameHUD/player_bar.png");
 }
 
-.avatar-img { width: 52px; height: 52px; border-radius: 26px; border-width: 3px; border-color: white; background-image: url("project://database/Assets/Image/Character/Shaya.png"); }
+.avatar-img { width: 52px; height: 52px; border-radius: 26px; border-width: 3px; border-color: white; overflow: hidden;  }
 
 
 /* 麥克風切換 */

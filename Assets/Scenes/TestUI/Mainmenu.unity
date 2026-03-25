@@ -830,6 +830,7 @@ GameObject:
   - component: {fileID: 21268787}
   - component: {fileID: 21268786}
   - component: {fileID: 21268785}
+  - component: {fileID: 21268789}
   m_Layer: 5
   m_Name: GameHUDPanel
   m_TagString: Untagged
@@ -897,6 +898,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1233569029}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &21268789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 21268784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37bcfdb8bdd3dcc41acd9e24d9ab83aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minimapRenderTexture: {fileID: 8400000, guid: 684e7ca2bbe4b4a4dbdefe69a626ddad, type: 2}
 --- !u!4 &25941273 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 503603676769486982, guid: dfdd7c9837cf7a34ab6a73f368c215fa, type: 3}
@@ -7572,6 +7586,18 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
+        - m_Target: {fileID: 21268784}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 2
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
 --- !u!114 &253899095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11774,8 +11800,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: dc14c79e4351e1548b068a31760ad027, type: 2}
-  m_sharedMaterial: {fileID: -6803952707645750648, guid: dc14c79e4351e1548b068a31760ad027, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 11bd6be4cdffedd489bae68b96345eb1, type: 2}
+  m_sharedMaterial: {fileID: 7067384546424574235, guid: 11bd6be4cdffedd489bae68b96345eb1, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -14893,6 +14919,7 @@ GameObject:
   - component: {fileID: 527608023}
   - component: {fileID: 527608022}
   - component: {fileID: 527608021}
+  - component: {fileID: 527608024}
   m_Layer: 5
   m_Name: MainMenuPanel
   m_TagString: Untagged
@@ -14988,6 +15015,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1233569029}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &527608024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527608020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37bcfdb8bdd3dcc41acd9e24d9ab83aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minimapRenderTexture: {fileID: 0}
 --- !u!1 &532131428
 GameObject:
   m_ObjectHideFlags: 0
@@ -25495,8 +25535,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: dc14c79e4351e1548b068a31760ad027, type: 2}
-  m_sharedMaterial: {fileID: -6803952707645750648, guid: dc14c79e4351e1548b068a31760ad027, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 11bd6be4cdffedd489bae68b96345eb1, type: 2}
+  m_sharedMaterial: {fileID: 7067384546424574235, guid: 11bd6be4cdffedd489bae68b96345eb1, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -34738,6 +34778,7 @@ MonoBehaviour:
   - {fileID: 455901172}
   - {fileID: 1192139714}
   - {fileID: 1905342284}
+  hostRoomDocument: {fileID: 253899095}
 --- !u!114 &1233569025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34759,6 +34800,8 @@ MonoBehaviour:
   progressfill: {fileID: 5051892454748510497}
   progressBar: {fileID: 1378232330}
   UserCardUI: {fileID: 7392923919495444460}
+  Notification: {fileID: 0}
+  DrawUI: {fileID: 0}
 --- !u!114 &1233569026
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34838,11 +34881,11 @@ RectTransform:
   - {fileID: 2146409005}
   - {fileID: 527608023}
   - {fileID: 2062700903}
+  - {fileID: 109091999}
   - {fileID: 253899096}
   - {fileID: 2143849885}
   - {fileID: 1762919918}
   - {fileID: 970692548}
-  - {fileID: 109091999}
   - {fileID: 21268788}
   - {fileID: 1195044349}
   m_Father: {fileID: 0}
@@ -48316,6 +48359,7 @@ GameObject:
   - component: {fileID: 1762919917}
   - component: {fileID: 1762919916}
   - component: {fileID: 1762919915}
+  - component: {fileID: 1762919919}
   m_Layer: 5
   m_Name: PracticePanel
   m_TagString: Untagged
@@ -48427,6 +48471,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1233569029}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1762919919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1762919914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cf91678c21caec4da1cb11ab8ddcf0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1764525579
 GameObject:
   m_ObjectHideFlags: 0

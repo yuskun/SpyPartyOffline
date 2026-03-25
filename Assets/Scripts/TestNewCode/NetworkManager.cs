@@ -268,8 +268,10 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
 
         Debug.Log($"Player joined: {player}");
 
-        PlayerSpawner.instance.SpawnPlayer(runner, PlayerPrefs.GetInt("Choosenindex"), player, PlayerName,true);
-        MenuUIManager.instance.playerlistmanager.RegisterPlayer(player, PlayerName);
+        PlayerSpawner.instance.SpawnPlayer(runner, PlayerPrefs.GetInt("Choosenindex"), player, PlayerName, true);
+        int skinIndex = PlayerPrefs.GetInt("Choosenindex", 0);
+        MenuUIManager.instance.playerlistmanager.RegisterPlayer(player, PlayerName, skinIndex);
+
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)

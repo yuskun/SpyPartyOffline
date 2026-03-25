@@ -24,6 +24,7 @@ public class GameManager : NetworkBehaviour
         Rpc_Ready(PlayerPrefs.GetInt("Choosenindex"), default);
         MenuUIManager.instance.Gameroom.SetActive(false);
         GameUIManager.Instance.HUDUI.SetActive(true);
+        //GameHUDManager.Instance.ShowHUD();
         LocalBackpack.Instance.SetUpdateEnabled(true);
         if (Runner.IsServer)
         {

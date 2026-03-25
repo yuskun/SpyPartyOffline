@@ -928,7 +928,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 1528112580
+  SortKey: 2950416796
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
@@ -4365,6 +4365,7 @@ MonoBehaviour:
   - {fileID: 1399791304}
   - {fileID: 638397785}
   - {fileID: 100206307}
+  characterAvatarDatabase: {fileID: 11400000, guid: 1a8cffecf506cc54aae54e85c83b0f40, type: 2}
   _SpawnedPlayers: []
 --- !u!114 &5252682844222221557
 MonoBehaviour:
@@ -4378,7 +4379,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 1001702401
+  SortKey: 2424006617
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []

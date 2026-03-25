@@ -176,7 +176,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         {
             Debug.Log("TEST");
             PlayerSpawner.instance.SpawnPlayer(_runner, 2, player, PlayerName);
-            MenuUIManager.instance.playerlistmanager.RegisterPlayer(player, PlayerName);
+            int skinIndex = PlayerPrefs.GetInt("Choosenindex", 0);
+            MenuUIManager.instance.playerlistmanager.RegisterPlayer(player, PlayerName, skinIndex);
         }
     }
 

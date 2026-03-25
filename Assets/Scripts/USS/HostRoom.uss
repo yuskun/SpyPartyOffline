@@ -158,8 +158,14 @@
 .slot:active { translate: 0 2px; background-image: url("project://database/Assets/Image/UIPanel/HostRoom/player_active.png");}
 
 /* Empty Slot */
-.slot.empty {
-    background-image: url("project://database/Assets/Image/UIPanel/HostRoom/player_default.png");
+
+/* 空閒狀態：名字置中、灰色 */
+.slot.empty .name-wrap {
+    flex-grow: 1;
+    justify-content: center;
+}
+
+.slot.empty .player-name {
     color: rgba(120, 120, 120, 0.5);
     font-size: 20px;
     -unity-text-align: middle-center;
@@ -177,6 +183,8 @@
     border-radius: 20px;
     border-width: 3px;
     border-color: rgba(255,255,255,0.9);
+    position: absolute;
+    overflow: hidden;
     -unity-background-scale-mode: scale-and-crop;
 }
 .avatar-img.Shaya { 

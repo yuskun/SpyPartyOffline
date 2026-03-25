@@ -145,13 +145,17 @@
     border-color: rgba(255,255,255,0.8);
 }
 
-.avatar-wrap { width: 52px; height: 52px; margin-right: 14px; }
-.avatar {
-    width: 100%; height: 100%;
+.avatar-wrap { 
+    width: 52px; height: 52px; 
+    margin-right: 14px; 
     border-radius: 26px;
     border-width: 3px;
     border-color: rgba(255,255,255,0.9);
-    background-image: url("project://database/Assets/Image/Character/Shaya.png");
+    overflow: hidden;
+
+}
+.avatar {
+    width: 100%; height: 100%;
     -unity-background-scale-mode: scale-and-crop;
 }
 
@@ -177,5 +181,11 @@
     align-items: center; justify-content: center;
 }
 .mic-icon { width: 20px; height: 20px; display: none; }
+.mic-btn {
+    transition-property: translate, scale;
+    transition-duration: 0.12s;
+}
+.mic-btn:hover { translate: 0 -1.5px; }
+.mic-btn:active { translate: 0 1.5px; }
 .mic-btn.is-open .mic-open { display: flex; background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/mic-open.png"); }
 .mic-btn.is-off .mic-off { display: flex; background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/mic-off.png"); }

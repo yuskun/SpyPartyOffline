@@ -24,6 +24,8 @@ public class MenuUIManager : MonoBehaviour
     public GameObject Practice;
     public Button ConfirmCharcterBtn;
     public Button[] CharacterButtons;
+    [Header("UI Documents")]
+    public UnityEngine.UIElements.UIDocument hostRoomDocument;
 
     void Awake()
     {

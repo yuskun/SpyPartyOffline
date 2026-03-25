@@ -17,6 +17,7 @@ public class SkinChange : NetworkBehaviour
     [Networked, Capacity(8)]
     public NetworkArray<NetworkObject> SpawnedPlayers => default;
 
+    public CharacterAvatarData characterAvatarDatabase;
 
     public override void Spawned()
     {
@@ -37,6 +38,11 @@ public class SkinChange : NetworkBehaviour
             {
                 SettingSkinColor(currentSkinIndex, SkinColor);
                 Rpc_ChangeSkin(Runner.LocalPlayer, currentSkinIndex, PlayerPrefs.GetString("Color"));
+                if (MenuUIManager.instance.playerlistmanager != null)
+                {
+                    MenuUIManager.instance.playerlistmanager.UpdateSkinIndex(Runner.LocalPlayer, currentSkinIndex);
+                }
+                FindObjectOfType<PracticeUIManager>()?.RefreshAvatar();
             }
             else
             {

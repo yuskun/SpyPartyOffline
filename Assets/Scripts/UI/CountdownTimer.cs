@@ -25,6 +25,7 @@ public class CountdownTimer : NetworkBehaviour
     public void OnTimeTextChanged()
     {
         GameUIManager.Instance.timerText.text = TimeText;
+        GameHUDManager.Instance?.SetTopTime(TimeText);
     }
 
     public override void FixedUpdateNetwork()
