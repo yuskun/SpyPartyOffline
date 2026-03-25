@@ -26,6 +26,7 @@ public class GameManager : NetworkBehaviour
         GameUIManager.Instance.HUDUI.SetActive(true);
         //GameHUDManager.Instance.ShowHUD();
         LocalBackpack.Instance.SetUpdateEnabled(true);
+        
         if (Runner.IsServer)
         {
            

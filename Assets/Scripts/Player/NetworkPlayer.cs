@@ -31,7 +31,7 @@ public class NetworkPlayer : NetworkBehaviour
             LocalBackpack.Instance.userInventory = this.GetComponent<PlayerInventory>();
             LocalBackpack.Instance.playerIdentify = this.GetComponent<PlayerIdentify>();
             LocalBackpack.Instance.character = this.GetComponent<OodlesCharacter>();
-
+            CardPreviewSystem.Instance.previewAnchor = this.transform.Find("Ragdoll/SpawnObject");
             LocalBackpack.Instance.scanner = this.transform.Find("Ragdoll").GetComponent<PlayerScanner>();
             LocalBackpack.Instance.scanner.enableScan = true;
             this.GetComponent<PlayerIdentify>().Text.gameObject.SetActive(false);
