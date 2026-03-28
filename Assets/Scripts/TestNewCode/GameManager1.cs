@@ -200,8 +200,21 @@ public class GameManager : NetworkBehaviour
      [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_Draw()
     {
-       
-            GameUIManager.Instance.Draw();
+        GameUIManager.Instance.Draw();
+    }
+
+    /// <summary>押送開始：廣播給所有 Client，顯示範圍圓圈（僅對 Catch 玩家可見）</summary>
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_EscortStart(int catcherID, int targetID)
+    {
+        EscortRangeIndicator.SetEscort(catcherID, targetID);
+    }
+
+    /// <summary>押送結束（成功或中斷）：廣播給所有 Client，隱藏範圍圓圈</summary>
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_EscortEnd()
+    {
+        EscortRangeIndicator.ClearEscort();
     }
     private void SpawnAllPlayers()
     {

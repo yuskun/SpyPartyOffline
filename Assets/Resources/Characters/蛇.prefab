@@ -76,6 +76,8 @@ GameObject:
   - component: {fileID: 5337010298752834278}
   - component: {fileID: 1383344109652482918}
   - component: {fileID: 4458448911091908190}
+  - component: {fileID: 5964044713601066274}
+  - component: {fileID: 5962110227735126495}
   m_Layer: 0
   m_Name: "\u86C7"
   m_TagString: Player
@@ -256,6 +258,7 @@ MonoBehaviour:
   - {fileID: 5600976483881776701}
   - {fileID: 5337010298752834278}
   - {fileID: 1383344109652482918}
+  - {fileID: 5964044713601066274}
   - {fileID: 3779478493264825892}
   - {fileID: 8865170252901606070}
   - {fileID: 5661276477501033193}
@@ -276,6 +279,33 @@ MonoBehaviour:
   - {fileID: 8765016504255143574}
   - {fileID: 531999508317189022}
   ForceRemoteRenderTimeframe: 0
+--- !u!114 &5964044713601066274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 153534593249668939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a44ff51ff486554497fa36fe13bff43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemSeekRange: 20
+  weaponPriority: 1.5
+  cardInterval: 6
+--- !u!114 &5962110227735126495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 153534593249668939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6a0109769fc4e840b23cad88c432e90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &810395477862977921
 GameObject:
   m_ObjectHideFlags: 0

@@ -65,6 +65,7 @@ public class MissionWinSystem : MonoBehaviour
         PlayerInventoryManager.Instance.playerInventories[catcherID].MissionStates.Set(0, 0);
 
         Debug.Log($"[Escort] 押送開始！抓人者:{catcherID} 目標:{targetID}，需維持 {escortDuration} 秒");
+        GameManager.instance.RPC_EscortStart(catcherID, targetID);
     }
 
     /// <summary>目標是否正在被押送（用於鎖定卡片使用，僅 Host 判斷）</summary>
@@ -130,6 +131,7 @@ public class MissionWinSystem : MonoBehaviour
         escortCatcherID = -1;
         escortTargetID = -1;
         Debug.Log($"[Escort] 押送成功！玩家 {winnerId} 獲勝！");
+        GameManager.instance.RPC_EscortEnd();
         GameManager.instance.RPC_Gameover(winnerId);
     }
 
@@ -140,6 +142,7 @@ public class MissionWinSystem : MonoBehaviour
         escortCatcherID = -1;
         escortTargetID = -1;
         Debug.Log("[Escort] 押送中斷");
+        GameManager.instance.RPC_EscortEnd();
     }
 
     private Vector3 _GetPlayerPos(GameObject player)

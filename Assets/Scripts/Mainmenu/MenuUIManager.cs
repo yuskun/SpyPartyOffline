@@ -6,7 +6,9 @@ using System;
 
 public class MenuUIManager : MonoBehaviour
 {
+
     static public MenuUIManager instance;
+    //介面UI
     public GameObject Menu;
     public GameObject Gameroom;
     public GameObject Host;
@@ -14,14 +16,18 @@ public class MenuUIManager : MonoBehaviour
     public GameObject BulidOrJoin;
     public GameObject LoadingScreen;
     public GameObject JoinRoomList;
+    public GameObject ChooseCharacterUI;
+    public GameObject Practice;
+    
+
+//元件
+
     public TextMeshProUGUI PlayerNameInput;
     public GameObject[] Ai;
    [HideInInspector] public PlayerListManager playerlistmanager;
     public Button StartButton;
     public MissionUIManager missionUIManager;
     public GameObject PlayerList;
-    public GameObject ChooseCharacterUI;
-    public GameObject Practice;
     public Button ConfirmCharcterBtn;
     public Button[] CharacterButtons;
     [Header("UI Documents")]

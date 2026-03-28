@@ -48,7 +48,7 @@ GameObject:
   - component: {fileID: 2180829311078693426}
   - component: {fileID: 2176730399049328859}
   m_Layer: 0
-  m_Name: PlauerSpawner
+  m_Name: PlayerSpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -217,12 +217,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4176c024ce15fc94397da79949d16cdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isGameOver: 0
   FightWinCount: 0
   FightCount: 0
   CatchWin: 0
   StealWin: 0
   StealID: -1
   FightWin: 0
+  collectRequiredCards: []
+  CollectWin: 0
+  CollectWinnerID: -1
+  escortDuration: 20
+  escortRadius: 5
+  isEscorting: 0
+  escortCatcherID: -1
+  escortTargetID: -1
 --- !u!1 &6243194713966306565
 GameObject:
   m_ObjectHideFlags: 0
@@ -267,7 +276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1d18cc9e3b14894baaf057ec7b5fed0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabToSpawn: {fileID: 8311757162922756701, guid: d00104cbe373e3e418253fc1dc5ce4dc, type: 3}
+  prefabToSpawn: {fileID: 1274913939806872608, guid: 41c910a886ed4ad438f94d91b829713e, type: 3}
   PlayerItem: {fileID: 4179703982041739608, guid: 8120e6e7df2882b41b82165c8d82a7dc, type: 3}
   WeaponItem:
   - {fileID: 4007593398365635647, guid: c94867057fa5ea8428f69303707be401, type: 3}
@@ -283,6 +292,8 @@ MonoBehaviour:
   radiusCheck: 0.5
   rayHeight: 10
   maxTotal: 40
+  initialSpawnCount: 10
+  weaponSpawnChance: 0.15
 --- !u!1 &7880250556768618973
 GameObject:
   m_ObjectHideFlags: 0
