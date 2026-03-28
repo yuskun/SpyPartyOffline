@@ -1,14 +1,5 @@
 fileFormatVersion: 2
 guid: 08255063ead8e2e449ec8ec4a58471d0
-MonoImporter:
-  externalObjects: {}
-  serializedVersion: 2
-  defaultReferences: []
-  executionOrder: 0
-  icon: {instanceID: 0}
-  userData: 
-  assetBundleName: 
-  assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
   productId: 274320
@@ -16,3 +7,19 @@ AssetOrigin:
   packageVersion: 1.0
   assetPath: Assets/TechFusion/OodlesEngine/Scripts/Runtime/Physics/Character/Controller/OodlesCharacter.cs
   uploadId: 664538
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - footstepSource: {instanceID: 0}
+  - footstepClip: {fileID: 8300000, guid: bee16145cd31ed24081f398564c8ddc3, type: 3}
+  - animatorPlayer: {instanceID: 0}
+  - ragdollPlayer: {instanceID: 0}
+  - handFunctionRight: {instanceID: 0}
+  - handFunctionLeft: {instanceID: 0}
+  - runningEffect: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

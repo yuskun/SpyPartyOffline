@@ -8,7 +8,7 @@ MonoImporter:
   - attackClip: {fileID: 8300000, guid: 9e960e59b6751794badde915bae34ba7, type: 3}
   - breakClip: {fileID: 8300000, guid: 4fe12dbf913d25f42b024fc5ee924f78, type: 3}
   - punchClip: {fileID: 8300000, guid: b076abbecd84e0a44a0204c96e9d9df9, type: 3}
-  - jumpClip: {instanceID: 0}
+  - jumpClip: {fileID: 8300000, guid: dd7136cc27fedad4abe41c6ce5aa9d21, type: 3}
   - pickUpClip: {instanceID: 0}
   - BananaClip: {fileID: 8300000, guid: d78aa862b90dde241a77ed6635ef9373, type: 3}
   - OpenUIClip: {fileID: 8300000, guid: 5c3bf8b6e9e57bb439492215ad7a4d59, type: 3}
