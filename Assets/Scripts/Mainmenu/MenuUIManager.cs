@@ -59,7 +59,7 @@ public class MenuUIManager : MonoBehaviour
         BulidOrJoin.SetActive(false);
         LoadingScreen.SetActive(false);
         JoinRoomList.SetActive(false);
-        RoomCode.SetActive(false);
+        // RoomCode.SetActive(false);
     }
     void Update()
     {
@@ -73,7 +73,6 @@ public class MenuUIManager : MonoBehaviour
         BulidOrJoin.SetActive(false);
         LoadingScreen.SetActive(false);
         JoinRoomList.SetActive(false);
-        RoomCode.SetActive(false);
         target.SetActive(true);
     }
 

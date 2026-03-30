@@ -14969,18 +14969,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-        - m_Target: {fileID: 1233569024}
-          m_TargetAssemblyTypeName: MenuUIManager, Assembly-CSharp
-          m_MethodName: SetPlayerName
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
 --- !u!114 &527608022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17371,6 +17359,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerName: 
   runner: {fileID: 0}
+  mode: 0
 --- !u!1 &591178980
 GameObject:
   m_ObjectHideFlags: 0
@@ -34760,7 +34749,11 @@ MonoBehaviour:
   BulidOrJoin: {fileID: 227122112}
   LoadingScreen: {fileID: 109091998}
   JoinRoomList: {fileID: 1617197665}
+  ChooseCharacterUI: {fileID: 910435907}
+  Practice: {fileID: 1843592897}
+  RoomCode: {fileID: 0}
   PlayerNameInput: {fileID: 1177434769}
+  RoomCodeInput: {fileID: 0}
   Ai:
   - {fileID: 2112623293}
   - {fileID: 1462391738}
@@ -34770,14 +34763,13 @@ MonoBehaviour:
   StartButton: {fileID: 901323169}
   missionUIManager: {fileID: 1127831495}
   PlayerList: {fileID: 988974596}
-  ChooseCharacterUI: {fileID: 910435907}
-  Practice: {fileID: 1843592897}
   ConfirmCharcterBtn: {fileID: 1468559605}
   CharacterButtons:
   - {fileID: 1672203927}
   - {fileID: 455901172}
   - {fileID: 1192139714}
   - {fileID: 1905342284}
+  RoomCodeText: {fileID: 0}
   hostRoomDocument: {fileID: 253899095}
 --- !u!114 &1233569025
 MonoBehaviour:

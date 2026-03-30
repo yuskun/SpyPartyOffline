@@ -20,8 +20,8 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
     public NetworkRunner runner;
     private NetworkSceneManagerDefault sceneManager;
 
-    private enum NetMode { Idle, Host, Client }
-    private NetMode mode = NetMode.Idle;
+    public enum NetMode { Idle, Host, Client }
+    public NetMode mode = NetMode.Idle;
 
     private bool waitingQuickJoin = false;
     public string CurrentRoomCode { get; private set; } = "";
@@ -39,6 +39,7 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
 
     public void Host()
     {
+        Debug.Log("Host button clicked");
         _ = HostAsync();
     }
 
@@ -80,8 +81,9 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
 
         // 3) SceneManager 也掛在同一個 RunnerRoot 上（推薦）
         sceneManager = runnerRoot.AddComponent<NetworkSceneManagerDefault>();
-        if(PlayerName==""){
-        PlayerName = "1234";
+        if (PlayerName == "")
+        {
+            PlayerName = "1234";
         }
 
         return Task.CompletedTask;
@@ -89,9 +91,11 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
 
     private async Task HostAsync()
     {
-        if (mode != NetMode.Idle) return;
-        MenuUIManager.instance.showUI(MenuUIManager.instance.LoadingScreen);
 
+        if (mode != NetMode.Idle) return;
+        Debug.Log("HostAsync called TEST");
+        MenuUIManager.instance.showUI(MenuUIManager.instance.LoadingScreen);
+        Debug.Log("HostAsync called");
         await InitRunner();
         await runner.JoinSessionLobby(SessionLobby.ClientServer);
 
@@ -228,7 +232,7 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
         }
 
         // 5️⃣ 真正切場景（Fusion 同步）
-        
+
         await runner.LoadScene(SceneRef.FromIndex(buildIndex), LoadSceneMode.Single);
 
         Debug.Log($"Scene switched to index {buildIndex}");
@@ -241,8 +245,8 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
     }
     public void PlayerNamgeChanged()
     {
-        PlayerName=MenuUIManager.instance.PlayerNameInput.text;
-        
+        PlayerName = MenuUIManager.instance.PlayerNameInput.text;
+
     }
 
     // =============================

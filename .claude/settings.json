@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -rn GetComponent.*NetworkObject c:UsersUserDesktop0310SpyPartyOfflineAssetsScripts)"
+    ]
+  }
+}
