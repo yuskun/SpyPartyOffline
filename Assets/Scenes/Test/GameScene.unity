@@ -338,11 +338,11 @@ PrefabInstance:
     - target: {fileID: 2334508049033271204, guid: 888d5cb136068a747b4176aa08b156c5, type: 3}
       propertyPath: m_Resource
       value: 
-      objectReference: {fileID: 8300000, guid: fff2115fe317d744ea1f8d056c468d55, type: 3}
+      objectReference: {fileID: 8300000, guid: e7f0b6f6baf93104a917d583bbc9c0b9, type: 3}
     - target: {fileID: 2334508049033271204, guid: 888d5cb136068a747b4176aa08b156c5, type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: fff2115fe317d744ea1f8d056c468d55, type: 3}
+      objectReference: {fileID: 8300000, guid: e7f0b6f6baf93104a917d583bbc9c0b9, type: 3}
     - target: {fileID: 3146927265620869583, guid: 888d5cb136068a747b4176aa08b156c5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 44.420258
@@ -13880,15 +13880,4 @@ SceneRoots:
   - {fileID: 335373973}
   - {fileID: 543450653445440912}
   - {fileID: 465848516}
-<<<<<<< HEAD
-=======
-  - {fileID: 293235246}
-  - {fileID: 877770430}
-  - {fileID: 1974570565}
-  - {fileID: 1231229196}
-  - {fileID: 1613276366}
-  - {fileID: 3773673708090765251}
-  - {fileID: 1700059780}
-  - {fileID: 1855967924}
   - {fileID: 111627485}
->>>>>>> 96d4a9be2b1bcea44b1b32da8124c5291cdf9758
