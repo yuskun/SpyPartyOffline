@@ -37,14 +37,14 @@ public class CharacterSFXManager : MonoBehaviour
         }
     }
 
-    public void PlayAttack() => PlayOneShot(attackClip);
-    public void PlayBreak() => PlayOneShot(breakClip);
-    public void PlayPunch() => PlayOneShot(punchClip);
+    public void PlayAttack() => PlayOneShot(attackClip, 0.1f);
+    public void PlayBreak() => PlayOneShot(breakClip, 0.1f);
+    public void PlayPunch() => PlayOneShot(punchClip, 0.1f);
     public void PlayJump() => PlayOneShot(jumpClip);
     public void PlayPickUp() => PlayOneShot(pickUpClip);
-    public void PlayBanana() => PlayOneShot(BananaClip);
-    public void PlayOpenUI() => PlayOneShot(OpenUIClip, 0.5f);
-    public void PlayUseCard() => PlayOneShot(UseCardClip);
+    public void PlayBanana() => PlayOneShot(BananaClip, 0.1f);
+    public void PlayOpenUI() => PlayOneShot(OpenUIClip);
+    public void PlayUseCard() => PlayOneShot(UseCardClip, 0.8f);
 
     
 

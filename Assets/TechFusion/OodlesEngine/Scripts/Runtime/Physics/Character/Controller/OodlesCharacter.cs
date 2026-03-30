@@ -101,7 +101,6 @@ namespace OodlesEngine
             movement = ragdollPlayer.AddComponent<CharacterMovement>();
             movement.controller = this;
 
-            footstepSource = GetComponent<AudioSource>();
             if (footstepSource == null)
             {
                 footstepSource = gameObject.AddComponent<AudioSource>();
