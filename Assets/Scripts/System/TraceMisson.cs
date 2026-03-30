@@ -104,5 +104,9 @@ public class TraceMission : MonoBehaviour
 
             checkIndex++;
         }
+
+        // 道具從其他途徑（Give、Swap 等）進入背包時，補檢查 Steal 收集進度
+        if (MissionWinSystem.Instance.StealID >= 0)
+            MissionWinSystem.Instance.CheckStealItemProgress(MissionWinSystem.Instance.StealID);
     }
 }

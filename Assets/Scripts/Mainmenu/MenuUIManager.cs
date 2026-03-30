@@ -18,11 +18,14 @@ public class MenuUIManager : MonoBehaviour
     public GameObject JoinRoomList;
     public GameObject ChooseCharacterUI;
     public GameObject Practice;
+    public GameObject RoomCode;
+    
     
 
 //元件
 
     public TextMeshProUGUI PlayerNameInput;
+    public TMP_InputField RoomCodeInput;
     public GameObject[] Ai;
    [HideInInspector] public PlayerListManager playerlistmanager;
     public Button StartButton;
@@ -30,6 +33,7 @@ public class MenuUIManager : MonoBehaviour
     public GameObject PlayerList;
     public Button ConfirmCharcterBtn;
     public Button[] CharacterButtons;
+     public TextMeshProUGUI RoomCodeText;
     [Header("UI Documents")]
     public UnityEngine.UIElements.UIDocument hostRoomDocument;
 
@@ -55,6 +59,7 @@ public class MenuUIManager : MonoBehaviour
         BulidOrJoin.SetActive(false);
         LoadingScreen.SetActive(false);
         JoinRoomList.SetActive(false);
+        RoomCode.SetActive(false);
     }
     void Update()
     {
@@ -68,14 +73,32 @@ public class MenuUIManager : MonoBehaviour
         BulidOrJoin.SetActive(false);
         LoadingScreen.SetActive(false);
         JoinRoomList.SetActive(false);
+        RoomCode.SetActive(false);
         target.SetActive(true);
+    }
+
+    public void ShowRoomCodePanel()
+    {
+        showUI(RoomCode);
+        if (RoomCodeInput != null) RoomCodeInput.text = "";
+    }
+
+    public void ConfirmJoinByCode()
+    {
+        if (RoomCodeInput == null) return;
+        string code = RoomCodeInput.text.Trim();
+        if (string.IsNullOrEmpty(code)) return;
+        NetworkManager2.Instance.JoinByCode(code);
     }
     public void ExitGame()
     {
         Application.Quit();
     }
-    public void ShowGameroom(GameMode mode)
+    public void ShowGameroom(GameMode mode, string roomCode = "")
     {
+        if (RoomCodeText != null)
+            RoomCodeText.text = roomCode;
+
         if (mode == GameMode.Host)
         {
             Host.SetActive(true);

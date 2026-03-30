@@ -24,6 +24,7 @@ public class AIController : NetworkBehaviour
 
     // ── Card Usage ───────────────────────────────────────────────
     [SerializeField] private float cardInterval = 6f;
+    [SerializeField] private float cardUseRange = 5f;  // 需要目標的卡牌最大使用距離
     private float cardCooldown;
 
     // ────────────────────────────────────────────────────────────
@@ -191,6 +192,10 @@ public class AIController : NetworkBehaviour
                                     ?? targetObj?.GetComponent<PlayerInventory>();
         int targetId = targetObj?.GetComponent<PlayerIdentify>()?.PlayerID ?? myId;
 
+        float distToTarget = targetObj != null
+            ? Vector3.Distance(GetMyPos(), GetPos(targetObj))
+            : float.MaxValue;
+
         for (int i = 0; i < PlayerInventory.MaxSlots; i++)
         {
             CardData card = inventory.slots[i];
@@ -206,8 +211,8 @@ public class AIController : NetworkBehaviour
                 {
                     MissionCard mc = CardManager.Instance.GetMissionCard(card.id);
                     if (mc == null) continue;
+                    if (mc.needTarget && (targetInv == null || distToTarget > cardUseRange)) continue;
                     PlayerInventory t = mc.needTarget ? targetInv : null;
-                    if (mc.needTarget && t == null) continue;  // 需目標但找不到
                     canUse = mc.CanUse(inventory, t, card);
                     if (mc.needTarget) useTarget = targetId;
                     break;
@@ -216,14 +221,21 @@ public class AIController : NetworkBehaviour
                 {
                     FunctionCard fc = CardManager.Instance.GetFunctionCard(card.id);
                     if (fc == null) continue;
+                    if (fc.needTarget && (targetInv == null || distToTarget > cardUseRange)) continue;
                     PlayerInventory t = fc.needTarget ? targetInv : null;
-                    if (fc.needTarget && t == null) continue;
                     canUse = fc.CanUse(inventory, t);
                     if (fc.needTarget) useTarget = targetId;
                     break;
                 }
-                default:
-                    continue;  // ItemCard 略過（需放置位置）
+                case CardType.Item:
+                {
+                    ItemCard ic = CardManager.Instance.GetItemCard(card.id);
+                    if (ic == null) continue;
+                    if (ic.needTarget && (targetInv == null || distToTarget > cardUseRange)) continue;
+                    canUse = true;
+                    if (ic.needTarget) useTarget = targetId;
+                    break;
+                }
             }
 
             if (!canUse) continue;

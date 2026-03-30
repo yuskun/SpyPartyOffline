@@ -37,19 +37,33 @@ public class MissionSlot : MonoBehaviour
 
     public void Refresh()
     {
-        bool isComplete = data.current >= data.goal;
-
         // Focus 顯示內容
         focusTitleText.text = data.title;
         focusDescText.text = data.description;
-        focusProgressBar.value = Mathf.Clamp01((float)data.current / data.goal);
-        focusProgressText.text = isComplete ? "完成" : $"{data.current}/{data.goal}";
 
         // Normal 顯示內容
         normalTitleText.text = data.title;
         normalDescText.text = data.description;
-        normalProgressBar.value = Mathf.Clamp01((float)data.current / data.goal);
-        normalProgressText.text = isComplete ? "完成" : $"{data.current}/{data.goal}";
+
+        if (data.goal <= 0)
+        {
+            // goal=0：計時模式，隱藏進度條與進度文字
+            focusProgressBar.gameObject.SetActive(false);
+            focusProgressText.text = "";
+            normalProgressBar.gameObject.SetActive(false);
+            normalProgressText.text = "";
+        }
+        else
+        {
+            focusProgressBar.gameObject.SetActive(true);
+            normalProgressBar.gameObject.SetActive(true);
+
+            bool isComplete = data.current >= data.goal;
+            focusProgressBar.value = Mathf.Clamp01((float)data.current / data.goal);
+            focusProgressText.text = isComplete ? "完成" : $"{data.current}/{data.goal}";
+            normalProgressBar.value = Mathf.Clamp01((float)data.current / data.goal);
+            normalProgressText.text = isComplete ? "完成" : $"{data.current}/{data.goal}";
+        }
     }
 
     public void SetFocus(bool focus)

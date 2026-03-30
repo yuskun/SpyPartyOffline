@@ -74,7 +74,13 @@ public class EscortRangeIndicator : MonoBehaviour
             return;
         }
 
-        bool iAmCatcher = IsEscortActive && identify.PlayerID == CatcherID;
+        // 直接比對 PlayerIdentify 元件參照：最可靠的「本地玩家物件」判斷
+        bool isLocalPlayerObject = LocalBackpack.Instance?.playerIdentify != null
+                                   && LocalBackpack.Instance.playerIdentify == identify;
+        bool iAmCatcher = IsEscortActive && isLocalPlayerObject && identify.PlayerID == CatcherID;
+
+        if (IsEscortActive && isLocalPlayerObject)
+            Debug.Log($"[EscortRange] IsActive={IsEscortActive} isLocal={isLocalPlayerObject} myID={identify.PlayerID} CatcherID={CatcherID} iAmCatcher={iAmCatcher}");
 
         if (!iAmCatcher)
         {

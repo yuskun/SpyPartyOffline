@@ -50,7 +50,7 @@ public class PlayerListManager : NetworkBehaviour
         }
         if (PlayerVersion == 1&&!hasOpenedGameRoom)
         {
-            MenuUIManager.instance.ShowGameroom(GameMode.Host);
+            MenuUIManager.instance.ShowGameroom(GameMode.Host, NetworkManager2.Instance != null ? NetworkManager2.Instance.CurrentRoomCode : "");
             hasOpenedGameRoom=true;
         }
     }

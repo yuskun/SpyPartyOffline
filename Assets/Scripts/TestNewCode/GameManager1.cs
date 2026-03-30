@@ -15,6 +15,9 @@ public class GameManager : NetworkBehaviour
     private Dictionary<PlayerRef, int> playerCharacterIndex = new Dictionary<PlayerRef, int>();
     public CountdownTimer countdownTimer;
     public int AICount = 0;
+
+    [Header("小偷任務目標道具（設定3個 Item CardData）")]
+    public List<CardData> stealTargetCardDatas = new List<CardData>();
     [Networked] private NetworkBool HasStarted { get; set; }
     [Networked] private TickTimer StartDelay { get; set; }
 
@@ -56,6 +59,27 @@ public class GameManager : NetworkBehaviour
         PlayerInventoryManager.Instance.init();
         PlayerInventoryManager.Instance.Refresh();
         MissionWinSystem.Instance.FightWinCount = PlayerInventoryManager.Instance.playerInventories.Count - 1;
+
+        // 從 CardCatalog.CanSpwanCard 隨機挑 3 張 ItemCard 注入 MissionWinSystem
+        MissionWinSystem.Instance.stealTargetItems.Clear();
+        var spawnableItems = new List<ItemCard>();
+        var seen = new HashSet<ItemCard>();
+        foreach (var card in CardManager.Instance.Catalog.CanSpwanCard)
+        {
+            if (card is ItemCard ic && seen.Add(ic))
+                spawnableItems.Add(ic);
+        }
+        for (int i = spawnableItems.Count - 1; i > 0; i--)
+        {
+            int j = UnityEngine.Random.Range(0, i + 1);
+            (spawnableItems[i], spawnableItems[j]) = (spawnableItems[j], spawnableItems[i]);
+        }
+        int pickCount = Mathf.Min(3, spawnableItems.Count);
+        for (int i = 0; i < pickCount; i++)
+            MissionWinSystem.Instance.stealTargetItems.Add(spawnableItems[i]);
+        Debug.Log($"[GameManager] 本局竊取目標：{string.Join(", ", MissionWinSystem.Instance.stealTargetItems.ConvertAll(x => x.name))}");
+    
+
         MenuUIManager.instance.LoadingScreen.SetActive(false);
 
     }

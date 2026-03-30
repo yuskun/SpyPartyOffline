@@ -44,5 +44,8 @@ public class Steal : MissionCard
             );
         }
         User.SetCooldownEnd(this.cardData);
+
+        // 偷竊後檢查是否達成收集勝利條件
+        MissionWinSystem.Instance?.CheckStealItemProgress(parameters.UserId);
     }
 }

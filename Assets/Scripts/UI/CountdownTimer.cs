@@ -10,6 +10,9 @@ public class CountdownTimer : NetworkBehaviour
     public string TimeText { get; set; }
     private NetworkBool IsRunning { get; set; }
 
+    [Networked, OnChangedRender(nameof(OnLastMinuteChanged))]
+    public NetworkBool IsLastMinute { get; set; }
+
     [Header("時間設定")]
     public int totalMinutes = 15;
     private float remainingTime;
@@ -28,6 +31,12 @@ public class CountdownTimer : NetworkBehaviour
         GameHUDManager.Instance?.SetTopTime(TimeText);
     }
 
+    public void OnLastMinuteChanged()
+    {
+        if (IsLastMinute && MissionWinSystem.Instance != null)
+            MissionWinSystem.Instance.SwitchStealToTimerMode();
+    }
+
     public override void FixedUpdateNetwork()
     {
         if (Runner.IsServer && IsRunning)
@@ -40,6 +49,9 @@ public class CountdownTimer : NetworkBehaviour
                 IsRunning = false;
                 OnTimerEnd();
             }
+
+            if (!IsLastMinute && remainingTime <= 60f)
+                IsLastMinute = true;
 
             UpdateTimeText();
         }

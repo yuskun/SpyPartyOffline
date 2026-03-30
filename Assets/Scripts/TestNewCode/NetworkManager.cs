@@ -24,6 +24,7 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
     private NetMode mode = NetMode.Idle;
 
     private bool waitingQuickJoin = false;
+    public string CurrentRoomCode { get; private set; } = "";
 
     private void Awake()
     {
@@ -97,6 +98,7 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
         mode = NetMode.Host;
 
         string sessionName = GenerateRoomCode();
+        CurrentRoomCode = sessionName;
 
 
         var result = await runner.StartGame(new StartGameArgs
@@ -143,7 +145,7 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
         }
 
         Debug.Log("Joined by code");
-        MenuUIManager.instance.ShowGameroom(GameMode.Client);
+        MenuUIManager.instance.ShowGameroom(GameMode.Client, code.Trim());
     }
 
     private async Task QuickJoinAsync()
