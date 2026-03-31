@@ -10,6 +10,7 @@ namespace OodlesEngine
     {
         private OodlesCharacter characterController;
         private OodlesCharacterInput aiInput;
+        public Collider Weapon;
 
         [SerializeField]
         private BehaviorTree enemyBrain;
@@ -26,7 +27,7 @@ namespace OodlesEngine
 
         private void Awake()
         {
-            aiInput = new OodlesCharacterInput(0, 0, 0, 0, 0, 0,0, 0, Vector3.forward, 0, 0);
+            aiInput = new OodlesCharacterInput(0, 0, 0, 0, 0, 0, 0, 0, Vector3.forward, 0, 0);
 
             enemyBrain = new BehaviorTreeBuilder(gameObject)
                 .Selector("AI Brain")
@@ -69,8 +70,11 @@ namespace OodlesEngine
 
         private void Start()
         {
+            
             characterController = GetComponent<OodlesCharacter>();
             characterController.AllowAttack = true;
+            if (Weapon != null)
+                characterController.handFunctionRight.OnTouchSomething(Weapon);
         }
 
         private void Update()

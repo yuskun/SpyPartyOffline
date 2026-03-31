@@ -9,6 +9,7 @@ namespace OodlesEngine
         [HideInInspector]
         public OodlesCharacter owner;
         public int Time;
+        public bool CanBreak = true;
 
         public float hitForce = 10000;
 

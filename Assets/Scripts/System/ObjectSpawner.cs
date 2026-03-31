@@ -184,6 +184,20 @@ public class ObjectSpawner : MonoBehaviour
 
 
 
+    /// <summary>從隨機生成區域找一個合法的地面位置，供外部（如 GameManager）使用</summary>
+    public bool TryGetRandomSpawnPosition(out Vector3 spawnPosition)
+    {
+        if (spawnAreas.Count == 0) { spawnPosition = Vector3.zero; return false; }
+        for (int attempt = 0; attempt < maxAttempts; attempt++)
+        {
+            Collider area = spawnAreas[Random.Range(0, spawnAreas.Count)];
+            if (TryFindGroundPosition(area, out spawnPosition))
+                return true;
+        }
+        spawnPosition = Vector3.zero;
+        return false;
+    }
+
     public void RemoveObject(GameObject obj)
     {
         if (spawnedObjects.Contains(obj))

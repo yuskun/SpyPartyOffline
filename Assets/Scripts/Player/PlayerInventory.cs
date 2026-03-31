@@ -251,13 +251,6 @@ public class PlayerInventory : NetworkBehaviour // ✅ 必須繼承 NetworkBehav
         UpdateLocalSlot();
         if (PlayerInventoryManager.Instance != null)
             PlayerInventoryManager.Instance.Refresh();
-        // 背包任何變動都同步更新小偷收集進度（Host only）
-        if (Object.HasStateAuthority && MissionWinSystem.Instance != null)
-        {
-            var identify = GetComponent<PlayerIdentify>();
-            if (identify != null)
-                MissionWinSystem.Instance.CheckStealItemProgress(identify.PlayerID);
-        }
     }
     private void UpdateLocalSlot()
     {

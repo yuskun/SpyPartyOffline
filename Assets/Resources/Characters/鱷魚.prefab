@@ -2346,6 +2346,7 @@ MonoBehaviour:
   itemSeekRange: 20
   weaponPriority: 1.5
   cardInterval: 6
+  cardUseRange: 5
 --- !u!114 &-2586930365080724014
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5097,6 +5098,8 @@ MonoBehaviour:
   debugDraw: 1
   gizmoColor: {r: 0, g: 1, b: 0, a: 0.15}
   targetColor: {r: 1, g: 0, b: 0, a: 1}
+  enableStealScan: 0
+  stealScanRadius: 4
 --- !u!114 &572050845876140852
 MonoBehaviour:
   m_ObjectHideFlags: 0

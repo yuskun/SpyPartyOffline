@@ -14,6 +14,7 @@ public class SkinChange : NetworkBehaviour
     public GameObject[] Skins;
     private int currentSkinIndex;
     private Color SkinColor;
+    private float _triggerCooldown = 0f;
     [Networked, Capacity(8)]
     public NetworkArray<NetworkObject> SpawnedPlayers => default;
 
@@ -30,6 +31,12 @@ public class SkinChange : NetworkBehaviour
         {
             Destroy(gameObject);
         }
+
+        // 每個 Client（含 Host）生成時，告知 Server 自己的 skin index 與名字
+        int skinIndex = PlayerPrefs.GetInt("Choosenindex", 0);
+        string playerName = NetworkManager2.Instance != null ? NetworkManager2.Instance.PlayerName : "Player";
+        Rpc_RegisterAndSpawn(skinIndex, playerName);
+
         // 初始化角色外观
         currentSkinIndex = PlayerPrefs.GetInt("Choosenindex");
         MenuUIManager.instance.ConfirmCharcterBtn.onClick.AddListener(() =>
@@ -54,9 +61,13 @@ public class SkinChange : NetworkBehaviour
                 Skin.SetActive(false);
             }
             GameUIManager.Instance.progressfill.fillAmount = 0;
+            _triggerCooldown = 3f;
 
             PlayHideOrShow(true);
             MenuUIManager.instance.Gameroom.SetActive(true);
+
+            // PlayHideOrShow(true) 之後 player 已恢復 active，統一 rebind Camera
+            StartCoroutine(RebindCameraNextFrame());
 
         });
         foreach (var btn in MenuUIManager.instance.CharacterButtons)
@@ -74,20 +85,25 @@ public class SkinChange : NetworkBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        if (_triggerCooldown > 0f) return;
         if (collision.gameObject.tag == "Player")
         {
-            Rpc_ChangeSkinProcess(true,collision.gameObject.transform.parent.GetComponent<NetworkObject>());
-
+            Rpc_ChangeSkinProcess(true, collision.gameObject.transform.parent.GetComponent<NetworkObject>());
         }
     }
     void OnCollisionExit(Collision collision)
     {
-         Rpc_ChangeSkinProcess(true,collision.gameObject.transform.parent.GetComponent<NetworkObject>());
-
+        if (collision.gameObject.tag == "Player")
+        {
+            Rpc_ChangeSkinProcess(false, collision.gameObject.transform.parent.GetComponent<NetworkObject>());
+        }
     }
 
     void Update()
     {
+        if (_triggerCooldown > 0f)
+            _triggerCooldown -= Time.deltaTime;
+
         if (GameUIManager.Instance.progressBar.activeSelf)
         {
             GameUIManager.Instance.progressfill.fillAmount += Time.deltaTime;
@@ -156,6 +172,50 @@ public class SkinChange : NetworkBehaviour
                 player.gameObject.SetActive(show);
         }
     }
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
+    public void Rpc_RegisterAndSpawn(int skinIndex, string playerName, RpcInfo info = default)
+    {
+        if (!Runner.IsServer) return;
+        if (PlayerSpawner.instance == null) { Debug.LogWarning("[SkinChange] PlayerSpawner.instance is null"); return; }
+        PlayerSpawner.instance.SpawnPlayer(Runner, skinIndex, info.Source, playerName, true);
+        StartCoroutine(RegisterWhenReady(info.Source, playerName, skinIndex));
+    }
+
+    private IEnumerator RebindCameraNextFrame()
+    {
+        yield return null; // 等一幀，確保 PlayHideOrShow(true) 已讓 player active
+
+        Transform physicsBody = null;
+        foreach (var playerObj in SpawnedPlayers)
+        {
+            if (playerObj == null) continue;
+            var np = playerObj.GetComponent<NetworkPlayer>();
+            if (np != null && np.PlayerId == Runner.LocalPlayer)
+            {
+                var ch = playerObj.GetComponent<OodlesCharacter>();
+                if (ch != null) physicsBody = ch.GetPhysicsBody().transform;
+                break;
+            }
+        }
+
+        if (physicsBody != null)
+        {
+            CameraFollow.Get().player = physicsBody;
+            CameraFollow.Get().enable = true;
+        }
+        else
+        {
+            Debug.LogWarning("[SkinChange] RebindCamera: 找不到本地玩家的 physics body");
+        }
+    }
+
+    private IEnumerator RegisterWhenReady(PlayerRef player, string playerName, int skinIndex)
+    {
+        while (MenuUIManager.instance == null || MenuUIManager.instance.playerlistmanager == null)
+            yield return null;
+        MenuUIManager.instance.playerlistmanager.RegisterPlayer(player, playerName, skinIndex);
+    }
+
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     void Rpc_ChangeSkin(PlayerRef PlayerId, int index, string colorHex)
     {

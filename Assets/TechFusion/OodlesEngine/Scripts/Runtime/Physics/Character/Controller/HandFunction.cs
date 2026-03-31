@@ -51,6 +51,16 @@ namespace OodlesEngine
                 });
             }
 
+            // 放開武器時，恢復與 owner 的碰撞
+            if (GrabbedObject != null && oodlesCharacter != null)
+            {
+                var wpColliders = GrabbedObject.GetComponentsInChildren<Collider>();
+                var ownerColliders = oodlesCharacter.GetComponentsInChildren<Collider>();
+                foreach (var wc in wpColliders)
+                    foreach (var oc in ownerColliders)
+                        Physics.IgnoreCollision(wc, oc, false);
+            }
+
             if (catchJoint != null)
             {
                 catchJoint.breakForce = 0;
@@ -160,7 +170,7 @@ namespace OodlesEngine
             });
         }
 
-        void OnTouchSomething(Collider other)
+         public void OnTouchSomething(Collider other)
         {
             if (hasJoint) return;
 
@@ -198,11 +208,19 @@ namespace OodlesEngine
 
                 SetFixedJoint(wp.gameObject);
 
+                // 武器裝備後，忽略與所有角色 Ragdoll 的碰撞，避免卡住
+                var wpColliders = wp.GetComponentsInChildren<Collider>();
+                var ownerColliders = oodlesCharacter.GetComponentsInChildren<Collider>();
+                foreach (var wc in wpColliders)
+                    foreach (var oc in ownerColliders)
+                        Physics.IgnoreCollision(wc, oc, true);
+
                 hasJoint = true;
                 currentHoldType = HoldType.Weapon;
                 GrabbedObject = wp.GetComponent<Rigidbody>();
             }
         }
+        
 
         //Grab on collision
         void OnCollisionEnter(Collision col)

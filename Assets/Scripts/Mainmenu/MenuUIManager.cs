@@ -27,7 +27,7 @@ public class MenuUIManager : MonoBehaviour
     public TextMeshProUGUI PlayerNameInput;
     public TMP_InputField RoomCodeInput;
     public GameObject[] Ai;
-   [HideInInspector] public PlayerListManager playerlistmanager;
+    public PlayerListManager playerlistmanager;
     public Button StartButton;
     public MissionUIManager missionUIManager;
     public GameObject PlayerList;
@@ -109,7 +109,7 @@ public class MenuUIManager : MonoBehaviour
         {
             Host.SetActive(false);
             Client.SetActive(true);
-
+            Debug.Log("顯示遊戲房間界面Client");
             showUI(Gameroom);
         }
     }

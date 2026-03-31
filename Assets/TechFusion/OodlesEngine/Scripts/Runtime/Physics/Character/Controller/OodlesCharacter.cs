@@ -451,7 +451,7 @@ namespace OodlesEngine
             handFunctionRight.ReleaseHand();
             this.GetComponent<PlayerInventory>().CanUseCard = false;
             this.GetComponent<PlayerInventory>().LostCard();
-            
+
             footstepSource.Stop();
         }
 
@@ -620,16 +620,16 @@ namespace OodlesEngine
 
         public void UpdateThrow()
         {
-            if (inputState.doAction2 > 0 && (LeftHandGrabObject() != null || RightHandGrabObject() != null) )
+            if (inputState.doAction2 > 0 && (LeftHandGrabObject() != null || RightHandGrabObject() != null))
             {
-                
+
                 if (!isThrowing)
                 {
                     Vector3 hor = physicsBody.transform.forward;
                     hor.y = 0;
                     hor.Normalize();
 
-                    if (LeftHandGrabObject() &&  RightHandGrabObject())
+                    if (LeftHandGrabObject() && RightHandGrabObject())
                     {
                         Rigidbody rb = LeftHandGrabObject();
 
@@ -764,7 +764,7 @@ namespace OodlesEngine
         {
             if (inputState.doAction2 > 0 && !HoldWeapon())
             {
-              
+
                 if (!pickUpInput)
                 {
                     if (coroutinePickUp != null) { StopCoroutine(coroutinePickUp); }
@@ -808,10 +808,11 @@ namespace OodlesEngine
 
                 animatorPlayer.SetTrigger("Attack");
                 attackInput = true;
-            
+
 
             }
-            else{
+            else
+            {
                 attackInput = false;
             }
         }
@@ -821,30 +822,32 @@ namespace OodlesEngine
         }
         public void OnAttackFinish()
         {
-             if (HoldWeapon())
+            if (HoldWeapon())
+            {
+                if (handFunctionLeft.HoldWeapon())
                 {
-                    if (handFunctionLeft.HoldWeapon())
-                    {
-                        Weapon wp = handFunctionLeft.GrabbedObject.GetComponent<Weapon>();
+                    Weapon wp = handFunctionLeft.GrabbedObject.GetComponent<Weapon>();
+                    if (wp.CanBreak)
                         wp.Time--;
-                        if (wp.Time <= 0)
-                        {
-                            handFunctionLeft.ReleaseHand();
-                            leftPicking = false;
-                        }
-                    }
-                    if (handFunctionRight.HoldWeapon())
+                    if (wp.Time <= 0)
                     {
-                        Weapon wp = handFunctionRight.GrabbedObject.GetComponent<Weapon>();
-                        wp.Time--;
-                        if (wp.Time <= 0)
-                        {
-                            handFunctionRight.ReleaseHand();
-                            rightPicking = false;
-                            wp.gameObject.gameObject.SetActive(false);
-                        }
+                        handFunctionLeft.ReleaseHand();
+                        leftPicking = false;
                     }
                 }
+                if (handFunctionRight.HoldWeapon())
+                {
+                    Weapon wp = handFunctionRight.GrabbedObject.GetComponent<Weapon>();
+                    if (wp.CanBreak)
+                        wp.Time--;
+                    if (wp.Time <= 0)
+                    {
+                        handFunctionRight.ReleaseHand();
+                        rightPicking = false;
+                        wp.gameObject.gameObject.SetActive(false);
+                    }
+                }
+            }
         }
     }
 }

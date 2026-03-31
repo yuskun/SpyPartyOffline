@@ -21,10 +21,17 @@ public class PlayerScanner : MonoBehaviour
     public Color gizmoColor = new Color(0, 1, 0, 0.15f);
     public Color targetColor = Color.red;
 
+    [Header("竊盜模式")]
+    public bool enableStealScan = false;
+    public float stealScanRadius = 4f;
+
     public GameObject currentTarget { get; private set; }
     public GameObject currentRagdoll { get; private set; }
     private GameObject previousTarget;
     private List<GameObject> nearbyPlayers = new();
+
+    public StealTargetObject currentStealTarget { get; private set; }
+    private StealTargetObject previousStealTarget;
 
     private void Start()
     {
@@ -34,19 +41,16 @@ public class PlayerScanner : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!enableScan) return;
+        if (enableScan)
+        {
+            ScanNearbyPlayers();
+            currentRagdoll = GetWeightedBestTarget();
+            UpdateOutlineState();
+            currentTarget = currentRagdoll != null ? currentRagdoll.transform.parent.gameObject : null;
+        }
 
-        ScanNearbyPlayers();
-        currentRagdoll = GetWeightedBestTarget();
-        UpdateOutlineState();
-        if (currentRagdoll != null)
-        {
-            currentTarget = currentRagdoll.transform.parent.gameObject;
-        }
-        else
-        {
-            currentTarget = null;
-        }
+        if (enableStealScan) ScanStealTargets();
+        else ClearStealTarget();
     }
 
     private void ScanNearbyPlayers()
@@ -121,6 +125,38 @@ public class PlayerScanner : MonoBehaviour
         }
 
         previousTarget = currentRagdoll;
+    }
+
+    private void ScanStealTargets()
+    {
+        Vector3 scanPos = transform.position + Vector3.up * heightOffset;
+
+        StealTargetObject best = null;
+        float bestDist = float.MaxValue;
+        foreach (var obj in StealTargetObject.All)
+        {
+            if (obj == null) continue;
+            float dist = Vector3.Distance(scanPos, obj.transform.position);
+            if (dist < stealScanRadius && dist < bestDist) { bestDist = dist; best = obj; }
+        }
+
+        if (previousStealTarget != best)
+        {
+            if (previousStealTarget != null) previousStealTarget.SetHighlight(false);
+            if (best != null) best.SetHighlight(true);
+            previousStealTarget = best;
+        }
+        currentStealTarget = best;
+    }
+
+    private void ClearStealTarget()
+    {
+        if (previousStealTarget != null)
+        {
+            previousStealTarget.SetHighlight(false);
+            previousStealTarget = null;
+        }
+        currentStealTarget = null;
     }
 
     private void OnDrawGizmos()

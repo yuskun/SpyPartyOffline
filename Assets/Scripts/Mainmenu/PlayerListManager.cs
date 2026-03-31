@@ -48,10 +48,13 @@ public class PlayerListManager : NetworkBehaviour
             lastRevision = PlayerVersion;
             OnPlayerListChanged();
         }
-        if (PlayerVersion == 1&&!hasOpenedGameRoom)
+        if (PlayerVersion == 1 && !hasOpenedGameRoom)
         {
-            MenuUIManager.instance.ShowGameroom(GameMode.Host, NetworkManager2.Instance != null ? NetworkManager2.Instance.CurrentRoomCode : "");
-            hasOpenedGameRoom=true;
+            Debug.Log("玩家列表已更新，顯示遊戲房間界面");
+            string code = NetworkManager2.Instance != null ? NetworkManager2.Instance.CurrentRoomCode : "";
+            GameMode mode = Runner.IsServer ? GameMode.Host : GameMode.Client;
+            MenuUIManager.instance.ShowGameroom(mode, code);
+            hasOpenedGameRoom = true;
         }
     }
     public void RegisterPlayer(PlayerRef player, string playerName, int skinIndex)

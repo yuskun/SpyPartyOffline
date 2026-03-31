@@ -43,7 +43,6 @@ public class MissionWinSystem : MonoBehaviour
     public int CollectWinnerID = -1;
 
     [Header("小偷收集勝利條件")]
-    [HideInInspector] public List<ItemCard> stealTargetItems = new List<ItemCard>(); // 由 GameManager.GameInit() 注入
     public bool StealCollectWin = false;
 
     [Header("押送設定")]
@@ -226,26 +225,25 @@ public class MissionWinSystem : MonoBehaviour
     }
 
     /// <summary>
-    /// 計時結束時：持有 Steal 任務卡的玩家獲勝。
-    /// 若無人持有 Steal 卡則平局。
+    /// 計時結束時：身上沒有任物卡的玩家獲勝（可能多人同時獲勝）。
     /// </summary>
     public void StealTimerWin()
     {
         if (isGameOver) return;
 
-        if (StealID < 0)
+        var inventories = PlayerInventoryManager.Instance.playerInventories;
+        var winners = new System.Collections.Generic.List<int>();
+
+        for (int i = 0; i < inventories.Count; i++)
         {
-            Draw();
-            return;
+            var cards = PlayerInventoryManager.Instance.GetCardsByPlayer(i);
+            bool hasItemCard = cards.Exists(c => c.type == CardType.Item);
+            if (!hasItemCard)
+                winners.Add(i);
         }
 
-        var inventories = PlayerInventoryManager.Instance.playerInventories;
-        if (StealID < inventories.Count)
-            inventories[StealID].MissionStates.Set(1, 1);
-
-        StealWin = true;
         isGameOver = true;
-        GameManager.instance.RPC_Gameover(StealID);
+        GameManager1.instance.RPC_MultipleWinners(winners.ToArray());
     }
 
     /// <summary>
@@ -289,35 +287,28 @@ public class MissionWinSystem : MonoBehaviour
     }
 
     /// <summary>
-    /// 計算 Steal 持卡者背包中已有幾個目標道具，更新 MissionStates[1]。
+    /// 小偷偷走一個場景物件後呼叫，遞增計數。
     /// 集齊3個後觸發 StealCollectWin。
-    /// 由 Steal.UseSkill 及 TraceMission.ProcessPlayerCards 呼叫（僅 Host）。
+    /// 僅由 Steal.UseSkill 呼叫（Host 端）。
     /// </summary>
-    public void CheckStealItemProgress(int playerId)
+    public void OnStealObjectCollected(int playerId)
     {
         if (isGameOver) return;
         if (StealID != playerId) return;
-        if (stealTargetItems == null || stealTargetItems.Count == 0) return;
 
         var inventories = PlayerInventoryManager.Instance.playerInventories;
         if (playerId < 0 || playerId >= inventories.Count) return;
 
         PlayerInventory inv = inventories[playerId];
-        int count = 0;
-        foreach (var item in stealTargetItems)
-        {
-            if (item == null) continue;
-            if (inv.HasCard(new CardData(-1, item.cardData.id, CardType.Item, 0f)))
-                count++;
-        }
-
+        inv.MissionStates.TryGet(1, out int count);
+        count++;
         inv.MissionStates.Set(1, count);
-        Debug.Log($"[StealCollect] 玩家 {playerId} 已收集 {count}/{stealTargetItems.Count} 個目標道具");
+        Debug.Log($"[Steal] 玩家 {playerId} 已偷取 {count}/3 個場景物件");
 
-        if (count >= stealTargetItems.Count)
+        if (count >= 3)
         {
             StealCollectWin = true;
-            Debug.Log($"[StealCollect] 玩家 {playerId} 集齊所有目標道具！");
+            Debug.Log($"[Steal] 玩家 {playerId} 集齊3個場景物件！");
             if (CheckAllMissionsComplete(playerId))
             {
                 isGameOver = true;
@@ -453,11 +444,7 @@ public class MissionWinSystem : MonoBehaviour
             if (StealID != -1 && StealID >= 0 && StealID < inventories.Count)
             {
                 inventories[StealID].MissionStates.Remove(1);
-                inventories[StealID].MissionStates.Remove(11);
                 inventories[StealID].MissionGoals.Remove(1);
-                inventories[StealID].MissionGoals.Remove(11);
-                inventories[StealID].MissionGoals.Remove(12);
-                inventories[StealID].MissionGoals.Remove(13);
             }
             StealCollectWin = false;
             StealID = -1;
@@ -475,22 +462,15 @@ public class MissionWinSystem : MonoBehaviour
             StealWin = false;
             StealCollectWin = false;
 
-            // 新持有者：收集進度=0，目標=3；寫入3個目標道具 CardID
+            // 新持有者：收集進度=0，目標=3
             inventories[id].MissionStates.Set(1, 0);
-            inventories[id].MissionStates.Remove(11); // 重設模式旗標（預設收集模式）
             inventories[id].MissionGoals.Set(1, 3);
-            for (int i = 0; i < stealTargetItems.Count && i < 3; i++)
-                inventories[id].MissionGoals.Set(11 + i, stealTargetItems[i].cardData.id);
 
-            // 舊持有者：清除全部資料
+            // 舊持有者：清除資料
             if (StealID != -1 && StealID < inventories.Count)
             {
                 inventories[StealID].MissionStates.Remove(1);
-                inventories[StealID].MissionStates.Remove(11);
                 inventories[StealID].MissionGoals.Remove(1);
-                inventories[StealID].MissionGoals.Remove(11);
-                inventories[StealID].MissionGoals.Remove(12);
-                inventories[StealID].MissionGoals.Remove(13);
             }
         }
 

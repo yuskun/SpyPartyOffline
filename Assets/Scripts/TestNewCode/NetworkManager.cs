@@ -93,9 +93,9 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
     {
 
         if (mode != NetMode.Idle) return;
-        Debug.Log("HostAsync called TEST");
+        
         MenuUIManager.instance.showUI(MenuUIManager.instance.LoadingScreen);
-        Debug.Log("HostAsync called");
+       
         await InitRunner();
         await runner.JoinSessionLobby(SessionLobby.ClientServer);
 
@@ -271,13 +271,8 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
         if (!runner.IsServer) return;
-
         Debug.Log($"Player joined: {player}");
-
-        PlayerSpawner.instance.SpawnPlayer(runner, PlayerPrefs.GetInt("Choosenindex"), player, PlayerName, true);
-        int skinIndex = PlayerPrefs.GetInt("Choosenindex", 0);
-        MenuUIManager.instance.playerlistmanager.RegisterPlayer(player, PlayerName, skinIndex);
-
+        // Spawn 由 SkinChange.Rpc_RegisterAndSpawn 處理（Client 帶自己的 skinIndex 過來）
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
