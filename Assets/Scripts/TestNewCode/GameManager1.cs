@@ -1,8 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Fusion;
-using GLTFast.Schema;
 using OodlesEngine;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
@@ -15,6 +15,11 @@ public class GameManager : NetworkBehaviour
     private Dictionary<PlayerRef, int> playerCharacterIndex = new Dictionary<PlayerRef, int>();
     public CountdownTimer countdownTimer;
     public int AICount = 0;
+
+    [Header("結算點位")]
+    public Transform WinnerPoint;
+    public Transform LoserPoint;
+    public float resultDelay = 3f;
 
     [Networked] private NetworkBool HasStarted { get; set; }
     [Networked] private TickTimer StartDelay { get; set; }
@@ -200,11 +205,37 @@ public class GameManager : NetworkBehaviour
         }
         else
             GameUIManager.Instance.Gameover();
+
+        StartCoroutine(ResultsSequence(new int[] { winnerID }));
     }
-     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_Draw()
     {
         GameUIManager.Instance.Draw();
+    }
+
+    private IEnumerator ResultsSequence(int[] winnerIDs)
+    {
+        yield return new WaitForSeconds(resultDelay);
+
+        // 1. 主相機解綁，停在原地
+        CameraFollow.Get().enable = false;
+
+        // 2. 傳送玩家（Host Only）
+        if (Runner.IsServer)
+        {
+            foreach (var parent in PlayerInventoryManager.Instance.playerParents)
+            {
+                int pid = parent.GetComponent<PlayerIdentify>().PlayerID;
+                bool isWinner = System.Array.IndexOf(winnerIDs, pid) >= 0;
+                parent.GetComponent<NetworkPlayer>().TeleportTo(
+                    isWinner ? WinnerPoint.position : LoserPoint.position);
+            }
+        }
+
+        // 3. 結算背景滑入
+        GameUIManager.Instance.ShowResultsPanel();
     }
 
     /// <summary>押送開始：廣播給所有 Client，顯示範圍圓圈（僅對 Catch 玩家可見）</summary>
@@ -212,6 +243,7 @@ public class GameManager : NetworkBehaviour
     public void RPC_EscortStart(int catcherID, int targetID)
     {
         EscortRangeIndicator.SetEscort(catcherID, targetID);
+        LocalBackpack.Instance.OnEscortStart(catcherID, targetID);
     }
 
     /// <summary>押送結束（成功或中斷）：廣播給所有 Client，隱藏範圍圓圈</summary>
@@ -219,6 +251,7 @@ public class GameManager : NetworkBehaviour
     public void RPC_EscortEnd()
     {
         EscortRangeIndicator.ClearEscort();
+        LocalBackpack.Instance.OnEscortEnd();
     }
     private void SpawnAllPlayers()
     {

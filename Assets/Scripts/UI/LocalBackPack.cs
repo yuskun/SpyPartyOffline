@@ -72,6 +72,8 @@ public class LocalBackpack : MonoBehaviour
                 data.outline.enabled = false;
                 data.shadow = btn.gameObject.GetComponent<Shadow>();
                 if (data.shadow != null) data.shadow.enabled = true;
+                data.forbidImage = btn.transform.Find("Forbid")?.GetComponent<Image>();
+                if (data.forbidImage != null) data.forbidImage.gameObject.SetActive(false);
 
                 buttons.Add(data);
             }
@@ -476,6 +478,33 @@ public class LocalBackpack : MonoBehaviour
 
 
 
+    private void ShowForbid(bool show)
+    {
+        foreach (var btn in buttons)
+            if (btn.forbidImage != null) btn.forbidImage.gameObject.SetActive(show);
+    }
+
+    public void OnEscortStart(int catcherID, int targetID)
+    {
+        if (playerIdentify == null) return;
+        int localID = playerIdentify.PlayerID;
+        if (localID == catcherID || localID == targetID)
+        {
+            userInventory.CanUseCard = false;
+            ShowForbid(true);
+        }
+        if (localID == targetID && GameUIManager.Instance != null && GameUIManager.Instance.CaughtUI != null)
+            GameUIManager.Instance.CaughtUI.SetActive(true);
+    }
+
+    public void OnEscortEnd()
+    {
+        if (userInventory != null) userInventory.CanUseCard = true;
+        ShowForbid(false);
+        if (GameUIManager.Instance != null && GameUIManager.Instance.CaughtUI != null)
+            GameUIManager.Instance.CaughtUI.SetActive(false);
+    }
+
     public void DisableInteractable()
     {
         for (int i = 0; i < buttons.Count; i++)
@@ -544,4 +573,5 @@ public class ButtionData
     public UnityEngine.UI.Outline outline;
     public Shadow shadow;
     public TextMeshProUGUI cooldownText;
+    public Image forbidImage;
 }
