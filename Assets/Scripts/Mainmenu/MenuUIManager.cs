@@ -109,7 +109,6 @@ public class MenuUIManager : MonoBehaviour
         {
             Host.SetActive(false);
             Client.SetActive(true);
-            Debug.Log("顯示遊戲房間界面Client");
             showUI(Gameroom);
         }
     }

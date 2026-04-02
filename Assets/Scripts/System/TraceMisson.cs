@@ -105,5 +105,7 @@ public class TraceMission : MonoBehaviour
             checkIndex++;
         }
 
+        // 檢查是否有玩家手中所有任務卡都已完成（含「給出未完成卡」後的情況）
+        MissionWinSystem.Instance.CheckAllPlayersCompletedMissions();
     }
 }

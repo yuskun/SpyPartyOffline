@@ -44,6 +44,7 @@ public class Swap : FunctionCard
                 )
             );
         }
-         User.SetCooldownEnd(this.cardData);
+        User.SetCooldownEnd(this.cardData);
+        TraceMission.Instance.ProcessPlayerCards();
     }
 }

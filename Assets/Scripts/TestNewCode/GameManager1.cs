@@ -21,6 +21,10 @@ public class GameManager : NetworkBehaviour
     public Transform LoserPoint;
     public float resultDelay = 3f;
 
+    [Header("結算鏡頭")]
+    public Transform ResultsCameraPoint;
+    public float resultsCamMoveDuration = 1f;
+
     [Networked] private NetworkBool HasStarted { get; set; }
     [Networked] private TickTimer StartDelay { get; set; }
 
@@ -210,9 +214,25 @@ public class GameManager : NetworkBehaviour
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_MultipleWinners(int[] winnerIDs)
+    {
+        int localID = LocalBackpack.Instance.userInventory.gameObject.GetComponent<PlayerIdentify>().PlayerID;
+        if (System.Array.IndexOf(winnerIDs, localID) >= 0)
+        {
+            GameUIManager.Instance.Win();
+            Debug.Log("你贏了！");
+        }
+        else
+            GameUIManager.Instance.Gameover();
+
+        StartCoroutine(ResultsSequence(winnerIDs));
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_Draw()
     {
         GameUIManager.Instance.Draw();
+        StartCoroutine(ResultsSequence(new int[0]));
     }
 
     private IEnumerator ResultsSequence(int[] winnerIDs)
@@ -236,6 +256,21 @@ public class GameManager : NetworkBehaviour
 
         // 3. 結算背景滑入
         GameUIManager.Instance.ShowResultsPanel();
+
+        // 4. 等待滑入動畫完成後，將相機移到結算鏡頭點
+        // 用 Tag 在 scene 中尋找（避免 prefab-spawned NetworkBehaviour 的 scene reference 在 client 為 null）
+        GameObject camPointObj = ResultsCameraPoint != null
+            ? ResultsCameraPoint.gameObject
+            : GameObject.FindWithTag("ResultsCam");
+
+        if (camPointObj != null)
+        {
+            float slideIn = ResultsBgPlane.Instance != null ? ResultsBgPlane.Instance.slideInDuration : 0.5f;
+            yield return new WaitForSeconds(slideIn);
+            CameraFollow.Get().MoveTo(camPointObj.transform, resultsCamMoveDuration);
+        }
+
+        GameUIManager.Instance.BackBtn?.SetActive(true);
     }
 
     /// <summary>押送開始：廣播給所有 Client，顯示範圍圓圈（僅對 Catch 玩家可見）</summary>

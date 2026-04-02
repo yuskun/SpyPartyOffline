@@ -237,13 +237,13 @@ public class MissionWinSystem : MonoBehaviour
         for (int i = 0; i < inventories.Count; i++)
         {
             var cards = PlayerInventoryManager.Instance.GetCardsByPlayer(i);
-            bool hasItemCard = cards.Exists(c => c.type == CardType.Item);
-            if (!hasItemCard)
+            bool hasMissionCard = cards.Exists(c => c.type == CardType.Mission);
+            if (!hasMissionCard)
                 winners.Add(i);
         }
 
         isGameOver = true;
-        GameManager1.instance.RPC_MultipleWinners(winners.ToArray());
+        GameManager.instance.RPC_MultipleWinners(winners.ToArray());
     }
 
     /// <summary>
@@ -341,6 +341,8 @@ public class MissionWinSystem : MonoBehaviour
         var missionCards = PlayerInventoryManager.Instance.GetCardsByPlayer(playerId)
             .FindAll(c => c.type == CardType.Mission);
 
+        if (missionCards.Count == 0) return false; // 沒有任務卡不算勝利
+
         foreach (var c in missionCards)
         {
             if (c.id == 0 && (!CatchWin || CatchID != playerId)) return false;
@@ -349,6 +351,28 @@ public class MissionWinSystem : MonoBehaviour
         }
 
         return true;
+    }
+
+    /// <summary>
+    /// 檢查所有玩家是否有人手中任務卡全部完成（卡片被轉移後呼叫）。
+    /// </summary>
+    public void CheckAllPlayersCompletedMissions()
+    {
+        if (isGameOver) return;
+        var inventories = PlayerInventoryManager.Instance.playerInventories;
+        for (int i = 0; i < inventories.Count; i++)
+        {
+            PlayerIdentify identify = inventories[i].GetComponentInParent<PlayerIdentify>();
+            if (identify == null) continue;
+            int playerId = identify.PlayerID;
+            if (CheckAllMissionsComplete(playerId))
+            {
+                isGameOver = true;
+                Debug.Log($"[MissionComplete] 玩家 {playerId} 手中任務全部完成，獲勝！");
+                GameManager.instance.RPC_Gameover(playerId);
+                return;
+            }
+        }
     }
 
     public void UpdateFightCount(OodlesCharacter target)
@@ -447,6 +471,7 @@ public class MissionWinSystem : MonoBehaviour
                 inventories[StealID].MissionGoals.Remove(1);
             }
             StealCollectWin = false;
+            StealTargetSelector.Instance?.ResetAllTargets();
             StealID = -1;
             return;
         }
@@ -461,6 +486,9 @@ public class MissionWinSystem : MonoBehaviour
             }
             StealWin = false;
             StealCollectWin = false;
+
+            // Steal 卡換手：所有已偷走的場景物件重置回原位
+            StealTargetSelector.Instance?.ResetAllTargets();
 
             // 新持有者：收集進度=0，目標=3
             inventories[id].MissionStates.Set(1, 0);

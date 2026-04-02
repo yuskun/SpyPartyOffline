@@ -21,6 +21,7 @@ public class GameUIManager : MonoBehaviour
     public GameObject DrawUI;
     public GameObject ResultsPanel;
     public GameObject CaughtUI;
+    public GameObject BackBtn;
 
     private void Awake()
     {

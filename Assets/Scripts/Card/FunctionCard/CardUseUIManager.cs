@@ -89,18 +89,15 @@ public class CardUseUIManager : MonoBehaviour
                 ShowFailUI(swapBlock.failUI);
         }
     }
-       public bool TryUseMissionCard(MissionCard card, PlayerInventory user, PlayerInventory target)
+    public bool TryUseMissionCard(MissionCard card, PlayerInventory user, PlayerInventory target, int useCardIndex)
     {
         if (card == null)
             return false;
 
-        if (card is MissionCard MissionCard)
-        {
-            if (!MissionCard.CanUse(user, target, user.slots[currentUseCardIndex]))
-                return false;
-        }
-        return true;
+        if (!card.CanUse(user, target, user.slots[useCardIndex]))
+            return false;
 
+        return true;
     }
 
     // 選哪張卡

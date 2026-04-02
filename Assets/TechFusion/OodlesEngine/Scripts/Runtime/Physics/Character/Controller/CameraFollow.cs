@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 
 namespace OodlesEngine
@@ -104,6 +105,34 @@ namespace OodlesEngine
             }
 
             return distance;
+        }
+
+        /// <summary>
+        /// 停用跟隨後，平滑將相機移動到指定 Transform（位置＋旋轉）。
+        /// </summary>
+        public void MoveTo(Transform target, float duration)
+        {
+            StopAllCoroutines();
+            StartCoroutine(DoMoveTo(target, duration));
+        }
+
+        private IEnumerator DoMoveTo(Transform target, float duration)
+        {
+            Vector3    startPos = mainCamera.transform.position;
+            Quaternion startRot = mainCamera.transform.rotation;
+
+            float elapsed = 0f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.SmoothStep(0f, 1f, elapsed / duration);
+                mainCamera.transform.position = Vector3.Lerp(startPos, target.position, t);
+                mainCamera.transform.rotation = Quaternion.Slerp(startRot, target.rotation, t);
+                yield return null;
+            }
+
+            mainCamera.transform.position = target.position;
+            mainCamera.transform.rotation = target.rotation;
         }
 
         void ApplyOccluderFade(Vector3 position, Vector3 target)

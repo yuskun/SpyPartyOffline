@@ -223,7 +223,7 @@ public class LocalBackpack : MonoBehaviour
             if (!requireHold)
             {
                 // 不需要長按：照原本瞬發流程
-                if (!cardUseUIManager.TryUseMissionCard(missionCard, userInventory, targetInventory) || !IsCardReady(FocusIndex))
+                if (!cardUseUIManager.TryUseMissionCard(missionCard, userInventory, targetInventory, FocusIndex) || !IsCardReady(FocusIndex))
                     return;
 
                 SendUseCardRpc(data, FocusIndex, targetInventory);
@@ -289,7 +289,7 @@ public class LocalBackpack : MonoBehaviour
 
         if (holdTimer >= currentHoldDuration)
         {
-            if (!cardUseUIManager.TryUseMissionCard(holdingMissionCard, userInventory, holdingTargetInventory))
+            if (!cardUseUIManager.TryUseMissionCard(holdingMissionCard, userInventory, holdingTargetInventory, holdingIndex))
             {
                 CancelHold("TryUseMissionCard 失敗");
                 return;
