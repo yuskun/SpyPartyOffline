@@ -9,7 +9,7 @@
                 <ui:VisualElement class="player-row">
                     <ui:VisualElement class="player-card">
                         <ui:VisualElement class="avatar-ring">
-                            <ui:Image class="avatar-img self" />
+                            <ui:Image class="avatar-self" />
                         </ui:VisualElement>
                         <ui:Label text="你" class="player-name-bottom" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;);" />
                     </ui:VisualElement>
@@ -18,7 +18,7 @@
                     </ui:VisualElement>
                     <ui:VisualElement class="player-card">
                         <ui:VisualElement class="avatar-ring">
-                            <ui:Image class="avatar-img target" />
+                            <ui:Image class="avatar-target" />
                         </ui:VisualElement>
                         <ui:Label text="Burr" class="player-name-bottom" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;);" />
                     </ui:VisualElement>

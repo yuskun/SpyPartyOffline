@@ -41,12 +41,18 @@
     height: 180px;
     border-radius: 60px;
     background-image: url("project://database/Assets/Image/UIPanel/GameHUD/player.png");
-    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
 }
 
-.target-avatar {
-    width: 100%; height: 100%;
-    border-radius: 50px;
+.avatar-target { 
+    width: 66%;
+    height: 70%;
+    margin-bottom: 16px;
+    overflow: hidden;
+    border-radius: 60px;    
 }
 
 /* 右上角疊加的放大鏡圖示 */
@@ -93,7 +99,7 @@
 }
 
 .item-img {
-    width: 70%; height: 70%;
+    width: 100%; height: 100%;
     -unity-background-scale-mode: scale-to-fit;
 }
 

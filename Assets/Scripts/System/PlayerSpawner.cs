@@ -52,6 +52,7 @@ public class PlayerSpawner : MonoBehaviour
             obj.GetComponent<NetworkPlayer>().PlayerId = player;
             obj.GetComponent<NetworkPlayer>().isPrepare = IsPrepare;  // 直接使用 IsPrepare，預設就是 false
             obj.GetComponent<PlayerIdentify>().PlayerName = name;
+            obj.GetComponent<PlayerIdentify>().SkinIndex = chosenIndex;
 
             SkinChange.instance.SetSpawnedPlayer(obj.GetComponent<NetworkObject>());
         });

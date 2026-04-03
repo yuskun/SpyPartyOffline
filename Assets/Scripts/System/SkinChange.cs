@@ -46,17 +46,23 @@ public class SkinChange : NetworkBehaviour
             {
                 SettingSkinColor(currentSkinIndex, SkinColor);
                 Rpc_ChangeSkin(Runner.LocalPlayer, currentSkinIndex, PlayerPrefs.GetString("Color"));
+
+                PlayerPrefs.SetInt("Choosenindex", currentSkinIndex);
+                PlayerPrefs.Save();
+
                 if (MenuUIManager.instance.playerlistmanager != null)
                 {
-                    MenuUIManager.instance.playerlistmanager.UpdateSkinIndex(Runner.LocalPlayer, currentSkinIndex);
+                    //MenuUIManager.instance.playerlistmanager.UpdateSkinIndex(Runner.LocalPlayer, currentSkinIndex);
+                    MenuUIManager.instance.playerlistmanager.Rpc_RequestSkinUpdate(Runner.LocalPlayer, currentSkinIndex);
                 }
+                
+                //FindObjectOfType<PracticeUIManager>()?.RefreshAvatar();
             }
             else
             {
                 SettingSkinColor(currentSkinIndex, SkinColor);
             }
 
-            FindObjectOfType<PracticeUIManager>()?.RefreshAvatar();
             MenuUIManager.instance.ChooseCharacterUI.SetActive(false);
             foreach (var Skin in Skins)
             {
@@ -66,6 +72,12 @@ public class SkinChange : NetworkBehaviour
 
             PlayHideOrShow(true);
             MenuUIManager.instance.Gameroom.SetActive(true);
+            
+            var practiceRoomUI = FindObjectOfType<PracticeUIManager>(true);
+            if (practiceRoomUI != null)
+            {
+                practiceRoomUI.gameObject.SetActive(true); // 重新打開
+            }
 
         });
         foreach (var btn in MenuUIManager.instance.CharacterButtons)
@@ -104,6 +116,8 @@ public class SkinChange : NetworkBehaviour
             {
                 GameUIManager.Instance.progressBar.SetActive(false);
                 MenuUIManager.instance.Gameroom.SetActive(false);
+                var practiceRoomUI = FindObjectOfType<PracticeUIManager>(true);
+                if (practiceRoomUI != null) practiceRoomUI.gameObject.SetActive(false);
                 CameraFollow.Get().enable = false;
                 StartCoroutine(MoveCamera());
                 Skins[currentSkinIndex].SetActive(true);

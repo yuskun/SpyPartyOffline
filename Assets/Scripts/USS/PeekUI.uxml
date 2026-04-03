@@ -9,7 +9,7 @@
                 <ui:VisualElement class="view-top">
                     <ui:VisualElement class="player-card">
                         <ui:VisualElement class="avatar-ring">
-                            <ui:Image class="target-avatar" />
+                            <ui:Image class="avatar-target" />
                             <ui:VisualElement class="tool-wrap">
                                 <ui:Image class="tool-icon" />
                             </ui:VisualElement>

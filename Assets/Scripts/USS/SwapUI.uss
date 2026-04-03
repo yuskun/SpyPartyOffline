@@ -56,12 +56,28 @@
     width: 150px;
     height: 150px;
     border-radius: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-image: url("project://database/Assets/Image/UIPanel/GameHUD/player.png");
     padding: 8px;
+    overflow: hidden;
 }
 
-.avatar-self { background-image: url("project://database/Assets/Image/Character/Shark.png"); }
-.avatar-target { background-image: url("project://database/Assets/Image/Character/Crocodile.png"); }
+.avatar-self {
+    width: 72%;
+    height: 78%;
+    margin-bottom: 16px;
+    overflow: hidden;
+    border-radius: 60px;
+}
+.avatar-target { 
+    width: 72%;
+    height: 78%;
+    margin-bottom: 16px;
+    overflow: hidden;
+    border-radius: 60px;
+}
 
 .player-name-bottom {
     margin-top: -18px;

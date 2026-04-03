@@ -68,6 +68,9 @@ public class CardUseUIManager_UIToolkit : MonoBehaviour
         giveUIDocument.gameObject.SetActive(true);
         VisualElement root = giveUIDocument.rootVisualElement;
 
+        UpdateUIInfo(root, currentUser, currentTarget);
+
+        //道具
         List<Button> slots = root.Query<Button>(className: "item-slot").ToList();
         VisualElement preselectIcon = root.Q<VisualElement>("SelectedGiftIcon");
         if (preselectIcon != null) preselectIcon.style.backgroundImage = StyleKeyword.None;
@@ -91,8 +94,19 @@ public class CardUseUIManager_UIToolkit : MonoBehaviour
     {
         peekUIDocument.gameObject.SetActive(true);
         VisualElement root = peekUIDocument.rootVisualElement;
-        List<Button> slots = root.Query<Button>(className: "item-slot").ToList();
 
+        var targetIdentify = currentTarget.GetComponent<PlayerIdentify>();
+        var db = SkinChange.instance?.characterAvatarDatabase;
+    
+        // 設定對方頭像與名字
+        if (db != null)
+            root.Q<Image>(className: "avatar-target").sprite = db.GetAvatar(targetIdentify.SkinIndex);
+        
+        var nameLabel = root.Q<Label>(className: "player-name-bottom");
+        if (nameLabel != null) nameLabel.text = targetIdentify.PlayerName;
+
+        //道具
+        List<Button> slots = root.Query<Button>(className: "item-slot").ToList();
         RefreshInventorySlots(currentTarget, slots, (idx) => { }, false);
 
         Button closeBtn = root.Q<Button>("CloseBtn");
@@ -110,6 +124,8 @@ public class CardUseUIManager_UIToolkit : MonoBehaviour
     {
         swapUIDocument.gameObject.SetActive(true);
         VisualElement root = swapUIDocument.rootVisualElement;
+
+        UpdateUIInfo(root, currentUser, currentTarget);
 
         List<VisualElement> panels = root.Query<VisualElement>(className: "item-panel").ToList();
         if (panels.Count >= 2)
@@ -263,5 +279,27 @@ public class CardUseUIManager_UIToolkit : MonoBehaviour
     {
         yield return new WaitForSeconds(seconds);
         ui.SetActive(false);
+    }
+
+    private void UpdateUIInfo(VisualElement root, PlayerInventory user, PlayerInventory target)
+    {
+        var userIdentify = user.GetComponent<PlayerIdentify>();
+        var targetIdentify = target.GetComponent<PlayerIdentify>();
+        var db = SkinChange.instance?.characterAvatarDatabase;
+
+        if (db != null)
+        {
+            // 設定自己的頭像
+            var selfImg = root.Q<Image>(className: "avatar-self");
+            if (selfImg != null) selfImg.sprite = db.GetAvatar(userIdentify.SkinIndex);
+
+            // 設定對方的頭像
+            var targetImg = root.Q<Image>(className: "avatar-target");
+            if (targetImg != null) targetImg.sprite = db.GetAvatar(targetIdentify.SkinIndex);
+        }
+
+        // 設定對方的名字 (對應 UXML 中的 Label)
+        var targetNameLabel = root.Query<Label>(className: "player-name-bottom").Last(); // 通常最後一個是目標
+        if (targetNameLabel != null) targetNameLabel.text = targetIdentify.PlayerName;
     }
 }
