@@ -246,7 +246,6 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
     public void PlayerNamgeChanged()
     {
         PlayerName = MenuUIManager.instance.PlayerNameInput.text;
-
     }
 
     // =============================

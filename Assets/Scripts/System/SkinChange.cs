@@ -18,6 +18,8 @@ public class SkinChange : NetworkBehaviour
     public NetworkArray<NetworkObject> SpawnedPlayers => default;
 
     public CharacterAvatarData characterAvatarDatabase;
+    [Networked, Capacity(8)]
+    public NetworkDictionary<int, int> PlayerSkinIndex { get; }
 
     public override void Spawned()
     {
@@ -25,6 +27,12 @@ public class SkinChange : NetworkBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
+
+            // 如果欄位是空的，就從 Resources 資料夾抓取
+            if (characterAvatarDatabase == null)
+            {
+                characterAvatarDatabase = Resources.Load<CharacterAvatarData>("Characters/CharacterAvatarData");
+            }
         }
         else
         {
@@ -42,12 +50,13 @@ public class SkinChange : NetworkBehaviour
                 {
                     MenuUIManager.instance.playerlistmanager.UpdateSkinIndex(Runner.LocalPlayer, currentSkinIndex);
                 }
-                FindObjectOfType<PracticeUIManager>()?.RefreshAvatar();
             }
             else
             {
                 SettingSkinColor(currentSkinIndex, SkinColor);
             }
+
+            FindObjectOfType<PracticeUIManager>()?.RefreshAvatar();
             MenuUIManager.instance.ChooseCharacterUI.SetActive(false);
             foreach (var Skin in Skins)
             {

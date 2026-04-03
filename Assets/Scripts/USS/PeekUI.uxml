@@ -1,0 +1,46 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Scripts/USS/PeekUI.uss?fileID=7433441132597879392&amp;guid=c16be4ec218f2a943b11580e2ac46c60&amp;type=3#PeekUI" />
+    <ui:VisualElement name="page-bg" class="page-bg">
+        <ui:VisualElement class="trade-modal">
+            <ui:VisualElement class="trade-header">
+                <ui:Label text="道具偷窺" class="header-title" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;);" />
+            </ui:VisualElement>
+            <ui:VisualElement class="trade-body">
+                <ui:VisualElement class="view-top">
+                    <ui:VisualElement class="player-card">
+                        <ui:VisualElement class="avatar-ring">
+                            <ui:Image class="target-avatar" />
+                            <ui:VisualElement class="tool-wrap">
+                                <ui:Image class="tool-icon" />
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                        <ui:Label text="Burr" class="player-name-bottom" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;);" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement class="item-panel">
+                    <ui:Button class="item-slot filled">
+                        <ui:Image class="item-img banana" />
+                    </ui:Button>
+                    <ui:Button class="item-slot filled">
+                        <ui:Image class="item-img magnifier" />
+                    </ui:Button>
+                    <ui:Button class="item-slot filled">
+                        <ui:Image class="item-img trap" />
+                    </ui:Button>
+                    <ui:Button class="item-slot filled">
+                        <ui:Image class="item-img steal" />
+                    </ui:Button>
+                    <ui:Button class="item-slot filled">
+                        <ui:Image class="item-img gift" />
+                    </ui:Button>
+                    <ui:Button class="item-slot filled">
+                        <ui:Image class="item-img handcuff" />
+                    </ui:Button>
+                </ui:VisualElement>
+                <ui:VisualElement class="action-row">
+                    <ui:Button name="CloseBtn" text="關閉" class="action-btn confirm-btn" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;);" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

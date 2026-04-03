@@ -160,8 +160,11 @@ public class PlayerListManager : NetworkBehaviour
         // 頭像
         var avatarImg = slot.Q<UnityEngine.UIElements.Image>(className: "avatar-img");
         if (avatarImg != null && SkinChange.instance?.characterAvatarDatabase != null)
+        {
+            Debug.Log($"正在為玩家 {playerName} 設定頭像，Index: {skinIndex}");
             avatarImg.sprite = SkinChange.instance.characterAvatarDatabase.GetAvatar(skinIndex);
-
+        }
+        
         // YOU tag
         var youTag = slot.Q<Label>(className: "you-tag");
         if (youTag != null)
