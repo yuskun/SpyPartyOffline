@@ -19,6 +19,8 @@ public class SkinChange : NetworkBehaviour
     public NetworkArray<NetworkObject> SpawnedPlayers => default;
 
     public CharacterAvatarData characterAvatarDatabase;
+    [Networked, Capacity(8)]
+    public NetworkDictionary<int, int> PlayerSkinIndex { get; }
 
     public override void Spawned()
     {
@@ -26,6 +28,12 @@ public class SkinChange : NetworkBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
+
+            // 如果欄位是空的，就從 Resources 資料夾抓取
+            if (characterAvatarDatabase == null)
+            {
+                characterAvatarDatabase = Resources.Load<CharacterAvatarData>("Characters/CharacterAvatarData");
+            }
         }
         else
         {
@@ -45,16 +53,23 @@ public class SkinChange : NetworkBehaviour
             {
                 SettingSkinColor(currentSkinIndex, SkinColor);
                 Rpc_ChangeSkin(Runner.LocalPlayer, currentSkinIndex, PlayerPrefs.GetString("Color"));
+
+                PlayerPrefs.SetInt("Choosenindex", currentSkinIndex);
+                PlayerPrefs.Save();
+
                 if (MenuUIManager.instance.playerlistmanager != null)
                 {
-                    MenuUIManager.instance.playerlistmanager.UpdateSkinIndex(Runner.LocalPlayer, currentSkinIndex);
+                    //MenuUIManager.instance.playerlistmanager.UpdateSkinIndex(Runner.LocalPlayer, currentSkinIndex);
+                    MenuUIManager.instance.playerlistmanager.Rpc_RequestSkinUpdate(Runner.LocalPlayer, currentSkinIndex);
                 }
-                FindObjectOfType<PracticeUIManager>()?.RefreshAvatar();
+                
+                //FindObjectOfType<PracticeUIManager>()?.RefreshAvatar();
             }
             else
             {
                 SettingSkinColor(currentSkinIndex, SkinColor);
             }
+
             MenuUIManager.instance.ChooseCharacterUI.SetActive(false);
             foreach (var Skin in Skins)
             {
@@ -65,6 +80,12 @@ public class SkinChange : NetworkBehaviour
 
             PlayHideOrShow(true);
             MenuUIManager.instance.Gameroom.SetActive(true);
+            
+            var practiceRoomUI = FindObjectOfType<PracticeUIManager>(true);
+            if (practiceRoomUI != null)
+            {
+                practiceRoomUI.gameObject.SetActive(true); // 重新打開
+            }
 
             // PlayHideOrShow(true) 之後 player 已恢復 active，統一 rebind Camera
             StartCoroutine(RebindCameraNextFrame());
@@ -111,6 +132,8 @@ public class SkinChange : NetworkBehaviour
             {
                 GameUIManager.Instance.progressBar.SetActive(false);
                 MenuUIManager.instance.Gameroom.SetActive(false);
+                var practiceRoomUI = FindObjectOfType<PracticeUIManager>(true);
+                if (practiceRoomUI != null) practiceRoomUI.gameObject.SetActive(false);
                 CameraFollow.Get().enable = false;
                 StartCoroutine(MoveCamera());
                 Skins[currentSkinIndex].SetActive(true);

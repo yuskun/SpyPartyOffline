@@ -1,0 +1,122 @@
+.page-bg {
+    width: 100%; height: 100%;
+    align-items: center; justify-content: center;
+}
+
+/* 主面板 */
+.trade-modal {
+    width: 880px; height: 600px;
+    border-radius: 32px; 
+    border-width: 3px;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/bg.png");
+    overflow: hidden;
+}
+
+/* 標題列 */
+.trade-header {
+    height: 70px;
+    align-items: center; justify-content: center;
+}
+
+.header-title {
+    font-size: 35px;
+    color: #8b5525;
+    letter-spacing: 4px;
+    padding-top: 13px;
+}
+
+.trade-body {
+    flex-grow: 1;
+    align-items: center;
+}
+
+/* 玩家資訊卡 */
+.player-card {
+    align-items: center;
+    margin-top: 20px;
+}
+
+.avatar-ring {
+    width: 180px; 
+    height: 180px;
+    border-radius: 60px;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/player.png");
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.avatar-target { 
+    width: 66%;
+    height: 70%;
+    margin-bottom: 16px;
+    overflow: hidden;
+    border-radius: 60px;    
+}
+
+/* 右上角疊加的放大鏡圖示 */
+.tool-wrap {
+    position: absolute;
+    top: -8px; right: -8px;
+    width: 100px; height: 100px;
+}
+
+.tool-icon {
+    width: 100%; height: 100%;
+    background-image: url("project://database/Assets/Image/CardIcon/Icon_Peek.png");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.player-name-bottom {
+    padding: 5px 20px;
+    border-radius: 20px;
+    margin-top: -15px;
+    color: #8b5525;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/name.png");
+    font-size: 20px;
+}
+
+/* 道具欄面板 */
+.item-panel {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 800px;
+    height: 180px;
+    padding-top: 25px;
+    margin-top: 20px;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/Inventory_bg.png");
+}
+
+.item-slot {
+    width: 90px; height: 90px;
+    margin: 10px;
+    align-items: center; justify-content: center;
+    background-color: transparent;
+    border-width: 0px;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/inventory.png");
+}
+
+.item-img {
+    width: 100%; height: 100%;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+/* 底部按鈕 */
+.action-row {
+    margin-top: 10px;
+}
+
+.confirm-btn {
+    width: 220px; height: 60px;
+    border-radius: 30px;
+    font-size: 30px;
+    color: white;
+    border-width: 0;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/green_default.png");
+    transition-duration: 0.15s;
+}
+
+.confirm-btn:hover { scale: 1.05; background-image: url("project://database/Assets/Image/UIPanel/GameHUD/green_hover.png");}
+.confirm-btn:active { scale: 0.95; background-image: url("project://database/Assets/Image/UIPanel/GameHUD/green_active.png");}

@@ -1,0 +1,67 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Scripts/USS/GiveUI.uss?fileID=7433441132597879392&amp;guid=b2330d5cccaf7c945b2b87f0ed2c883f&amp;type=3#GiveUI" />
+    <ui:VisualElement name="page-bg" class="page-bg">
+        <ui:VisualElement class="trade-modal">
+            <ui:VisualElement class="trade-header">
+                <ui:Label text="道具贈與" class="header-title" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;);" />
+            </ui:VisualElement>
+            <ui:VisualElement class="trade-body">
+                <ui:VisualElement class="player-row">
+                    <ui:VisualElement class="player-card">
+                        <ui:VisualElement class="avatar-ring">
+                            <ui:Image class="avatar-self" />
+                        </ui:VisualElement>
+                        <ui:Label text="你" class="player-name-bottom" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;);" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="tip-box">
+                        <ui:Label text="選擇要贈與的道具！" class="tip-text" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;);" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="player-card">
+                        <ui:VisualElement class="avatar-ring">
+                            <ui:Image class="avatar-target" />
+                        </ui:VisualElement>
+                        <ui:Label text="Burr" class="player-name-bottom" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;);" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement class="item-section">
+                    <ui:VisualElement class="item-panel">
+                        <ui:Button class="item-slot filled selected">
+                            <ui:Image class="item-icon banana" />
+                        </ui:Button>
+                        <ui:Button class="item-slot filled">
+                            <ui:Image class="item-icon magnifier" />
+                        </ui:Button>
+                        <ui:Button class="item-slot filled">
+                            <ui:Image class="item-icon trap" />
+                        </ui:Button>
+                        <ui:Button class="item-slot filled">
+                            <ui:Image class="item-icon banana" />
+                        </ui:Button>
+                        <ui:Button class="item-slot filled">
+                            <ui:Image class="item-icon magnifier" />
+                        </ui:Button>
+                        <ui:Button class="item-slot filled">
+                            <ui:Image class="item-icon trap" />
+                        </ui:Button>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="gift-transfer-area">
+                        <ui:VisualElement class="arrow-wrap">
+                            <ui:Image class="arrow-img" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="gift-wrap">
+                            <ui:Image class="gift-img" />
+                            <ui:VisualElement class="gift-item-container">
+                                <ui:VisualElement class="gift-selected-frame" />
+                                <ui:Image name="SelectedGiftIcon" class="item-icon banana" />
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement class="action-row" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;);">
+                    <ui:Button name="ConfirmBtn" text="確認贈與" class="action-btn confirm-btn" />
+                    <ui:Button name="CancelBtn" text="取消" class="action-btn cancel-btn" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

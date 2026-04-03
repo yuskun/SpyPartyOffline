@@ -1,0 +1,221 @@
+/* 基礎設定 */
+.page-bg {
+    width: 100%; height: 100%;
+    align-items: center; justify-content: center;
+}
+
+/* 主面板 */
+.trade-modal {
+    width: 880px;
+    height: 600px;
+    border-radius: 32px;
+    border-width: 3px;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/bg.png");
+    overflow: hidden;
+}
+
+.trade-header {
+    align-items: center; justify-content: center;
+}
+
+.header-title { font-size: 35px; color: #8b5525; padding-top: 13px; }
+
+.trade-body { flex-grow: 1; }
+
+/* 玩家資訊列 */
+.player-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 180px;
+    margin-top: 10px;
+}
+
+.player-card {
+    align-items: center;
+    margin: 0 40px;
+}
+
+.avatar-ring {
+    width: 150px;
+    height: 150px;
+    border-radius: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/player.png");
+    padding: 8px;
+    overflow: hidden;
+}
+
+.avatar-self {    
+    width: 72%;
+    height: 78%;
+    margin-bottom: 16px;
+    overflow: hidden;
+    border-radius: 60px; 
+}
+.avatar-target {
+    width: 72%;
+    height: 78%;
+    margin-bottom: 16px;
+    overflow: hidden;
+    border-radius: 60px;
+}
+
+.player-name-bottom {
+    margin-top: -18px;
+    padding: 8px 18px;
+    border-radius: 20px;
+    padding-bottom:10px;
+    color: #8b5525;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/name.png");
+    font-size: 20px;
+}
+
+.tip-box {
+    width: 200px; 
+    height: 40px;
+    border-radius: 25px;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/textbar.png");
+    border-width: 0;
+}
+.tip-text { color: white; margin-top: 8px; -unity-text-align: middle-center; font-size: 18px;}
+
+/* 道具贈與區域 */
+.item-section {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: 20px;
+    margin-left: -30px;
+}
+
+.item-panel {
+    width: 330px;
+    height: 250px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 20px;
+    justify-content: center;
+    border-radius: 34px;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/Inventory_bg.png");
+}
+
+.item-slot {
+    width: 85px; height: 85px; margin: 5px;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/inventory.png");
+    background-color: rgba(0,0,0,0); border-width: 0;
+}
+
+.item-slot.selected {
+    scale: 1.15;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/inventory_select.png");
+}
+
+/* 禮物盒動畫區 */
+.gift-transfer-area { flex-direction: row; align-items: center; margin-left: 30px; }
+
+.arrow-img {
+    width: 100px; height: 100px;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/arrow.png");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.gift-wrap { width: 250px; height: 250px; position: relative; }
+
+.gift-img {
+    width: 100%; height: 100%;
+    background-image: url("project://database/Assets/Image/CardIcon/Icon_Give.png");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+/* 禮物盒道具的容器 */
+.gift-item-container {
+    position: absolute;
+    top: 55%; 
+    left: 50%;
+    translate: -50% -50%;
+    /* 這裡設為 85px，確保內部的道具圖示預設為 85px */
+    width: 85px;
+    height: 85px;
+    /* 確保內部的元件能重疊 (例如框和圖示) */
+    align-items: center;
+    justify-content: center;
+}
+
+/* 道具圖示層 - 固定為 85px，且永遠不 scale */
+.gift-item-container .item-icon {
+    width: 85px;
+    height: 85px;
+    -unity-background-scale-mode: scale-to-fit;
+    /* 確保絕對不放大 */
+    scale: 1 !important;
+}
+
+/* 專門用來放大的選取框背景層 */
+.gift-selected-frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* 這是原本設定在框上的背景圖 */
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/inventory_select.png");
+    
+    /* 核心：單獨放大這個框 (1.15倍) */
+    scale: 1.15;
+    
+    /* 確保框在道具圖示後面 (如果圖示有透明度的話) */
+    /* position: absolute 預設會根據 UXML 順序，後寫的在上面。
+       為了保險起見，可以加載 item-icon 上，
+       或者將 selected-frame 的寫在 selectedGiftIcon 之前 (如 UXML 修改所示) */
+}
+
+.item-icon { width: 100%; height: 100%; -unity-background-scale-mode: scale-to-fit; }
+
+/* 按鈕區 */
+.action-row {
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.action-btn {
+    width: 220px;
+    height: 50px;
+    border-radius: 25px;
+    border-width: 0;
+    font-size: 28px;
+    margin: 0 17px;
+    transition-duration: 0.15s;
+}
+
+.confirm-btn {
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/green_default.png");
+    color: white;
+}
+
+.confirm-btn:hover {
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/green_hover.png");
+    scale: 1.05;
+}
+
+.confirm-btn:active {
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/green_active.png");
+    scale: 0.95;
+}
+
+
+.cancel-btn {
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/yellow_default.png");
+    color: #8b5525;
+}
+.cancel-btn:hover {
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/yellow_hover.png");
+    scale: 1.05;
+}
+.cancel-btn:active {
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/yellow_active.png");
+    scale: 0.95;
+}

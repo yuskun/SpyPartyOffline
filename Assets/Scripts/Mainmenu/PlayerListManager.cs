@@ -115,6 +115,20 @@ public class PlayerListManager : NetworkBehaviour
             SetSlotOccupied(slotElements[slotIndex], playerName, skinIndex, isHost, isLocal);
             slotIndex++;
         }
+
+        var practiceUI = FindAnyObjectByType<PracticeUIManager>(FindObjectsInactive.Include);
+        if (practiceUI != null && practiceUI.gameObject.activeInHierarchy)
+        {
+            practiceUI.RefreshAvatar();
+        }
+    }
+
+    // 1. 這是對外的窗口：所有人都可以呼叫，但只有 Host 會執行內部的邏輯
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void Rpc_RequestSkinUpdate(PlayerRef player, int skinIndex)
+    {
+        // 只有 Host 執行到這裡，確保資料能寫入 NetworkDictionary 並同步給所有人
+        UpdateSkinIndex(player, skinIndex);
     }
 
     public void UpdateSkinIndex(PlayerRef player, int skinIndex)
@@ -163,8 +177,11 @@ public class PlayerListManager : NetworkBehaviour
         // 頭像
         var avatarImg = slot.Q<UnityEngine.UIElements.Image>(className: "avatar-img");
         if (avatarImg != null && SkinChange.instance?.characterAvatarDatabase != null)
+        {
+            Debug.Log($"正在為玩家 {playerName} 設定頭像，Index: {skinIndex}");
             avatarImg.sprite = SkinChange.instance.characterAvatarDatabase.GetAvatar(skinIndex);
-
+        }
+        
         // YOU tag
         var youTag = slot.Q<Label>(className: "you-tag");
         if (youTag != null)
@@ -177,6 +194,16 @@ public class PlayerListManager : NetworkBehaviour
 
         if (isHost) slot.AddToClassList("is-host");
         else slot.RemoveFromClassList("is-host");
+    }
+
+    // PlayerListManager.cs
+    void Update()
+    {
+        // 只有在已經連線並生成 (Spawned) 後才檢查
+        if (Object != null && Object.IsValid)
+        {
+            Check();
+        }
     }
 
 }

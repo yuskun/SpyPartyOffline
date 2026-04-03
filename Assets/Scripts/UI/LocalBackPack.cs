@@ -41,6 +41,7 @@ public class LocalBackpack : MonoBehaviour
 
 
     public CardUseUIManager cardUseUIManager; // UI 控制器
+    public CardUseUIManager_UIToolkit cardUseUIManagerUIToolkit;
 
     // ✅ 新增：可控制 Update 是否執行
     [Header("控制項")]
@@ -163,7 +164,13 @@ public class LocalBackpack : MonoBehaviour
                 Debug.Log("此功能卡需要目標，但沒有掃描到有效目標");
                 return;
             }
-            cardUseUIManager.TryUseFunctionCard(functionCard, userInventory, targetInventory, FocusIndex);
+            //cardUseUIManager.TryUseFunctionCard(functionCard, userInventory, targetInventory, FocusIndex);
+
+            if (cardUseUIManagerUIToolkit != null)
+                cardUseUIManagerUIToolkit.TryUseFunctionCard(functionCard, userInventory, targetInventory, FocusIndex);
+            else
+                cardUseUIManager.TryUseFunctionCard(functionCard, userInventory, targetInventory, FocusIndex);
+            return;
             return;
         }
 

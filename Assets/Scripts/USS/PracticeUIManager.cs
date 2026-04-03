@@ -32,10 +32,31 @@ public class PracticeUIManager : MonoBehaviour
         if (avatarElement == null) return;
         if (SkinChange.instance?.characterAvatarDatabase == null) return;
 
-        int skinIndex = PlayerPrefs.GetInt("Choosenindex", 0);
-        Sprite avatar = SkinChange.instance.characterAvatarDatabase.GetAvatar(skinIndex);
-        if (avatar != null)
+        // 取得本地玩家的正確索引
+        // 優先從 NetworkRunner 取得當前玩家在房間內同步的 SkinIndex
+        int skinIndex = 0;
+
+        // 方案 A: 如果你有 PlayerListManager 在場景中，從同步字典抓
+        if (MenuUIManager.instance?.playerlistmanager != null)
+        {
+            var runner = NetworkManager2.Instance.runner;
+            if (MenuUIManager.instance.playerlistmanager.PlayerSkinIndexes.TryGet(runner.LocalPlayer.AsIndex, out int networkedIndex))
+            {
+                skinIndex = networkedIndex;
+            }
+        }
+        else
+        {
+            // 方案 B: 保底方案，才讀取本地 PlayerPrefs
+            skinIndex = PlayerPrefs.GetInt("Choosenindex", 0); 
+        }
+
+        Sprite avatar = SkinChange.instance.characterAvatarDatabase.GetAvatar(skinIndex); 
+        if (avatar != null){
             avatarElement.style.backgroundImage = new StyleBackground(avatar);
+            avatarElement.MarkDirtyRepaint();
+            Debug.Log($"[Client] Practice 頭像已更新為 Index: {skinIndex}");
+        }
     }
     
     void ToggleMic()
