@@ -12,7 +12,9 @@
       "Bash(grep -r \"material\\\\|shader\\\\|quad\\\\|plane\" /c/Users/User/Desktop/0310/SpyPartyOffline/Assets/Scripts --include=*.cs)",
       "Bash(find /c/Users/User/Desktop/0310/SpyPartyOffline/Assets -name *.cs -type f -exec grep -l \"circle\\\\|Circle\\\\|range\\\\|Range\\\\|indicator\\\\|Indicator\" {})",
       "Bash(2)",
-      "Bash(grep -r \"mesh\\\\|Mesh\\\\|vertices\\\\|triangles\" /c/Users/User/Desktop/0310/SpyPartyOffline/Assets/Scripts --include=*.cs)"
+      "Bash(grep -r \"mesh\\\\|Mesh\\\\|vertices\\\\|triangles\" /c/Users/User/Desktop/0310/SpyPartyOffline/Assets/Scripts --include=*.cs)",
+      "Bash(git fetch:*)",
+      "Bash(git stash:*)"
     ]
   }
 }

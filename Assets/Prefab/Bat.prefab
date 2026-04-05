@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 1059208164973921244}
   - component: {fileID: -5497487439667136304}
   - component: {fileID: -5857014755396243598}
+  - component: {fileID: 7859000812388122193}
   m_Layer: 0
   m_Name: Bat
   m_TagString: Untagged
@@ -157,6 +158,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owner: {fileID: 0}
   Time: 2
+  CanBreak: 1
   hitForce: 15000
 --- !u!114 &-5497487439667136304
 MonoBehaviour:
@@ -176,6 +178,7 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: -5857014755396243598}
+  - {fileID: 7859000812388122193}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &-5857014755396243598
 MonoBehaviour:
@@ -190,6 +193,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _pos: {x: 0, y: 0, z: 0}
+--- !u!114 &7859000812388122193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4007593398365635647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 0
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!1 &5761969045885657821
 GameObject:
   m_ObjectHideFlags: 0

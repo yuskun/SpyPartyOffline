@@ -38,6 +38,9 @@ public class LocalBackpack : MonoBehaviour
     private CardData previewingCardData;
     private PlayerInventory previewingTargetInventory = null;
 
+    // ========= Steal Outline 狀態 =========
+    private bool hadStealCard = false;
+
 
 
     public CardUseUIManager cardUseUIManager; // UI 控制器
@@ -95,6 +98,7 @@ public class LocalBackpack : MonoBehaviour
         HandleCardInput();
         UpdateCardImagesByInventory();
         UpdateStealScan();
+        UpdateStealOutlines();
     }
     void HandleCardInput()
     {
@@ -570,6 +574,57 @@ public class LocalBackpack : MonoBehaviour
             buttons[i].image.gameObject.SetActive(false);
         }
         enableUpdate = false; // ✅ 清空後關閉 Update
+
+        // 清除 Steal Outline
+        SetAllStealOutlines(false);
+        hadStealCard = false;
+    }
+
+    /// <summary>持有 Steal 卡時，所有 StealTarget 持續顯示 Outline</summary>
+    void UpdateStealOutlines()
+    {
+        if (userInventory == null) return;
+
+        bool hasSteal = LocalPlayerHasStealCard();
+
+        // 狀態沒變且沒持有 → 不需更新
+        if (!hasSteal && !hadStealCard) return;
+
+        // 狀態變化 → 全部切換
+        if (hasSteal != hadStealCard)
+        {
+            SetAllStealOutlines(hasSteal);
+            hadStealCard = hasSteal;
+            return;
+        }
+
+        // 持續持有 → 確保新生成的 target 也亮起來
+        if (hasSteal)
+        {
+            foreach (var obj in StealTargetObject.All)
+                if (obj != null) obj.SetHighlight(true);
+        }
+    }
+
+    bool LocalPlayerHasStealCard()
+    {
+        var allCards = CardManager.Instance?.Catalog?.cards;
+        if (allCards == null) return false;
+
+        for (int i = 0; i < PlayerInventory.MaxSlots; i++)
+        {
+            var data = userInventory.slotsNetworked[i];
+            if (data.IsEmpty()) continue;
+            var card = allCards.Find(c => c.cardData.id == data.id && c.cardData.type == data.type);
+            if (card is Steal) return true;
+        }
+        return false;
+    }
+
+    void SetAllStealOutlines(bool on)
+    {
+        foreach (var obj in StealTargetObject.All)
+            if (obj != null) obj.SetHighlight(on);
     }
 }
 [System.Serializable]

@@ -18,7 +18,7 @@ public class ObjectSpawner : MonoBehaviour
     public List<Collider> spawnAreas = new List<Collider>();
 
     [Header("生成間隔 (秒)")]
-    [SerializeField] private float spawnInterval = 10f;
+    [SerializeField] private float spawnInterval = 2f;
 
     [Header("離地高度偏移")]
     [SerializeField] private float spawnHeightOffset = 0.5f;
@@ -36,7 +36,7 @@ public class ObjectSpawner : MonoBehaviour
     [SerializeField] private int maxTotal = 40;
 
     [Header("初始生成數量")]
-    [SerializeField] private int initialSpawnCount = 10;
+    [SerializeField] private int initialSpawnCount = 5;
 
     [Header("武器生成機率 (0~1)")]
     [SerializeField] private float weaponSpawnChance = 0.15f;
@@ -137,13 +137,15 @@ public class ObjectSpawner : MonoBehaviour
             return WeaponItem[Random.Range(0, WeaponItem.Count)];
         }
     }
+    private int nextAreaIndex = 0;
+
     public void RandomSpawnObject(int spawnCount = -1)
     {
         if (prefabToSpawn == null || spawnAreas.Count == 0)
             return;
 
         if (spawnCount < 0)
-            spawnCount = Random.Range(1, 3);
+            spawnCount = Random.Range(2, 5);
 
         for (int i = 0; i < spawnCount; i++)
         {
@@ -153,11 +155,14 @@ public class ObjectSpawner : MonoBehaviour
             bool spawned = false;
             int attempts = 0;
 
+            // 輪流分配區域，確保每片區域平均生成
+            Collider area = spawnAreas[nextAreaIndex % spawnAreas.Count];
+            nextAreaIndex++;
+
             while (!spawned && attempts < maxAttempts)
             {
                 attempts++;
 
-                Collider area = spawnAreas[Random.Range(0, spawnAreas.Count)];
                 if (TryFindGroundPosition(area, out Vector3 pos))
                 {
                     GameObject spawnPrefab = GetRandomSpawnPrefab();
@@ -177,7 +182,7 @@ public class ObjectSpawner : MonoBehaviour
             }
 
             if (!spawned)
-                Debug.LogWarning($"⚠️ 無法在任何區域找到可用生成點。");
+                Debug.LogWarning($"⚠️ 無法在區域 {area.name} 找到可用生成點。");
         }
     }
 

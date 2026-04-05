@@ -140,22 +140,14 @@ public class PlayerScanner : MonoBehaviour
             if (dist < stealScanRadius && dist < bestDist) { bestDist = dist; best = obj; }
         }
 
-        if (previousStealTarget != best)
-        {
-            if (previousStealTarget != null) previousStealTarget.SetHighlight(false);
-            if (best != null) best.SetHighlight(true);
-            previousStealTarget = best;
-        }
+        // Outline 由 LocalBackpack.UpdateStealOutlines() 統一管理，這裡只追蹤互動目標
+        previousStealTarget = best;
         currentStealTarget = best;
     }
 
     private void ClearStealTarget()
     {
-        if (previousStealTarget != null)
-        {
-            previousStealTarget.SetHighlight(false);
-            previousStealTarget = null;
-        }
+        previousStealTarget = null;
         currentStealTarget = null;
     }
 

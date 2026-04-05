@@ -75,6 +75,24 @@ public class PlayerListManager : NetworkBehaviour
         }
     }
 
+    public void UnregisterPlayer(PlayerRef player)
+    {
+        if (!Object.HasStateAuthority) return;
+
+        int key = player.AsIndex;
+        if (PlayerNames.ContainsKey(key))
+        {
+            PlayerNames.Remove(key);
+            Debug.Log($"🗑 移除玩家名稱 index={key}");
+        }
+        if (PlayerSkinIndexes.ContainsKey(key))
+        {
+            PlayerSkinIndexes.Remove(key);
+            Debug.Log($"🗑 移除玩家皮膚 index={key}");
+        }
+        PlayerVersion++;
+    }
+
     public void OnPlayerListChanged()
     {
         Debug.Log("玩家列表已更新");

@@ -227,6 +227,7 @@ MonoBehaviour:
   collectRequiredCards: []
   CollectWin: 0
   CollectWinnerID: -1
+  StealCollectWin: 0
   escortDuration: 20
   escortRadius: 5
   isEscorting: 0
@@ -279,7 +280,11 @@ MonoBehaviour:
   prefabToSpawn: {fileID: 1274913939806872608, guid: 41c910a886ed4ad438f94d91b829713e, type: 3}
   PlayerItem: {fileID: 4179703982041739608, guid: 8120e6e7df2882b41b82165c8d82a7dc, type: 3}
   WeaponItem:
-  - {fileID: 4007593398365635647, guid: c94867057fa5ea8428f69303707be401, type: 3}
+  - {fileID: 6906986642631395477, guid: 32af71d884675764baddc2c9833df1d2, type: 3}
+  - {fileID: 2056142711678900693, guid: ee888ba3b73349b4e8efb2edff1719b9, type: 3}
+  - {fileID: 5497108325385040827, guid: 48b5cd8774443bb429ad7e59487b1c50, type: 3}
+  - {fileID: 2066945333363597869, guid: 3bf32e7f1cf9b2a498a3dc3609e6719f, type: 3}
+  - {fileID: 5721967769401065919, guid: 245bb313a6adc1b42b2c3a5df8984f98, type: 3}
   spawnAreas:
   - {fileID: 0}
   - {fileID: 0}

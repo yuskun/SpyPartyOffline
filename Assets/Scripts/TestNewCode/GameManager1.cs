@@ -13,8 +13,12 @@ public class GameManager : NetworkBehaviour
     public GameObject HostSystem;
     public static GameManager instance;
     private Dictionary<PlayerRef, int> playerCharacterIndex = new Dictionary<PlayerRef, int>();
+    private Dictionary<PlayerRef, string> playerNames = new Dictionary<PlayerRef, string>();
     public CountdownTimer countdownTimer;
     public int AICount = 0;
+
+    /// <summary>Server 端追蹤旁觀者 PlayerRef</summary>
+    private HashSet<PlayerRef> spectatorPlayers = new HashSet<PlayerRef>();
 
     [Header("結算點位")]
     public Transform WinnerPoint;
@@ -25,23 +29,42 @@ public class GameManager : NetworkBehaviour
     public Transform ResultsCameraPoint;
     public float resultsCamMoveDuration = 1f;
 
+    [Header("結算動畫")]
+    public Animator resultsAnimator;
+    public string resultsAnimBoolName = "Show";
+
     [Networked] private NetworkBool HasStarted { get; set; }
     [Networked] private TickTimer StartDelay { get; set; }
 
     public override void Spawned()
     {
-         instance = this;
-        Rpc_Ready(PlayerPrefs.GetInt("Choosenindex"), default);
+        instance = this;
+
+        // 旁觀者：不生角色、不送 Ready，改用自由相機
+        if (NetworkManager2.IsSpectator)
+        {
+            Rpc_RegisterSpectator();
+            MenuUIManager.instance.Gameroom.SetActive(false);
+            MenuUIManager.instance.LoadingScreen.SetActive(false);
+            GameUIManager.Instance.HUDUI.SetActive(false);
+            CameraFollow.Get().enable = false;
+            // 掛 SpectatorCamera 到主相機
+            Camera cam = Camera.main;
+            if (cam != null && cam.GetComponent<SpectatorCamera>() == null)
+                cam.gameObject.AddComponent<SpectatorCamera>();
+            return;
+        }
+
+        string localName = NetworkManager2.Instance != null ? NetworkManager2.Instance.PlayerName : "Player";
+        Rpc_Ready(PlayerPrefs.GetInt("Choosenindex"), localName, default);
         MenuUIManager.instance.Gameroom.SetActive(false);
         GameUIManager.Instance.HUDUI.SetActive(true);
         //GameHUDManager.Instance.ShowHUD();
         LocalBackpack.Instance.SetUpdateEnabled(true);
-        
+
         if (Runner.IsServer)
         {
-           
             HasStarted = false;
-
         }
     }
     public void StartGameRequest()
@@ -118,8 +141,9 @@ public class GameManager : NetworkBehaviour
     }
     public void SpawnAI()
     {
-        Debug.Log("ActivePlayers Count: " + Runner.ActivePlayers.Count());
-        for (int i = 0; i < 4 - Runner.ActivePlayers.Count(); i++)
+        int realPlayerCount = Runner.ActivePlayers.Count() - spectatorPlayers.Count;
+        Debug.Log($"ActivePlayers: {Runner.ActivePlayers.Count()}, Spectators: {spectatorPlayers.Count}, RealPlayers: {realPlayerCount}");
+        for (int i = 0; i < 4 - realPlayerCount; i++)
         {
             PlayerSpawner.instance.SpawnPlayer(Runner, null, PlayerRef.None, "AI_" + i);
         }
@@ -187,21 +211,46 @@ public class GameManager : NetworkBehaviour
     {
         CardManager.Instance.UseCard(cardUseParameters);
     }
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void Rpc_RegisterSpectator(RpcInfo info = default)
+    {
+        if (!Runner.IsServer) return;
+        spectatorPlayers.Add(info.Source);
+        Debug.Log($"[Spectator] Registered spectator: {info.Source} (total: {spectatorPlayers.Count})");
+
+        // 旁觀者註冊後重新檢查：其他玩家可能已經全部 Ready 了
+        CheckAllReady();
+    }
+
     [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
-    public void Rpc_Ready(int chosenIndex, RpcInfo info)
+    public void Rpc_Ready(int chosenIndex, string playerName, RpcInfo info)
     {
         if (Runner.IsServer)
         {
             playerCharacterIndex[info.Source] = chosenIndex;
-            if (playerCharacterIndex.Count == Runner.ActivePlayers.Count())
-            {
-                StartGameRequest();
-            }
+            playerNames[info.Source] = playerName;
+            Debug.Log($"[Ready] {info.Source} name={playerName} skin={chosenIndex}");
+            CheckAllReady();
+        }
+    }
+
+    private void CheckAllReady()
+    {
+        int expectedPlayers = Runner.ActivePlayers.Count() - spectatorPlayers.Count;
+        if (playerCharacterIndex.Count >= expectedPlayers && expectedPlayers > 0)
+        {
+            StartGameRequest();
         }
     }
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_Gameover(int winnerID)
     {
+        if (NetworkManager2.IsSpectator)
+        {
+            StartCoroutine(SpectatorResultsSequence());
+            return;
+        }
+
         if (LocalBackpack.Instance.userInventory.gameObject.GetComponent<PlayerIdentify>().PlayerID == winnerID)
         {
             GameUIManager.Instance.Win();
@@ -216,6 +265,12 @@ public class GameManager : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_MultipleWinners(int[] winnerIDs)
     {
+        if (NetworkManager2.IsSpectator)
+        {
+            StartCoroutine(SpectatorResultsSequence());
+            return;
+        }
+
         int localID = LocalBackpack.Instance.userInventory.gameObject.GetComponent<PlayerIdentify>().PlayerID;
         if (System.Array.IndexOf(winnerIDs, localID) >= 0)
         {
@@ -231,8 +286,39 @@ public class GameManager : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_Draw()
     {
+        if (NetworkManager2.IsSpectator)
+        {
+            StartCoroutine(SpectatorResultsSequence());
+            return;
+        }
+
         GameUIManager.Instance.Draw();
         StartCoroutine(ResultsSequence(new int[0]));
+    }
+
+    /// <summary>旁觀者的結算流程：關閉自由相機、顯示結算 UI 與返回按鈕</summary>
+    private IEnumerator SpectatorResultsSequence()
+    {
+        yield return new WaitForSeconds(resultDelay);
+
+        // 關閉 SpectatorCamera，讓相機停在當前位置
+        var specCam = Camera.main?.GetComponent<SpectatorCamera>();
+        if (specCam != null) specCam.enabled = false;
+
+        GameUIManager.Instance.ShowResultsPanel();
+
+        GameObject camPointObj = ResultsCameraPoint != null
+            ? ResultsCameraPoint.gameObject
+            : GameObject.FindWithTag("ResultsCam");
+
+        if (camPointObj != null)
+        {
+            float slideIn = ResultsBgPlane.Instance != null ? ResultsBgPlane.Instance.slideInDuration : 0.5f;
+            yield return new WaitForSeconds(slideIn);
+            CameraFollow.Get().MoveTo(camPointObj.transform, resultsCamMoveDuration);
+        }
+
+        GameUIManager.Instance.BackBtn?.SetActive(true);
     }
 
     private IEnumerator ResultsSequence(int[] winnerIDs)
@@ -270,6 +356,12 @@ public class GameManager : NetworkBehaviour
             CameraFollow.Get().MoveTo(camPointObj.transform, resultsCamMoveDuration);
         }
 
+        // 相機到位後，Host 端觸發結算動畫
+        if (Runner.IsServer && resultsAnimator != null)
+        {
+            resultsAnimator.SetBool(resultsAnimBoolName, true);
+        }
+
         GameUIManager.Instance.BackBtn?.SetActive(true);
     }
 
@@ -278,7 +370,8 @@ public class GameManager : NetworkBehaviour
     public void RPC_EscortStart(int catcherID, int targetID)
     {
         EscortRangeIndicator.SetEscort(catcherID, targetID);
-        LocalBackpack.Instance.OnEscortStart(catcherID, targetID);
+        if (!NetworkManager2.IsSpectator)
+            LocalBackpack.Instance.OnEscortStart(catcherID, targetID);
     }
 
     /// <summary>押送結束（成功或中斷）：廣播給所有 Client，隱藏範圍圓圈</summary>
@@ -286,23 +379,30 @@ public class GameManager : NetworkBehaviour
     public void RPC_EscortEnd()
     {
         EscortRangeIndicator.ClearEscort();
-        LocalBackpack.Instance.OnEscortEnd();
+        if (!NetworkManager2.IsSpectator)
+            LocalBackpack.Instance.OnEscortEnd();
     }
     private void SpawnAllPlayers()
     {
         foreach (PlayerRef player in Runner.ActivePlayers)
         {
+            // 跳過旁觀者
+            if (spectatorPlayers.Contains(player)) continue;
+
             if (!playerCharacterIndex.ContainsKey(player))
             {
                 Debug.LogError($"Missing character index for {player}");
                 continue;
             }
 
+            // 從 Rpc_Ready 收集的名字取得
+            string playerName = playerNames.ContainsKey(player) ? playerNames[player] : "Player";
+
             PlayerSpawner.instance.SpawnPlayer(
                 Runner,
                 playerCharacterIndex[player],
                 player,
-                NetworkManager2.Instance.PlayerName
+                playerName
             );
         }
     }

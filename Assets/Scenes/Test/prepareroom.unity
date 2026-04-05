@@ -4639,6 +4639,9 @@ MonoBehaviour:
   - {fileID: 100206307}
   characterAvatarDatabase: {fileID: 0}
   _SpawnedPlayers: []
+  _PlayerSkinIndex:
+    _items: []
+  spawnDelay: 3
 --- !u!114 &5252682844222221557
 MonoBehaviour:
   m_ObjectHideFlags: 0

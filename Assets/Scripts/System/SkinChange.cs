@@ -40,10 +40,20 @@ public class SkinChange : NetworkBehaviour
             Destroy(gameObject);
         }
 
-        // 每個 Client（含 Host）生成時，告知 Server 自己的 skin index 與名字
-        int skinIndex = PlayerPrefs.GetInt("Choosenindex", 0);
-        string playerName = NetworkManager2.Instance != null ? NetworkManager2.Instance.PlayerName : "Player";
-        Rpc_RegisterAndSpawn(skinIndex, playerName);
+        // 旁觀者不生成角色、不註冊、不綁 UI
+        if (NetworkManager2.IsSpectator) return;
+
+        // Host 延遲生成（用 TickTimer 等場景穩定），Client 立即生成
+        if (NetworkManager2.Instance.mode == NetworkManager2.NetMode.Host)
+        {
+            instance.StartHostSpawnDelay();
+        }
+        else
+        {
+            int skinIndex = PlayerPrefs.GetInt("Choosenindex", 0);
+            string playerName = NetworkManager2.Instance != null ? NetworkManager2.Instance.PlayerName : "Player";
+            Rpc_RegisterAndSpawn(skinIndex, playerName);
+        }
 
         // 初始化角色外观
         currentSkinIndex = PlayerPrefs.GetInt("Choosenindex");
@@ -195,6 +205,30 @@ public class SkinChange : NetworkBehaviour
                 player.gameObject.SetActive(show);
         }
     }
+    [Header("生成延遲（僅 Host）")]
+    public float spawnDelay = 1.5f;
+
+    [Networked] private TickTimer HostSpawnDelay { get; set; }
+    private bool hostPendingSpawn = false;
+
+    private void StartHostSpawnDelay()
+    {
+        HostSpawnDelay = TickTimer.CreateFromSeconds(Runner, spawnDelay);
+        hostPendingSpawn = true;
+    }
+
+    public override void FixedUpdateNetwork()
+    {
+        if (!hostPendingSpawn) return;
+        if (!HostSpawnDelay.Expired(Runner)) return;
+
+        hostPendingSpawn = false;
+
+        int skinIndex = PlayerPrefs.GetInt("Choosenindex", 0);
+        string playerName = NetworkManager2.Instance != null ? NetworkManager2.Instance.PlayerName : "Player";
+        Rpc_RegisterAndSpawn(skinIndex, playerName);
+    }
+
     [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
     public void Rpc_RegisterAndSpawn(int skinIndex, string playerName, RpcInfo info = default)
     {
@@ -243,18 +277,42 @@ public class SkinChange : NetworkBehaviour
     void Rpc_ChangeSkin(PlayerRef PlayerId, int index, string colorHex)
     {
         if (Runner.IsServer)
-        {
+            StartCoroutine(ChangeSkinRoutine(PlayerId, index));
+    }
 
-            foreach (var player in SpawnedPlayers)
+    /// <summary>分幀處理 Despawn / Spawn，避免同一幀同時銷毀+建立造成全體卡頓</summary>
+    private IEnumerator ChangeSkinRoutine(PlayerRef playerId, int skinIndex)
+    {
+        NetworkObject oldObj = null;
+        int oldSlot = -1;
+        string playerName = "Player";
+
+        // 1) 找到舊角色，記下名字和欄位
+        for (int i = 0; i < SpawnedPlayers.Length; i++)
+        {
+            var obj = SpawnedPlayers.Get(i);
+            if (obj == null) continue;
+            var np = obj.GetComponent<NetworkPlayer>();
+            if (np != null && np.PlayerId == playerId)
             {
-                if (player.GetComponent<NetworkPlayer>().PlayerId == PlayerId)
-                {
-                    Runner.Despawn(player);
-                    PlayerSpawner.instance.SpawnPlayer(Runner, index, PlayerId, "ChangeSkinPlayer");
-                    break;
-                }
+                oldObj = obj;
+                oldSlot = i;
+                playerName = obj.GetComponent<PlayerIdentify>()?.PlayerName ?? "Player";
+                break;
             }
         }
+
+        if (oldObj == null) yield break;
+
+        // 2) Frame A：先生成新角色（Client 端只需要 Instantiate）
+        SpawnedPlayers.Set(oldSlot, null); // 清空舊欄位給新角色用
+        PlayerSpawner.instance.SpawnPlayer(Runner, skinIndex, playerId, playerName);
+
+        yield return null; // 等一幀
+
+        // 3) Frame B：再銷毀舊角色（Client 端只需要 Destroy）
+        if (oldObj != null && oldObj.IsValid)
+            Runner.Despawn(oldObj);
     }
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
     void Rpc_ChangeSkinProcess( bool open,NetworkObject Player)
