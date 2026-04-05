@@ -242,9 +242,42 @@ public class GameManager : NetworkBehaviour
             StartGameRequest();
         }
     }
+    /// <summary>遊戲結束後停止所有進行中的系統</summary>
+    private void StopGameplay()
+    {
+        // 1) 卡片使用禁用（所有端）
+        if (!NetworkManager2.IsSpectator && LocalBackpack.Instance != null)
+        {
+            LocalBackpack.Instance.SetUpdateEnabled(false);
+            if (LocalBackpack.Instance.userInventory != null)
+                LocalBackpack.Instance.userInventory.CanUseCard = false;
+        }
+
+        // 2) Steal 目標 Outline 關閉（所有端）
+        foreach (var obj in StealTargetObject.All)
+            if (obj != null) obj.SetHighlight(false);
+
+        // === 以下僅 Host 端 ===
+        if (!Runner.IsServer) return;
+
+        // 3) 物件生成停止
+        if (ObjectSpawner.Instance != null)
+            ObjectSpawner.Instance.enabled = false;
+
+        // 4) 計時器停止
+        if (countdownTimer != null)
+            countdownTimer.StopTimer();
+
+        // 5) 任務判斷停止（押送等）
+        if (MissionWinSystem.Instance != null)
+            MissionWinSystem.Instance.isGameOver = true;
+    }
+
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_Gameover(int winnerID)
     {
+        StopGameplay();
+
         if (NetworkManager2.IsSpectator)
         {
             StartCoroutine(SpectatorResultsSequence());
@@ -265,6 +298,8 @@ public class GameManager : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_MultipleWinners(int[] winnerIDs)
     {
+        StopGameplay();
+
         if (NetworkManager2.IsSpectator)
         {
             StartCoroutine(SpectatorResultsSequence());
@@ -286,6 +321,8 @@ public class GameManager : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_Draw()
     {
+        StopGameplay();
+
         if (NetworkManager2.IsSpectator)
         {
             StartCoroutine(SpectatorResultsSequence());

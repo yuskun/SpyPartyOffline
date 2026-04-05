@@ -71,12 +71,16 @@ public class SpectatorCamera : MonoBehaviour
         HandlePlayerSwitch();
         HandleLook();
 
-        if (followTarget != null)
-            HandleFollow();
-        else
+        if (followTarget == null)
             HandleFreeMovement();
 
         HandleSpeedChange();
+    }
+
+    void LateUpdate()
+    {
+        if (followTarget != null)
+            HandleFollow();
     }
 
     // ========= 數字鍵切換跟隨目標 =========
@@ -155,9 +159,9 @@ public class SpectatorCamera : MonoBehaviour
             return;
         }
 
+        // 用當前視角旋轉計算 offset 方向，位置直接貼上不用 Lerp
         Quaternion rot = Quaternion.Euler(pitch, yaw, 0f);
-        Vector3 targetPos = followTarget.position + rot * followOffset;
-        transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * followSmooth);
+        transform.position = followTarget.position + rot * followOffset;
     }
 
     void HandleFreeMovement()

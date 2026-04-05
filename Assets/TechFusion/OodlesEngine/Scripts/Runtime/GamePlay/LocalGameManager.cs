@@ -247,6 +247,9 @@ namespace OodlesEngine
             string player = OodlesSetting.Instance.PlayerLayerName;
             if (msg.obj.layer == LayerMask.NameToLayer(player))
             {
+                // 打到人：額外扣武器耐久
+                msg.wp.ApplyHitCost();
+
                 OodlesCharacter targetPC = msg.obj.GetComponentInParent<OodlesCharacter>();
                 if (msg.pc.gameObject.GetComponent<PlayerIdentify>().PlayerID == MissionWinSystem.Instance.GetFightID())
                 {
@@ -256,7 +259,6 @@ namespace OodlesEngine
                 if (targetPC != null)
                 {
                     targetPC.KnockDown();
-
                 }
             }
         }

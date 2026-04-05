@@ -48,11 +48,13 @@ public class MissionWinSystem : MonoBehaviour
     [Header("押送設定")]
     public float escortDuration = 20f;
     public float escortRadius = 5f;
+    public float escortIdleTimeout = 20f; // 累積幾秒沒跑進度就自動解綁
 
     public bool isEscorting = false;
     public int escortCatcherID = -1;
     public int escortTargetID = -1;
     private float _escortTimer = 0f;
+    private float _escortIdleTimer = 0f; // 累積未跑進度的時間
 
     /// <summary>開始押送流程，由 Catch 卡成功使用後呼叫（僅 Host）</summary>
     public void StartEscort(int catcherID, int targetID)
@@ -63,6 +65,7 @@ public class MissionWinSystem : MonoBehaviour
         escortCatcherID = catcherID;
         escortTargetID = targetID;
         _escortTimer = 0f;
+        _escortIdleTimer = 0f;
 
         // 重置押送進度（MissionStates[0] = 0，UI 顯示 0/20）
         PlayerInventoryManager.Instance.playerInventories[catcherID].MissionStates.Set(0, 0);
@@ -96,18 +99,28 @@ public class MissionWinSystem : MonoBehaviour
 
         if (distance > escortRadius)
         {
+            // 超出範圍：進度歸零，累積閒置時間
             if (_escortTimer > 0f)
             {
                 int prev = Mathf.FloorToInt(_escortTimer);
                 _escortTimer = 0f;
-                // 超出範圍：進度歸零，UI 顯示 0/20
                 if (prev > 0)
                     PlayerInventoryManager.Instance.playerInventories[escortCatcherID].MissionStates.Set(0, 0);
                 Debug.Log("[Escort] 超出押送範圍，計時重置");
             }
+
+            _escortIdleTimer += deltaTime;
+            if (_escortIdleTimer >= escortIdleTimeout)
+            {
+                Debug.Log($"[Escort] 累積 {escortIdleTimeout} 秒未跑進度，自動解綁");
+                _CancelEscort();
+                return;
+            }
         }
         else
         {
+            // 在範圍內有跑進度 → 重置閒置計時
+            _escortIdleTimer = 0f;
             int secondsBefore = Mathf.FloorToInt(_escortTimer);
             _escortTimer += deltaTime;
             int secondsAfter = Mathf.FloorToInt(_escortTimer);

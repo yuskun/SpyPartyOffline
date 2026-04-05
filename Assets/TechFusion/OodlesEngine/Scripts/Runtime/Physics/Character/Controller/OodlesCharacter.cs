@@ -828,7 +828,7 @@ namespace OodlesEngine
                 {
                     Weapon wp = handFunctionLeft.GrabbedObject.GetComponent<Weapon>();
                     if (wp.CanBreak)
-                        wp.Time--;
+                        wp.Time -= wp.swingCost;
                     if (wp.Time <= 0)
                     {
                         handFunctionLeft.ReleaseHand();
@@ -839,7 +839,7 @@ namespace OodlesEngine
                 {
                     Weapon wp = handFunctionRight.GrabbedObject.GetComponent<Weapon>();
                     if (wp.CanBreak)
-                        wp.Time--;
+                        wp.Time -= wp.swingCost;
                     if (wp.Time <= 0)
                     {
                         handFunctionRight.ReleaseHand();
@@ -848,6 +848,22 @@ namespace OodlesEngine
                     }
                 }
             }
+        }
+
+        /// <summary>武器耐久歸零時，強制釋放並隱藏</summary>
+        public void BreakWeapon(Weapon wp)
+        {
+            if (handFunctionLeft.HoldWeapon() && handFunctionLeft.GrabbedObject.GetComponent<Weapon>() == wp)
+            {
+                handFunctionLeft.ReleaseHand();
+                leftPicking = false;
+            }
+            if (handFunctionRight.HoldWeapon() && handFunctionRight.GrabbedObject.GetComponent<Weapon>() == wp)
+            {
+                handFunctionRight.ReleaseHand();
+                rightPicking = false;
+            }
+            wp.gameObject.SetActive(false);
         }
     }
 }

@@ -411,10 +411,17 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
     {
+        Debug.Log($"[Network] OnDisconnectedFromServer: {reason}");
         _ = LeaveAsync();
     }
 
-    public void OnShutdown(NetworkRunner runner, ShutdownReason reason) { }
+    public void OnShutdown(NetworkRunner runner, ShutdownReason reason)
+    {
+        Debug.Log($"[Network] OnShutdown: {reason}");
+        // Host 主動離開時 Client 可能只收到 OnShutdown 而非 OnDisconnectedFromServer
+        // isLeaving guard 防止與 OnDisconnectedFromServer 重複執行
+        _ = LeaveAsync();
+    }
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
         if (IsSpectator) return;

@@ -351,7 +351,7 @@ MonoBehaviour:
   followPosition: 1
   smoothFollow: 1
   smoothSpeed: 15
-  faceCamera: 0
+  faceCamera: 1
   onlyYAxis: 1
 --- !u!1 &805170647439753711
 GameObject:
@@ -2274,6 +2274,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _PlayerID: 0
   _PlayerName: 
+  _SkinIndex: 0
   Text: {fileID: 5901316795843207769}
 --- !u!114 &2510167533390964607
 MonoBehaviour:

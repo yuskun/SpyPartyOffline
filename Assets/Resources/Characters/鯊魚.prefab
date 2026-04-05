@@ -505,6 +505,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _PlayerID: 0
   _PlayerName: 
+  _SkinIndex: 0
   Text: {fileID: 3857618428909973612}
 --- !u!114 &4536659258725188919
 MonoBehaviour:
@@ -3002,6 +3003,8 @@ MonoBehaviour:
   debugDraw: 1
   gizmoColor: {r: 0, g: 1, b: 0, a: 0.15}
   targetColor: {r: 1, g: 0, b: 0, a: 1}
+  enableStealScan: 0
+  stealScanRadius: 4
 --- !u!114 &6839355258270765295
 MonoBehaviour:
   m_ObjectHideFlags: 0

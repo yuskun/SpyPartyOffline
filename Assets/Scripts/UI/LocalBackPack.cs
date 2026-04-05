@@ -499,13 +499,15 @@ public class LocalBackpack : MonoBehaviour
     {
         if (playerIdentify == null) return;
         int localID = playerIdentify.PlayerID;
-        if (localID == catcherID || localID == targetID)
+
+        // 只有被抓者禁用卡片，抓人者可以繼續使用
+        if (localID == targetID)
         {
             userInventory.CanUseCard = false;
             ShowForbid(true);
+            if (GameUIManager.Instance != null && GameUIManager.Instance.CaughtUI != null)
+                GameUIManager.Instance.CaughtUI.SetActive(true);
         }
-        if (localID == targetID && GameUIManager.Instance != null && GameUIManager.Instance.CaughtUI != null)
-            GameUIManager.Instance.CaughtUI.SetActive(true);
     }
 
     public void OnEscortEnd()

@@ -41,6 +41,10 @@ public class PlayerScanner : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // Camera 可能在 Start 之後才就緒（網路生成的角色），持續補抓
+        if (cameraTransform == null && Camera.main != null)
+            cameraTransform = Camera.main.transform;
+
         if (enableScan)
         {
             ScanNearbyPlayers();
