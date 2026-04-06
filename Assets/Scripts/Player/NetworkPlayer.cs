@@ -35,9 +35,6 @@ public class NetworkPlayer : NetworkBehaviour
             LocalBackpack.Instance.scanner = this.transform.Find("Ragdoll").GetComponent<PlayerScanner>();
             LocalBackpack.Instance.scanner.enableScan = true;
             this.GetComponent<PlayerIdentify>().Text.gameObject.SetActive(false);
-
-
-
         }
 
     }

@@ -108,6 +108,10 @@ public class GameManager : NetworkBehaviour
         if (StartDelay.Expired(Runner))
         {
             HasStarted = true;
+
+            // 關閉房間，禁止新玩家加入
+            Runner.SessionInfo.IsOpen = false;
+
             GameInit();
             GameStart();
         }
@@ -130,14 +134,18 @@ public class GameManager : NetworkBehaviour
 
     private void GameStart()
     {
+        // 重置上一場殘留的禁止狀態（所有端）
+        if (!NetworkManager2.IsSpectator && LocalBackpack.Instance != null)
+        {
+            LocalBackpack.Instance.OnEscortEnd();
+        }
+
         if (Runner.IsServer)
         {
             RandomAssignMissionCard();
             countdownTimer.StartTimer();
             ObjectSpawner.Instance.enabled = true;
-
         }
-
     }
     public void SpawnAI()
     {
@@ -211,6 +219,18 @@ public class GameManager : NetworkBehaviour
     {
         CardManager.Instance.UseCard(cardUseParameters);
     }
+
+    /// <summary>Client/Host 請求播放失敗動畫（Host 端執行 SetTrigger，自動同步回所有端）</summary>
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void Rpc_PlayFailAnimation(int playerId, NetworkString<_16> triggerName)
+    {
+        var playerObj = PlayerInventoryManager.Instance?.GetPlayer(playerId);
+        if (playerObj == null) return;
+        var character = playerObj.GetComponent<OodlesEngine.OodlesCharacter>();
+        if (character != null && character.animatorPlayer != null)
+            character.animatorPlayer.SetTrigger(triggerName.ToString());
+    }
+
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void Rpc_RegisterSpectator(RpcInfo info = default)
     {

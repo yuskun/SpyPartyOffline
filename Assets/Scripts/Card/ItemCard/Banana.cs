@@ -14,6 +14,9 @@ public class Banana : NetworkBehaviour
 
         if (character == null) return;
 
+        // 倒地中的玩家免疫香蕉
+        if (character.ragdollMode) return;
+
         character.KnockDown();
         var ragdoll = player.transform.Find("Ragdoll");
 

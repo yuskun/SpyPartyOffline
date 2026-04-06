@@ -25,6 +25,9 @@ public class SlowTrap : NetworkBehaviour
                 var character = Player.GetComponent<OodlesCharacter>();
                 if (character != null)
                 {
+                    // 倒地中的玩家免疫減速陷阱
+                    if (character.ragdollMode) return;
+
                     Debug.Log("玩家踩到陷阱");
 
                     // 如果已經在減速，先重置計時

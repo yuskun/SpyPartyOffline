@@ -137,26 +137,36 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
         if (mode != NetMode.Idle) return;
         if (string.IsNullOrWhiteSpace(code)) return;
 
-        await InitRunner();
+        MenuUIManager.instance.showUI(MenuUIManager.instance.LoadingScreen);
 
-        mode = NetMode.Client;
-
-        var result = await runner.StartGame(new StartGameArgs
+        try
         {
-            GameMode = GameMode.Client,
-            SessionName = code.Trim(),
-            SceneManager = sceneManager
-        });
+            await InitRunner();
 
-        if (!result.Ok)
-        {
-            Debug.LogError("Join failed");
-            QuickJoinFailed("加入房間失敗");
-            return;
+            mode = NetMode.Client;
+
+            var result = await runner.StartGame(new StartGameArgs
+            {
+                GameMode = GameMode.Client,
+                SessionName = code.Trim(),
+                SceneManager = sceneManager
+            });
+
+            if (!result.Ok)
+            {
+                Debug.LogError("Join failed");
+                QuickJoinFailed("加入房間失敗");
+                return;
+            }
+
+            Debug.Log("Joined by code");
+            MenuUIManager.instance.ShowGameroom(GameMode.Client, code.Trim());
         }
-
-        Debug.Log("Joined by code");
-        MenuUIManager.instance.ShowGameroom(GameMode.Client, code.Trim());
+        catch (System.Exception e)
+        {
+            Debug.LogWarning($"[JoinByCode] Exception: {e.Message}");
+            QuickJoinFailed("加入房間發生錯誤");
+        }
     }
 
     private async Task QuickJoinAsync()
@@ -164,12 +174,17 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
         if (mode != NetMode.Idle) return;
         MenuUIManager.instance.showUI(MenuUIManager.instance.LoadingScreen);
 
-
-        await InitRunner();
-
-        waitingQuickJoin = true;
-
-        await runner.JoinSessionLobby(SessionLobby.ClientServer);
+        try
+        {
+            await InitRunner();
+            waitingQuickJoin = true;
+            await runner.JoinSessionLobby(SessionLobby.ClientServer);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning($"[QuickJoin] Exception: {e.Message}");
+            QuickJoinFailed("快速加入發生錯誤");
+        }
     }
 
     private async Task QuickJoinAsSpectatorAsync()
@@ -179,13 +194,21 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
         IsSpectator = true;
         MenuUIManager.instance.showUI(MenuUIManager.instance.LoadingScreen);
 
-        await InitRunner();
-        runner.ProvideInput = false; // 旁觀者不送任何輸入
+        try
+        {
+            await InitRunner();
+            runner.ProvideInput = false; // 旁觀者不送任何輸入
 
-        mode = NetMode.Spectator;
-        waitingQuickJoin = true;
+            mode = NetMode.Spectator;
+            waitingQuickJoin = true;
 
-        await runner.JoinSessionLobby(SessionLobby.ClientServer);
+            await runner.JoinSessionLobby(SessionLobby.ClientServer);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning($"[QuickJoinSpectator] Exception: {e.Message}");
+            QuickJoinFailed("旁觀者快速加入發生錯誤");
+        }
     }
 
     private bool isLeaving = false;
@@ -287,9 +310,6 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
     // Callbacks
     // =============================
 
-    private int quickJoinRetries = 0;
-    private const int MaxQuickJoinRetries = 3;
-
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> list)
     {
         if (!waitingQuickJoin) return;
@@ -297,18 +317,12 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
         var room = list.FirstOrDefault(s => s.IsOpen && s.IsVisible);
         if (room == null)
         {
-            quickJoinRetries++;
-            Debug.Log($"No available room (attempt {quickJoinRetries}/{MaxQuickJoinRetries})");
-
-            if (quickJoinRetries >= MaxQuickJoinRetries)
-            {
-                QuickJoinFailed("找不到可加入的房間");
-            }
+            Debug.Log("[QuickJoin] 找不到可加入的房間，直接返回選單");
+            QuickJoinFailed("找不到可加入的房間");
             return;
         }
 
         waitingQuickJoin = false;
-        quickJoinRetries = 0;
 
         if (IsSpectator)
             _ = JoinSpectatorByCodeAsync(room.Name);
@@ -343,7 +357,6 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
         Debug.LogWarning($"[QuickJoin] Failed: {reason}");
 
         waitingQuickJoin = false;
-        quickJoinRetries = 0;
 
         // 關閉 Runner
         if (runner != null)

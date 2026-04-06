@@ -19,7 +19,7 @@ public class Catch : MissionCard
 
 
     public override void UseSkill(CardUseParameters parameters)
-    {   
+    {
         CheckMission(parameters);
     }
     public override void CheckMission(CardUseParameters parameters)

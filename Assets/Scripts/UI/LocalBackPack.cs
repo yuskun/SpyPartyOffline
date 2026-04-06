@@ -164,7 +164,7 @@ public class LocalBackpack : MonoBehaviour
         {
             if (functionCard.needTarget && targetInventory == null)
             {
-                character.animatorPlayer.SetTrigger("DoScratch");
+                PlayAnimationViaRpc("DoScratch");
                 Debug.Log("此功能卡需要目標，但沒有掃描到有效目標");
                 return;
             }
@@ -183,7 +183,7 @@ public class LocalBackpack : MonoBehaviour
         {
             if (itemCard.needTarget && targetInventory == null)
             {
-                character.animatorPlayer.SetTrigger("DoScratch");
+                PlayAnimationViaRpc("DoScratch");
                 Debug.Log("此物品卡需要目標，但沒有掃描到有效目標");
                 return;
             }
@@ -217,14 +217,14 @@ public class LocalBackpack : MonoBehaviour
             {
                 if (scanner.currentStealTarget == null)
                 {
-                    character.animatorPlayer.SetTrigger("DoScratch");
+                    PlayAnimationViaRpc("DoScratch");
                     Debug.Log("附近沒有可竊盜的物件");
                     return;
                 }
             }
             else if (missionCard.needTarget && targetInventory == null)
             {
-                character.animatorPlayer.SetTrigger("DoScratch");
+                PlayAnimationViaRpc("DoScratch");
                 Debug.Log("此任務卡需要目標，但沒有掃描到有效目標");
                 return;
             }
@@ -265,7 +265,7 @@ public class LocalBackpack : MonoBehaviour
         {
             if (scanner.currentStealTarget == null)
             {
-                character.animatorPlayer.SetTrigger("DoScratch");
+                PlayAnimationViaRpc("DoScratch");
                 CancelHold("steal target 消失，取消長按");
                 return;
             }
@@ -274,7 +274,7 @@ public class LocalBackpack : MonoBehaviour
         {
             if (scanner.currentTarget == null)
             {
-                character.animatorPlayer.SetTrigger("DoScratch");
+                PlayAnimationViaRpc("DoScratch");
                 CancelHold("scanner.currentTarget 為 null，取消長按");
                 return;
             }
@@ -433,7 +433,7 @@ public class LocalBackpack : MonoBehaviour
     {
         if (index < 0 || index >= PlayerInventory.MaxSlots)
         {
-            character.animatorPlayer.SetTrigger("DoShake");
+            PlayAnimationViaRpc("DoShake");
             return false;
         }
         var slot = userInventory.slotsNetworked[index];
@@ -488,6 +488,13 @@ public class LocalBackpack : MonoBehaviour
     }
 
 
+
+    /// <summary>透過 RPC 請求 Host 播放動畫（Host 端 SetTrigger 後自動同步回所有端）</summary>
+    private void PlayAnimationViaRpc(string triggerName)
+    {
+        if (playerIdentify == null) return;
+        GameManager.instance.Rpc_PlayFailAnimation(playerIdentify.PlayerID, triggerName);
+    }
 
     private void ShowForbid(bool show)
     {

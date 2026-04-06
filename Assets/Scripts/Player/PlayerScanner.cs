@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class PlayerScanner : MonoBehaviour
 {
+    public static readonly List<PlayerScanner> AllScanners = new();
+
     [Header("掃描設定")]
     public bool enableScan = false;
     public float scanRadius = 6f;
@@ -33,6 +35,17 @@ public class PlayerScanner : MonoBehaviour
     public StealTargetObject currentStealTarget { get; private set; }
     private StealTargetObject previousStealTarget;
 
+    private void OnEnable()
+    {
+        if (!AllScanners.Contains(this))
+            AllScanners.Add(this);
+    }
+
+    private void OnDisable()
+    {
+        AllScanners.Remove(this);
+    }
+
     private void Start()
     {
         if (cameraTransform == null && Camera.main != null)
@@ -62,11 +75,12 @@ public class PlayerScanner : MonoBehaviour
         nearbyPlayers.Clear();
         Vector3 scanPos = transform.position + Vector3.up * heightOffset;
 
-        Collider[] hits = Physics.OverlapSphere(scanPos, scanRadius, playerLayer);
-        foreach (var hit in hits)
+        foreach (var scanner in AllScanners)
         {
-            var scanner = hit.transform.GetComponentInParent<PlayerScanner>();
-            if (scanner != null && scanner != this)
+            if (scanner == null || scanner == this) continue;
+
+            float dist = Vector3.Distance(scanPos, scanner.transform.position);
+            if (dist <= scanRadius)
                 nearbyPlayers.Add(scanner.gameObject);
         }
     }

@@ -488,6 +488,7 @@ MonoBehaviour:
   armsAngleOffset: 0
   handsRotationOffset: 0
   armsHorizontalSeparation: 0.75
+  ragdollMode: 0
   isAttacking: 0
   animationSpeed: 1
   runningEffect: {fileID: 0}
@@ -1888,8 +1889,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: PRX_Forsaken
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 11bd6be4cdffedd489bae68b96345eb1, type: 2}
-  m_sharedMaterial: {fileID: 7067384546424574235, guid: 11bd6be4cdffedd489bae68b96345eb1, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: bfc382d10e25c4544b3f8714d4c63cb7, type: 2}
+  m_sharedMaterial: {fileID: -8427051968470054623, guid: bfc382d10e25c4544b3f8714d4c63cb7, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2996,7 +2997,7 @@ MonoBehaviour:
   heightOffset: 1
   playerLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 768
   angleWeight: 0.7
   distanceWeight: 0.3
   cameraTransform: {fileID: 0}

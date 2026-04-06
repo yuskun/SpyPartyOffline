@@ -1,6 +1,7 @@
+using Fusion;
 using UnityEngine;
 
-public class GateTrigger : MonoBehaviour
+public class GateTrigger : NetworkBehaviour
 {
     [Header("柵門物件（左右兩片）")]
     public Transform gateLeft;
@@ -19,11 +20,11 @@ public class GateTrigger : MonoBehaviour
     private Vector3 leftOpenPos;
     private Vector3 rightOpenPos;
 
-    private bool isOpen = false;
-    private float closeTimer = 0f;
-    private int playersInside = 0;
+    [Networked] private NetworkBool IsOpen { get; set; }
+    [Networked] private float CloseTimer { get; set; }
+    [Networked] private int PlayersInside { get; set; }
 
-    void Start()
+    public override void Spawned()
     {
         leftClosedPos = gateLeft.localPosition;
         rightClosedPos = gateRight.localPosition;
@@ -32,37 +33,44 @@ public class GateTrigger : MonoBehaviour
         rightOpenPos = rightClosedPos + Vector3.back * openDistance;
     }
 
-    void Update()
+    public override void Render()
     {
-        Vector3 leftTarget = isOpen ? leftOpenPos : leftClosedPos;
-        Vector3 rightTarget = isOpen ? rightOpenPos : rightClosedPos;
+        Vector3 leftTarget = IsOpen ? leftOpenPos : leftClosedPos;
+        Vector3 rightTarget = IsOpen ? rightOpenPos : rightClosedPos;
 
         gateLeft.localPosition = Vector3.Lerp(gateLeft.localPosition, leftTarget, Time.deltaTime * openSpeed);
         gateRight.localPosition = Vector3.Lerp(gateRight.localPosition, rightTarget, Time.deltaTime * openSpeed);
+    }
 
-        if (autoClose && isOpen && playersInside <= 0)
+    // Host 端驅動自動關門計時
+    public override void FixedUpdateNetwork()
+    {
+        if (!Runner.IsServer) return;
+
+        if (autoClose && IsOpen && PlayersInside <= 0)
         {
-            closeTimer -= Time.deltaTime;
-            if (closeTimer <= 0f)
-                isOpen = false;
+            CloseTimer -= Runner.DeltaTime;
+            if (CloseTimer <= 0f)
+                IsOpen = false;
         }
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if (NetworkManager2.Instance == null || NetworkManager2.Instance.mode != NetworkManager2.NetMode.Host) return;
-        Debug.Log($"GateTrigger: {other.name} entered. Tag: {other.tag}");
+        
+        if (!Runner.IsServer) return;
         if (!other.CompareTag("CanBeGrabbed")) return;
-        playersInside++;
-        isOpen = true;
-        closeTimer = closeDelay;
+        Debug.Log(" gate trigger");
+        PlayersInside++;
+        IsOpen = true;
+        CloseTimer = closeDelay;
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (NetworkManager2.Instance == null || NetworkManager2.Instance.mode != NetworkManager2.NetMode.Host) return;
+        if (!Runner.IsServer) return;
         if (!other.CompareTag("CanBeGrabbed")) return;
-        playersInside = Mathf.Max(0, playersInside - 1);
-        closeTimer = closeDelay;
+        PlayersInside = Mathf.Max(0, PlayersInside - 1);
+        CloseTimer = closeDelay;
     }
 }

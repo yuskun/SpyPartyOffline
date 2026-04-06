@@ -57,7 +57,8 @@ namespace OodlesEngine
 
         public OodlesCharacterInput inputState;
 
-        private bool ragdollMode, waitingGetUp = false, attackInput, pickUpInput;
+        [HideInInspector] public bool ragdollMode;
+        private bool waitingGetUp = false, attackInput, pickUpInput;
         private bool isThrowing = false;
         [HideInInspector] public bool isAttacking = false;
 
@@ -831,8 +832,11 @@ namespace OodlesEngine
                         wp.Time -= wp.swingCost;
                     if (wp.Time <= 0)
                     {
+                        var netObj = wp.GetComponentInParent<Fusion.NetworkObject>();
                         handFunctionLeft.ReleaseHand();
                         leftPicking = false;
+                        if (netObj != null && NetworkManager2.Instance != null && NetworkManager2.Instance.runner != null)
+                            NetworkManager2.Instance.runner.Despawn(netObj);
                     }
                 }
                 if (handFunctionRight.HoldWeapon())
@@ -842,15 +846,17 @@ namespace OodlesEngine
                         wp.Time -= wp.swingCost;
                     if (wp.Time <= 0)
                     {
+                        var netObj = wp.GetComponentInParent<Fusion.NetworkObject>();
                         handFunctionRight.ReleaseHand();
                         rightPicking = false;
-                        wp.gameObject.gameObject.SetActive(false);
+                        if (netObj != null && NetworkManager2.Instance != null && NetworkManager2.Instance.runner != null)
+                            NetworkManager2.Instance.runner.Despawn(netObj);
                     }
                 }
             }
         }
 
-        /// <summary>武器耐久歸零時，強制釋放並隱藏</summary>
+        /// <summary>武器耐久歸零時，強制釋放並 Despawn</summary>
         public void BreakWeapon(Weapon wp)
         {
             if (handFunctionLeft.HoldWeapon() && handFunctionLeft.GrabbedObject.GetComponent<Weapon>() == wp)
@@ -863,7 +869,9 @@ namespace OodlesEngine
                 handFunctionRight.ReleaseHand();
                 rightPicking = false;
             }
-            wp.gameObject.SetActive(false);
+            var netObj = wp.GetComponentInParent<Fusion.NetworkObject>();
+            if (netObj != null && NetworkManager2.Instance != null && NetworkManager2.Instance.runner != null)
+                NetworkManager2.Instance.runner.Despawn(netObj);
         }
     }
 }
