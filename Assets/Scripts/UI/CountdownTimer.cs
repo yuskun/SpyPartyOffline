@@ -69,6 +69,14 @@ public class CountdownTimer : NetworkBehaviour
         }
     }
 
+    public void StopTimer()
+    {
+        if (Runner.IsServer)
+        {
+            IsRunning = false;
+        }
+    }
+
     private void UpdateTimeText()
     {
         int m = Mathf.FloorToInt(remainingTime / 60);

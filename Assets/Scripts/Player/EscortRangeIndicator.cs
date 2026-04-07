@@ -25,15 +25,19 @@ public class EscortRangeIndicator : MonoBehaviour
         IsEscortActive = false;
         CatcherID      = -1;
         TargetID       = -1;
+        // 快取會在下次 SetEscort 時因為 TargetID 改變自動重新搜尋
     }
 
     // ── 實體 ─────────────────────────────────────────────────────
     private LineRenderer   lr;
     private PlayerIdentify identify;
+    private GameObject     cachedTarget;
+    private int            cachedTargetID = -1;
 
     private const int   Segments  = 48;
     private const float LineWidth = 0.07f;
     private const float GroundY   = 0.05f;   // 貼地高度
+    private const float DefaultEscortRadius = 5f; // 預設押送半徑（與 MissionWinSystem.escortRadius 一致）
 
     private static readonly Color ColorSafe = new Color(0.1f, 1f,   0.1f, 0.9f);  // 綠：目標在範圍內
     private static readonly Color ColorWarn = new Color(1f,   0.2f, 0f,   0.9f);  // 紅：目標超出範圍
@@ -68,7 +72,7 @@ public class EscortRangeIndicator : MonoBehaviour
 
     void Update()
     {
-        if (identify == null || MissionWinSystem.Instance == null)
+        if (identify == null)
         {
             if (lr != null) lr.enabled = false;
             return;
@@ -89,16 +93,23 @@ public class EscortRangeIndicator : MonoBehaviour
         }
 
         // 圓圈以小偷（目標）為圓心，只有警察（抓人者）看得到
-        if (PlayerInventoryManager.Instance == null) { lr.enabled = false; return; }
-        GameObject target = PlayerInventoryManager.Instance.GetPlayer(TargetID);
-        if (target == null) { lr.enabled = false; return; }
+        // 快取目標玩家，避免每幀搜尋
+        if (cachedTarget == null || cachedTargetID != TargetID)
+        {
+            cachedTarget = FindPlayerByID(TargetID);
+            cachedTargetID = TargetID;
+        }
+        if (cachedTarget == null) { lr.enabled = false; return; }
+        GameObject target = cachedTarget;
 
         lr.enabled = true;
 
         Vector3 center = GetRagdollPos(target);
         center.y = GroundY;
 
-        float radius = MissionWinSystem.Instance.escortRadius;
+        float radius = MissionWinSystem.Instance != null
+            ? MissionWinSystem.Instance.escortRadius
+            : DefaultEscortRadius;
         DrawCircle(center, radius);
         UpdateColor(center, radius, gameObject);
     }
@@ -139,6 +150,17 @@ public class EscortRangeIndicator : MonoBehaviour
     }
 
     // ── Helpers ──────────────────────────────────────────────────
+
+    /// <summary>透過 PlayerIdentify.PlayerID 找玩家，Host / Client 都能用</summary>
+    private GameObject FindPlayerByID(int playerID)
+    {
+        foreach (var pi in FindObjectsByType<PlayerIdentify>(FindObjectsSortMode.None))
+        {
+            if (pi != null && pi.PlayerID == playerID)
+                return pi.gameObject;
+        }
+        return null;
+    }
 
     private Vector3 GetRagdollPos(GameObject go)
     {

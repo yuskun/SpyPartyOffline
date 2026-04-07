@@ -409,6 +409,7 @@ GameObject:
   - component: {fileID: 341423640240217469}
   - component: {fileID: 9154730314767901852}
   - component: {fileID: 2649401637883138803}
+  - component: {fileID: -4306642317339094128}
   m_Layer: 0
   m_Name: "\u9BCA\u9B5A"
   m_TagString: Player
@@ -487,6 +488,7 @@ MonoBehaviour:
   armsAngleOffset: 0
   handsRotationOffset: 0
   armsHorizontalSeparation: 0.75
+  ragdollMode: 0
   isAttacking: 0
   animationSpeed: 1
   runningEffect: {fileID: 0}
@@ -504,6 +506,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _PlayerID: 0
   _PlayerName: 
+  _SkinIndex: 0
   Text: {fileID: 3857618428909973612}
 --- !u!114 &4536659258725188919
 MonoBehaviour:
@@ -706,6 +709,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-4306642317339094128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2238780322483866809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6a0109769fc4e840b23cad88c432e90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2501336314892739693
 GameObject:
   m_ObjectHideFlags: 0
@@ -1874,8 +1889,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: PRX_Forsaken
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 11bd6be4cdffedd489bae68b96345eb1, type: 2}
-  m_sharedMaterial: {fileID: 7067384546424574235, guid: 11bd6be4cdffedd489bae68b96345eb1, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: bfc382d10e25c4544b3f8714d4c63cb7, type: 2}
+  m_sharedMaterial: {fileID: -8427051968470054623, guid: bfc382d10e25c4544b3f8714d4c63cb7, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2982,13 +2997,15 @@ MonoBehaviour:
   heightOffset: 1
   playerLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 768
   angleWeight: 0.7
   distanceWeight: 0.3
   cameraTransform: {fileID: 0}
   debugDraw: 1
   gizmoColor: {r: 0, g: 1, b: 0, a: 0.15}
   targetColor: {r: 1, g: 0, b: 0, a: 1}
+  enableStealScan: 0
+  stealScanRadius: 4
 --- !u!114 &6839355258270765295
 MonoBehaviour:
   m_ObjectHideFlags: 0

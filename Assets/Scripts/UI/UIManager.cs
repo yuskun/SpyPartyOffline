@@ -19,6 +19,9 @@ public class GameUIManager : MonoBehaviour
     public Image UserCardUI;
     public GameObject Notification;
     public GameObject DrawUI;
+    public GameObject ResultsPanel;
+    public GameObject CaughtUI;
+    public GameObject BackBtn;
 
     private void Awake()
     {
@@ -39,10 +42,20 @@ public class GameUIManager : MonoBehaviour
          GameoverText.SetActive(false);
          HUDUI.SetActive(false);
          PauseUI.SetActive(false);
+         if (ResultsPanel != null) ResultsPanel.SetActive(false);
     }
     public void Draw()
     {
         DrawUI.SetActive(true);
+    }
+
+    public void ShowResultsPanel()
+    {
+        WinText.SetActive(false);
+        GameoverText.SetActive(false);
+        HUDUI.SetActive(false);
+        if (ResultsPanel != null) ResultsPanel.SetActive(true);
+        if (ResultsBgPlane.Instance != null) ResultsBgPlane.Instance.SlideIn();
     }
 
     void FixedUpdate()

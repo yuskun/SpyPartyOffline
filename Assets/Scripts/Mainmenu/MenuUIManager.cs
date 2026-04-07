@@ -24,10 +24,10 @@ public class MenuUIManager : MonoBehaviour
 
 //元件
 
-    public TextMeshProUGUI PlayerNameInput;
+    public TMP_InputField PlayerNameInput;
     public TMP_InputField RoomCodeInput;
     public GameObject[] Ai;
-   [HideInInspector] public PlayerListManager playerlistmanager;
+    public PlayerListManager playerlistmanager;
     public Button StartButton;
     public MissionUIManager missionUIManager;
     public GameObject PlayerList;
@@ -82,6 +82,12 @@ public class MenuUIManager : MonoBehaviour
         if (RoomCodeInput != null) RoomCodeInput.text = "";
     }
 
+    /// <summary>從「旁觀」按鈕呼叫：快速搜尋房間並以旁觀者加入</summary>
+    public void QuickJoinAsSpectator()
+    {
+        NetworkManager2.Instance.QuickJoinAsSpectator();
+    }
+
     public void ConfirmJoinByCode()
     {
         if (RoomCodeInput == null) return;
@@ -109,7 +115,6 @@ public class MenuUIManager : MonoBehaviour
         {
             Host.SetActive(false);
             Client.SetActive(true);
-
             showUI(Gameroom);
         }
     }
@@ -122,8 +127,7 @@ public class MenuUIManager : MonoBehaviour
     }
     public void AllowInput(bool allow)
     {
-
+        if (NetworkManager2.IsSpectator) return;
         LocalBackpack.Instance.userInventory.gameObject.GetComponent<NetworkPlayer>().AllowInput = allow;
-
     }
 }

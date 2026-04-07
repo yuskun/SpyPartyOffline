@@ -25,9 +25,11 @@ public class LocalBackpack : MonoBehaviour
     // ========= 長按狀態 =========
     private bool isHolding = false;
     private float holdTimer = 0f;
+    private float currentHoldDuration = 1f;
     private int holdingIndex = -1;
     private MissionCard holdingMissionCard = null;
     private PlayerInventory holdingTargetInventory = null;
+    private StealTargetObject holdingStealTarget = null;
 
     // ========= ItemCard 預覽狀態 =========
     private bool isPreviewingItem = false;
@@ -35,6 +37,9 @@ public class LocalBackpack : MonoBehaviour
     private ItemCard previewingItemCard = null;
     private CardData previewingCardData;
     private PlayerInventory previewingTargetInventory = null;
+
+    // ========= Steal Outline 狀態 =========
+    private bool hadStealCard = false;
 
 
 
@@ -75,6 +80,8 @@ public class LocalBackpack : MonoBehaviour
                 data.outline.enabled = false;
                 data.shadow = btn.gameObject.GetComponent<Shadow>();
                 if (data.shadow != null) data.shadow.enabled = true;
+                data.forbidImage = btn.transform.Find("Forbid")?.GetComponent<Image>();
+                if (data.forbidImage != null) data.forbidImage.gameObject.SetActive(false);
 
                 buttons.Add(data);
             }
@@ -94,6 +101,8 @@ public class LocalBackpack : MonoBehaviour
         UpdateButtonHighlight();
         HandleCardInput();
         UpdateCardImagesByInventory();
+        UpdateStealScan();
+        UpdateStealOutlines();
     }
     void HandleCardInput()
     {
@@ -159,7 +168,7 @@ public class LocalBackpack : MonoBehaviour
         {
             if (functionCard.needTarget && targetInventory == null)
             {
-                character.animatorPlayer.SetTrigger("DoScratch");
+                PlayAnimationViaRpc("DoScratch");
                 Debug.Log("此功能卡需要目標，但沒有掃描到有效目標");
                 return;
             }
@@ -178,7 +187,7 @@ public class LocalBackpack : MonoBehaviour
         {
             if (itemCard.needTarget && targetInventory == null)
             {
-                character.animatorPlayer.SetTrigger("DoScratch");
+                PlayAnimationViaRpc("DoScratch");
                 Debug.Log("此物品卡需要目標，但沒有掃描到有效目標");
                 return;
             }
@@ -206,38 +215,46 @@ public class LocalBackpack : MonoBehaviour
         // MissionCard：判斷要不要長按
         if (card is MissionCard missionCard)
         {
-            if (missionCard.needTarget && targetInventory == null)
+            bool isSteal = missionCard is Steal;
+
+            if (isSteal)
             {
-                character.animatorPlayer.SetTrigger("DoScratch");
+                if (scanner.currentStealTarget == null)
+                {
+                    PlayAnimationViaRpc("DoScratch");
+                    Debug.Log("附近沒有可竊盜的物件");
+                    return;
+                }
+            }
+            else if (missionCard.needTarget && targetInventory == null)
+            {
+                PlayAnimationViaRpc("DoScratch");
                 Debug.Log("此任務卡需要目標，但沒有掃描到有效目標");
                 return;
             }
-            bool requireHold = missionCard.isHoldingUse; // 直接從卡片屬性讀取是否需要長按
 
+            bool requireHold = missionCard.isHoldingUse;
 
             if (!requireHold)
             {
                 // 不需要長按：照原本瞬發流程
-                if (!cardUseUIManager.TryUseMissionCard(missionCard, userInventory, targetInventory) || !IsCardReady(FocusIndex))
+                if (!cardUseUIManager.TryUseMissionCard(missionCard, userInventory, targetInventory, FocusIndex) || !IsCardReady(FocusIndex))
                     return;
 
                 SendUseCardRpc(data, FocusIndex, targetInventory);
                 return;
             }
 
-            // 需要長按：進入蓄力狀態（先不要用卡）
-            // 注意：蓄力 UI 你自己接，這裡先留 hook
+            // 需要長按：進入蓄力狀態
             isHolding = true;
             holdTimer = 0f;
+            currentHoldDuration = missionCard.holdDuration > 0f ? missionCard.holdDuration : holdSeconds;
             holdingIndex = FocusIndex;
             holdingMissionCard = missionCard;
-            holdingTargetInventory = targetInventory;
+            holdingTargetInventory = isSteal ? null : targetInventory;
+            holdingStealTarget = isSteal ? scanner.currentStealTarget : null;
             GameUIManager.Instance.UserCardUI.sprite = card.image;
             GameUIManager.Instance.progressBar.SetActive(true);
-
-            // TODO: 顯示長按進度 UI（例如開始顯示圓環 0%）
-            // cardUseUIManager.ShowHoldUI(true);
-            // cardUseUIManager.SetHoldProgress(0f);
         }
     }
 
@@ -245,55 +262,58 @@ public class LocalBackpack : MonoBehaviour
     {
         if (!isHolding) return;
 
-        if (scanner.currentTarget == null)
+        bool isSteal = holdingMissionCard is Steal;
+
+        // 目標消失檢查
+        if (isSteal)
         {
-            character.animatorPlayer.SetTrigger("DoScratch");
-            CancelHold("scanner.currentTarget 為 null，取消長按");
-            return;
+            if (scanner.currentStealTarget == null)
+            {
+                PlayAnimationViaRpc("DoScratch");
+                CancelHold("steal target 消失，取消長按");
+                return;
+            }
         }
-        // 長按期間狀態改變 → 直接取消
+        else
+        {
+            if (scanner.currentTarget == null)
+            {
+                PlayAnimationViaRpc("DoScratch");
+                CancelHold("scanner.currentTarget 為 null，取消長按");
+                return;
+            }
+        }
+
         if (!userInventory.CanUseCard)
         {
             CancelHold("canUseCard 為 false，取消長按");
             return;
         }
 
-        // Focus 改變 → 取消
         if (FocusIndex != holdingIndex)
         {
             CancelHold("FocusIndex 改變，取消長按");
             return;
         }
 
-        // 檢查該卡是否還可用（例如冷卻中）
         if (!IsCardReady(holdingIndex))
-        {
-            // 冷卻期間不計算時間（選一種策略）
-            // 1) 不累積但不取消
             return;
 
-            // 或 2) 直接取消（比較乾淨）
-            // CancelHold("卡片進入冷卻，取消長按");
-            // return;
-        }
-
         holdTimer += Time.deltaTime;
-        GameUIManager.Instance.progressfill.fillAmount = holdTimer / holdSeconds;
+        GameUIManager.Instance.progressfill.fillAmount = holdTimer / currentHoldDuration;
 
-        if (holdTimer >= holdSeconds)
+        if (holdTimer >= currentHoldDuration)
         {
-            var data = userInventory.slotsNetworked[holdingIndex];
-
-            if (!cardUseUIManager.TryUseMissionCard(
-                holdingMissionCard,
-                userInventory,
-                holdingTargetInventory))
+            if (!cardUseUIManager.TryUseMissionCard(holdingMissionCard, userInventory, holdingTargetInventory, holdingIndex))
             {
                 CancelHold("TryUseMissionCard 失敗");
                 return;
             }
 
-            SendUseCardRpc(data, holdingIndex, holdingTargetInventory);
+            if (isSteal)
+                SendStealObjectRpc(holdingIndex, holdingStealTarget);
+            else
+                SendUseCardRpc(userInventory.slotsNetworked[holdingIndex], holdingIndex, holdingTargetInventory);
 
             FinishHold();
         }
@@ -333,9 +353,7 @@ public class LocalBackpack : MonoBehaviour
         holdingIndex = -1;
         holdingMissionCard = null;
         holdingTargetInventory = null;
-
-        // TODO: 關閉長按 UI
-        // cardUseUIManager.ShowHoldUI(false);
+        holdingStealTarget = null;
     }
 
     void CancelItemPreview()
@@ -363,10 +381,30 @@ public class LocalBackpack : MonoBehaviour
         holdingIndex = -1;
         holdingMissionCard = null;
         holdingTargetInventory = null;
+        holdingStealTarget = null;
+    }
 
-        // TODO: 關閉長按 UI / 重置進度
-        // cardUseUIManager.ShowHoldUI(false);
-        // cardUseUIManager.SetHoldProgress(0f);
+    void SendStealObjectRpc(int cardIndex, StealTargetObject target)
+    {
+        if (target == null) return;
+        CardUseParameters p = new CardUseParameters();
+        p.Card = userInventory.slotsNetworked[cardIndex];
+        p.UserId = playerIdentify.PlayerID;
+        p.UseCardIndex = cardIndex;
+        p.TargetId = target.StealIndex;  // 傳序號（0/1/2），Host 端用靜態表查找
+        GameManager.instance.Rpc_RequestUseCard(p);
+    }
+
+    void UpdateStealScan()
+    {
+        if (scanner == null || userInventory == null) return;
+        if (FocusIndex < 0 || FocusIndex >= PlayerInventory.MaxSlots) { scanner.enableStealScan = false; return; }
+
+        var data = userInventory.slotsNetworked[FocusIndex];
+        if (data.IsEmpty()) { scanner.enableStealScan = false; return; }
+
+        var card = CardManager.Instance?.Catalog?.cards?.Find(c => c.cardData.id == data.id && c.cardData.type == data.type);
+        scanner.enableStealScan = card is Steal;
     }
     public void SetUpdateEnabled(bool state)
     {
@@ -399,7 +437,7 @@ public class LocalBackpack : MonoBehaviour
     {
         if (index < 0 || index >= PlayerInventory.MaxSlots)
         {
-            character.animatorPlayer.SetTrigger("DoShake");
+            PlayAnimationViaRpc("DoShake");
             return false;
         }
         var slot = userInventory.slotsNetworked[index];
@@ -456,6 +494,42 @@ public class LocalBackpack : MonoBehaviour
     }
 
 
+
+    /// <summary>透過 RPC 請求 Host 播放動畫（Host 端 SetTrigger 後自動同步回所有端）</summary>
+    private void PlayAnimationViaRpc(string triggerName)
+    {
+        if (playerIdentify == null) return;
+        GameManager.instance.Rpc_PlayFailAnimation(playerIdentify.PlayerID, triggerName);
+    }
+
+    private void ShowForbid(bool show)
+    {
+        foreach (var btn in buttons)
+            if (btn.forbidImage != null) btn.forbidImage.gameObject.SetActive(show);
+    }
+
+    public void OnEscortStart(int catcherID, int targetID)
+    {
+        if (playerIdentify == null) return;
+        int localID = playerIdentify.PlayerID;
+
+        // 只有被抓者禁用卡片，抓人者可以繼續使用
+        if (localID == targetID)
+        {
+            userInventory.CanUseCard = false;
+            ShowForbid(true);
+            if (GameUIManager.Instance != null && GameUIManager.Instance.CaughtUI != null)
+                GameUIManager.Instance.CaughtUI.SetActive(true);
+        }
+    }
+
+    public void OnEscortEnd()
+    {
+        if (userInventory != null) userInventory.CanUseCard = true;
+        ShowForbid(false);
+        if (GameUIManager.Instance != null && GameUIManager.Instance.CaughtUI != null)
+            GameUIManager.Instance.CaughtUI.SetActive(false);
+    }
 
     public void DisableInteractable()
     {
@@ -515,6 +589,57 @@ public class LocalBackpack : MonoBehaviour
             buttons[i].image.gameObject.SetActive(false);
         }
         enableUpdate = false; // ✅ 清空後關閉 Update
+
+        // 清除 Steal Outline
+        SetAllStealOutlines(false);
+        hadStealCard = false;
+    }
+
+    /// <summary>持有 Steal 卡時，所有 StealTarget 持續顯示 Outline</summary>
+    void UpdateStealOutlines()
+    {
+        if (userInventory == null) return;
+
+        bool hasSteal = LocalPlayerHasStealCard();
+
+        // 狀態沒變且沒持有 → 不需更新
+        if (!hasSteal && !hadStealCard) return;
+
+        // 狀態變化 → 全部切換
+        if (hasSteal != hadStealCard)
+        {
+            SetAllStealOutlines(hasSteal);
+            hadStealCard = hasSteal;
+            return;
+        }
+
+        // 持續持有 → 確保新生成的 target 也亮起來
+        if (hasSteal)
+        {
+            foreach (var obj in StealTargetObject.All)
+                if (obj != null) obj.SetHighlight(true);
+        }
+    }
+
+    bool LocalPlayerHasStealCard()
+    {
+        var allCards = CardManager.Instance?.Catalog?.cards;
+        if (allCards == null) return false;
+
+        for (int i = 0; i < PlayerInventory.MaxSlots; i++)
+        {
+            var data = userInventory.slotsNetworked[i];
+            if (data.IsEmpty()) continue;
+            var card = allCards.Find(c => c.cardData.id == data.id && c.cardData.type == data.type);
+            if (card is Steal) return true;
+        }
+        return false;
+    }
+
+    void SetAllStealOutlines(bool on)
+    {
+        foreach (var obj in StealTargetObject.All)
+            if (obj != null) obj.SetHighlight(on);
     }
 }
 [System.Serializable]
@@ -525,5 +650,7 @@ public class ButtionData
     public UnityEngine.UI.Outline outline;
     public Shadow shadow;
     public TextMeshProUGUI cooldownText;
+
     public Image frameImage; // 父物件的 Image
+    public Image forbidImage;
 }

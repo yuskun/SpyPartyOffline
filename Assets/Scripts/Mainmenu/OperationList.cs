@@ -137,26 +137,13 @@ public class MissionUIManager : MonoBehaviour
                 break;
             }
 
-            case 1: // Steal：收集模式 or 計時模式
+            case 1: // Steal：偷取場景物件
             {
-                int mode = 0;
-                inv.MissionStates.TryGet(11, out mode);
-
-                if (mode == 1) // 計時模式（倒數1分鐘後）
-                {
-                    slot.data.title       = "存活";
-                    slot.data.description = "等待時間結束存活獲勝";
-                    slot.data.current     = 0;
-                    slot.data.goal        = 0; // goal=0 → MissionSlot 隱藏進度條
-                }
-                else // 收集模式
-                {
-                    var stealCard = CardManager.Instance.GetMissionCard(1);
-                    slot.data.title       = stealCard != null ? stealCard.data.title : "小偷";
-                    slot.data.description = BuildStealItemDesc();
-                    slot.data.current     = setValue;
-                    slot.data.goal        = 3;
-                }
+                var stealCard = CardManager.Instance.GetMissionCard(1);
+                slot.data.title       = stealCard != null ? stealCard.data.title : "小偷";
+                slot.data.description = "靠近場景物件長按 E 偷走它";
+                slot.data.current     = setValue;
+                slot.data.goal        = 3;
                 slot.Refresh();
                 break;
             }
@@ -170,24 +157,6 @@ public class MissionUIManager : MonoBehaviour
                 break;
             }
         }
-    }
-
-    /// <summary>讀取 MissionGoals[11~13] 的道具 CardID，組合成描述字串</summary>
-    private string BuildStealItemDesc()
-    {
-        var inv = LocalBackpack.Instance.userInventory;
-        var lines = new System.Text.StringBuilder();
-        for (int i = 0; i < 3; i++)
-        {
-            int itemId = -1;
-            inv.MissionGoals.TryGet(11 + i, out itemId);
-            if (itemId < 0) continue;
-
-            var item = CardManager.Instance.GetItemCard(itemId);
-            string itemName = item != null ? item.name : $"道具{itemId}";
-            lines.AppendLine($"• {itemName}");
-        }
-        return lines.Length > 0 ? lines.ToString().TrimEnd() : "收集3個指定道具";
     }
 
     // ✅ TAB 切換焦點

@@ -57,6 +57,19 @@ public class GameManager1 : NetworkBehaviour
             GameUIManager.Instance.Gameover();
     }
 
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_MultipleWinners(int[] winnerIDs)
+    {
+        int localID = LocalBackpack.Instance.userInventory.gameObject.GetComponent<PlayerIdentify>().PlayerID;
+        if (System.Array.IndexOf(winnerIDs, localID) >= 0)
+        {
+            GameUIManager.Instance.Win();
+            Debug.Log("你贏了！");
+        }
+        else
+            GameUIManager.Instance.Gameover();
+    }
+
     /// <summary>
     /// RPC：讓所有 Client（與 Host 自己）都執行 GameStart。
     /// </summary>

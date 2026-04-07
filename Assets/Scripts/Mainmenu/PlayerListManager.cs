@@ -48,10 +48,13 @@ public class PlayerListManager : NetworkBehaviour
             lastRevision = PlayerVersion;
             OnPlayerListChanged();
         }
-        if (PlayerVersion == 1&&!hasOpenedGameRoom)
+        if (PlayerVersion == 1 && !hasOpenedGameRoom)
         {
-            MenuUIManager.instance.ShowGameroom(GameMode.Host, NetworkManager2.Instance != null ? NetworkManager2.Instance.CurrentRoomCode : "");
-            hasOpenedGameRoom=true;
+            Debug.Log("玩家列表已更新，顯示遊戲房間界面");
+            string code = NetworkManager2.Instance != null ? NetworkManager2.Instance.CurrentRoomCode : "";
+            GameMode mode = Runner.IsServer ? GameMode.Host : GameMode.Client;
+            MenuUIManager.instance.ShowGameroom(mode, code);
+            hasOpenedGameRoom = true;
         }
     }
     public void RegisterPlayer(PlayerRef player, string playerName, int skinIndex)
@@ -70,6 +73,24 @@ public class PlayerListManager : NetworkBehaviour
             Debug.Log($"✅ 註冊玩家 {playerName} 角色{skinIndex} 到索引 {player.AsIndex}");
             PlayerVersion++;
         }
+    }
+
+    public void UnregisterPlayer(PlayerRef player)
+    {
+        if (!Object.HasStateAuthority) return;
+
+        int key = player.AsIndex;
+        if (PlayerNames.ContainsKey(key))
+        {
+            PlayerNames.Remove(key);
+            Debug.Log($"🗑 移除玩家名稱 index={key}");
+        }
+        if (PlayerSkinIndexes.ContainsKey(key))
+        {
+            PlayerSkinIndexes.Remove(key);
+            Debug.Log($"🗑 移除玩家皮膚 index={key}");
+        }
+        PlayerVersion++;
     }
 
     public void OnPlayerListChanged()

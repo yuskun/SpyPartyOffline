@@ -20,8 +20,10 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
     public NetworkRunner runner;
     private NetworkSceneManagerDefault sceneManager;
 
-    public enum NetMode { Idle, Host, Client }
+    public enum NetMode { Idle, Host, Client, Spectator }
     public NetMode mode = NetMode.Idle;
+
+    public static bool IsSpectator { get; private set; } = false;
 
     private bool waitingQuickJoin = false;
     public string CurrentRoomCode { get; private set; } = "";
@@ -56,6 +58,11 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
     public void Leave()
     {
         _ = LeaveAsync();
+    }
+
+    public void QuickJoinAsSpectator()
+    {
+        _ = QuickJoinAsSpectatorAsync();
     }
     public void SwitchScene(int buildIndex)
     {
@@ -93,9 +100,9 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
     {
 
         if (mode != NetMode.Idle) return;
-        Debug.Log("HostAsync called TEST");
+        
         MenuUIManager.instance.showUI(MenuUIManager.instance.LoadingScreen);
-        Debug.Log("HostAsync called");
+       
         await InitRunner();
         await runner.JoinSessionLobby(SessionLobby.ClientServer);
 
@@ -130,26 +137,36 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
         if (mode != NetMode.Idle) return;
         if (string.IsNullOrWhiteSpace(code)) return;
 
-        await InitRunner();
+        MenuUIManager.instance.showUI(MenuUIManager.instance.LoadingScreen);
 
-        mode = NetMode.Client;
-
-        var result = await runner.StartGame(new StartGameArgs
+        try
         {
-            GameMode = GameMode.Client,
-            SessionName = code.Trim(),
-            SceneManager = sceneManager
-        });
+            await InitRunner();
 
-        if (!result.Ok)
-        {
-            Debug.LogError("Join failed");
-            mode = NetMode.Idle;
-            return;
+            mode = NetMode.Client;
+
+            var result = await runner.StartGame(new StartGameArgs
+            {
+                GameMode = GameMode.Client,
+                SessionName = code.Trim(),
+                SceneManager = sceneManager
+            });
+
+            if (!result.Ok)
+            {
+                Debug.LogError("Join failed");
+                QuickJoinFailed("加入房間失敗");
+                return;
+            }
+
+            Debug.Log("Joined by code");
+            MenuUIManager.instance.ShowGameroom(GameMode.Client, code.Trim());
         }
-
-        Debug.Log("Joined by code");
-        MenuUIManager.instance.ShowGameroom(GameMode.Client, code.Trim());
+        catch (System.Exception e)
+        {
+            Debug.LogWarning($"[JoinByCode] Exception: {e.Message}");
+            QuickJoinFailed("加入房間發生錯誤");
+        }
     }
 
     private async Task QuickJoinAsync()
@@ -157,42 +174,83 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
         if (mode != NetMode.Idle) return;
         MenuUIManager.instance.showUI(MenuUIManager.instance.LoadingScreen);
 
-
-        await InitRunner();
-
-        waitingQuickJoin = true;
-
-        await runner.JoinSessionLobby(SessionLobby.ClientServer);
+        try
+        {
+            await InitRunner();
+            waitingQuickJoin = true;
+            await runner.JoinSessionLobby(SessionLobby.ClientServer);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning($"[QuickJoin] Exception: {e.Message}");
+            QuickJoinFailed("快速加入發生錯誤");
+        }
     }
 
+    private async Task QuickJoinAsSpectatorAsync()
+    {
+        if (mode != NetMode.Idle) return;
+
+        IsSpectator = true;
+        MenuUIManager.instance.showUI(MenuUIManager.instance.LoadingScreen);
+
+        try
+        {
+            await InitRunner();
+            runner.ProvideInput = false; // 旁觀者不送任何輸入
+
+            mode = NetMode.Spectator;
+            waitingQuickJoin = true;
+
+            await runner.JoinSessionLobby(SessionLobby.ClientServer);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning($"[QuickJoinSpectator] Exception: {e.Message}");
+            QuickJoinFailed("旁觀者快速加入發生錯誤");
+        }
+    }
+
+    private bool isLeaving = false;
     private async Task LeaveAsync()
     {
-        SceneManager.LoadScene(0);
-        if (runner == null) return;
+        if (isLeaving) return;
+        isLeaving = true;
 
         waitingQuickJoin = false;
 
-        if (runner.IsRunning)
+        // 1) 先關閉 Runner（帶 try-catch 避免 Client 斷線時 Shutdown 拋例外）
+        if (runner != null)
         {
+            try
+            {
+                if (runner.IsRunning)
+                {
+                    runner.RemoveCallbacks(this);
+                    await runner.Shutdown();
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning($"Runner shutdown error: {e.Message}");
+            }
 
-            runner.RemoveCallbacks(this);
-            await runner.Shutdown();
+            if (runnerRoot != null)
+                Destroy(runnerRoot);
+
+            runner = null;
+            sceneManager = null;
+            runnerRoot = null;
         }
 
-
-        // 2) 直接把整個 RunnerRoot 砍掉（最乾淨）
-        if (runnerRoot != null)
-            Destroy(runnerRoot);
-
-        runner = null;
-        sceneManager = null;
-        runnerRoot = null;
-
-
         mode = NetMode.Idle;
+        IsSpectator = false;
+        isLeaving = false;
 
         Debug.Log("Disconnected");
 
+        // 2) 切回主選單場景並顯示 UI
+        SceneManager.LoadScene(0);
         MenuUIManager.instance.showUI(MenuUIManager.instance.BulidOrJoin);
     }
     public async Task<bool> SwitchSceneAsync(int buildIndex)
@@ -259,39 +317,128 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
         var room = list.FirstOrDefault(s => s.IsOpen && s.IsVisible);
         if (room == null)
         {
-            Debug.Log("No available room");
+            Debug.Log("[QuickJoin] 找不到可加入的房間，直接返回選單");
+            QuickJoinFailed("找不到可加入的房間");
             return;
         }
 
         waitingQuickJoin = false;
-        _ = JoinByCodeAsync(room.Name);
+
+        if (IsSpectator)
+            _ = JoinSpectatorByCodeAsync(room.Name);
+        else
+            _ = JoinByCodeAsync(room.Name);
+    }
+
+    /// <summary>旁觀者用房間名稱直接加入（由 QuickJoin 流程觸發）</summary>
+    private async Task JoinSpectatorByCodeAsync(string code)
+    {
+        var result = await runner.StartGame(new StartGameArgs
+        {
+            GameMode = GameMode.Client,
+            SessionName = code.Trim(),
+            SceneManager = sceneManager
+        });
+
+        if (!result.Ok)
+        {
+            Debug.LogError("Spectator join failed");
+            QuickJoinFailed("旁觀加入失敗");
+            return;
+        }
+
+        Debug.Log("Joined as spectator");
+        MenuUIManager.instance.ShowGameroom(GameMode.Client, code.Trim());
+    }
+
+    /// <summary>快速加入失敗：清理狀態、關閉 Loading、回到 BulidOrJoin</summary>
+    private async void QuickJoinFailed(string reason)
+    {
+        Debug.LogWarning($"[QuickJoin] Failed: {reason}");
+
+        waitingQuickJoin = false;
+
+        // 關閉 Runner
+        if (runner != null)
+        {
+            try
+            {
+                runner.RemoveCallbacks(this);
+                await runner.Shutdown();
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning($"Runner shutdown error: {e.Message}");
+            }
+
+            if (runnerRoot != null) Destroy(runnerRoot);
+            runner = null;
+            sceneManager = null;
+            runnerRoot = null;
+        }
+
+        mode = NetMode.Idle;
+        IsSpectator = false;
+
+        MenuUIManager.instance.showUI(MenuUIManager.instance.BulidOrJoin);
     }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
         if (!runner.IsServer) return;
-
         Debug.Log($"Player joined: {player}");
-
-        PlayerSpawner.instance.SpawnPlayer(runner, PlayerPrefs.GetInt("Choosenindex"), player, PlayerName, true);
-        int skinIndex = PlayerPrefs.GetInt("Choosenindex", 0);
-        MenuUIManager.instance.playerlistmanager.RegisterPlayer(player, PlayerName, skinIndex);
-
+        // Spawn 由 SkinChange.Rpc_RegisterAndSpawn 處理（Client 帶自己的 skinIndex 過來）
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
         Debug.Log($"Player left: {player}");
+        if (!runner.IsServer) return;
+
+        // 1) Despawn 該玩家的角色並清除 SpawnedPlayers 欄位
+        if (SkinChange.instance != null)
+        {
+            for (int i = 0; i < SkinChange.instance.SpawnedPlayers.Length; i++)
+            {
+                var obj = SkinChange.instance.SpawnedPlayers.Get(i);
+                if (obj == null) continue;
+
+                var np = obj.GetComponent<NetworkPlayer>();
+                if (np != null && np.PlayerId == player)
+                {
+                    Debug.Log($"Despawning player object for {player} (slot {i})");
+                    runner.Despawn(obj);
+                    SkinChange.instance.SpawnedPlayers.Set(i, null);
+                    break;
+                }
+            }
+        }
+
+        // 2) 從 PlayerListManager 移除名稱與皮膚紀錄
+        var plm = MenuUIManager.instance?.playerlistmanager;
+        if (plm != null && plm.Object != null && plm.Object.IsValid)
+        {
+            plm.UnregisterPlayer(player);
+        }
     }
 
     public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
     {
+        Debug.Log($"[Network] OnDisconnectedFromServer: {reason}");
         _ = LeaveAsync();
     }
 
-    public void OnShutdown(NetworkRunner runner, ShutdownReason reason) { }
+    public void OnShutdown(NetworkRunner runner, ShutdownReason reason)
+    {
+        Debug.Log($"[Network] OnShutdown: {reason}");
+        // Host 主動離開時 Client 可能只收到 OnShutdown 而非 OnDisconnectedFromServer
+        // isLeaving guard 防止與 OnDisconnectedFromServer 重複執行
+        _ = LeaveAsync();
+    }
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
+        if (IsSpectator) return;
+
         OodlesCharacterInput pci = new OodlesCharacterInput(
                    InputManager.Get().GetVertical(),
                    InputManager.Get().GetHorizontal(),
@@ -320,7 +467,12 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
     public void OnHostMigration(NetworkRunner r, HostMigrationToken t) { }
     public void OnSceneLoadDone(NetworkRunner r)
     {
-
+        // Loading 由 NetworkPlayer.Spawned() 在玩家生成後關閉，這裡不再自動關
     }
-    public void OnSceneLoadStart(NetworkRunner r) { }
+    public void OnSceneLoadStart(NetworkRunner r)
+    {
+        // 場景開始載入 → 顯示 Loading（所有端，包含 Client）
+        if (MenuUIManager.instance != null && MenuUIManager.instance.LoadingScreen != null)
+            MenuUIManager.instance.LoadingScreen.SetActive(true);
+    }
 }

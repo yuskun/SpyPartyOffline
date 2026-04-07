@@ -46,5 +46,6 @@ public class Give : FunctionCard
             );
         }
         User.SetCooldownEnd(this.cardData);
+        TraceMission.Instance.ProcessPlayerCards();
     }
 }

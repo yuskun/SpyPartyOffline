@@ -47,6 +47,12 @@ namespace OodlesEngine
         private float jumpCooldown = 1.25f;
         public float jumpForce = 800000f;
 
+        // 卡住偵測（高度不變 + 不在地面 → 允許跳躍脫困）
+        private float stuckCheckTimer = 0f;
+        private float lastHeightY;
+        private const float StuckHeightThreshold = 0.05f; // 高度變化小於此視為沒動
+        private const float StuckTimeRequired = 1.5f;     // 持續多久判定卡住（秒）
+        private bool isStuck = false;
 
         //Input
         private float x, y;
@@ -107,10 +113,17 @@ namespace OodlesEngine
 
         private void Jump()
         {
-            //If player is ground and ready to jump
-            if (grounded && readyToJump)
+            //If player is ground (or stuck) and ready to jump
+            if ((grounded || isStuck) && readyToJump)
             {
                 readyToJump = false;
+
+                // 卡住脫困跳：重置狀態
+                if (isStuck)
+                {
+                    isStuck = false;
+                    stuckCheckTimer = 0f;
+                }
 
                 //Add the jump forces
                 rb.AddForce(Vector2.up * jumpForce * 1.5f);
@@ -275,6 +288,31 @@ namespace OodlesEngine
                 grounded = false;
                 normalVector = Vector3.up;
             }
+
+            // ── 卡住偵測：不在地面 + 高度幾乎不變 → 允許跳躍脫困 ──
+            if (!grounded)
+            {
+                float heightDiff = Mathf.Abs(transform.position.y - lastHeightY);
+                if (heightDiff < StuckHeightThreshold)
+                {
+                    stuckCheckTimer += Time.deltaTime;
+                    if (stuckCheckTimer >= StuckTimeRequired)
+                    {
+                        isStuck = true;
+                    }
+                }
+                else
+                {
+                    stuckCheckTimer = 0f;
+                    isStuck = false;
+                }
+            }
+            else
+            {
+                stuckCheckTimer = 0f;
+                isStuck = false;
+            }
+            lastHeightY = transform.position.y;
         }
     }
 }

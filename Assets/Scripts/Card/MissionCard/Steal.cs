@@ -1,51 +1,41 @@
-using System;
 using UnityEngine;
+
 [CreateAssetMenu(menuName = "Card/MissionCard/Steal")]
 public class Steal : MissionCard
 {
     public override bool CanUse(PlayerInventory user, PlayerInventory target, CardData card)
     {
-        if (target == null)
-            return false;
-        else if (user.CanUse(this.cardData) == false)
-            return false;
-
-        int userCount = 0,
-            targetCount = 0;
-        foreach (var c in user.slots)
-            if (!c.IsEmpty())
-                userCount++;
-        foreach (var c in target.slots)
-            if (!c.IsEmpty())
-                targetCount++;
-
-        return userCount <= 5 && targetCount >= 1 ;
+        return user.CanUse(this.cardData);
     }
+
     public override void UseSkill(CardUseParameters parameters)
     {
-        PlayerInventory Target = PlayerInventoryManager.Instance.GetPlayer(parameters.TargetId).GetComponent<PlayerInventory>();
-        PlayerInventory User = PlayerInventoryManager.Instance.GetPlayer(parameters.UserId).GetComponent<PlayerInventory>();
-        CardData card = Target.RandomGetCard();
+        // TargetId 存放 StealIndex（0/1/2），從靜態登錄表找物件
+        var stealTarget = StealTargetObject.All.Find(x => x.StealIndex == parameters.TargetId);
+        if (stealTarget == null)
+        {
+            Debug.LogWarning($"[Steal] 找不到 StealIndex={parameters.TargetId} 的目標物件（可能已被偷走）");
+            return;
+        }
 
+        stealTarget.BeStolen();
         CharacterSFXManager.Instance?.PlayUseCard();
 
-        Debug.Log($"[Steal] 玩家 {parameters.UserId} 從 玩家 {parameters.TargetId} 偷到卡片 ID={card.id}, type={card.type} ");
-        User.AddCard(card);
-         if (CardHistoryManager.Instance != null)
-        {
-            CardHistoryManager.Instance.Record(
-                new CardHistoryEntry(
-                    parameters.UserId,
-                    parameters.TargetId,
-                    "Steal",
-                    CardType.Mission
-                    //result
-                )
-            );
-        }
-        User.SetCooldownEnd(this.cardData);
+        PlayerInventory user = PlayerInventoryManager.Instance.GetPlayer(parameters.UserId).GetComponent<PlayerInventory>();
+        user.SetCooldownEnd(this.cardData);
 
-        // 偷竊後檢查是否達成收集勝利條件
-        MissionWinSystem.Instance?.CheckStealItemProgress(parameters.UserId);
+        Debug.Log($"[Steal] 玩家 {parameters.UserId} 偷走了場景物件 StealIndex={parameters.TargetId}");
+
+        if (CardHistoryManager.Instance != null)
+        {
+            CardHistoryManager.Instance.Record(new CardHistoryEntry(
+                parameters.UserId,
+                -1,
+                "Steal",
+                CardType.Mission
+            ));
+        }
+
+        MissionWinSystem.Instance?.OnStealObjectCollected(parameters.UserId);
     }
 }

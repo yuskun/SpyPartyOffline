@@ -57,7 +57,8 @@ namespace OodlesEngine
 
         public OodlesCharacterInput inputState;
 
-        private bool ragdollMode, waitingGetUp = false, attackInput, pickUpInput;
+        [HideInInspector] public bool ragdollMode;
+        private bool waitingGetUp = false, attackInput, pickUpInput;
         private bool isThrowing = false;
         [HideInInspector] public bool isAttacking = false;
 
@@ -451,7 +452,7 @@ namespace OodlesEngine
             handFunctionRight.ReleaseHand();
             this.GetComponent<PlayerInventory>().CanUseCard = false;
             this.GetComponent<PlayerInventory>().LostCard();
-            
+
             footstepSource.Stop();
         }
 
@@ -620,16 +621,16 @@ namespace OodlesEngine
 
         public void UpdateThrow()
         {
-            if (inputState.doAction2 > 0 && (LeftHandGrabObject() != null || RightHandGrabObject() != null) )
+            if (inputState.doAction2 > 0 && (LeftHandGrabObject() != null || RightHandGrabObject() != null))
             {
-                
+
                 if (!isThrowing)
                 {
                     Vector3 hor = physicsBody.transform.forward;
                     hor.y = 0;
                     hor.Normalize();
 
-                    if (LeftHandGrabObject() &&  RightHandGrabObject())
+                    if (LeftHandGrabObject() && RightHandGrabObject())
                     {
                         Rigidbody rb = LeftHandGrabObject();
 
@@ -764,7 +765,7 @@ namespace OodlesEngine
         {
             if (inputState.doAction2 > 0 && !HoldWeapon())
             {
-              
+
                 if (!pickUpInput)
                 {
                     if (coroutinePickUp != null) { StopCoroutine(coroutinePickUp); }
@@ -808,10 +809,11 @@ namespace OodlesEngine
 
                 animatorPlayer.SetTrigger("Attack");
                 attackInput = true;
-            
+
 
             }
-            else{
+            else
+            {
                 attackInput = false;
             }
         }
@@ -821,30 +823,55 @@ namespace OodlesEngine
         }
         public void OnAttackFinish()
         {
-             if (HoldWeapon())
+            if (HoldWeapon())
+            {
+                if (handFunctionLeft.HoldWeapon())
                 {
-                    if (handFunctionLeft.HoldWeapon())
+                    Weapon wp = handFunctionLeft.GrabbedObject.GetComponent<Weapon>();
+                    if (wp.CanBreak)
+                        wp.Time -= wp.swingCost;
+                    if (wp.Time <= 0)
                     {
-                        Weapon wp = handFunctionLeft.GrabbedObject.GetComponent<Weapon>();
-                        wp.Time--;
-                        if (wp.Time <= 0)
-                        {
-                            handFunctionLeft.ReleaseHand();
-                            leftPicking = false;
-                        }
-                    }
-                    if (handFunctionRight.HoldWeapon())
-                    {
-                        Weapon wp = handFunctionRight.GrabbedObject.GetComponent<Weapon>();
-                        wp.Time--;
-                        if (wp.Time <= 0)
-                        {
-                            handFunctionRight.ReleaseHand();
-                            rightPicking = false;
-                            wp.gameObject.gameObject.SetActive(false);
-                        }
+                        var netObj = wp.GetComponentInParent<Fusion.NetworkObject>();
+                        handFunctionLeft.ReleaseHand();
+                        leftPicking = false;
+                        if (netObj != null && NetworkManager2.Instance != null && NetworkManager2.Instance.runner != null)
+                            NetworkManager2.Instance.runner.Despawn(netObj);
                     }
                 }
+                if (handFunctionRight.HoldWeapon())
+                {
+                    Weapon wp = handFunctionRight.GrabbedObject.GetComponent<Weapon>();
+                    if (wp.CanBreak)
+                        wp.Time -= wp.swingCost;
+                    if (wp.Time <= 0)
+                    {
+                        var netObj = wp.GetComponentInParent<Fusion.NetworkObject>();
+                        handFunctionRight.ReleaseHand();
+                        rightPicking = false;
+                        if (netObj != null && NetworkManager2.Instance != null && NetworkManager2.Instance.runner != null)
+                            NetworkManager2.Instance.runner.Despawn(netObj);
+                    }
+                }
+            }
+        }
+
+        /// <summary>武器耐久歸零時，強制釋放並 Despawn</summary>
+        public void BreakWeapon(Weapon wp)
+        {
+            if (handFunctionLeft.HoldWeapon() && handFunctionLeft.GrabbedObject.GetComponent<Weapon>() == wp)
+            {
+                handFunctionLeft.ReleaseHand();
+                leftPicking = false;
+            }
+            if (handFunctionRight.HoldWeapon() && handFunctionRight.GrabbedObject.GetComponent<Weapon>() == wp)
+            {
+                handFunctionRight.ReleaseHand();
+                rightPicking = false;
+            }
+            var netObj = wp.GetComponentInParent<Fusion.NetworkObject>();
+            if (netObj != null && NetworkManager2.Instance != null && NetworkManager2.Instance.runner != null)
+                NetworkManager2.Instance.runner.Despawn(netObj);
         }
     }
 }

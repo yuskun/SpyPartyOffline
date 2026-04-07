@@ -8,6 +8,7 @@ public class MissionCard : Card
     public bool needTarget = false;
 
     public bool isHoldingUse = false; // 是否正在長按
+    public float holdDuration = 1f;   // 長按所需秒數（Steal 卡在 Inspector 設為 5）
 
     public virtual bool CanUse(PlayerInventory user, PlayerInventory target, CardData card)
     {

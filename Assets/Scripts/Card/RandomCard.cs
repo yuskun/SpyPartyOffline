@@ -10,6 +10,10 @@ public class RandomCard : NetworkBehaviour
         
         if (other.name == "Ragdoll")
         {
+            // 倒地中的玩家不能撿取
+            var character = other.transform.parent.gameObject.GetComponent<OodlesEngine.OodlesCharacter>();
+            if (character != null && character.ragdollMode) return;
+
             if (cardCatalog == null || cardCatalog.cards.Count == 0)
             {
                 Debug.LogWarning("[RandomCard] CardCatalog 未設置或卡池為空！");

@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class PlayerScanner : MonoBehaviour
 {
+    public static readonly List<PlayerScanner> AllScanners = new();
+
     [Header("掃描設定")]
     public bool enableScan = false;
     public float scanRadius = 6f;
@@ -21,10 +23,28 @@ public class PlayerScanner : MonoBehaviour
     public Color gizmoColor = new Color(0, 1, 0, 0.15f);
     public Color targetColor = Color.red;
 
+    [Header("竊盜模式")]
+    public bool enableStealScan = false;
+    public float stealScanRadius = 4f;
+
     public GameObject currentTarget { get; private set; }
     public GameObject currentRagdoll { get; private set; }
     private GameObject previousTarget;
     private List<GameObject> nearbyPlayers = new();
+
+    public StealTargetObject currentStealTarget { get; private set; }
+    private StealTargetObject previousStealTarget;
+
+    private void OnEnable()
+    {
+        if (!AllScanners.Contains(this))
+            AllScanners.Add(this);
+    }
+
+    private void OnDisable()
+    {
+        AllScanners.Remove(this);
+    }
 
     private void Start()
     {
@@ -34,19 +54,20 @@ public class PlayerScanner : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!enableScan) return;
+        // Camera 可能在 Start 之後才就緒（網路生成的角色），持續補抓
+        if (cameraTransform == null && Camera.main != null)
+            cameraTransform = Camera.main.transform;
 
-        ScanNearbyPlayers();
-        currentRagdoll = GetWeightedBestTarget();
-        UpdateOutlineState();
-        if (currentRagdoll != null)
+        if (enableScan)
         {
-            currentTarget = currentRagdoll.transform.parent.gameObject;
+            ScanNearbyPlayers();
+            currentRagdoll = GetWeightedBestTarget();
+            UpdateOutlineState();
+            currentTarget = currentRagdoll != null ? currentRagdoll.transform.parent.gameObject : null;
         }
-        else
-        {
-            currentTarget = null;
-        }
+
+        if (enableStealScan) ScanStealTargets();
+        else ClearStealTarget();
     }
 
     private void ScanNearbyPlayers()
@@ -54,11 +75,12 @@ public class PlayerScanner : MonoBehaviour
         nearbyPlayers.Clear();
         Vector3 scanPos = transform.position + Vector3.up * heightOffset;
 
-        Collider[] hits = Physics.OverlapSphere(scanPos, scanRadius, playerLayer);
-        foreach (var hit in hits)
+        foreach (var scanner in AllScanners)
         {
-            var scanner = hit.transform.GetComponentInParent<PlayerScanner>();
-            if (scanner != null && scanner != this)
+            if (scanner == null || scanner == this) continue;
+
+            float dist = Vector3.Distance(scanPos, scanner.transform.position);
+            if (dist <= scanRadius)
                 nearbyPlayers.Add(scanner.gameObject);
         }
     }
@@ -121,6 +143,30 @@ public class PlayerScanner : MonoBehaviour
         }
 
         previousTarget = currentRagdoll;
+    }
+
+    private void ScanStealTargets()
+    {
+        Vector3 scanPos = transform.position + Vector3.up * heightOffset;
+
+        StealTargetObject best = null;
+        float bestDist = float.MaxValue;
+        foreach (var obj in StealTargetObject.All)
+        {
+            if (obj == null) continue;
+            float dist = Vector3.Distance(scanPos, obj.transform.position);
+            if (dist < stealScanRadius && dist < bestDist) { bestDist = dist; best = obj; }
+        }
+
+        // Outline 由 LocalBackpack.UpdateStealOutlines() 統一管理，這裡只追蹤互動目標
+        previousStealTarget = best;
+        currentStealTarget = best;
+    }
+
+    private void ClearStealTarget()
+    {
+        previousStealTarget = null;
+        currentStealTarget = null;
     }
 
     private void OnDrawGizmos()
