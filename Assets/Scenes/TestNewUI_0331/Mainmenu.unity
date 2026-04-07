@@ -3309,6 +3309,7 @@ MonoBehaviour:
   armsAngleOffset: 0
   handsRotationOffset: 0
   armsHorizontalSeparation: 0.75
+  ragdollMode: 0
   isAttacking: 0
   animationSpeed: 1
   runningEffect: {fileID: 0}
@@ -3324,6 +3325,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6404faee905fc3c4792b5b3f745349c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Weapon: {fileID: 0}
   alive: 1
 --- !u!1 &123645816
 GameObject:
@@ -7771,6 +7773,7 @@ MonoBehaviour:
   armsAngleOffset: 0
   handsRotationOffset: 0
   armsHorizontalSeparation: 0.75
+  ragdollMode: 0
   isAttacking: 0
   animationSpeed: 1
   runningEffect: {fileID: 0}
@@ -7786,6 +7789,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6404faee905fc3c4792b5b3f745349c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Weapon: {fileID: 0}
   alive: 1
 --- !u!1 &296384821
 GameObject:
@@ -11009,7 +11013,7 @@ MonoBehaviour:
   m_PanelSettings: {fileID: 11400000, guid: 1dc758853d3f069419e1dc8ae4eeb7d4, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: ab436f6b54c7ec24bb4a0b749463cd66, type: 3}
-  m_SortingOrder: 2
+  m_SortingOrder: 5
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
   m_WorldSpaceHeight: 1080
@@ -30266,7 +30270,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   missionSlotPrefab: {fileID: 8042588102901407178, guid: 3533e56405ae0be4bba6a2ea99024031, type: 3}
   missionContainer: {fileID: 1127831494}
-  missionPanelBridge: {fileID: 0}
 --- !u!114 &1127831496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33177,7 +33180,7 @@ MonoBehaviour:
   ChooseCharacterUI: {fileID: 910435907}
   Practice: {fileID: 1843592897}
   RoomCode: {fileID: 1938899634}
-  PlayerNameInput: {fileID: 1177434769}
+  PlayerNameInput: {fileID: 0}
   RoomCodeInput: {fileID: 1792380198}
   Ai:
   - {fileID: 2112623293}
@@ -33220,6 +33223,9 @@ MonoBehaviour:
   UserCardUI: {fileID: 7392923919495444460}
   Notification: {fileID: 0}
   DrawUI: {fileID: 0}
+  ResultsPanel: {fileID: 0}
+  CaughtUI: {fileID: 0}
+  BackBtn: {fileID: 0}
 --- !u!114 &1233569026
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34396,7 +34402,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   missionSlotPrefab: {fileID: 8042588102901407178, guid: 3533e56405ae0be4bba6a2ea99024031, type: 3}
   missionContainer: {fileID: 1273638192}
-  missionPanelBridge: {fileID: 1727296451}
 --- !u!1 &1277583128
 GameObject:
   m_ObjectHideFlags: 0
@@ -37813,6 +37818,7 @@ MonoBehaviour:
   armsAngleOffset: 0
   handsRotationOffset: 0
   armsHorizontalSeparation: 0.75
+  ragdollMode: 0
   isAttacking: 0
   animationSpeed: 1
   runningEffect: {fileID: 0}
@@ -37828,6 +37834,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6404faee905fc3c4792b5b3f745349c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Weapon: {fileID: 0}
   alive: 1
 --- !u!1 &1467424654
 GameObject:
@@ -46528,7 +46535,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e809ab378cfc1044a9033da7d6fc1cfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  missionUIManager: {fileID: 1273638194}
 --- !u!1 &1733094652
 GameObject:
   m_ObjectHideFlags: 0
@@ -54834,6 +54840,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6404faee905fc3c4792b5b3f745349c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Weapon: {fileID: 0}
   alive: 1
 --- !u!114 &2112623295
 MonoBehaviour:
@@ -54888,6 +54895,7 @@ MonoBehaviour:
   armsAngleOffset: 0
   handsRotationOffset: 0
   armsHorizontalSeparation: 0.75
+  ragdollMode: 0
   isAttacking: 0
   animationSpeed: 1
   runningEffect: {fileID: 0}
