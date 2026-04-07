@@ -64,6 +64,7 @@ public class SkinChange : NetworkBehaviour
             }
 
             MenuUIManager.instance.ChooseCharacterUI.SetActive(false);
+
             foreach (var Skin in Skins)
             {
                 Skin.SetActive(false);
@@ -121,7 +122,11 @@ public class SkinChange : NetworkBehaviour
                 CameraFollow.Get().enable = false;
                 StartCoroutine(MoveCamera());
                 Skins[currentSkinIndex].SetActive(true);
-                MenuUIManager.instance.ChooseCharacterUI.SetActive(true);
+                //MenuUIManager.instance.ChooseCharacterUI.SetActive(true);
+
+                MenuUIManager.instance.chooseCharacterDocument.gameObject.SetActive(true); 
+                
+
                 PlayHideOrShow(false);
 
             }
@@ -165,7 +170,7 @@ public class SkinChange : NetworkBehaviour
     {
         Skins[currentSkinIndex].GetComponent<Renderer>().material.color = color;
     }
-    void changeSkin(int index)
+    public void changeSkin(int index)
     {
         Skins[currentSkinIndex].SetActive(false);
         Skins[index].SetActive(true);
@@ -220,8 +225,40 @@ public class SkinChange : NetworkBehaviour
 
     }
 
+    // 在 SkinChange.cs 內部增加
+    public void BackAndCloseAllUI()
+    {
+
+        int originalIndex = PlayerPrefs.GetInt("Choosenindex", 0);
+        Rpc_ChangeSkin(Runner.LocalPlayer, originalIndex, PlayerPrefs.GetString("Color", "#FFFFFF"));
+        // 2. 隱藏 3D 預覽模型 
+        foreach (var skin in Skins)
+        {
+            if (skin != null) skin.SetActive(false); 
+        }
+        GameUIManager.Instance.progressfill.fillAmount = 0;
+
+        // 3. 恢復玩家物件與房間介面 
+        PlayHideOrShow(true); 
+        if (MenuUIManager.instance != null)
+        {
+            MenuUIManager.instance.Gameroom.SetActive(true); 
+
+            // 4. 關鍵：同時關閉新舊兩種 UI 面板 
+            MenuUIManager.instance.ChooseCharacterUI.SetActive(false); 
+            if (MenuUIManager.instance.chooseCharacterDocument != null)
+            {
+                MenuUIManager.instance.chooseCharacterDocument.gameObject.SetActive(false); 
+            }
+        }
+        
+        var practiceRoomUI = FindObjectOfType<PracticeUIManager>(true);
+        if (practiceRoomUI != null)
+        {
+            practiceRoomUI.gameObject.SetActive(true); // 重新打開
+        }
 
 
-
+    }
 
 }

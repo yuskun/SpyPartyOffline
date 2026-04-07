@@ -1,0 +1,123 @@
+/* 全站設定 */
+.page-bg {
+    width: 100%; height: 100%;
+    align-items: center; justify-content: center;
+}
+
+/* 主面板：毛玻璃背景 */
+.items-panel {
+    width: 90%; height: 100%;
+    margin-top: 43px;
+    border-radius: 42px;
+    background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/bg.png");
+}
+
+/*標題標籤 */
+.panel-top-bar {
+    position: absolute; top: -15px; left: 0; right: 0;
+    align-items: center;
+}
+
+.panel-title {
+    padding: 20px 60px 30px; font-size: 35px; color: white;
+    background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/title_bg.png");
+}
+
+/* 關閉按鈕 */
+.close-btn {
+    position: absolute; top: 20px; right: 38px;
+    width: 60px; height: 60px; font-size: 30px; color: white;
+    padding-top: -10px;
+    border-width: 0;
+    background-color: transparent;
+    transition-duration: 0.15s;
+    background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/exit_default.png");
+}
+
+.close-btn:hover {
+    background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/exit_hover.png");
+    scale: 1.05;
+}
+.close-btn:active {
+    background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/exit_active.png");
+    scale: 0.95;
+}
+
+/* 網格排版 */
+.scroll-view { flex-grow: 1; margin-top: 50px; }
+.cards-grid {
+    flex-direction: row; flex-wrap: wrap; justify-content: center;
+}
+
+/* 卡片基礎 */
+.item-card {
+    width: 265px; height: 310px; padding: 0 16px 10px;
+    margin-bottom: -20px;
+    background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/slot.png");
+}
+
+/* 卡片頂部標題條 */
+.item-header {
+    color: white; font-size: 22px; -unity-text-align: middle-center;
+    margin: 20px;
+}
+
+/* 不同卡片類型的背景圖 */
+.means-card .item-header   { background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/name_p.png"); }
+.trap-card .item-header    { background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/name_y.png"); }
+.control-card .item-header { background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/name_b.png"); }
+
+/* Icon 容器 */
+.item-icon-box {
+    height: 140px; 
+    width: 180px;
+    border-radius: 24px;
+    background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/slotitem.png");
+    margin-left: 25px;
+    align-items: center;
+    justify-content: center;
+}
+
+.item-icon { width: 84%; height: 84%; -unity-background-scale-mode: scale-to-fit; }
+
+/* 道具 Icon 分配 */
+.magnifier { background-image: url("project://database/Assets/Image/CardIcon/Icon_Peek.png"); }
+.fist      { background-image: url("project://database/Assets/Image/CardIcon/Icon_Fight.png"); }
+.gift      { background-image: url("project://database/Assets/Image/CardIcon/Icon_Give.png"); }
+.swap      { background-image: url("project://database/Assets/Image/CardIcon/Icon_Swap.png"); }
+.banana    { background-image: url("project://database/Assets/Image/CardIcon/Icon_Banana.png"); }
+.glue-trap { background-image: url("project://database/Assets/Image/CardIcon/Icon_Sticky.png"); }
+.handcuffs { background-image: url("project://database/Assets/Image/CardIcon/Icon_Catch.png"); }
+.steal     { background-image: url("project://database/Assets/Image/CardIcon/Icon_Steal.png"); }
+
+/* 效果文字 */
+.item-effect {
+    height: 44px;
+    font-size: 18px; color: #8d4f1d;-unity-text-align: middle-center;
+}
+
+/* 底部標籤列 */
+.item-bottom { flex-direction: row; align-items: center; justify-content: space-between; }
+.item-tag {
+    padding: 13px 25px;
+    height: 28px;
+    width: 110px;
+    margin-left: 20px;
+    margin-bottom: 45px;
+    font-size: 15px; color: white; -unity-text-align: middle-center;
+}
+
+/* 標籤背景圖 */
+.means-tag   { background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/tag_p.png"); }
+.trap-tag    { background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/tag_y.png"); }
+.control-tag { background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/tag_b.png"); }
+
+/* 黏鼠板專用副資訊 */
+.item-subinfo {
+    padding: 15px 25px;
+    height: 52px;
+    margin-left: -20px;
+    margin-bottom: 36px;
+    background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/gray.png");
+    color: white; font-size: 15px;
+}

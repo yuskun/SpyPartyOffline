@@ -36,7 +36,7 @@ public class MenuUIManager : MonoBehaviour
      public TextMeshProUGUI RoomCodeText;
     [Header("UI Documents")]
     public UnityEngine.UIElements.UIDocument hostRoomDocument;
-
+    public UnityEngine.UIElements.UIDocument chooseCharacterDocument;
     void Awake()
     {
         if (instance == null)

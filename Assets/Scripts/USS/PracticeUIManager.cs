@@ -17,8 +17,10 @@ public class PracticeUIManager : MonoBehaviour
 
         // Mic
         micBtn = root.Q<Button>("MicBtn");
-        if (micBtn != null)
+        if (micBtn != null){
+            micBtn.focusable = false; // 關鍵：禁止聚焦
             micBtn.clicked += ToggleMic;
+        }
     }
 
     void OnDisable()

@@ -1,0 +1,124 @@
+/* ✨ 全站設定 */
+.page-bg {
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 📦 主面板 */
+.trade-modal {
+    width: 560px;
+    height: 650px;
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/setting_bg.png"); 
+    margin-top: 50px;
+    border-width: 3px;
+}
+
+/* 標題列 */
+.trade-header {
+    margin-top: 20px;
+    height: 70px;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-title {
+    font-size: 35px;
+    color: #8b5525;
+    letter-spacing: 4px;
+}
+
+.trade-body {
+    flex-grow: 1;
+}
+
+/* 按鈕排版 */
+.action-row {
+    margin-top: 30px;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 🍮 通用按鈕基底 - 處理尺寸與動畫 */
+.action-btn {
+    width: 250px;
+    height: 80px;
+    margin-bottom: 30px;
+    border-radius: 40px;
+    display: flex; /* 確保 flex 生效 */
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-width: 0;
+    transition: all 0.15s ease; /* 簡化過渡寫法 */
+}
+
+.action-btn:hover {
+    scale: 1.02;
+    translate: 0 -2px;
+}
+
+.action-btn:active {
+    scale: 0.98;
+    translate: 0 1px;
+}
+
+.continue-btn {
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/g_default.png");
+}
+.continue-btn:hover {
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/g_hover.png");
+}
+.continue-btn:active {
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/g_active.png");
+}
+
+.item-btn {
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/y_default.png");
+}
+.item-btn:hover {
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/y_hover.png");
+}
+.item-btn:active {
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/y_active.png");
+}
+
+.setting-btn {
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/b_default.png");
+}
+.setting-btn:hover {
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/b_hover.png");
+}
+.setting-btn:active {
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/b_active.png");
+}
+
+.lobby-btn {
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/o_default.png");
+}
+.lobby-btn:hover {
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/o_hover.png");
+}
+.lobby-btn:active {
+    background-image: url("project://database/Assets/Image/UIPanel/MainMenu/o_active.png");
+}
+
+/* 文字與圖示 */
+.label {
+    color: white;
+    font-size: 30px;
+    margin-left: 10px;
+}
+
+.icon-img {
+    width: 36px;
+    height: 36px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+/* 指定圖片路徑 (請根據你的專案結構修改) */
+.icon-play     { background-image: url("project://database/Assets/Image/UIPanel/MainMenu/icon_play_button.png"); }
+.icon-give     { background-image: url("project://database/Assets/Image/UIPanel/MainMenu/icon_give.png"); }
+.icon-settings { background-image: url("project://database/Assets/Image/UIPanel/MainMenu/icon_settings.png"); }
+.icon-back     { background-image: url("project://database/Assets/Image/UIPanel/MainMenu/icon_back.png"); }

@@ -4,7 +4,7 @@
 }
 
 /* =========================================
-   🔙 左上返回按鈕 (膠囊)
+   左上返回按鈕 (膠囊)
    ========================================= */
 .back-btn {
     position: absolute;
@@ -24,8 +24,8 @@
     transition-duration: 0.1s;
 }
 
-.back-arrow { font-size: 18px; color: white; margin-right: 8px; }
-.back-label { font-size: 16px; color: white; -unity-font-style: bold; letter-spacing: 2px; }
+.back-arrow { font-size: 18px; color: #8b5525; margin-right: 8px; }
+.back-label { font-size: 16px; color: #8b5525; -unity-font-style: bold; letter-spacing: 2px; }
 
 .back-btn:hover { scale: 1.05; translate: 0 -1px; background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/back_hover.png");}
 .back-btn:active { scale: 0.95; translate: 0 2px; background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/back_active.png");}
@@ -44,7 +44,6 @@
     bottom: 15%;
     width: 450px;
     height: 120px;
-    background-image: url("project://database/Assets/Image/ShadowEllipse.png"); /* 建議用一張圓形漸層圖 */
     -unity-background-image-tint-color: rgba(0, 0, 0, 0.3);
 }
 

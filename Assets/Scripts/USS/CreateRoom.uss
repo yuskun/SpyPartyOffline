@@ -21,8 +21,8 @@
     transition-duration: 0.12s;
 }
 
-.back-arrow { font-size: 18px; color: white; margin-right: 5px; }
-.back-label { font-size: 16px; color: white; }
+.back-arrow { font-size: 18px; color: #8b5525; margin-right: 5px; }
+.back-label { font-size: 16px; color: #8b5525; }
 
 .back-pill:hover {
     scale: 1.05;
