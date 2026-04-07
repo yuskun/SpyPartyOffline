@@ -116,6 +116,14 @@ namespace OodlesEngine
             StartCoroutine(DoMoveTo(target, duration));
         }
 
+        /// <summary>瞬間將相機移到指定 Transform（不做平滑過渡）</summary>
+        public void SnapTo(Transform target)
+        {
+            StopAllCoroutines();
+            mainCamera.transform.position = target.position;
+            mainCamera.transform.rotation = target.rotation;
+        }
+
         private IEnumerator DoMoveTo(Transform target, float duration)
         {
             Vector3    startPos = mainCamera.transform.position;

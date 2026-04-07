@@ -10,7 +10,7 @@ public class ResultsBgPlane : MonoBehaviour
     public static ResultsBgPlane Instance { get; private set; }
 
     [Tooltip("滑入動畫時間（秒）")]
-    public float slideInDuration = 0.5f;
+    public float slideInDuration = 2f;
 
     [Tooltip("從右側偏移多少距離開始（世界單位），依 Plane 大小調整）")]
     public float slideOffsetX = 30f;

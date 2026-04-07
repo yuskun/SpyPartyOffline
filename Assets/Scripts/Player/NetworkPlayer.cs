@@ -17,6 +17,7 @@ public class NetworkPlayer : NetworkBehaviour
     public float freezeTimer = 1f; // 凍結計時器，初始值為3秒
     private OodlesCharacter characterController;
     public bool isPrepare=false;
+    private float loadingHideTimer = -1f;
     public override void Spawned()
     {
         Debug.Log($"[NetworkPlayer] 玩家 {PlayerId} 已生成。");
@@ -25,6 +26,10 @@ public class NetworkPlayer : NetworkBehaviour
         {
             CameraFollow.Get().player = characterController.GetPhysicsBody().transform;
             CameraFollow.Get().enable = true;
+
+            // 玩家生成完成 → 延遲 1 秒後關閉 Loading
+            loadingHideTimer = 1f;
+
             if(isPrepare)return;
             if (MiniMap.instance != null)
                 MiniMap.instance.target = characterController.GetPhysicsBody().transform;
@@ -55,6 +60,18 @@ public class NetworkPlayer : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
+        // Loading 延遲關閉倒數（用 Runner.DeltaTime）
+        if (loadingHideTimer > 0f)
+        {
+            loadingHideTimer -= Runner.DeltaTime;
+            if (loadingHideTimer <= 0f)
+            {
+                loadingHideTimer = -1f;
+                if (MenuUIManager.instance != null && MenuUIManager.instance.LoadingScreen != null)
+                    MenuUIManager.instance.LoadingScreen.SetActive(false);
+            }
+        }
+
         if (!AllowInput)
             return;
 
