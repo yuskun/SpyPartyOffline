@@ -92,10 +92,21 @@ public class GameManager : NetworkBehaviour
         PlayerInventoryManager.Instance.Refresh();
         MissionWinSystem.Instance.FightWinCount = PlayerInventoryManager.Instance.playerInventories.Count - 1;
 
+        // Host 生成完全部玩家後，延遲 2 秒統一關閉所有人的 Loading
+        StartCoroutine(DelayedHideLoading(2f));
+    }
 
+    private IEnumerator DelayedHideLoading(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Rpc_HideLoading();
+    }
 
-        // Loading 由 NetworkPlayer.Spawned() 在玩家生成後關閉
-
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void Rpc_HideLoading()
+    {
+        if (MenuUIManager.instance != null && MenuUIManager.instance.LoadingScreen != null)
+            MenuUIManager.instance.LoadingScreen.SetActive(false);
     }
     public override void FixedUpdateNetwork()
     {
@@ -378,7 +389,7 @@ public class GameManager : NetworkBehaviour
         var data = new WinnerData();
         data.winnerID = winnerID;
 
-        // 1. 任務卡 CardData — 從勝利者背包抓
+        // 1. 任務卡 — 從勝利者背包抓，附帶圖片
         if (PlayerInventoryManager.Instance != null)
         {
             var cards = PlayerInventoryManager.Instance.GetCardsByPlayer(winnerID);
@@ -387,7 +398,18 @@ public class GameManager : NetworkBehaviour
                 foreach (var c in cards)
                 {
                     if (c.type == CardType.Mission)
-                        data.missionCards.Add(c);
+                    {
+                        Sprite img = null;
+                        var catalogCard = CardManager.Instance?.Catalog?.cards?.Find(
+                            x => x.cardData.id == c.id && x.cardData.type == c.type);
+                        if (catalogCard != null) img = catalogCard.image;
+
+                        data.missionCards.Add(new MissionCardEntry
+                        {
+                            card = c,
+                            image = img
+                        });
+                    }
                 }
             }
         }
@@ -395,7 +417,7 @@ public class GameManager : NetworkBehaviour
         // 2. 道具/功能卡使用紀錄（不含任務卡）— 從 CardHistoryManager 過濾
         if (CardHistoryManager.Instance != null)
         {
-            // 先統計：cardName → (cardType, count)
+            // key = "cardName_cardType" → CardUsageEntry
             var usageMap = new Dictionary<string, CardUsageEntry>();
             foreach (var entry in CardHistoryManager.Instance.GetAllHistory())
             {
@@ -409,28 +431,31 @@ public class GameManager : NetworkBehaviour
                 }
                 else
                 {
+                    // 從 Catalog 反查出完整的 CardData + 圖片
+                    CardData cardData = default;
+                    Sprite img = null;
+                    if (CardManager.Instance?.Catalog != null)
+                    {
+                        var card = CardManager.Instance.Catalog.cards.Find(c =>
+                            c.GetType().Name == entry.cardName && c.cardData.type == entry.cardType);
+                        if (card != null)
+                        {
+                            cardData = card.cardData;
+                            img = card.image;
+                        }
+                    }
+
                     usageMap[key] = new CardUsageEntry
                     {
-                        cardId = -1, // 下面反查
-                        cardType = entry.cardType,
-                        cardName = entry.cardName,
+                        card = cardData,
+                        image = img,
                         useCount = 1
                     };
                 }
             }
 
-            // 反查 cardId
             foreach (var kv in usageMap)
-            {
-                var usage = kv.Value;
-                if (CardManager.Instance?.Catalog != null)
-                {
-                    var card = CardManager.Instance.Catalog.cards.Find(c =>
-                        c.GetType().Name == usage.cardName && c.cardData.type == usage.cardType);
-                    if (card != null) usage.cardId = card.cardData.id;
-                }
-                data.cardUsages.Add(usage);
-            }
+                data.cardUsages.Add(kv.Value);
         }
 
         // 3. 擊倒記錄 — 從 KnockdownTracker
