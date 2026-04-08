@@ -12,6 +12,7 @@ public class RandomCard : NetworkBehaviour
         {
             // 倒地中的玩家不能撿取
             var character = other.transform.parent.gameObject.GetComponent<OodlesEngine.OodlesCharacter>();
+            NetworkPlayer hitPlayer = other.transform.parent.gameObject.GetComponentInParent<NetworkPlayer>();
             if (character != null && character.ragdollMode) return;
 
             if (cardCatalog == null || cardCatalog.cards.Count == 0)
@@ -24,7 +25,10 @@ public class RandomCard : NetworkBehaviour
             Debug.Log(randomCard.type+" "+randomCard.cardId);
             if (other.transform.parent.gameObject.GetComponent<PlayerInventory>().AddCard(randomCard))
             {
-                CharacterSFXManager.Instance?.PlayPickUp();
+                if (hitPlayer != null) {
+                    hitPlayer.RPC_PlayGlobalSFX(CharacterSFXManager.SFXType.PickUp,hitPlayer.PlayerId);
+                    Debug.LogWarning($"[RandomCard] Host 呼叫玩家 {hitPlayer.PlayerId} 播放音效");
+                }
                 Runner.Despawn(this.GetComponent<NetworkObject>());
             }
         }

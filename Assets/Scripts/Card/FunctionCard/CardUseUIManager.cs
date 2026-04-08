@@ -168,7 +168,7 @@ public class CardUseUIManager : MonoBehaviour
         ui.SetActive(true);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-        CharacterSFXManager.Instance?.PlayOpenUI();
+        NetworkPlayer.Local.RPC_PlayGlobalSFX(CharacterSFXManager.SFXType.OpenUI,NetworkPlayer.Local.PlayerId);
     }
 
     private void ShowFailUI(GameObject failUI) // fail文字顯示幾秒後關閉

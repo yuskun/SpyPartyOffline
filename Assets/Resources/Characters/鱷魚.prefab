@@ -130,8 +130,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: PRX_Forsaken
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: bfc382d10e25c4544b3f8714d4c63cb7, type: 2}
-  m_sharedMaterial: {fileID: -8427051968470054623, guid: bfc382d10e25c4544b3f8714d4c63cb7, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 11bd6be4cdffedd489bae68b96345eb1, type: 2}
+  m_sharedMaterial: {fileID: 7067384546424574235, guid: 11bd6be4cdffedd489bae68b96345eb1, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5156,7 +5156,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: bf24534e3f752b64aacd6642afaf21f7, type: 3}
   m_Resource: {fileID: 8300000, guid: bf24534e3f752b64aacd6642afaf21f7, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.1
+  m_Volume: 0.8
   m_Pitch: 1.5
   Loop: 1
   Mute: 0
@@ -5165,7 +5165,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 3
-  MaxDistance: 15
+  MaxDistance: 8
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0

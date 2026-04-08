@@ -45,6 +45,6 @@ public class Banana : NetworkBehaviour
         }
         Runner.Despawn(this.GetComponent<NetworkObject>());
         
-        CharacterSFXManager.Instance?.PlayBanana(); // 呼叫角色音效
+        NetworkPlayer.Local.RPC_PlayGlobalSFX(CharacterSFXManager.SFXType.Banana,NetworkPlayer.Local.PlayerId);
     }
 }

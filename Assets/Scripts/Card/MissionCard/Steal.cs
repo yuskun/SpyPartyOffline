@@ -19,7 +19,7 @@ public class Steal : MissionCard
         }
 
         stealTarget.BeStolen();
-        CharacterSFXManager.Instance?.PlayUseCard();
+        NetworkPlayer.Local.RPC_PlayGlobalSFX(CharacterSFXManager.SFXType.UseCard,NetworkPlayer.Local.PlayerId);
 
         PlayerInventory user = PlayerInventoryManager.Instance.GetPlayer(parameters.UserId).GetComponent<PlayerInventory>();
         user.SetCooldownEnd(this.cardData);

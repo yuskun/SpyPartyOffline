@@ -252,7 +252,7 @@ public class CardUseUIManager_UIToolkit : MonoBehaviour
             gameHUDDocument.gameObject.SetActive(false);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-        CharacterSFXManager.Instance?.PlayOpenUI();
+        NetworkPlayer.Local.RPC_PlayGlobalSFX(CharacterSFXManager.SFXType.OpenUI,NetworkPlayer.Local.PlayerId);
     }
 
     public void CloseUI(UIDocument doc)
