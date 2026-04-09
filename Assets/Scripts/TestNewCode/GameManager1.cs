@@ -306,14 +306,27 @@ public class GameManager : NetworkBehaviour
             MissionWinSystem.Instance.isGameOver = true;
     }
 
+    /// <summary>Host 清空所有玩家背包（結算資料收集完後呼叫）</summary>
+    private void ClearAllPlayerInventories()
+    {
+        if (PlayerInventoryManager.Instance == null) return;
+        foreach (var inv in PlayerInventoryManager.Instance.playerInventories)
+        {
+            if (inv != null) inv.ClearAll();
+        }
+    }
+
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_Gameover(int winnerID)
     {
         StopGameplay();
 
-        // Host 端組裝結算資料
+        // Host 端組裝結算資料 → 再清空背包
         if (Runner.IsServer)
+        {
             BuildWinnerData(winnerID);
+            ClearAllPlayerInventories();
+        }
 
         if (NetworkManager2.IsSpectator)
         {
@@ -337,9 +350,13 @@ public class GameManager : NetworkBehaviour
     {
         StopGameplay();
 
-        // Host 端組裝結算資料（取第一位勝利者）
-        if (Runner.IsServer && winnerIDs != null && winnerIDs.Length > 0)
-            BuildWinnerData(winnerIDs[0]);
+        // Host 端組裝結算資料 → 再清空背包
+        if (Runner.IsServer)
+        {
+            if (winnerIDs != null && winnerIDs.Length > 0)
+                BuildWinnerData(winnerIDs[0]);
+            ClearAllPlayerInventories();
+        }
 
         if (NetworkManager2.IsSpectator)
         {
@@ -364,9 +381,11 @@ public class GameManager : NetworkBehaviour
     {
         StopGameplay();
 
-        // 平局沒有勝利者
         if (Runner.IsServer)
+        {
             CurrentWinnerData = null;
+            ClearAllPlayerInventories();
+        }
 
         if (NetworkManager2.IsSpectator)
         {

@@ -17,6 +17,10 @@ namespace OodlesEngine
 
         public float hitForce = 10000;
 
+        /// <summary>耐久歸零後標記為損壞，不可再被撿取</summary>
+        [HideInInspector]
+        public bool isBroken = false;
+
         /// <summary>打到人時額外扣耐久，如果歸零則立刻壞掉</summary>
         public void ApplyHitCost()
         {
