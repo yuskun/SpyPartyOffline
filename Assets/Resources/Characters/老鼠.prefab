@@ -775,7 +775,7 @@ AudioSource:
   m_GameObject: {fileID: 2300421023371744903}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 22e1833281e33534d9b657c86f35f779, type: 2}
   m_audioClip: {fileID: 8300000, guid: bee16145cd31ed24081f398564c8ddc3, type: 3}
   m_Resource: {fileID: 8300000, guid: bee16145cd31ed24081f398564c8ddc3, type: 3}
   m_PlayOnAwake: 0
@@ -1427,8 +1427,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: PRX_Forsaken
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: bfc382d10e25c4544b3f8714d4c63cb7, type: 2}
-  m_sharedMaterial: {fileID: -8427051968470054623, guid: bfc382d10e25c4544b3f8714d4c63cb7, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 11bd6be4cdffedd489bae68b96345eb1, type: 2}
+  m_sharedMaterial: {fileID: 7067384546424574235, guid: 11bd6be4cdffedd489bae68b96345eb1, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3570,7 +3570,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: bf24534e3f752b64aacd6642afaf21f7, type: 3}
   m_Resource: {fileID: 8300000, guid: bf24534e3f752b64aacd6642afaf21f7, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.1
+  m_Volume: 0.05
   m_Pitch: 1.5
   Loop: 1
   Mute: 0
@@ -3579,9 +3579,9 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 3
-  MaxDistance: 15
+  MaxDistance: 100
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 2
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -3589,7 +3589,7 @@ AudioSource:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
+      time: 0.1
       value: 1
       inSlope: 0
       outSlope: 0
@@ -3598,7 +3598,7 @@ AudioSource:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 1
+      time: 0.35
       value: 0
       inSlope: 0
       outSlope: 0

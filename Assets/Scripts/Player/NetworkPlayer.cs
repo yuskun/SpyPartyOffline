@@ -1,33 +1,41 @@
-
 using UnityEngine;
 using Fusion;
 using OodlesEngine;
-using UnityEngine.SocialPlatforms;
 using Fusion.Addons.Physics;
-using TMPro;
-
 
 public class NetworkPlayer : NetworkBehaviour
 {
+    // 新增：方便外部存取本地玩家的連線物件
+    public static NetworkPlayer Local;
+
     [Networked]
     public PlayerRef PlayerId { get; set; }
 
-    
     public bool AllowInput = true;
-    public float freezeTimer = 1f; // 凍結計時器，初始值為3秒
+    public float freezeTimer = 1f; 
     private OodlesCharacter characterController;
-    public bool isPrepare=false;
+    public bool isPrepare = false;
+    private float loadingHideTimer = -1f;
+
     public override void Spawned()
     {
         Debug.Log($"[NetworkPlayer] 玩家 {PlayerId} 已生成。");
         characterController = GetComponent<OodlesCharacter>();
+
         if (PlayerId == Runner.LocalPlayer)
         {
+            // 記錄本地玩家實例
+            Local = this;
+
             CameraFollow.Get().player = characterController.GetPhysicsBody().transform;
             CameraFollow.Get().enable = true;
-            if(isPrepare)return;
+
+            loadingHideTimer = 1f;
+
+            if (isPrepare) return;
             if (MiniMap.instance != null)
                 MiniMap.instance.target = characterController.GetPhysicsBody().transform;
+
             LocalBackpack.Instance.userInventory = this.GetComponent<PlayerInventory>();
             LocalBackpack.Instance.playerIdentify = this.GetComponent<PlayerIdentify>();
             LocalBackpack.Instance.character = this.GetComponent<OodlesCharacter>();
@@ -36,8 +44,33 @@ public class NetworkPlayer : NetworkBehaviour
             LocalBackpack.Instance.scanner.enableScan = true;
             this.GetComponent<PlayerIdentify>().Text.gameObject.SetActive(false);
         }
-
     }
+
+    // =============================
+    // 音效同步系統 (RPC)
+    // =============================
+
+    /// <summary>
+    /// 最核心的 RPC 方法：讓所有端呼叫本地的 CharacterSFXManager 播放聲音
+    /// </summary>
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void RPC_PlayGlobalSFX(CharacterSFXManager.SFXType type, PlayerRef targetPlayer)
+    {
+        if (Runner.LocalPlayer != targetPlayer) return;
+        if (CharacterSFXManager.Instance != null)
+        {
+            CharacterSFXManager.Instance.PlaySFX(type);
+        }
+    }
+
+    // 快捷播放方法：方便你從 Animator 腳本或卡片腳本呼叫
+    //public void PlayPunchSound() => RPC_PlayGlobalSFX(CharacterSFXManager.SFXType.Punch);
+    //public void PlayAttackSound() => RPC_PlayGlobalSFX(CharacterSFXManager.SFXType.Attack);
+    //public void PlayUseCardSound() => RPC_PlayGlobalSFX(CharacterSFXManager.SFXType.UseCard);
+
+    // =============================
+    // 原有邏輯保持不變
+    // =============================
 
     public void TeleportTo(Vector3 position)
     {
@@ -48,43 +81,34 @@ public class NetworkPlayer : NetworkBehaviour
             body.Teleport(position, Quaternion.identity);
             freezeTimer = 5;
         }
-
     }
-
-
 
     public override void FixedUpdateNetwork()
     {
-        if (!AllowInput)
-            return;
+        if (loadingHideTimer > 0f)
+        {
+            loadingHideTimer -= Runner.DeltaTime;
+            if (loadingHideTimer <= 0f)
+            {
+                loadingHideTimer = -1f;
+                if (MenuUIManager.instance != null && MenuUIManager.instance.LoadingScreen != null)
+                    MenuUIManager.instance.LoadingScreen.SetActive(false);
+            }
+        }
 
-        // 遊戲規則凍結（OK）
+        if (!AllowInput) return;
+
         if (freezeTimer > 0f)
         {
             freezeTimer -= Runner.DeltaTime;
             return;
         }
 
-        //  只讓 Host 模擬
-        if (!Object.HasStateAuthority)
-            return;
+        if (!Object.HasStateAuthority) return;
 
         if (Runner.TryGetInputForPlayer(PlayerId, out OodlesCharacterInput data))
         {
-            // // ====== 關鍵：丟掉過期輸入 ======
-            // int currentTick = Runner.Tick;   // Fusion.Tick 可直接當 int 用
-            // int inputTick = data.tick;
-
-            // if (currentTick - inputTick > 2)
-            // {
-            //     // 過期輸入 → 直接忽略
-            //     return;
-            // }
-
-            // ====== 只有新鮮輸入才進物理 ======
             characterController.ProcessInput(data);
         }
-
     }
-
 }

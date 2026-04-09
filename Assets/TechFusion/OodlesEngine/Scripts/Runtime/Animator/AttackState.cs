@@ -17,13 +17,15 @@ namespace OodlesEngine
             {
                 character.isAttacking = true;
                 if(character.HoldWeapon() == true)
-                {
-                CharacterSFXManager.Instance?.PlayAttack();
+                {// 在本地玩家身上發送同步音效
+                NetworkPlayer.Local.RPC_PlayGlobalSFX(CharacterSFXManager.SFXType.Attack,NetworkPlayer.Local.PlayerId);
+                //CharacterSFXManager.Instance?.PlayAttack();
                 Debug.LogWarning("播放攻擊音效");
                 }
                 else
                 {
-                CharacterSFXManager.Instance?.PlayPunch();
+                NetworkPlayer.Local.RPC_PlayGlobalSFX(CharacterSFXManager.SFXType.Punch,NetworkPlayer.Local.PlayerId);
+                //CharacterSFXManager.Instance?.PlayPunch();
                 Debug.LogWarning("播放拳頭音效");
                 }
             }

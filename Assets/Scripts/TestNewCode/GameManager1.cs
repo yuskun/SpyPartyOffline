@@ -84,16 +84,29 @@ public class GameManager : NetworkBehaviour
         SetSpawnArea();
         PlayerSpawner.instance.RefreshSpawnPoints();
         MissionWinSystem.Instance.ResetFightStats();
+        KnockdownTracker.Reset();
+        CurrentWinnerData = null;
         SpawnAI();
         SpawnAllPlayers();
         PlayerInventoryManager.Instance.init();
         PlayerInventoryManager.Instance.Refresh();
         MissionWinSystem.Instance.FightWinCount = PlayerInventoryManager.Instance.playerInventories.Count - 1;
 
+        // Host 生成完全部玩家後，延遲 2 秒統一關閉所有人的 Loading
+        StartCoroutine(DelayedHideLoading(2f));
+    }
 
+    private IEnumerator DelayedHideLoading(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Rpc_HideLoading();
+    }
 
-        MenuUIManager.instance.LoadingScreen.SetActive(false);
-
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void Rpc_HideLoading()
+    {
+        if (MenuUIManager.instance != null && MenuUIManager.instance.LoadingScreen != null)
+            MenuUIManager.instance.LoadingScreen.SetActive(false);
     }
     public override void FixedUpdateNetwork()
     {
@@ -298,6 +311,10 @@ public class GameManager : NetworkBehaviour
     {
         StopGameplay();
 
+        // Host 端組裝結算資料
+        if (Runner.IsServer)
+            BuildWinnerData(winnerID);
+
         if (NetworkManager2.IsSpectator)
         {
             StartCoroutine(SpectatorResultsSequence());
@@ -319,6 +336,10 @@ public class GameManager : NetworkBehaviour
     public void RPC_MultipleWinners(int[] winnerIDs)
     {
         StopGameplay();
+
+        // Host 端組裝結算資料（取第一位勝利者）
+        if (Runner.IsServer && winnerIDs != null && winnerIDs.Length > 0)
+            BuildWinnerData(winnerIDs[0]);
 
         if (NetworkManager2.IsSpectator)
         {
@@ -343,6 +364,10 @@ public class GameManager : NetworkBehaviour
     {
         StopGameplay();
 
+        // 平局沒有勝利者
+        if (Runner.IsServer)
+            CurrentWinnerData = null;
+
         if (NetworkManager2.IsSpectator)
         {
             StartCoroutine(SpectatorResultsSequence());
@@ -351,6 +376,104 @@ public class GameManager : NetworkBehaviour
 
         GameUIManager.Instance.Draw();
         StartCoroutine(ResultsSequence(new int[0]));
+    }
+
+    // ====== 結算資料系統 ======
+
+    /// <summary>結算資料（Host 端組裝，所有端可讀）</summary>
+    public static WinnerData CurrentWinnerData;
+
+    /// <summary>Host 端組裝勝利者的結算資料</summary>
+    private void BuildWinnerData(int winnerID)
+    {
+        var data = new WinnerData();
+        data.winnerID = winnerID;
+
+        // 1. 任務卡 — 從勝利者背包抓，附帶圖片
+        if (PlayerInventoryManager.Instance != null)
+        {
+            var cards = PlayerInventoryManager.Instance.GetCardsByPlayer(winnerID);
+            if (cards != null)
+            {
+                foreach (var c in cards)
+                {
+                    if (c.type == CardType.Mission)
+                    {
+                        Sprite img = null;
+                        var catalogCard = CardManager.Instance?.Catalog?.cards?.Find(
+                            x => x.cardData.id == c.id && x.cardData.type == c.type);
+                        if (catalogCard != null) img = catalogCard.image;
+
+                        data.missionCards.Add(new MissionCardEntry
+                        {
+                            card = c,
+                            image = img
+                        });
+                    }
+                }
+            }
+        }
+
+        // 2. 道具/功能卡使用紀錄（不含任務卡）— 從 CardHistoryManager 過濾
+        if (CardHistoryManager.Instance != null)
+        {
+            // key = "cardName_cardType" → CardUsageEntry
+            var usageMap = new Dictionary<string, CardUsageEntry>();
+            foreach (var entry in CardHistoryManager.Instance.GetAllHistory())
+            {
+                if (entry.userId != winnerID) continue;
+                if (entry.cardType == CardType.Mission) continue; // 排除任務卡
+
+                string key = $"{entry.cardName}_{(int)entry.cardType}";
+                if (usageMap.ContainsKey(key))
+                {
+                    usageMap[key].useCount++;
+                }
+                else
+                {
+                    // 從 Catalog 反查出完整的 CardData + 圖片
+                    CardData cardData = default;
+                    Sprite img = null;
+                    if (CardManager.Instance?.Catalog != null)
+                    {
+                        var card = CardManager.Instance.Catalog.cards.Find(c =>
+                            c.GetType().Name == entry.cardName && c.cardData.type == entry.cardType);
+                        if (card != null)
+                        {
+                            cardData = card.cardData;
+                            img = card.image;
+                        }
+                    }
+
+                    usageMap[key] = new CardUsageEntry
+                    {
+                        card = cardData,
+                        image = img,
+                        useCount = 1
+                    };
+                }
+            }
+
+            foreach (var kv in usageMap)
+                data.cardUsages.Add(kv.Value);
+        }
+
+        // 3. 擊倒記錄 — 從 KnockdownTracker
+        var koRecords = KnockdownTracker.GetRecords(winnerID);
+        foreach (var kv in koRecords)
+        {
+            data.knockdowns.Add(new KnockdownEntry
+            {
+                targetPlayerId = kv.Key,
+                knockdownCount = kv.Value
+            });
+        }
+
+        CurrentWinnerData = data;
+
+        Debug.Log($"[Results] WinnerData 組裝完成: winnerID={winnerID}, " +
+                  $"任務卡={data.missionCards.Count}, 道具使用={data.cardUsages.Count}種, " +
+                  $"擊倒目標={data.knockdowns.Count}人");
     }
 
     /// <summary>旁觀者的結算流程：關閉自由相機、顯示結算 UI 與返回按鈕</summary>
@@ -364,15 +487,16 @@ public class GameManager : NetworkBehaviour
 
         GameUIManager.Instance.ShowResultsPanel();
 
+
         GameObject camPointObj = ResultsCameraPoint != null
             ? ResultsCameraPoint.gameObject
             : GameObject.FindWithTag("ResultsCam");
 
         if (camPointObj != null)
         {
-            float slideIn = ResultsBgPlane.Instance != null ? ResultsBgPlane.Instance.slideInDuration : 0.5f;
+            float slideIn = ResultsBgPlane.Instance != null ? ResultsBgPlane.Instance.slideInDuration : 2f;
             yield return new WaitForSeconds(slideIn);
-            CameraFollow.Get().MoveTo(camPointObj.transform, resultsCamMoveDuration);
+            CameraFollow.Get().SnapTo(camPointObj.transform);
         }
 
         GameUIManager.Instance.BackBtn?.SetActive(true);
@@ -400,6 +524,7 @@ public class GameManager : NetworkBehaviour
         // 3. 結算背景滑入
         GameUIManager.Instance.ShowResultsPanel();
 
+
         // 4. 等待滑入動畫完成後，將相機移到結算鏡頭點
         // 用 Tag 在 scene 中尋找（避免 prefab-spawned NetworkBehaviour 的 scene reference 在 client 為 null）
         GameObject camPointObj = ResultsCameraPoint != null
@@ -408,9 +533,9 @@ public class GameManager : NetworkBehaviour
 
         if (camPointObj != null)
         {
-            float slideIn = ResultsBgPlane.Instance != null ? ResultsBgPlane.Instance.slideInDuration : 0.5f;
+            float slideIn = ResultsBgPlane.Instance != null ? ResultsBgPlane.Instance.slideInDuration : 2f;
             yield return new WaitForSeconds(slideIn);
-            CameraFollow.Get().MoveTo(camPointObj.transform, resultsCamMoveDuration);
+            CameraFollow.Get().SnapTo(camPointObj.transform);
         }
 
         // 相機到位後，Host 端觸發結算動畫

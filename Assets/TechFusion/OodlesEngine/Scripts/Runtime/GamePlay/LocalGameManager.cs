@@ -216,7 +216,14 @@ namespace OodlesEngine
             {
 
                 var target = animMagnet.oodlesCharacter;
-                if (msg.pc.gameObject.GetComponent<PlayerIdentify>().PlayerID == MissionWinSystem.Instance.GetFightID())
+
+                // 所有玩家的擊倒都記錄（結算用：誰打倒了誰）
+                var attackerIdentify = msg.pc.gameObject.GetComponent<PlayerIdentify>();
+                var targetIdentify = target.GetComponentInParent<PlayerIdentify>();
+                if (attackerIdentify != null && targetIdentify != null && !target.ragdollMode)
+                    KnockdownTracker.RecordKnockdown(attackerIdentify.PlayerID, targetIdentify.PlayerID);
+
+                if (attackerIdentify != null && attackerIdentify.PlayerID == MissionWinSystem.Instance.GetFightID())
                 {
 
                     // 檢查是否已經擊倒過這個 target
@@ -255,7 +262,13 @@ namespace OodlesEngine
                 // 打到人：額外扣武器耐久
                 msg.wp.ApplyHitCost();
 
-                if (msg.pc.gameObject.GetComponent<PlayerIdentify>().PlayerID == MissionWinSystem.Instance.GetFightID())
+                // 所有玩家的擊倒都記錄（結算用：誰打倒了誰）
+                var weaponAttackerIdentify = msg.pc.gameObject.GetComponent<PlayerIdentify>();
+                var weaponTargetIdentify = targetPC != null ? targetPC.GetComponentInParent<PlayerIdentify>() : null;
+                if (weaponAttackerIdentify != null && weaponTargetIdentify != null)
+                    KnockdownTracker.RecordKnockdown(weaponAttackerIdentify.PlayerID, weaponTargetIdentify.PlayerID);
+
+                if (weaponAttackerIdentify != null && weaponAttackerIdentify.PlayerID == MissionWinSystem.Instance.GetFightID())
                 {
                     // 檢查是否已經擊倒過這個 target
                     MissionWinSystem.Instance.UpdateFightCount(targetPC);

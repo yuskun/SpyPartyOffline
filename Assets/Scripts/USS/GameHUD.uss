@@ -103,6 +103,18 @@
     width: 70%; height: 70%; -unity-background-scale-mode: scale-to-fit;
 }
 
+.cooldown-label {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -unity-text-align: middle-center;
+    color: white;
+    font-size: 24px;
+    -unity-font-style: bold;
+    background-color: rgba(0, 0, 0, 0.5); /* 變暗效果 */
+    display: none; /* 沒冷卻時隱藏 */
+}
+
 .minimap-container {
     position: absolute; top: 40px; right: 40px;
     width: 250px; height: 250px;
@@ -146,12 +158,20 @@
 
 /* 麥克風切換 */
 .icon-btn {
-    width: 38px; height: 38px; border-radius: 15px;
+    width: 40px; height: 40px; border-radius: 15px;
     background-image: url("project://database/Assets/Image/UIPanel/GameHUD/mic_bg.png");
     border-width: 0;
     background-color: rgba(0, 0, 0, 0);
     align-items: center; justify-content: center;
 }
 .mic-icon { width: 20px; height: 20px; display: none; }
+
+.mic-btn {
+    transition-property: translate, scale;
+    transition-duration: 0.12s;
+}
+.mic-btn:hover { translate: 0 -1.5px; }
+.mic-btn:active { translate: 0 1.5px; }
+
 .mic-btn.is-open .mic-open { display: flex; background-image: url("project://database/Assets/Image/UIPanel/GameHUD/mic-open.png"); }
 .mic-btn.is-off .mic-off { display: flex; background-image: url("project://database/Assets/Image/UIPanel/GameHUD/mic-off.png"); }

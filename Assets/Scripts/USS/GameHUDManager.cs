@@ -6,6 +6,8 @@ public class GameHUDManager : MonoBehaviour
     public static GameHUDManager Instance;
     private Label _topTimeLabel;
     public RenderTexture minimapRenderTexture;
+    private Button micBtn;
+    private bool micOn = true;
 
     private void Awake()
     {
@@ -30,11 +32,33 @@ public class GameHUDManager : MonoBehaviour
         var avatarImg = root.Q<UnityEngine.UIElements.Image>(className: "avatar-img");
         if (avatarImg != null)
             avatarImg.sprite = avatar;
+
+        // Mic
+        micBtn = root.Q<Button>("MicBtn");
+        if (micBtn != null){
+            micBtn.focusable = false; // 關鍵：禁止聚焦
+            micBtn.clicked += ToggleMic;
+        }
     }
 
     public void SetTopTime(string timeText)
     {
         if (_topTimeLabel != null)
             _topTimeLabel.text = timeText;
+    }
+
+    void ToggleMic()
+    {
+        micOn = !micOn;
+        if (micOn)
+        {
+            micBtn.AddToClassList("is-open");
+            micBtn.RemoveFromClassList("is-off");
+        }
+        else
+        {
+            micBtn.AddToClassList("is-off");
+            micBtn.RemoveFromClassList("is-open");
+        }
     }
 }

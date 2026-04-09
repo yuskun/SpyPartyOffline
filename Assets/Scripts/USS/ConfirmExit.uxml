@@ -5,8 +5,8 @@
             <ui:Label text="離開房間" class="dialog-title" />
             <ui:Label text="你確定要離開目前的房間嗎？" class="dialog-message" />
             <ui:VisualElement class="button-group">
-                <ui:Button text="取消" name="CancelButton" class="dialog-button cancel" />
                 <ui:Button text="確定離開" name="ConfirmButton" class="dialog-button confirm" />
+                <ui:Button text="取消" name="CancelButton" class="dialog-button cancel" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

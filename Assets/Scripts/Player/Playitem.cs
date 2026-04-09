@@ -11,6 +11,10 @@ public class PlayerItem : NetworkBehaviour
     {
         if (other.name == "Ragdoll")
         {
+            // 倒地中的玩家不能撿取
+            var character = other.transform.parent.gameObject.GetComponent<OodlesEngine.OodlesCharacter>();
+            if (character != null && character.ragdollMode) return;
+
             if (other.transform.parent.gameObject.GetComponent<PlayerInventory>().AddCard(cardData))
             {
                 this.gameObject.SetActive(false);

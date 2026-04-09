@@ -45,6 +45,9 @@ public class LocalBackpack : MonoBehaviour
 
     public CardUseUIManager cardUseUIManager; // UI 控制器
     public CardUseUIManager_UIToolkit cardUseUIManagerUIToolkit;
+    // 在欄位區加這兩個
+    public Sprite normalFrame;    // 拖入 inventory.png
+    public Sprite selectedFrame;  // 拖入 inventory_select.png
 
     // ✅ 新增：可控制 Update 是否執行
     [Header("控制項")]
@@ -70,6 +73,7 @@ public class LocalBackpack : MonoBehaviour
                 ButtionData data = new ButtionData();
                 data.button = btn;
                 data.image = btn.transform.Find("CardImage")?.GetComponent<Image>();
+                data.frameImage = btn.gameObject.GetComponent<Image>();
                 data.cooldownText = btn.transform.Find("CooldownText")?.GetComponent<TextMeshProUGUI>();
                 data.outline = btn.gameObject.GetComponent<UnityEngine.UI.Outline>();
                 if (data.outline == null) data.outline = btn.gameObject.AddComponent<UnityEngine.UI.Outline>();
@@ -474,14 +478,16 @@ public class LocalBackpack : MonoBehaviour
         {
             if (i == FocusIndex)
             {
-                buttons[i].outline.enabled = true;
-                buttons[i].shadow.enabled = false;
+                //buttons[i].outline.enabled = true;
+                //buttons[i].shadow.enabled = false;
+                buttons[i].frameImage.sprite = selectedFrame;
                 buttons[i].button.transform.localScale = Vector3.one * 1.15f;
             }
             else
             {
-                buttons[i].outline.enabled = false;
-                buttons[i].shadow.enabled = true;
+                //buttons[i].outline.enabled = false;
+                //buttons[i].shadow.enabled = true;
+                buttons[i].frameImage.sprite = normalFrame;
                 buttons[i].button.transform.localScale = Vector3.one;
             }
         }
@@ -644,5 +650,7 @@ public class ButtionData
     public UnityEngine.UI.Outline outline;
     public Shadow shadow;
     public TextMeshProUGUI cooldownText;
+
+    public Image frameImage; // 父物件的 Image
     public Image forbidImage;
 }

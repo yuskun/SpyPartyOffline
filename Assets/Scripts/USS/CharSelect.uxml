@@ -6,22 +6,22 @@
             <ui:VisualElement class="portrait-column">
                 <ui:Button class="portrait selected">
                     <ui:VisualElement class="avatar">
+                        <ui:VisualElement name="RobertImg" class="char-img mouse" />
+                    </ui:VisualElement>
+                </ui:Button>
+                <ui:Button class="portrait">
+                    <ui:VisualElement class="avatar">
+                        <ui:VisualElement name="BurrImg" class="char-img snake" />
+                    </ui:VisualElement>
+                </ui:Button>
+                <ui:Button class="portrait">
+                    <ui:VisualElement class="avatar">
                         <ui:VisualElement name="ShayaImg" class="char-img shark" />
                     </ui:VisualElement>
                 </ui:Button>
                 <ui:Button class="portrait">
                     <ui:VisualElement class="avatar">
-                        <ui:VisualElement name="BurrImg" class="char-img crocodile" />
-                    </ui:VisualElement>
-                </ui:Button>
-                <ui:Button class="portrait">
-                    <ui:VisualElement class="avatar">
-                        <ui:VisualElement name="SybooImg" class="char-img snake" />
-                    </ui:VisualElement>
-                </ui:Button>
-                <ui:Button class="portrait">
-                    <ui:VisualElement class="avatar">
-                        <ui:VisualElement name="RobertImg" class="char-img mouse" />
+                        <ui:VisualElement name="SybooImg" class="char-img crocodile" />
                     </ui:VisualElement>
                 </ui:Button>
             </ui:VisualElement>

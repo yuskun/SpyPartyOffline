@@ -1,54 +1,229 @@
-/* 背景遮罩 */
-.settings-root {
-    flex-grow: 1;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.5);
+/* 全站設定 */
+.page-bg {
+    width: 100%; height: 100%;
+    align-items: center; justify-content: center;
+    color: #8b5525;
 }
 
-/* 主容器 */
-.settings-container {
-    width: 500px;
-    background-color: rgb(240, 240, 240);
-    border-radius: 30px;
-    padding: 25px;
+/* 主面板 */
+.settings-panel {
+    width: 650px; height: 730px;
+    margin-top: 43px;
+    background-image: url("project://database/Assets/Image/UIPanel/Setting/bg.png");
+    border-radius: 38px;
 }
 
-/* 標題 */
-.main-title {
-    font-size: 24px;
+.panel-top-bar {
+    height: 72px; 
+    align-items: center; justify-content: center;
+}
+
+.panel-title {
+    position: absolute; top: -18px;
+    width: 240px; height: 76px;
+    background-image: url("project://database/Assets/Image/UIPanel/Setting/title_bg.png");
+    font-size: 35px;
     -unity-text-align: middle-center;
-    margin-bottom: 20px;
 }
 
-/* 區塊（圖像、聲音） */
-.section {
-    background-color: white;
-    margin-bottom: 15px;
-    padding: 15px;
-    border-radius: 20px;
+.panel-body {
+    padding: 20px 45px;
 }
 
-.section-title {
-    font-size: 14px;
-    color: gray;
+/* 個人資料卡 */
+.profile-card {
+    width: 540px;
+    height: 140px;
+    margin-left: 8px;
+    flex-direction: row; align-items: center;
+    padding: 15px 20px;
+    background-image: url("project://database/Assets/Image/UIPanel/Setting/playerbg.png");
+}
+
+.avatar-wrap {
+    width: 110px; height: 110px; border-radius: 50px;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/player.png");
+    overflow: hidden;
+    align-items: center; justify-content: center;
+}
+
+.avatar-img { 
     margin-bottom: 10px;
+    width: 63%; height: 68%;
+    background-image: url("project://database/Assets/Image/Character/Shaya.png"); 
+    border-radius: 35px;
+
 }
+
+.profile-info {
+    flex-grow: 1; margin-left: 2px;
+}
+
+.player-name { font-size: 24px; color: #7e4d25; -unity-font-style: bold; margin-top: -1px;}
+.player-id { font-size: 18px; color: #9d7045; margin-top: -3px;}
+
+.level-row {
+    flex-direction: row; align-items: center; margin-top: -10px;
+}
+
+.level-bar {
+    height: 14px; width: 220px;     
+    background-image: url("project://database/Assets/Image/UIPanel/Setting/levelbar.png");
+    border-radius: 7px; overflow: hidden; margin-right: 12px;
+}
+
+.level-fill { 
+    height: 100%; 
+    background-image: url("project://database/Assets/Image/UIPanel/Setting/level_fill.png");
+}
+
+.level-text { font-size: 18px; -unity-font-style: bold; }
+
+/* 設定卡片通用 (Slider & 品質) */
+.setting-card {
+    flex-direction: row; align-items: center;
+    height: 100px; 
+    width: 540px;
+    margin-left: 8px;
+    padding: 0 50px; margin-top: -20px;
+    padding-bottom:10px;
+    padding-left: 50px;
+    background-image: url("project://database/Assets/Image/UIPanel/Setting/slot.png");
+}
+
+.setting-left { 
+    flex-direction: row; align-items: center; 
+    width: 160px; 
+}
+
+/* Icon 樣式 */
+.icon-img {
+    width: 30px; height: 30px; margin-right: 15px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+/* 各別 Icon 圖片路徑 */
+.icon-master { background-image: url("project://database/Assets/Image/UIPanel/Setting/icon1.png"); }
+.icon-music { background-image: url("project://database/Assets/Image/UIPanel/Setting/icon2.png"); }
+.icon-sfx { background-image: url("project://database/Assets/Image/UIPanel/Setting/icon3.png"); }
+.icon-quality { background-image: url("project://database/Assets/Image/UIPanel/Setting/icon4.png"); }
+
+.setting-label { font-size: 22px; }
+
+.setting-right { 
+    flex-direction: row; align-items: center; 
+    flex-grow: 1; justify-content: flex-end;
+}
+
+/* Slider 樣式 */
+.volume-slider { flex-grow: 1; margin-right: 10px; border-width: 0; }
+.volume-slider .unity-base-slider__tracker {
+    height: 12px; border-radius: 6px;border-width: 0;
+    background-image: url("project://database/Assets/Image/UIPanel/Setting/slider.png");
+}
+.volume-slider .unity-base-slider__dragger {
+    width: 28px; height: 28px; border-radius: 14px;border-width: 0;
+    background-image: url("project://database/Assets/Image/UIPanel/Setting/slider_dot.png");
+    margin-top: -11px;
+}
+
+.value-pill {
+    width: 74px; height: 58px; 
+    font-size: 18px;
+    padding-bottom: 12px;
+    margin-top: 10px;
+    background-image: url("project://database/Assets/Image/UIPanel/Setting/value.png");
+    color: white; -unity-text-align: middle-center;
+}
+
+/* 品質按鈕群組 */
+.quality-group {
+    flex-direction: row; align-items: center;
+    flex-grow: 1; justify-content: flex-end;
+}
+
+/* --- 基礎設定 --- */
+.quality-btn {
+    width: 75px;
+    height: 38px;
+    margin-left: 8px;
+    border-radius: 21px;
+    border-width: 0;
+    transition-duration: 0.15s;
+    scale: 1;
+    opacity: 0.8;
+    color: white;
+    font-size: 18px;
+}
+
+/* 1. 預設圖片 (Default) */
+.low { background-image: url("project://database/Assets/Image/UIPanel/Setting/green_default.png"); }
+.mid { background-image: url("project://database/Assets/Image/UIPanel/Setting/blue_default.png"); }
+.high { background-image: url("project://database/Assets/Image/UIPanel/Setting/orange_default.png"); }
+
+/* 2. 懸停狀態 (Hover) - 放大並換圖 */
+.quality-btn:hover {
+    opacity: 1;
+    scale: 1.05;
+}
+.low:hover { background-image: url("project://database/Assets/Image/UIPanel/Setting/green_hover.png"); }
+.mid:hover { background-image: url("project://database/Assets/Image/UIPanel/Setting/blue_hover.png"); }
+.high:hover { background-image: url("project://database/Assets/Image/UIPanel/Setting/orange_hover.png"); }
+
+/* 3. 按下瞬間 (Active 偽類) - 縮小展現點擊感 */
+.quality-btn:active {
+    scale: 0.92;
+    transition-duration: 0.05s; /* 縮小要快才有打擊感 */
+}
+/* 按住時通常維持 hover 或使用 active 圖，這裡建議換上 active 圖 */
+.low:active { background-image: url("project://database/Assets/Image/UIPanel/Setting/green_active.png"); }
+.mid:active { background-image: url("project://database/Assets/Image/UIPanel/Setting/blue_active.png"); }
+.high:active { background-image: url("project://database/Assets/Image/UIPanel/Setting/orange_active.png"); }
+
+/* 4. 選中狀態 (C# 控制的 .active Class) - 保持放大與明亮 */
+/* 我們用 .selected-active 來避開與內建 :active 混淆，
+   如果你 C# 是寫 AddToClassList("active")，請維持 .active */
+.quality-btn.active {
+    opacity: 1;
+    scale: 1.15; 
+}
+.low.active { background-image: url("project://database/Assets/Image/UIPanel/Setting/green_active.png"); }
+.mid.active { background-image: url("project://database/Assets/Image/UIPanel/Setting/blue_active.png"); }
+.high.active { background-image: url("project://database/Assets/Image/UIPanel/Setting/orange_active.png"); }
 
 /* 底部按鈕 */
-.footer {
-    flex-direction: row;
-    justify-content: space-between;
-    margin-top: 15px;
+.result-actions { flex-direction: row; justify-content: center; margin-top: 20px; }
+.action-btn {
+    width: 200px; height: 60px; border-radius: 30px; border-width: 0;
+    font-size: 28px; color: white; margin: -20 15px;
+    transition-duration: 0.15s;
 }
 
-.footer-button {
-    width: 30%;
-    height: 45px;
-    border-radius: 12px;
-    background-color: white;
+.back-btn {
+    background-image: url("project://database/Assets/Image/UIPanel/Setting/g_default.png");
+    color: white;
 }
 
-.apply-button {
-    background-color: rgb(255, 235, 59);
+.back-btn:hover {
+    background-image: url("project://database/Assets/Image/UIPanel/Setting/g_hover.png");
+    scale: 1.05;
+}
+
+.back-btn:active {
+    background-image: url("project://database/Assets/Image/UIPanel/Setting/g_active.png");
+    scale: 0.95;
+}
+
+
+.confirm-btn {
+    background-image: url("project://database/Assets/Image/UIPanel/Setting/y_default.png");
+    color: #8b5525;
+}
+.confirm-btn:hover {
+    background-image: url("project://database/Assets/Image/UIPanel/Setting/y_hover.png");
+    scale: 1.05;
+}
+.confirm-btn:active {
+    background-image: url("project://database/Assets/Image/UIPanel/Setting/y_active.png");
+    scale: 0.95;
 }

@@ -300,6 +300,19 @@ public class MissionWinSystem : MonoBehaviour
     }
 
     /// <summary>
+    /// 取得指定玩家已完成的任務 ID 列表（結算畫面用）
+    /// 0=Catch, 1=Steal, 2=Fight
+    /// </summary>
+    public List<int> GetCompletedMissionIds(int playerId)
+    {
+        var result = new List<int>();
+        if (CatchWin && CatchID == playerId) result.Add(0);
+        if ((StealWin || StealCollectWin) && StealID == playerId) result.Add(1);
+        if (FightWin && FightID == playerId) result.Add(2);
+        return result;
+    }
+
+    /// <summary>
     /// 小偷偷走一個場景物件後呼叫，遞增計數。
     /// 集齊3個後觸發 StealCollectWin。
     /// 僅由 Steal.UseSkill 呼叫（Host 端）。

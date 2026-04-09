@@ -217,7 +217,7 @@ public class ObjectSpawner : MonoBehaviour
         {
             if (obj.GetComponent<SetPosition>() != null)
                 obj.GetComponent<SetPosition>().Setpos(position.position);
-                CharacterSFXManager.Instance?.PlayUseCard();
+                NetworkPlayer.Local.RPC_PlayGlobalSFX(CharacterSFXManager.SFXType.UseCard,NetworkPlayer.Local.PlayerId);
         });
     }
 

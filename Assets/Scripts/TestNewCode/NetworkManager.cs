@@ -467,7 +467,12 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
     public void OnHostMigration(NetworkRunner r, HostMigrationToken t) { }
     public void OnSceneLoadDone(NetworkRunner r)
     {
-
+        // Loading 由 NetworkPlayer.Spawned() 在玩家生成後關閉，這裡不再自動關
     }
-    public void OnSceneLoadStart(NetworkRunner r) { }
+    public void OnSceneLoadStart(NetworkRunner r)
+    {
+        // 場景開始載入 → 顯示 Loading（所有端，包含 Client）
+        if (MenuUIManager.instance != null && MenuUIManager.instance.LoadingScreen != null)
+            MenuUIManager.instance.LoadingScreen.SetActive(true);
+    }
 }

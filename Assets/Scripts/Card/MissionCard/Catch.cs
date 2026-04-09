@@ -24,7 +24,7 @@ public class Catch : MissionCard
     }
     public override void CheckMission(CardUseParameters parameters)
     {
-        CharacterSFXManager.Instance?.PlayUseCard();
+        NetworkPlayer.Local.RPC_PlayGlobalSFX(CharacterSFXManager.SFXType.UseCard,NetworkPlayer.Local.PlayerId);
 
         bool hasSteal = PlayerInventoryManager.Instance.GetPlayer(parameters.TargetId).GetComponent<PlayerInventory>().HasCard(targetCard.cardData);
         Debug.Log($"[Catch] UserId={parameters.UserId} TargetId={parameters.TargetId} targetHasSteal={hasSteal} targetCardData=id:{targetCard?.cardData.id} type:{targetCard?.cardData.type}");

@@ -1,0 +1,30 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Scripts/USS/GameMenu.uss?fileID=7433441132597879392&amp;guid=486fb04b88377694b9b74a7eccaa62c7&amp;type=3#GameMenu" />
+    <ui:VisualElement name="page-bg" class="page-bg" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;);">
+        <ui:VisualElement class="trade-modal">
+            <ui:VisualElement class="trade-header">
+                <ui:Label text="主選單" class="header-title" />
+            </ui:VisualElement>
+            <ui:VisualElement class="trade-body">
+                <ui:VisualElement class="action-row">
+                    <ui:Button name="ContinueBtn" class="action-btn continue-btn">
+                        <ui:VisualElement class="icon-img icon-play" />
+                        <ui:Label text="繼續遊戲" class="label" />
+                    </ui:Button>
+                    <ui:Button name="ItemIntroBtn" class="action-btn item-btn">
+                        <ui:VisualElement class="icon-img icon-give" />
+                        <ui:Label text="道具介紹" class="label" />
+                    </ui:Button>
+                    <ui:Button name="SettingBtn" class="action-btn setting-btn">
+                        <ui:VisualElement class="icon-img icon-settings" />
+                        <ui:Label text="設定" class="label" />
+                    </ui:Button>
+                    <ui:Button name="LobbyBtn" class="action-btn lobby-btn">
+                        <ui:VisualElement class="icon-img icon-back" />
+                        <ui:Label text="回到大廳" class="label" />
+                    </ui:Button>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
