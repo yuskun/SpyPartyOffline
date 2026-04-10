@@ -1,0 +1,177 @@
+/* 全站設定 */
+.result-page {
+    width: 100%; height: 100%; align-items: center; justify-content: center;
+}
+
+.bg-overlay {
+    position: absolute; inset: 0;
+    background-color: rgba(32, 28, 24, 0.3);
+}
+
+/* 主面板 */
+.result-panel {
+    width: 880px;
+    height: 660px;
+    border-radius: 32px;
+    border-width: 3px;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/endbg.png");
+    overflow: hidden;
+}
+
+/* 標題區 */
+.result-header {
+    align-items: center; justify-content: center;
+}
+.header-text { font-size: 54px; color: #8d5a2c; padding-top:20px;}
+
+/* 贏家區 (關鍵修正：防止頭像拉伸) */
+.winner-section { align-items: center; margin-top: 40px; position: relative; }
+
+.crown-icon {
+    position: absolute; top: -20px; left: 50%; translate: -50% 0;
+    width: 45px; height: 45px;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/winner.png");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.winner-avatar-wrap {
+    width: 200px; height: 210px; border-radius: 90px;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/player.png");
+    overflow: hidden;
+}
+
+.winner-avatar {
+    width: 100%; height: 100%;
+    -unity-background-scale-mode: scale-and-crop;
+}
+
+.winner-badge {
+    margin-top: -20px; padding: 10px 20px; border-radius: 20px;
+    color: #8b5525; font-size: 22px;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/name.png");
+}
+
+/* 統計三格排版 */
+.stats-row { flex-direction: row; justify-content: space-between; padding: 0 40px; }
+.stat-card {
+    width: 250px; height: 230px; border-radius: 28px;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/end.png");
+    overflow: hidden;
+}
+.stat-title {
+    color: #8d5a2c; -unity-text-align: middle-center; font-size: 22px; padding-top: 10px;
+}
+
+/* =========================================
+   任務排版修正 (取代 CSS Float)
+   ========================================= */
+.task-list { padding-top: 20px; align-items: center;}
+
+/* 關鍵：讓名稱靠左，數值靠右在同一行 */
+.task-item-row {
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/task.png");
+    flex-direction: row;
+    align-items: center;
+    height: 45px;
+    width: 110px;
+    justify-content: center;
+    padding-bottom: 5px;
+}
+
+.task-name { font-size: 16px; color: #52707e;}
+.task-value { font-size: 16px; color: #8d5a2c;}
+
+/* =========================================
+   道具滾動 (延用原本邏輯)
+   ========================================= */
+
+/* 1. ScrollView 本體：確保它填滿剩餘空間並清除預設邊距 */
+.item-scroll-view {
+    flex-grow: 1;
+    --unity-metrics-scrollbar-height: 0;
+}
+
+/* 2. 關鍵修正：ScrollView 內部的容器 */
+/* Unity ScrollView 會自動生成一個 .unity-scroll-view__content-container */
+.item-scroll-view .unity-scroll-view__content-container {
+    flex-grow: 1;
+    justify-content: center; /* 垂直置中關鍵 */
+    align-items: center;     /* 水平置中關鍵 */
+}
+
+/* 3. 道具圖示的外層容器 */
+.item-icons-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* 4. 單個道具組件 */
+.mini-item {
+    align-items: center;
+    justify-content: center;
+    margin: 5px; /* 給道具之間一點呼吸空間 */
+}
+
+.item-img {
+    width: 60px;
+    height: 60px;
+    background-image: url("project://database/Assets/Image/CardIcon/Icon_Banana.png");
+    margin-top: -15px;
+    margin-bottom: -15px; 
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.item-count {
+    color: #8d5a2c;
+    -unity-font-style: bold;
+    font-size: 16px;
+}
+
+/* 按鈕區 */
+.result-actions {
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.action-btn {
+    width: 220px;
+    height: 50px;
+    border-radius: 25px;
+    border-width: 0;
+    font-size: 28px;
+    margin: 0 17px;
+    transition-duration: 0.15s;
+}
+
+.confirm-btn {
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/green_default.png");
+    color: white;
+}
+
+.confirm-btn:hover {
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/green_hover.png");
+    scale: 1.05;
+}
+
+.confirm-btn:active {
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/green_active.png");
+    scale: 0.95;
+}
+
+
+.cancel-btn {
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/yellow_default.png");
+    color: #8b5525;
+}
+.cancel-btn:hover {
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/yellow_hover.png");
+    scale: 1.05;
+}
+.cancel-btn:active {
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/yellow_active.png");
+    scale: 0.95;
+}

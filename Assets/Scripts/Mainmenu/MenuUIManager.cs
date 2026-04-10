@@ -3,6 +3,7 @@ using UnityEngine;
 using Fusion;
 using UnityEngine.UI;
 using System;
+using UnityEngine.UIElements;
 
 public class MenuUIManager : MonoBehaviour
 {
@@ -28,15 +29,17 @@ public class MenuUIManager : MonoBehaviour
     public TMP_InputField RoomCodeInput;
     public GameObject[] Ai;
     public PlayerListManager playerlistmanager;
-    public Button StartButton;
+    public UnityEngine.UI.Button StartButton;
     public MissionUIManager missionUIManager;
     public GameObject PlayerList;
-    public Button ConfirmCharcterBtn;
-    public Button[] CharacterButtons;
-     public TextMeshProUGUI RoomCodeText;
+    public UnityEngine.UI.Button ConfirmCharcterBtn;
+    public UnityEngine.UI.Button[] CharacterButtons;
+    public TextMeshProUGUI RoomCodeText;
     [Header("UI Documents")]
     public UnityEngine.UIElements.UIDocument hostRoomDocument;
     public UnityEngine.UIElements.UIDocument chooseCharacterDocument;
+    public UnityEngine.UIElements.UIDocument createRoomDocument;
+
     void Awake()
     {
         if (instance == null)
@@ -65,6 +68,7 @@ public class MenuUIManager : MonoBehaviour
     {
         if (playerlistmanager != null)
             playerlistmanager.Check();
+        InitCreateRoomUI();
     }
     public void showUI(GameObject target)
     {
@@ -129,5 +133,33 @@ public class MenuUIManager : MonoBehaviour
     {
         if (NetworkManager2.IsSpectator) return;
         LocalBackpack.Instance.userInventory.gameObject.GetComponent<NetworkPlayer>().AllowInput = allow;
+    }
+
+    private void InitCreateRoomUI()
+    {
+        if (createRoomDocument == null) return;
+        var root = createRoomDocument.rootVisualElement;
+
+        // 找到 UXML 裡的 TextField
+        var nameField = root.Q<UnityEngine.UIElements.TextField>("PlayerNameInput");
+
+        if (nameField != null)
+        {
+            // 優先讀取 NetworkManager 裡的名字，如果那邊是空的，才給預設值
+            string defaultName = string.IsNullOrEmpty(NetworkManager2.Instance.PlayerName) 
+                                 ? "玩家" + UnityEngine.Random.Range(1000, 9999) 
+                                 : NetworkManager2.Instance.PlayerName;
+    
+            // 顯示到 UI 上
+            nameField.value = defaultName;
+            
+            // 同步回 NetworkManager，確保變數不是空的
+            NetworkManager2.Instance.PlayerNamgeChanged(defaultName);
+    
+            // 綁定輸入事件
+            nameField.RegisterValueChangedCallback(evt => {
+                NetworkManager2.Instance.PlayerNamgeChanged(evt.newValue);
+            });
+        }
     }
 }

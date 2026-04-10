@@ -116,7 +116,7 @@
                                 </ui:VisualElement>
                             </ui:VisualElement>
                             <ui:VisualElement class="name-wrap">
-                                <ui:Label text="shaya" class="player-name" />
+                                <ui:Label text="玩家1234" class="player-name" />
                                 <ui:Label text="YOU" class="you-tag" />
                             </ui:VisualElement>
                         </ui:Button>

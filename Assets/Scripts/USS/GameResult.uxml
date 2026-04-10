@@ -1,0 +1,73 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Scripts/USS/GameResult.uss?fileID=7433441132597879392&amp;guid=71b2c63b1eb0ac84cb7a6cac03c7517c&amp;type=3#GameResult" />
+    <ui:VisualElement name="result-page" class="result-page" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;);">
+        <ui:VisualElement class="bg-overlay" />
+        <ui:VisualElement class="result-panel">
+            <ui:VisualElement class="result-header">
+                <ui:Label text="任務完成" class="header-text" />
+            </ui:VisualElement>
+            <ui:VisualElement name="WinnerSection" class="winner-section">
+                <ui:VisualElement class="winner-avatar-wrap">
+                    <ui:Image name="WinnerAvatar" class="winner-avatar" />
+                </ui:VisualElement>
+                <ui:Image name="CrownIcon" class="crown-icon" />
+                <ui:Label text="Burr" name="WinnerName" class="winner-badge" />
+            </ui:VisualElement>
+            <ui:VisualElement name="StatsRow" class="stats-row">
+                <ui:VisualElement class="stat-card">
+                    <ui:Label text="完成任務" class="stat-title" />
+                    <ui:VisualElement class="task-list">
+                        <ui:VisualElement class="task-item-row">
+                            <ui:Label text="逮捕" class="task-name" />
+                            <ui:Label text="2/2" class="task-value" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="task-item-row">
+                            <ui:Label text="KO王" class="task-name" />
+                            <ui:Label text="8/8" class="task-value" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="task-item-row">
+                            <ui:Label text="活下來" class="task-name" />
+                            <ui:Label text="1/1" class="task-value" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement class="stat-card">
+                    <ui:Label text="道具使用" class="stat-title" />
+                    <ui:ScrollView vertical-scroller-visibility="Hidden" class="item-scroll-view">
+                        <ui:VisualElement class="item-icons-container">
+                            <ui:VisualElement class="mini-item">
+                                <ui:Image class="item-img banana" />
+                                <ui:Label text="x2" class="item-count" />
+                            </ui:VisualElement>
+                            <ui:VisualElement class="mini-item">
+                                <ui:Image class="item-img banana" />
+                                <ui:Label text="x2" class="item-count" />
+                            </ui:VisualElement>
+                            <ui:VisualElement class="mini-item">
+                                <ui:Image class="item-img banana" />
+                                <ui:Label text="x2" class="item-count" />
+                            </ui:VisualElement>
+                            <ui:VisualElement class="mini-item">
+                                <ui:Image class="item-img banana" />
+                                <ui:Label text="x2" class="item-count" />
+                            </ui:VisualElement>                        
+                        </ui:VisualElement>
+                    </ui:ScrollView>
+                </ui:VisualElement>
+                <ui:VisualElement class="stat-card">
+                    <ui:Label text="擊倒玩家" class="stat-title" />
+                    <ui:VisualElement class="stat-avatar-group">
+                        <ui:VisualElement class="stat-avatar-wrap">
+                            <ui:Image class="stat-avatar shark" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:Label text="2人" class="stat-player" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement class="result-actions">
+                <ui:Button name="ReplayBtn" text="再玩一次" class="action-btn confirm-btn" />
+                <ui:Button name="LobbyBtn" text="返回大廳" class="action-btn cancel-btn" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

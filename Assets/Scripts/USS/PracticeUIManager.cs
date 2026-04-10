@@ -4,6 +4,7 @@ using UnityEngine.UIElements;
 public class PracticeUIManager : MonoBehaviour
 {
     private VisualElement avatarElement;
+    private Label nameLabel; 
     private Button micBtn;
     private bool micOn = true;
 
@@ -14,6 +15,10 @@ public class PracticeUIManager : MonoBehaviour
         // 頭像
         avatarElement = root.Q<VisualElement>(className: "avatar");
         RefreshAvatar();
+
+        //名字
+        nameLabel = root.Q<Label>(className: "player-name");
+        RefreshPlayerName();
 
         // Mic
         micBtn = root.Q<Button>("MicBtn");
@@ -59,6 +64,19 @@ public class PracticeUIManager : MonoBehaviour
             avatarElement.MarkDirtyRepaint();
             Debug.Log($"[Client] Practice 頭像已更新為 Index: {skinIndex}");
         }
+    }
+
+    public void RefreshPlayerName()
+    {
+        if (nameLabel == null) return;
+
+        // 優先從 NetworkManager2 抓取名字，若為空則顯示預設
+        string pName = NetworkManager2.Instance != null ? NetworkManager2.Instance.PlayerName : "shaya";
+        
+        if (string.IsNullOrEmpty(pName)) pName = "Guest";
+
+        nameLabel.text = pName;
+        Debug.Log($"[Practice] HUD 名字已更新為: {pName}");
     }
     
     void ToggleMic()

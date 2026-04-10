@@ -134,8 +134,21 @@
     -unity-background-scale-mode: scale-and-crop;
 }
 
-.player-meta { flex-grow: 1; justify-content: center; }
-.player-name { font-size: 16px; -unity-font-style: bold; color: #8b6a2b; margin-bottom: 10px; margin-top: -6px;}
+.player-meta { flex-grow: 1; justify-content: center; margin-top: -12px}
+
+.player-name-input #unity-text-input {
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+    color: #8b6a2b; /* 沿用妳原本的顏色 */
+    font-size: 18px;
+    -unity-font-style: bold;
+}
+
+/* 當玩家點擊準備輸入時的樣式（選擇性加強） */
+.player-name-input:focus #unity-text-input {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+}
 
 .level-line { flex-direction: row; align-items: center; }
 .level-bubble {

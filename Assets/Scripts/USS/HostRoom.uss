@@ -176,6 +176,7 @@
     width: 40px; height: 40px;
     margin-right: 10px;
     position: relative;
+    flex-shrink: 0; /* 新增：禁止縮小 */
 }
 
 .avatar-img {
@@ -213,20 +214,30 @@
 
 /* 名字與標籤 */
 .name-wrap {
+    margin-left: -9px;
     flex-direction: row;
     align-items: center;
+    flex-grow: 1;    /* 佔據剩餘空間 */
+    flex-shrink: 1;  /* 空間不夠時允許縮小 */
+    overflow: hidden; /* 防止溢出內容影響佈局 */
+    min-width: 0;    /* Flexbox 縮小必備設定 */
 }
 
 .player-name {
-    font-size: 20px;
+    font-size: 18px;
     color: #535457;
+    white-space: nowrap;      /* 禁止換行 */
+    overflow: hidden;         /* 隱藏超出部分 */
+    text-overflow: ellipsis;  /* 文字過長時顯示 ... */
+    max-width: 100px;         /* 根據妳的 Slot 寬度給一個適當的最大值 */
 }
 
 .you-tag {
     background-color: #fbc156;
     color: #fff;
-    font-size: 12px;
+    font-size: 11px;
     padding: 2px 6px;
     border-radius: 10px;
-    margin-left: 8px;
+    margin-left: -2.3px;
+    flex-shrink: 0; /* 新增：禁止縮小 */
 }

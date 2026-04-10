@@ -16,6 +16,9 @@ public class MissionUIManager : MonoBehaviour
     // 只有這些 key 代表「任務顯示槽」，其餘為 metadata
     private static readonly HashSet<int> DisplayKeys = new HashSet<int> { 0, 1, 2 };
 
+    [Header("UIDocument Bridge（新任務欄）")]
+    public MissionPanelBridge missionPanelBridge;
+
     void Update()
     {
         var missionStates = LocalBackpack.Instance.userInventory.MissionStates;
@@ -89,6 +92,8 @@ public class MissionUIManager : MonoBehaviour
         missionDict.Add(missionId, slot);
         missionOrder.Add(missionId);
         RefreshFocus();
+
+        missionPanelBridge?.AddMission(missionId, card.data.title, card.data.description, 0, goal);
     }
     
     // ✅ 移除任務
@@ -102,6 +107,8 @@ public class MissionUIManager : MonoBehaviour
 
         focusIndex = Mathf.Clamp(focusIndex, 0, missionOrder.Count - 1);
         RefreshFocus();
+
+        missionPanelBridge?.RemoveMission(id);
     }
 
     // ✅ 更新任務進度（依任務ID特殊處理顯示邏輯）
@@ -134,6 +141,9 @@ public class MissionUIManager : MonoBehaviour
                     slot.data.goal        = escortGoal;
                 }
                 slot.Refresh();
+                missionPanelBridge?.UpdateDisplay(id,
+                    slot.data.title, slot.data.description,
+                    slot.data.current, slot.data.goal);
                 break;
             }
 
@@ -145,6 +155,8 @@ public class MissionUIManager : MonoBehaviour
                 slot.data.current     = setValue;
                 slot.data.goal        = 3;
                 slot.Refresh();
+
+                missionPanelBridge?.UpdateDisplay(id, slot.data.title, slot.data.description, setValue, 3);
                 break;
             }
 
@@ -154,6 +166,8 @@ public class MissionUIManager : MonoBehaviour
                 slot.Refresh();
                 if (slot.data.current >= slot.data.goal)
                     slot.MarkAsCompleted();
+                    
+                missionPanelBridge?.UpdateProgress(id, slot.data.current, slot.data.goal);                
                 break;
             }
         }

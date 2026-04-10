@@ -36,7 +36,7 @@
 
 /* 展開狀態 */
 .mission-task.active {
-    width: 280px;
+    width: 310px;
     height: 50px;
     scale: 1.05;
     padding: 0;
@@ -57,6 +57,7 @@
     margin: 0;
     padding: 0 12px;
     background-image: url("project://database/Assets/Image/UIPanel/GameHUD/default-t.png");
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf");
     color: white;
     -unity-text-align: middle-center;
     font-size: 18px;
@@ -64,6 +65,7 @@
 
 .task-desc {
     font-size: 15px;
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf");
     color: #5F7F8D;
     margin-left: 8px;
     opacity: 0;
@@ -75,6 +77,8 @@
 .mission-task.active .task-desc { opacity: 1; width: auto; }
 
 .task-progress {
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf");
+    -unity-font-style: bold; 
     padding-right: 10px;
     color: #4F7F8D;
 }

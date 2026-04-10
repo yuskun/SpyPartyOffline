@@ -27,7 +27,7 @@
                     <ui:VisualElement class="avatar" />
                 </ui:VisualElement>
                 <ui:VisualElement class="player-meta">
-                    <ui:Label text="shaya" class="player-name" />
+                    <ui:TextField name="PlayerNameInput" value="shaya" class="player-name-input" maxLength="6" />
                     <ui:VisualElement class="level-line">
                         <ui:VisualElement class="level-track">
                             <ui:VisualElement name="LevelFill" class="level-fill" style="width: 65%;" />

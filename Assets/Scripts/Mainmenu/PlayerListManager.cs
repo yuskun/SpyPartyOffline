@@ -20,6 +20,7 @@ public class PlayerListManager : NetworkBehaviour
     [Networked, Capacity(8)]
     public NetworkDictionary<int, int> PlayerSkinIndexes { get; } // key=PlayerRef.AsIndex, value=skinIndex
 
+    private Button startGameBtn;
 
     public override void Spawned()
     {
@@ -37,6 +38,10 @@ public class PlayerListManager : NetworkBehaviour
         slotElements.Clear();
         root.Query<VisualElement>(className: "slot").ForEach(slot => slotElements.Add(slot));
         Debug.Log($"找到 {slotElements.Count} 個 slot");
+        
+        // 只有房主可以點擊開始
+        startGameBtn = root.Q<Button>("StartGameBtn");
+        RefreshStartButtonAuthority();
 
         PlayerVersion = 0;
     }
@@ -139,6 +144,7 @@ public class PlayerListManager : NetworkBehaviour
         {
             practiceUI.RefreshAvatar();
         }
+        RefreshStartButtonAuthority();
     }
 
     // 1. 這是對外的窗口：所有人都可以呼叫，但只有 Host 會執行內部的邏輯
@@ -224,4 +230,20 @@ public class PlayerListManager : NetworkBehaviour
         }
     }
 
+    // 新增一個方法專門處理按鈕權限
+    private void RefreshStartButtonAuthority()
+    {
+        if (startGameBtn != null)
+        {
+            bool isHost = Runner.IsServer; // 或使用 Object.HasStateAuthority
+            startGameBtn.SetEnabled(isHost);
+
+            // 如果想讓 Client 看到不同的文字
+            var btnLabel = startGameBtn.Q<Label>(className: "btn-text");
+            if (btnLabel != null)
+            {
+                btnLabel.text = isHost ? "開始遊戲" : "等待房主開始";
+            }
+        }
+    }
 }

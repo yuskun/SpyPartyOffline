@@ -301,10 +301,25 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
     {
         return Guid.NewGuid().ToString("N").Substring(0, 6).ToUpper();
     }
+    
+    public void PlayerNamgeChanged(string newName)
+    {
+        PlayerName = newName;
+        Debug.Log($"[NetworkManager2] 玩家名字已更新為: {PlayerName}");
+    }
+
+    // 為了相容原本的 TMP_InputField (如果還有在用的話)
     public void PlayerNamgeChanged()
     {
-        PlayerName = MenuUIManager.instance.PlayerNameInput.text;
+        if (MenuUIManager.instance.PlayerNameInput != null)
+        {
+            PlayerNamgeChanged(MenuUIManager.instance.PlayerNameInput.text);
+        }
     }
+    /*public void PlayerNamgeChanged()
+    {
+        PlayerName = MenuUIManager.instance.PlayerNameInput.text;
+    }*/
 
     // =============================
     // Callbacks
