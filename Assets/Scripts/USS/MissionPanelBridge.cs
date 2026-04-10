@@ -1,28 +1,67 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class MissionPanelBridge : MonoBehaviour
 {
+    // 任務資料（與 UI 分離，重啟用時可重建）
+    private class MissionEntry
+    {
+        public int id;
+        public string title;
+        public string desc;
+        public int current;
+        public int goal;
+    }
+
     private UIDocument _uiDocument;
     private VisualElement _missionPanel;
- 
+
     // key = 任意 ID（你傳什麼都行，例如 0/1/2）
     private Dictionary<int, VisualElement> _rows = new();
+    private Dictionary<int, MissionEntry> _data = new();
     private List<int> _order = new();
     private int _focusIndex = 0;
- 
+
     private void OnEnable()
+    {
+        // UIDocument 在 OnEnable 才建立 rootVisualElement，而元件 OnEnable 執行順序不固定，
+        // 所以延後一幀再跑，確保視覺樹已就緒
+        StartCoroutine(InitNextFrame());
+    }
+
+    private IEnumerator InitNextFrame()
+    {
+        yield return null;
+        RebuildPanel();
+    }
+
+    /// <summary>重新抓 UIDocument 並從 _data 重建所有任務列</summary>
+    private void RebuildPanel()
     {
         _uiDocument = GetComponent<UIDocument>();
         if (_uiDocument == null) { Debug.LogError("找不到 UIDocument"); return; }
- 
+
         var root = _uiDocument.rootVisualElement;
+        if (root == null) { Debug.LogWarning("rootVisualElement 尚未就緒"); return; }
+
         _missionPanel = root.Q<VisualElement>("MissionPanel");
         if (_missionPanel == null) { Debug.LogError("找不到 #MissionPanel"); return; }
- 
-        // 清掉 UXML 裡寫死的示範列，改由程式動態產生
+
+        // 清掉 UXML 裡寫死的示範列與舊 VisualElement 參照
         _missionPanel.Clear();
+        _rows.Clear();
+
+        // 依原本順序從 _data 重建
+        foreach (var id in _order)
+        {
+            if (!_data.TryGetValue(id, out var entry)) continue;
+            var row = BuildRow(entry.id, entry.title, entry.desc, entry.current, entry.goal);
+            _missionPanel.Add(row);
+            _rows[id] = row;
+        }
+        RefreshFocus();
     }
  
     private void Update()
@@ -38,34 +77,53 @@ public class MissionPanelBridge : MonoBehaviour
     /// <summary>新增一列任務</summary>
     public void AddMission(int id, string title, string desc, int current, int goal)
     {
-        if (_rows.ContainsKey(id)) return;
- 
-        var row = BuildRow(id, title, desc, current, goal);
-        _missionPanel.Add(row);
-        _rows.Add(id, row);
+        if (_data.ContainsKey(id)) return;
+
+        _data[id] = new MissionEntry { id = id, title = title, desc = desc, current = current, goal = goal };
         _order.Add(id);
- 
+
+        if (_missionPanel != null)
+        {
+            var row = BuildRow(id, title, desc, current, goal);
+            _missionPanel.Add(row);
+            _rows[id] = row;
+        }
+
         // 第一列自動 focus
         if (_order.Count == 1) _focusIndex = 0;
         RefreshFocus();
     }
- 
+
     /// <summary>更新進度數字</summary>
     public void UpdateProgress(int id, int current, int goal)
     {
+        if (_data.TryGetValue(id, out var entry))
+        {
+            entry.current = current;
+            entry.goal = goal;
+        }
+
         if (!_rows.TryGetValue(id, out var row)) return;
         var lbl = row.Q<Label>("progress-lbl");
         if (lbl == null) return;
- 
+
         if (goal <= 0)
             lbl.text = "";
         else
             lbl.text = current >= goal ? "完成" : $"{current}/{goal}";
     }
- 
+
     /// <summary>更新標題與描述（多步驟任務用）</summary>
     public void UpdateDisplay(int id, string title, string desc, int current, int goal)
     {
+        if (_data.TryGetValue(id, out var entry))
+        {
+            entry.title = title;
+            entry.desc = desc;
+            entry.current = current;
+            entry.goal = goal;
+        }
+
         if (!_rows.TryGetValue(id, out var row)) return;
         var titleLbl = row.Q<Label>("title-lbl");
         var descLbl  = row.Q<Label>("desc-lbl");
@@ -73,14 +131,20 @@ public class MissionPanelBridge : MonoBehaviour
         if (descLbl  != null) descLbl.text  = desc;
         UpdateProgress(id, current, goal);
     }
- 
+
     /// <summary>移除一列任務</summary>
     public void RemoveMission(int id)
     {
-        if (!_rows.TryGetValue(id, out var row)) return;
-        _missionPanel.Remove(row);
-        _rows.Remove(id);
+        _data.Remove(id);
         _order.Remove(id);
+
+        if (_rows.TryGetValue(id, out var row))
+        {
+            if (_missionPanel != null && row.parent == _missionPanel)
+                _missionPanel.Remove(row);
+            _rows.Remove(id);
+        }
+
         _focusIndex = Mathf.Clamp(_focusIndex, 0, Mathf.Max(0, _order.Count - 1));
         RefreshFocus();
     }

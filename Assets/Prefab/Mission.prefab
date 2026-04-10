@@ -1565,7 +1565,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1663503410254263262
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1618,7 +1618,6 @@ MonoBehaviour:
   normalProgressText: {fileID: 3248220408919435947}
   normalProgressBar: {fileID: 1526646892020205399}
   data:
-    id: 0
     title: 
     description: 
     current: 0
