@@ -20,7 +20,7 @@ public class GameHUDManager : MonoBehaviour
         _topTimeLabel = root.Q<Label>("TopTime");
 
         _playerNameLabel = root.Q<Label>(className: "player-name");
-        //RefreshPlayerName(); // 執行名字更新
+        RefreshPlayerName(); // 執行名字更新
 
         var mapContent = root.Q<VisualElement>(className: "map-content");
         if (mapContent != null)

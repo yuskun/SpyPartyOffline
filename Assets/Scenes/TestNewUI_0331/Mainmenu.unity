@@ -20969,6 +20969,57 @@ Transform:
   - {fileID: 1669695783}
   m_Father: {fileID: 65891164}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &746902069
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 746902070}
+  - component: {fileID: 746902071}
+  m_Layer: 5
+  m_Name: GameResultPanel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &746902070
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 746902069}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -478.5694, y: -289.59174, z: 79.793945}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1315708617}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &746902071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 746902069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PanelSettings: {fileID: 11400000, guid: 1dc758853d3f069419e1dc8ae4eeb7d4, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 2eff555e2be27ef4a9b4695eeb96c181, type: 3}
+  m_SortingOrder: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
 --- !u!1 &747827418
 GameObject:
   m_ObjectHideFlags: 0
@@ -25387,7 +25438,7 @@ RectTransform:
   m_GameObject: {fileID: 898763935}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 159662233}
@@ -30282,6 +30333,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   missionSlotPrefab: {fileID: 8042588102901407178, guid: 3533e56405ae0be4bba6a2ea99024031, type: 3}
   missionContainer: {fileID: 1127831494}
+  missionPanelBridge: {fileID: 0}
 --- !u!114 &1127831496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33192,7 +33244,7 @@ MonoBehaviour:
   ChooseCharacterUI: {fileID: 910435907}
   Practice: {fileID: 1843592897}
   RoomCode: {fileID: 1938899634}
-  PlayerNameInput: {fileID: 0}
+  PlayerNameInput: {fileID: 308613379}
   RoomCodeInput: {fileID: 1792380198}
   Ai:
   - {fileID: 2112623293}
@@ -33212,6 +33264,7 @@ MonoBehaviour:
   RoomCodeText: {fileID: 1467424656}
   hostRoomDocument: {fileID: 382115426}
   chooseCharacterDocument: {fileID: 1569418051}
+  createRoomDocument: {fileID: 630246000}
 --- !u!114 &1233569025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34415,6 +34468,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   missionSlotPrefab: {fileID: 8042588102901407178, guid: 3533e56405ae0be4bba6a2ea99024031, type: 3}
   missionContainer: {fileID: 1273638192}
+  missionPanelBridge: {fileID: 1727296451}
 --- !u!1 &1277583128
 GameObject:
   m_ObjectHideFlags: 0
@@ -35250,6 +35304,7 @@ RectTransform:
   - {fileID: 39293255}
   - {fileID: 2105088930}
   - {fileID: 2120944986}
+  - {fileID: 746902070}
   - {fileID: 938588592}
   - {fileID: 2138362037}
   m_Father: {fileID: 1233569029}
@@ -46544,7 +46599,6 @@ GameObject:
   - component: {fileID: 1727296446}
   - component: {fileID: 1727296450}
   - component: {fileID: 1727296449}
-  - component: {fileID: 1727296448}
   - component: {fileID: 1727296447}
   - component: {fileID: 1727296451}
   m_Layer: 5
@@ -46582,18 +46636,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minimapRenderTexture: {fileID: 8400000, guid: 684e7ca2bbe4b4a4dbdefe69a626ddad, type: 2}
---- !u!114 &1727296448
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1727296445}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 839fbf6b0dad84d428bda4c64e27e627, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1727296449
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46623,7 +46665,7 @@ MonoBehaviour:
   m_PanelSettings: {fileID: 11400000, guid: 1dc758853d3f069419e1dc8ae4eeb7d4, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: 178b68162dda01443bd7397c2377fe55, type: 3}
-  m_SortingOrder: 1
+  m_SortingOrder: 10
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
   m_WorldSpaceHeight: 1080
