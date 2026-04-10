@@ -832,11 +832,10 @@ namespace OodlesEngine
                         wp.Time -= wp.swingCost;
                     if (wp.Time <= 0)
                     {
-                        var netObj = wp.GetComponentInParent<Fusion.NetworkObject>();
+                        wp.isBroken = true;
                         handFunctionLeft.ReleaseHand();
                         leftPicking = false;
-                        if (netObj != null && NetworkManager2.Instance != null && NetworkManager2.Instance.runner != null)
-                            NetworkManager2.Instance.runner.Despawn(netObj);
+                        DelayedDespawnWeapon(wp, 2f);
                     }
                 }
                 if (handFunctionRight.HoldWeapon())
@@ -846,19 +845,19 @@ namespace OodlesEngine
                         wp.Time -= wp.swingCost;
                     if (wp.Time <= 0)
                     {
-                        var netObj = wp.GetComponentInParent<Fusion.NetworkObject>();
+                        wp.isBroken = true;
                         handFunctionRight.ReleaseHand();
                         rightPicking = false;
-                        if (netObj != null && NetworkManager2.Instance != null && NetworkManager2.Instance.runner != null)
-                            NetworkManager2.Instance.runner.Despawn(netObj);
+                        DelayedDespawnWeapon(wp, 2f);
                     }
                 }
             }
         }
 
-        /// <summary>武器耐久歸零時，強制釋放並 Despawn</summary>
+        /// <summary>武器耐久歸零時，強制釋放並延遲 Despawn</summary>
         public void BreakWeapon(Weapon wp)
         {
+            wp.isBroken = true;
             if (handFunctionLeft.HoldWeapon() && handFunctionLeft.GrabbedObject.GetComponent<Weapon>() == wp)
             {
                 handFunctionLeft.ReleaseHand();
@@ -869,6 +868,19 @@ namespace OodlesEngine
                 handFunctionRight.ReleaseHand();
                 rightPicking = false;
             }
+            DelayedDespawnWeapon(wp, 2f);
+        }
+
+        /// <summary>延遲 Despawn 武器</summary>
+        private void DelayedDespawnWeapon(Weapon wp, float delay)
+        {
+            StartCoroutine(DespawnWeaponCoroutine(wp, delay));
+        }
+
+        private System.Collections.IEnumerator DespawnWeaponCoroutine(Weapon wp, float delay)
+        {
+            yield return new UnityEngine.WaitForSeconds(delay);
+            if (wp == null) yield break;
             var netObj = wp.GetComponentInParent<Fusion.NetworkObject>();
             if (netObj != null && NetworkManager2.Instance != null && NetworkManager2.Instance.runner != null)
                 NetworkManager2.Instance.runner.Despawn(netObj);

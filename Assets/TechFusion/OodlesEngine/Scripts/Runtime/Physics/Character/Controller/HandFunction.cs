@@ -179,6 +179,7 @@ namespace OodlesEngine
             if (wh != null)
             {
                 if (wh.wepon.owner != null) return;
+                if (wh.wepon.isBroken) return; // 損壞的武器不可撿取
 
                 wh.SetOwner(oodlesCharacter);
 

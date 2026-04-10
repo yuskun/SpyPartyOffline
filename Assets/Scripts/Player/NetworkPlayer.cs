@@ -15,7 +15,6 @@ public class NetworkPlayer : NetworkBehaviour
     public float freezeTimer = 1f; 
     private OodlesCharacter characterController;
     public bool isPrepare = false;
-    private float loadingHideTimer = -1f;
 
     public override void Spawned()
     {
@@ -29,8 +28,6 @@ public class NetworkPlayer : NetworkBehaviour
 
             CameraFollow.Get().player = characterController.GetPhysicsBody().transform;
             CameraFollow.Get().enable = true;
-
-            loadingHideTimer = 1f;
 
             if (isPrepare) return;
             if (MiniMap.instance != null)
@@ -85,17 +82,6 @@ public class NetworkPlayer : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        if (loadingHideTimer > 0f)
-        {
-            loadingHideTimer -= Runner.DeltaTime;
-            if (loadingHideTimer <= 0f)
-            {
-                loadingHideTimer = -1f;
-                if (MenuUIManager.instance != null && MenuUIManager.instance.LoadingScreen != null)
-                    MenuUIManager.instance.LoadingScreen.SetActive(false);
-            }
-        }
-
         if (!AllowInput) return;
 
         if (freezeTimer > 0f)

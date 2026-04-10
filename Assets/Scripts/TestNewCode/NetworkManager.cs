@@ -249,7 +249,11 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
 
         Debug.Log("Disconnected");
 
-        // 2) 切回主選單場景並顯示 UI
+        // 2) 關閉 Game HUD
+        if (GameUIManager.Instance != null && GameUIManager.Instance.HUDUI != null)
+            GameUIManager.Instance.HUDUI.SetActive(false);
+
+        // 3) 切回主選單場景並顯示 UI
         SceneManager.LoadScene(0);
         MenuUIManager.instance.showUI(MenuUIManager.instance.BulidOrJoin);
     }
@@ -289,8 +293,15 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
             return false;
         }
 
-        // 5️⃣ 真正切場景（Fusion 同步）
+        // 5️⃣ 4人以下跳小場景（index 3）
+        int playerCount = runner.ActivePlayers.Count();
+        if (playerCount <= 4 && buildIndex == 2)
+        {
+            buildIndex = 3;
+            Debug.Log($"[SwitchScene] 玩家 {playerCount} 人，切換至小場景 (index {buildIndex})");
+        }
 
+        // 6️⃣ 真正切場景（Fusion 同步）
         await runner.LoadScene(SceneRef.FromIndex(buildIndex), LoadSceneMode.Single);
 
         Debug.Log($"Scene switched to index {buildIndex}");
