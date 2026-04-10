@@ -67,4 +67,16 @@ public class UniversalUIController : MonoBehaviour
         if (_doc != null)
             _doc.rootVisualElement.style.display = DisplayStyle.Flex;
     }
+
+    public void SetVisible(bool visible)
+    {
+        // 確保 _doc 已經被賦值
+        if (_doc == null) _doc = GetComponent<UIDocument>();
+
+        if (_doc != null && _doc.rootVisualElement != null)
+        {
+            // 切換 DisplayStyle 
+            _doc.rootVisualElement.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+    }
 }

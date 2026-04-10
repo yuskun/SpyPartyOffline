@@ -8,7 +8,7 @@
             <ui:ScrollView class="scroll-view">
                 <ui:VisualElement class="cards-grid">
                     <ui:VisualElement class="item-card means-card">
-                        <ui:Label text="破譯" class="item-header" />
+                        <ui:Label text="查看" class="item-header" />
                         <ui:VisualElement class="item-icon-box">
                             <ui:Image class="item-icon magnifier" />
                         </ui:VisualElement>
@@ -18,21 +18,11 @@
                         </ui:VisualElement>
                     </ui:VisualElement>
                     <ui:VisualElement class="item-card means-card">
-                        <ui:Label text="劫持" class="item-header" />
-                        <ui:VisualElement class="item-icon-box">
-                            <ui:Image class="item-icon fist" />
-                        </ui:VisualElement>
-                        <ui:Label text="隨機竊取一張卡牌" class="item-effect" />
-                        <ui:VisualElement class="item-bottom single">
-                            <ui:Label text="特工手段卡" class="item-tag means-tag" />
-                        </ui:VisualElement>
-                    </ui:VisualElement>
-                    <ui:VisualElement class="item-card means-card">
-                        <ui:Label text="禮物" class="item-header" />
+                        <ui:Label text="贈與" class="item-header" />
                         <ui:VisualElement class="item-icon-box">
                             <ui:Image class="item-icon gift" />
                         </ui:VisualElement>
-                        <ui:Label text="贈送任意卡牌一張" class="item-effect" />
+                        <ui:Label text="贈與卡牌一張" class="item-effect" />
                         <ui:VisualElement class="item-bottom single">
                             <ui:Label text="特工手段卡" class="item-tag means-tag" />
                         </ui:VisualElement>
@@ -42,7 +32,7 @@
                         <ui:VisualElement class="item-icon-box">
                             <ui:Image class="item-icon swap" />
                         </ui:VisualElement>
-                        <ui:Label text="交換任務紙條" class="item-effect" />
+                        <ui:Label text="可指定卡牌交換" class="item-effect" />
                         <ui:VisualElement class="item-bottom single">
                             <ui:Label text="特工手段卡" class="item-tag means-tag" />
                         </ui:VisualElement>
@@ -52,7 +42,7 @@
                         <ui:VisualElement class="item-icon-box">
                             <ui:Image class="item-icon banana" />
                         </ui:VisualElement>
-                        <ui:Label text="限制行動與使用卡牌" class="item-effect" />
+                        <ui:Label text="可使玩家滑倒" class="item-effect" />
                         <ui:VisualElement class="item-bottom single">
                             <ui:Label text="間諜道具卡" class="item-tag trap-tag" />
                         </ui:VisualElement>
@@ -73,7 +63,7 @@
                         <ui:VisualElement class="item-icon-box">
                             <ui:Image class="item-icon handcuffs" />
                         </ui:VisualElement>
-                        <ui:Label text="逮補擁有小偷的玩家" class="item-effect" />
+                        <ui:Label text="逮補小偷玩家" class="item-effect" />
                         <ui:VisualElement class="item-bottom single">
                             <ui:Label text="任務紙條卡" class="item-tag control-tag" />
                         </ui:VisualElement>
@@ -84,6 +74,16 @@
                             <ui:Image class="item-icon steal" />
                         </ui:VisualElement>
                         <ui:Label text="偷取任意一張卡牌" class="item-effect" />
+                        <ui:VisualElement class="item-bottom single">
+                            <ui:Label text="任務紙條卡" class="item-tag control-tag" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="item-card control-card">
+                        <ui:Label text="拳王" class="item-header" />
+                        <ui:VisualElement class="item-icon-box">
+                            <ui:Image class="item-icon fist" />
+                        </ui:VisualElement>
+                        <ui:Label text="擊倒3位玩家" class="item-effect" />
                         <ui:VisualElement class="item-bottom single">
                             <ui:Label text="任務紙條卡" class="item-tag control-tag" />
                         </ui:VisualElement>

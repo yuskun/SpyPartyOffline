@@ -23,6 +23,8 @@ public class GameUIManager : MonoBehaviour
     public GameObject CaughtUI;
     public GameObject BackBtn;
 
+    public UniversalUIController GameHudUI;
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -42,6 +44,7 @@ public class GameUIManager : MonoBehaviour
          GameoverText.SetActive(false);
          HUDUI.SetActive(false);
          PauseUI.SetActive(false);
+         if (GameHudUI != null) GameHudUI.SetVisible(false);
          if (ResultsPanel != null) ResultsPanel.SetActive(false);
     }
     public void Draw()
@@ -58,22 +61,44 @@ public class GameUIManager : MonoBehaviour
         if (ResultsBgPlane.Instance != null) ResultsBgPlane.Instance.SlideIn();
     }
 
-    void FixedUpdate()
+    void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (HUDUI.activeSelf)
+            /*if (GameHudUI.activeSelf)
             {
                 if (PauseUI.activeSelf)
                 {
                     PauseUI.SetActive(false);
+                    if (GameHudUI != null) GameHudUI.SetVisible(false);
+                    HUDUI.SetActive(false);
                 }
                 else
                 {
                     PauseUI.SetActive(true);
+                    if (GameHudUI != null) GameHudUI.SetVisible(true);
+                    HUDUI.SetActive(true);
+                }
+            }*/
+
+            if (GameHudUI != null && GameHudUI.gameObject.activeSelf) 
+            {
+                if (PauseUI.activeSelf)
+                {
+                    PauseUI.SetActive(false);
+                    if (GameHudUI != null) GameHudUI.SetVisible(true);
+                    HUDUI.SetActive(true);
+                }
+                else
+                {
+                    GameHudUI.SetVisible(false);
+                    HUDUI.SetActive(false);
+                    PauseUI.SetActive(true);
                 }
             }
         }
+
+        
     }
 
 
