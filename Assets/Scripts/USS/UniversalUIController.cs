@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -13,28 +14,52 @@ public class UniversalUIController : MonoBehaviour
         [HideInInspector] public Button loadedButton;
     }
 
-    [Tooltip("勾選後，此 UI 在啟動時會自動隱藏")]
+    [Tooltip("勾選後，此 UI 在首次啟動時會自動隱藏（僅第一次 OnEnable 生效）")]
     public bool hideOnStart = false;
     public List<ButtonBinding> buttonSettings = new List<ButtonBinding>();
     private UIDocument _doc;
+    private bool _firstInit = true;
 
-    private void Start()
-    {
-        if (hideOnStart) HideCurrentUI();
-    }
     private void OnEnable()
     {
-        _doc = GetComponent<UIDocument>();
-        var root = _doc.rootVisualElement;
+        // 延後一幀，避免 UniversalUIController.OnEnable 早於 UIDocument.OnEnable
+        // 導致 rootVisualElement 還沒建好
+        StartCoroutine(InitNextFrame());
+    }
 
+    private IEnumerator InitNextFrame()
+    {
+        yield return null;
+
+        _doc = GetComponent<UIDocument>();
+        if (_doc == null) yield break;
+
+        var root = _doc.rootVisualElement;
+        if (root == null) yield break;
+
+        // 綁定按鈕（先解再綁，避免重複堆疊）
         foreach (var setting in buttonSettings)
         {
             var btn = root.Q<Button>(setting.buttonName);
             if (btn != null)
             {
+                btn.clicked -= setting.OnClickEvents.Invoke;
                 btn.clicked += setting.OnClickEvents.Invoke;
                 setting.loadedButton = btn;
             }
+        }
+
+        // 顯示狀態處理：
+        // - 首次 OnEnable：依 hideOnStart 決定（取代原本 Start() 的邏輯）
+        // - 非首次（SetActive(false)→true 再次啟用）：強制 Flex，清除上次 HideCurrentUI 殘留的 None
+        if (_firstInit)
+        {
+            _firstInit = false;
+            root.style.display = hideOnStart ? DisplayStyle.None : DisplayStyle.Flex;
+        }
+        else
+        {
+            root.style.display = DisplayStyle.Flex;
         }
     }
 

@@ -34,26 +34,35 @@ public class MissionPanelBridge : MonoBehaviour
     private IEnumerator InitNextFrame()
     {
         yield return null;
-        RebuildPanel();
+        EnsurePanelSynced();
     }
 
-    /// <summary>重新抓 UIDocument 並從 _data 重建所有任務列</summary>
-    private void RebuildPanel()
+    /// <summary>
+    /// 每次操作前呼叫：確保 _missionPanel 是當前 UIDocument 的，
+    /// 並把 _data 裡的任務全部 rebuild 出 row。
+    /// 解決兩個問題：
+    /// (1) Client 端 AddMission 早於 OnEnable 協程跑完 → _missionPanel 還是 null
+    /// (2) UIDocument 重建後快取的 _missionPanel 變孤兒參照（與 PlayerListManager 同樣的坑）
+    /// </summary>
+    private void EnsurePanelSynced()
     {
-        _uiDocument = GetComponent<UIDocument>();
-        if (_uiDocument == null) { Debug.LogError("找不到 UIDocument"); return; }
+        if (_uiDocument == null) _uiDocument = GetComponent<UIDocument>();
+        if (_uiDocument == null) return;
 
         var root = _uiDocument.rootVisualElement;
-        if (root == null) { Debug.LogWarning("rootVisualElement 尚未就緒"); return; }
+        if (root == null) return;
 
-        _missionPanel = root.Q<VisualElement>("MissionPanel");
-        if (_missionPanel == null) { Debug.LogError("找不到 #MissionPanel"); return; }
+        var currentPanel = root.Q<VisualElement>("MissionPanel");
+        if (currentPanel == null) return;
 
-        // 清掉 UXML 裡寫死的示範列與舊 VisualElement 參照
+        // 已是最新且 row 數量正確 → 不用做事
+        if (currentPanel == _missionPanel && _rows.Count == _order.Count) return;
+
+        // panel 變了（UIDocument 重建）或 row 缺漏 → 整個從 _data 重建
+        _missionPanel = currentPanel;
         _missionPanel.Clear();
         _rows.Clear();
 
-        // 依原本順序從 _data 重建
         foreach (var id in _order)
         {
             if (!_data.TryGetValue(id, out var entry)) continue;
@@ -77,20 +86,25 @@ public class MissionPanelBridge : MonoBehaviour
     /// <summary>新增一列任務</summary>
     public void AddMission(int id, string title, string desc, int current, int goal)
     {
-        if (_data.ContainsKey(id)) return;
-
-        _data[id] = new MissionEntry { id = id, title = title, desc = desc, current = current, goal = goal };
-        _order.Add(id);
-
-        if (_missionPanel != null)
+        // 資料先寫入 _data（即使此刻 panel 尚未就緒也不會掉資料）
+        if (!_data.ContainsKey(id))
         {
-            var row = BuildRow(id, title, desc, current, goal);
-            _missionPanel.Add(row);
-            _rows[id] = row;
+            _data[id] = new MissionEntry { id = id, title = title, desc = desc, current = current, goal = goal };
+            _order.Add(id);
         }
 
         // 第一列自動 focus
         if (_order.Count == 1) _focusIndex = 0;
+
+        // 嘗試取得最新的 panel；若 panel 變了或 row 缺漏會自動 rebuild
+        EnsurePanelSynced();
+
+        if (_missionPanel == null) return;
+        if (_rows.ContainsKey(id)) { RefreshFocus(); return; }
+
+        var row = BuildRow(id, title, desc, current, goal);
+        _missionPanel.Add(row);
+        _rows[id] = row;
         RefreshFocus();
     }
 
@@ -102,6 +116,9 @@ public class MissionPanelBridge : MonoBehaviour
             entry.current = current;
             entry.goal = goal;
         }
+
+        // 確保 panel 是當前的；如果之前 row 沒建出來，這裡會補建
+        EnsurePanelSynced();
 
         if (!_rows.TryGetValue(id, out var row)) return;
         var lbl = row.Q<Label>("progress-lbl");
@@ -123,6 +140,9 @@ public class MissionPanelBridge : MonoBehaviour
             entry.current = current;
             entry.goal = goal;
         }
+
+        // 補建漏掉的 row（與 AddMission 同理）
+        EnsurePanelSynced();
 
         if (!_rows.TryGetValue(id, out var row)) return;
         var titleLbl = row.Q<Label>("title-lbl");

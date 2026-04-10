@@ -32,6 +32,10 @@ public class GameManager : NetworkBehaviour
     [Header("結算動畫")]
     public Animator resultsAnimator;
     public string resultsAnimBoolName = "Show";
+    [Tooltip("結算動畫播放時間（秒）；動畫結束後會再等 endUIDelayAfterAnim 才跳出 EndUI")]
+    public float resultsAnimDuration = 2f;
+    [Tooltip("結算動畫結束後，再等幾秒才打開 EndUI（舊版 UGUI 結算面板）")]
+    public float endUIDelayAfterAnim = 5f;
 
     [Networked] private NetworkBool HasStarted { get; set; }
     [Networked] private TickTimer StartDelay { get; set; }
@@ -39,6 +43,9 @@ public class GameManager : NetworkBehaviour
     public override void Spawned()
     {
         instance = this;
+
+        // 進入遊戲場景一律清掉上一局殘留的結算資料（Host + Client 都清）
+        CurrentWinnerData = null;
 
         // 旁觀者：不生角色、不送 Ready，改用自由相機
         if (NetworkManager2.IsSpectator)
@@ -60,6 +67,18 @@ public class GameManager : NetworkBehaviour
         MenuUIManager.instance.Gameroom.SetActive(false);
         GameUIManager.Instance.HUDUI.SetActive(true);
         //GameHUDManager.Instance.ShowHUD();
+
+        // ✅ 啟用新版 GameHUD UIDocument（Host 由 StartGameBtn 的 Inspector 事件
+        //    SetActive(true) GameHUDPanel；Client 沒按鈕，這裡統一處理。
+        //    放在 GameManager.Spawned() 裡可以天然綁定「遊戲場景」這個條件，
+        //    不用在 NetworkManager.OnSceneLoadStart 猜 build index。）
+        if (GameUIManager.Instance.GameHudUI != null)
+        {
+            var hudGo = GameUIManager.Instance.GameHudUI.gameObject;
+            if (!hudGo.activeSelf) hudGo.SetActive(true);
+            GameUIManager.Instance.GameHudUI.SetVisible(true);
+        }
+
         LocalBackpack.Instance.SetUpdateEnabled(true);
 
         if (Runner.IsServer)
@@ -360,7 +379,7 @@ public class GameManager : NetworkBehaviour
 
         if (NetworkManager2.IsSpectator)
         {
-            StartCoroutine(SpectatorResultsSequence());
+            StartCoroutine(SpectatorResultsSequence(winnerIDs));
             return;
         }
 
@@ -381,9 +400,11 @@ public class GameManager : NetworkBehaviour
     {
         StopGameplay();
 
+        // 平局：所有端（含 Client）清空 CurrentWinnerData，避免殘留上一局資料
+        CurrentWinnerData = null;
+
         if (Runner.IsServer)
         {
-            CurrentWinnerData = null;
             ClearAllPlayerInventories();
         }
 
@@ -493,10 +514,117 @@ public class GameManager : NetworkBehaviour
         Debug.Log($"[Results] WinnerData 組裝完成: winnerID={winnerID}, " +
                   $"任務卡={data.missionCards.Count}, 道具使用={data.cardUsages.Count}種, " +
                   $"擊倒目標={data.knockdowns.Count}人");
+
+        // Host 端組好後，把扁平化的資料廣播給所有 Client（包含自己），
+        // 讓 Client 也能在 EndUI 顯示完整的勝利者結算。
+        int mCount = data.missionCards.Count;
+        int[] mIds = new int[mCount];
+        int[] mTypes = new int[mCount];
+        for (int i = 0; i < mCount; i++)
+        {
+            mIds[i] = data.missionCards[i].card.id;
+            mTypes[i] = (int)data.missionCards[i].card.type;
+        }
+
+        int uCount = data.cardUsages.Count;
+        int[] uIds = new int[uCount];
+        int[] uTypes = new int[uCount];
+        int[] uCounts = new int[uCount];
+        for (int i = 0; i < uCount; i++)
+        {
+            uIds[i] = data.cardUsages[i].card.id;
+            uTypes[i] = (int)data.cardUsages[i].card.type;
+            uCounts[i] = data.cardUsages[i].useCount;
+        }
+
+        int kCount = data.knockdowns.Count;
+        int[] kTargets = new int[kCount];
+        int[] kCounts = new int[kCount];
+        for (int i = 0; i < kCount; i++)
+        {
+            kTargets[i] = data.knockdowns[i].targetPlayerId;
+            kCounts[i] = data.knockdowns[i].knockdownCount;
+        }
+
+        Rpc_SyncWinnerData(winnerID, mIds, mTypes, uIds, uTypes, uCounts, kTargets, kCounts);
+    }
+
+    /// <summary>
+    /// 把 Host 組好的勝利者資料用扁平 int 陣列廣播到所有 Client（含自己）。
+    /// Client 端用 CardManager.Catalog 反查出 CardData 跟 Sprite，重建 CurrentWinnerData。
+    /// </summary>
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void Rpc_SyncWinnerData(
+        int winnerID,
+        int[] missionIds, int[] missionTypes,
+        int[] usageIds, int[] usageTypes, int[] usageCounts,
+        int[] knockTargets, int[] knockCounts)
+    {
+        var data = new WinnerData { winnerID = winnerID };
+
+        var catalog = CardManager.Instance != null ? CardManager.Instance.Catalog : null;
+
+        // --- 任務卡 ---
+        if (missionIds != null)
+        {
+            for (int i = 0; i < missionIds.Length; i++)
+            {
+                var cd = new CardData { id = missionIds[i], type = (CardType)missionTypes[i] };
+                Sprite img = null;
+                if (catalog != null)
+                {
+                    var catalogCard = catalog.cards.Find(
+                        c => c.cardData.id == cd.id && c.cardData.type == cd.type);
+                    if (catalogCard != null) img = catalogCard.image;
+                }
+                data.missionCards.Add(new MissionCardEntry { card = cd, image = img });
+            }
+        }
+
+        // --- 道具/功能卡使用 ---
+        if (usageIds != null)
+        {
+            for (int i = 0; i < usageIds.Length; i++)
+            {
+                var cd = new CardData { id = usageIds[i], type = (CardType)usageTypes[i] };
+                Sprite img = null;
+                if (catalog != null)
+                {
+                    var catalogCard = catalog.cards.Find(
+                        c => c.cardData.id == cd.id && c.cardData.type == cd.type);
+                    if (catalogCard != null) img = catalogCard.image;
+                }
+                data.cardUsages.Add(new CardUsageEntry
+                {
+                    card = cd,
+                    image = img,
+                    useCount = usageCounts[i]
+                });
+            }
+        }
+
+        // --- 擊倒紀錄 ---
+        if (knockTargets != null)
+        {
+            for (int i = 0; i < knockTargets.Length; i++)
+            {
+                data.knockdowns.Add(new KnockdownEntry
+                {
+                    targetPlayerId = knockTargets[i],
+                    knockdownCount = knockCounts[i]
+                });
+            }
+        }
+
+        CurrentWinnerData = data;
+
+        Debug.Log($"[Results] 收到 Rpc_SyncWinnerData: winnerID={winnerID}, " +
+                  $"任務卡={data.missionCards.Count}, 道具使用={data.cardUsages.Count}種, " +
+                  $"擊倒目標={data.knockdowns.Count}人");
     }
 
     /// <summary>旁觀者的結算流程：關閉自由相機、顯示結算 UI 與返回按鈕</summary>
-    private IEnumerator SpectatorResultsSequence()
+    private IEnumerator SpectatorResultsSequence(int[] winnerIDs = null)
     {
         yield return new WaitForSeconds(resultDelay);
 
@@ -518,7 +646,18 @@ public class GameManager : NetworkBehaviour
             CameraFollow.Get().SnapTo(camPointObj.transform);
         }
 
-        GameUIManager.Instance.BackBtn?.SetActive(true);
+        // 旁觀者不觸發動畫，但仍保留相同節奏才跳 EndUI / MULTIPYWIN
+        yield return new WaitForSeconds(resultsAnimDuration);
+        yield return new WaitForSeconds(endUIDelayAfterAnim);
+
+        if (winnerIDs != null && winnerIDs.Length > 1)
+        {
+            GameUIManager.Instance.ShowMultiWinUI(winnerIDs);
+        }
+        else
+        {
+            GameUIManager.Instance.ShowEndUI();
+        }
     }
 
     private IEnumerator ResultsSequence(int[] winnerIDs)
@@ -563,7 +702,18 @@ public class GameManager : NetworkBehaviour
             resultsAnimator.SetBool(resultsAnimBoolName, true);
         }
 
-        GameUIManager.Instance.BackBtn?.SetActive(true);
+        // 等結算動畫播完
+        yield return new WaitForSeconds(endUIDelayAfterAnim);
+
+        // 多人勝利用 MULTIPYWIN，單人勝利用 EndUI
+        if (winnerIDs != null && winnerIDs.Length > 1)
+        {
+            GameUIManager.Instance.ShowMultiWinUI(winnerIDs);
+        }
+        else
+        {
+            GameUIManager.Instance.ShowEndUI();
+        }
     }
 
     /// <summary>押送開始：廣播給所有 Client，顯示範圍圓圈（僅對 Catch 玩家可見）</summary>

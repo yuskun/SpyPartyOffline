@@ -2943,11 +2943,13 @@ MonoBehaviour:
   AICount: 4
   WinnerPoint: {fileID: 149188479}
   LoserPoint: {fileID: 1358849574}
-  resultDelay: 1
+  resultDelay: 2
   ResultsCameraPoint: {fileID: 878490955}
-  resultsCamMoveDuration: 1
+  resultsCamMoveDuration: 2
   resultsAnimator: {fileID: 889422762}
   resultsAnimBoolName: IsOpen
+  resultsAnimDuration: 10
+  endUIDelayAfterAnim: 10
 --- !u!4 &107143289
 Transform:
   m_ObjectHideFlags: 0
@@ -3912,6 +3914,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   catalog: {fileID: 11400000, guid: 086c7a2c8ac87e945ae37b4d20e2e5e0, type: 2}
+  avatarData: {fileID: 11400000, guid: 1a8cffecf506cc54aae54e85c83b0f40, type: 2}
 --- !u!4 &155071585
 Transform:
   m_ObjectHideFlags: 0
@@ -10086,6 +10089,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   catalog: {fileID: 11400000, guid: 086c7a2c8ac87e945ae37b4d20e2e5e0, type: 2}
+  avatarData: {fileID: 0}
 --- !u!4 &335373973
 Transform:
   m_ObjectHideFlags: 0

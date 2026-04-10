@@ -6,9 +6,13 @@ public class CardManager : MonoBehaviour
     [Header("卡片資料庫（用 ID 對應）")]
     public static CardManager Instance;
     public CardCatalog Catalog => catalog;
+    public CharacterAvatarData AvatarData => avatarData;
 
     [SerializeField]
     private CardCatalog catalog; // ScriptableObject 總表
+    [SerializeField]
+    private CharacterAvatarData avatarData; // 角色頭像資料
+    
 
     private Dictionary<int, FunctionCard> funcDictionary = new();
     private Dictionary<int, MissionCard> missionDictionary = new();

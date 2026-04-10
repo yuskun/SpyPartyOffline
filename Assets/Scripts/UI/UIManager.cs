@@ -23,6 +23,12 @@ public class GameUIManager : MonoBehaviour
     public GameObject CaughtUI;
     public GameObject BackBtn;
 
+    [Header("結算舊版 UGUI 面板（遊戲結算時顯示）")]
+    public GameObject EndUI;
+
+    [Header("多人勝利結算面板（MULTIPYWIN）")]
+    public GameObject MultipleWinUI;
+
     public UniversalUIController GameHudUI;
 
     private void Awake()
@@ -46,6 +52,8 @@ public class GameUIManager : MonoBehaviour
          PauseUI.SetActive(false);
          if (GameHudUI != null) GameHudUI.SetVisible(false);
          if (ResultsPanel != null) ResultsPanel.SetActive(false);
+         if (EndUI != null) EndUI.SetActive(false);
+         if (MultipleWinUI != null) MultipleWinUI.SetActive(false);
     }
     public void Draw()
     {
@@ -57,8 +65,33 @@ public class GameUIManager : MonoBehaviour
         WinText.SetActive(false);
         GameoverText.SetActive(false);
         HUDUI.SetActive(false);
+        // 關掉新版 UIDocument 的 HUD（任務欄、卡片欄等）
+        if (GameHudUI != null) GameHudUI.SetVisible(false);
         if (ResultsPanel != null) ResultsPanel.SetActive(true);
         if (ResultsBgPlane.Instance != null) ResultsBgPlane.Instance.SlideIn();
+        // ⚠️ 注意：EndUI（舊版 UGUI 結算面板）不在這裡開，
+        // 必須等結算動畫跑完才跳出來，由 ShowEndUI() 在 ResultsSequence 的最後呼叫。
+    }
+
+    /// <summary>
+    /// 結算動畫結束後才呼叫，跳出舊版 UGUI 結算面板（EndUI）。
+    /// 由 GameManager.ResultsSequence / SpectatorResultsSequence 在動畫完成後觸發。
+    /// </summary>
+    public void ShowEndUI()
+    {
+        if (EndUI != null) EndUI.SetActive(true);
+    }
+
+    /// <summary>
+    /// 多人勝利時用這個 UI 取代 EndUI。
+    /// winnerIDs 會先寫進 MultiWinnerPanelPopulator.PendingWinnerIDs，
+    /// SetActive(true) 之後 Populator 的 OnEnable 會自動填充玩家列表。
+    /// </summary>
+    public void ShowMultiWinUI(int[] winnerIDs)
+    {
+        if (MultipleWinUI == null) return;
+        MultiWinnerPanelPopulator.PendingWinnerIDs = winnerIDs;
+        MultipleWinUI.SetActive(true);
     }
 
     void Update()

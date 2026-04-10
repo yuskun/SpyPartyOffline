@@ -33,17 +33,35 @@ public class PlayerListManager : NetworkBehaviour
             nameTexts[i].text = "空間";
         }
 
-        // ── 新版 UI Toolkit 初始化 ──
-        var root = MenuUIManager.instance.hostRoomDocument.rootVisualElement;
-        slotElements.Clear();
-        root.Query<VisualElement>(className: "slot").ForEach(slot => slotElements.Add(slot));
-        Debug.Log($"找到 {slotElements.Count} 個 slot");
-        
-        // 只有房主可以點擊開始
-        startGameBtn = root.Q<Button>("StartGameBtn");
-        RefreshStartButtonAuthority();
+        // ⚠️ 不要在 Spawned() 快取 UI Toolkit 元素！
+        // 因為此時 hostRoomDocument 可能還是 inactive（第二次流程特別明顯），
+        // 就算拿得到 root，ShowGameroom 之後 UIDocument 會重建整棵樹，
+        // 快取到的 slotElements / startGameBtn 會變成孤兒參照。
+        // 改成每次要用時再 query（見 TryGetRoot）。
 
+        RefreshStartButtonAuthority();
         PlayerVersion = 0;
+    }
+
+    /// <summary>
+    /// 每次要用 UI 時即時取得 rootVisualElement，避免快取失效。
+    /// 同時確保 hostRoomDocument 是啟用狀態。
+    /// </summary>
+    private VisualElement TryGetRoot()
+    {
+        var doc = MenuUIManager.instance?.hostRoomDocument;
+        if (doc == null) return null;
+        if (!doc.gameObject.activeInHierarchy) return null;
+        return doc.rootVisualElement;
+    }
+
+    /// <summary>即時從目前的 rootVisualElement 重新抓 slot 元素</summary>
+    private void RefreshSlotElements()
+    {
+        slotElements.Clear();
+        var root = TryGetRoot();
+        if (root == null) return;
+        root.Query<VisualElement>(className: "slot").ForEach(slot => slotElements.Add(slot));
     }
     public void Check()
     {
@@ -53,14 +71,29 @@ public class PlayerListManager : NetworkBehaviour
             lastRevision = PlayerVersion;
             OnPlayerListChanged();
         }
-        if (PlayerVersion == 1 && !hasOpenedGameRoom)
+        if (PlayerVersion >= 1 && !hasOpenedGameRoom)
         {
             Debug.Log("玩家列表已更新，顯示遊戲房間界面");
             string code = NetworkManager2.Instance != null ? NetworkManager2.Instance.CurrentRoomCode : "";
             GameMode mode = Runner.IsServer ? GameMode.Host : GameMode.Client;
             MenuUIManager.instance.ShowGameroom(mode, code);
             hasOpenedGameRoom = true;
+
+            // ✅ 關鍵：ShowGameroom 之後 hostRoomDocument 才剛被 SetActive(true)，
+            // 而 UIDocument.OnEnable 是延後一幀建好 root 的，
+            // 所以延後一幀再強制刷新一次，把 UXML 預設範本內容覆寫掉。
+            StartCoroutine(ForceRefreshNextFrame());
         }
+    }
+
+    private System.Collections.IEnumerator ForceRefreshNextFrame()
+    {
+        // 等兩幀：第一幀讓 GameObject SetActive 生效、UIDocument 建 root；
+        // 第二幀讓 UniversalUIController 的 coroutine 跑完 display=Flex
+        yield return null;
+        yield return null;
+        OnPlayerListChanged();
+        RefreshStartButtonAuthority();
     }
     public void RegisterPlayer(PlayerRef player, string playerName, int skinIndex)
     {
@@ -116,8 +149,10 @@ public class PlayerListManager : NetworkBehaviour
             nameTexts[Slotindex].color = kvp.Key == Runner.LocalPlayer.AsIndex ? myPlayerColor : otherPlayerColor;
             Slotindex++;
         }
-        
-        // 新版UI(可直接取代) ──
+
+        // ── 新版UI：每次更新前即時重抓 slot 元素，避免 UIDocument 重建後快取失效 ──
+        RefreshSlotElements();
+
         for (int i = 0; i < slotElements.Count; i++)
         {
             ResetSlotToEmpty(slotElements[i]);
@@ -230,20 +265,23 @@ public class PlayerListManager : NetworkBehaviour
         }
     }
 
-    // 新增一個方法專門處理按鈕權限
+    // 新增一個方法專門處理按鈕權限（每次即時 query，避免快取失效）
     private void RefreshStartButtonAuthority()
     {
-        if (startGameBtn != null)
-        {
-            bool isHost = Runner.IsServer; // 或使用 Object.HasStateAuthority
-            startGameBtn.SetEnabled(isHost);
+        var root = TryGetRoot();
+        if (root == null) return;
 
-            // 如果想讓 Client 看到不同的文字
-            var btnLabel = startGameBtn.Q<Label>(className: "btn-text");
-            if (btnLabel != null)
-            {
-                btnLabel.text = isHost ? "開始遊戲" : "等待房主開始";
-            }
+        var btn = root.Q<Button>("StartGameBtn");
+        if (btn == null) return;
+
+        startGameBtn = btn;
+        bool isHost = Runner != null && Runner.IsServer;
+        btn.SetEnabled(isHost);
+
+        var btnLabel = btn.Q<Label>(className: "btn-text");
+        if (btnLabel != null)
+        {
+            btnLabel.text = isHost ? "開始遊戲" : "等待房主開始";
         }
     }
 }

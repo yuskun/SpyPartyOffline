@@ -249,13 +249,35 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
 
         Debug.Log("Disconnected");
 
-        // 2) 關閉 Game HUD
-        if (GameUIManager.Instance != null && GameUIManager.Instance.HUDUI != null)
-            GameUIManager.Instance.HUDUI.SetActive(false);
+        // 2) 關閉 Game HUD + 結算相關 UI（舊 UGUI + 新版 UIDocument）
+        if (GameUIManager.Instance != null)
+        {
+            if (GameUIManager.Instance.HUDUI != null)
+                GameUIManager.Instance.HUDUI.SetActive(false);
+            if (GameUIManager.Instance.GameHudUI != null)
+                GameUIManager.Instance.GameHudUI.SetVisible(false);
+
+            // 斷線時若結算 UI 還開著要一併關掉，避免回主選單還殘留
+            if (GameUIManager.Instance.ResultsPanel != null)
+                GameUIManager.Instance.ResultsPanel.SetActive(false);
+            if (GameUIManager.Instance.EndUI != null)
+                GameUIManager.Instance.EndUI.SetActive(false);
+            if (GameUIManager.Instance.MultipleWinUI != null)
+                GameUIManager.Instance.MultipleWinUI.SetActive(false);
+            if (GameUIManager.Instance.WinText != null)
+                GameUIManager.Instance.WinText.SetActive(false);
+            if (GameUIManager.Instance.GameoverText != null)
+                GameUIManager.Instance.GameoverText.SetActive(false);
+            if (GameUIManager.Instance.DrawUI != null)
+                GameUIManager.Instance.DrawUI.SetActive(false);
+        }
 
         // 3) 切回主選單場景並顯示 UI
         SceneManager.LoadScene(0);
         MenuUIManager.instance.showUI(MenuUIManager.instance.BulidOrJoin);
+
+        // 4) 重置新版 UIDocument 主選單（關掉殘留的大廳 UI、打開 MainMenuPanel）
+        MenuUIManager.instance.ResetToMainMenu();
     }
     public async Task<bool> SwitchSceneAsync(int buildIndex)
     {
@@ -497,8 +519,34 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
     }
     public void OnSceneLoadStart(NetworkRunner r)
     {
+        if (MenuUIManager.instance == null) return;
+
         // 場景開始載入 → 顯示 Loading（所有端，包含 Client）
-        if (MenuUIManager.instance != null && MenuUIManager.instance.LoadingScreen != null)
+        if (MenuUIManager.instance.LoadingScreen != null)
             MenuUIManager.instance.LoadingScreen.SetActive(true);
+
+        // ✅ 無條件關閉 PrepareRoom 相關所有 UI（不再用 buildIndex 判斷方向）
+        //    原本有用 SceneManager.GetActiveScene().buildIndex == PrepareGameIndex 去 gate，
+        //    但 Fusion OnSceneLoadStart 時 active scene 已不一定是舊場景，
+        //    build index 也可能跟 PrepareGameIndex 對不上 → Client 會跳過這段，
+        //    造成 HostRoomPanel 殘留進 GameScene。
+        //
+        //    永遠關是安全的：
+        //    - Mainmenu → PrepareRoom：本來 HostRoomPanel / Gameroom 就沒開，
+        //      SetActive(false) 是 no-op；之後 ShowGameroom 會重新打開。
+        //    - PrepareRoom → GameScene：本來就該關，這是要修的 case。
+        //    - 回主選單由 ResetToMainMenu 走，不經這裡。
+        //
+        // - hostRoomDocument: 新版 UIDocument 的 HostRoomPanel
+        // - Gameroom:         舊版 UGUI 父物件（包 Host / Client 子面板）
+        if (MenuUIManager.instance.hostRoomDocument != null)
+            MenuUIManager.instance.hostRoomDocument.gameObject.SetActive(false);
+        if (MenuUIManager.instance.Gameroom != null)
+            MenuUIManager.instance.Gameroom.SetActive(false);
+
+        // GameHudUI 的啟用改由 GameManager.Spawned() 負責（見 GameManager1.cs）。
+        // 理由：GameManager 只在遊戲場景存在，Spawned() 必定是在遊戲場景才跑，
+        // 天然就把「要不要開 HUD」和「是不是遊戲場景」綁在一起，
+        // 不必在這裡猜 build index。
     }
 }
