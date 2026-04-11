@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Fusion;
 using OodlesEngine;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 using UnityEngine.SocialPlatforms;
@@ -65,6 +66,7 @@ public class GameManager : NetworkBehaviour
         string localName = NetworkManager2.Instance != null ? NetworkManager2.Instance.PlayerName : "Player";
         Rpc_Ready(PlayerPrefs.GetInt("Choosenindex"), localName, default);
         MenuUIManager.instance.Gameroom.SetActive(false);
+      
         GameUIManager.Instance.HUDUI.SetActive(true);
         //GameHUDManager.Instance.ShowHUD();
 
