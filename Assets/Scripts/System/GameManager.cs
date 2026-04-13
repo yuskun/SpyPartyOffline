@@ -98,6 +98,7 @@ public class GameManager1 : NetworkBehaviour
     {
         MenuUIManager.instance.Gameroom.SetActive(false);
         GameUIManager.Instance.HUDUI.SetActive(true);
+        GameUIManager.Instance.GameHUDPanel?.ShowCurrentUI();
         NetworkManager.instance.GameScene.SetActive(true);
         LocalBackpack.Instance.SetUpdateEnabled(true);
 

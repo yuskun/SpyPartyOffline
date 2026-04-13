@@ -269,8 +269,12 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
         Debug.Log("Disconnected");
 
         // 2) 關閉 Game HUD
-        if (GameUIManager.Instance != null && GameUIManager.Instance.HUDUI != null)
-            GameUIManager.Instance.HUDUI.SetActive(false);
+        if (GameUIManager.Instance != null)
+        {
+            if (GameUIManager.Instance.HUDUI != null)
+                GameUIManager.Instance.HUDUI.SetActive(false);
+            GameUIManager.Instance.GameHUDPanel?.HideCurrentUI();
+        }
 
         // 3) 切回主選單場景並顯示 UI
         SceneManager.LoadScene(0);

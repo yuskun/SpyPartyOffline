@@ -6,7 +6,7 @@ public class CountdownTimer : NetworkBehaviour
 {
     [Header("UI 設定")]
 
-    [Networked, OnChangedRender(nameof(OnTimeTextChanged))]
+    [Networked]
     public string TimeText { get; set; }
     [Networked] private NetworkBool IsRunning { get; set; }
 
@@ -29,7 +29,8 @@ public class CountdownTimer : NetworkBehaviour
     {
         if (GameUIManager.Instance != null && GameUIManager.Instance.timerText != null)
             GameUIManager.Instance.timerText.text = TimeText;
-        GameHUDManager.Instance?.SetTopTime(TimeText);
+        if (GameHUDManager.Instance != null)
+            GameHUDManager.Instance.SetTopTime(TimeText);
     }
 
     public void OnLastMinuteChanged()
@@ -56,9 +57,18 @@ public class CountdownTimer : NetworkBehaviour
 
             UpdateTimeText();
         }
+    }
 
+    /// <summary>每幀直接同步 UI，不依賴 OnChangedRender</summary>
+    public override void Render()
+    {
+        if (string.IsNullOrEmpty(TimeText)) return;
 
+        if (GameUIManager.Instance != null && GameUIManager.Instance.timerText != null)
+            GameUIManager.Instance.timerText.text = TimeText;
 
+        if (GameHUDManager.Instance != null)
+            GameHUDManager.Instance.SetTopTime(TimeText);
     }
 
     public void StartTimer()
@@ -67,7 +77,11 @@ public class CountdownTimer : NetworkBehaviour
         {
             remainingTime = totalMinutes * 60f;
             IsLastMinute = false;
+
+            // 先設一個不同的值，強制 Fusion 偵測到變化觸發 OnChangedRender
+            TimeText = "";
             IsRunning = true;
+            UpdateTimeText();
         }
     }
 

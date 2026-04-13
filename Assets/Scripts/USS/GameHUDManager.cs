@@ -11,42 +11,61 @@ public class GameHUDManager : MonoBehaviour
     private bool micOn = true;
 
     private void Awake()
-    {
+    {  if(Instance != null && Instance != this)
+        {
+            Debug.LogWarning("GameHUDManager 已存在，正在銷毀重複的實例。");
+            Destroy(gameObject);
+            return;
+        }
         Instance = this;
     }
-    void OnEnable()
+    /// <summary>重新綁定所有 UI 元素引用（開始遊戲時呼叫一次）</summary>
+    public void InitHUD()
     {
-        var root = GetComponent<UIDocument>().rootVisualElement;
-        _topTimeLabel = root.Q<Label>("TopTime");
+        var doc = GetComponent<UIDocument>();
+        if (doc == null || doc.rootVisualElement == null) return;
+        var root = doc.rootVisualElement;
 
+        _topTimeLabel = root.Q<Label>("TopTime");
         _playerNameLabel = root.Q<Label>(className: "player-name");
-        RefreshPlayerName(); // 執行名字更新
+        RefreshPlayerName();
 
         var mapContent = root.Q<VisualElement>(className: "map-content");
         if (mapContent != null)
             mapContent.style.backgroundImage = new StyleBackground(Background.FromRenderTexture(minimapRenderTexture));
-        
-        // 頭像部分
-        if (SkinChange.instance?.characterAvatarDatabase == null) return;
 
-        int skinIndex = PlayerPrefs.GetInt("Choosenindex", 0);
-        Sprite avatar = SkinChange.instance.characterAvatarDatabase.GetAvatar(skinIndex);
-        if (avatar == null) return;
-
-        var avatarImg = root.Q<UnityEngine.UIElements.Image>(className: "avatar-img");
-        if (avatarImg != null)
-            avatarImg.sprite = avatar;
+        // 頭像
+        if (SkinChange.instance != null && SkinChange.instance.characterAvatarDatabase != null)
+        {
+            int skinIndex = PlayerPrefs.GetInt("Choosenindex", 0);
+            Sprite avatar = SkinChange.instance.characterAvatarDatabase.GetAvatar(skinIndex);
+            if (avatar != null)
+            {
+                var avatarImg = root.Q<UnityEngine.UIElements.Image>(className: "avatar-img");
+                if (avatarImg != null)
+                    avatarImg.sprite = avatar;
+            }
+        }
 
         // Mic
         micBtn = root.Q<Button>("MicBtn");
-        if (micBtn != null){
-            micBtn.focusable = false; // 關鍵：禁止聚焦
+        if (micBtn != null)
+        {
+            micBtn.focusable = false;
             micBtn.clicked += ToggleMic;
         }
     }
 
     public void SetTopTime(string timeText)
     {
+        // SetActive 重建視覺樹後，舊引用會脫離（parent == null），需重新抓
+        if (_topTimeLabel == null || _topTimeLabel.panel == null)
+        {
+            var doc = GetComponent<UIDocument>();
+            if (doc != null && doc.rootVisualElement != null)
+                _topTimeLabel = doc.rootVisualElement.Q<Label>("TopTime");
+        }
+
         if (_topTimeLabel != null)
             _topTimeLabel.text = timeText;
     }

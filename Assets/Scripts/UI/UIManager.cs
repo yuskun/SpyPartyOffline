@@ -50,6 +50,7 @@ public class GameUIManager : MonoBehaviour
          WinText.SetActive(false);
          GameoverText.SetActive(false);
          HUDUI.SetActive(false);
+         if (GameHUDPanel != null) GameHUDPanel.HideCurrentUI();
          PauseUI.SetActive(false);
          if (GameHudUI != null) GameHudUI.SetVisible(false);
          if (ResultsPanel != null) ResultsPanel.SetActive(false);
@@ -64,6 +65,7 @@ public class GameUIManager : MonoBehaviour
         WinText.SetActive(false);
         GameoverText.SetActive(false);
         HUDUI.SetActive(false);
+        if (GameHUDPanel != null) GameHUDPanel.HideCurrentUI();
         if (ResultsPanel != null) ResultsPanel.SetActive(true);
         if (ResultsBgPlane.Instance != null) ResultsBgPlane.Instance.SlideIn();
     }

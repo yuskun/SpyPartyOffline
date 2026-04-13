@@ -51,6 +51,7 @@ public class GameManager : NetworkBehaviour
             MenuUIManager.instance.Gameroom.SetActive(false);
             MenuUIManager.instance.LoadingScreen.SetActive(false);
             GameUIManager.Instance.HUDUI.SetActive(false);
+            GameUIManager.Instance.GameHUDPanel?.HideCurrentUI();
             CameraFollow.Get().enable = false;
             // 掛 SpectatorCamera 到主相機
             Camera cam = Camera.main;
@@ -63,7 +64,7 @@ public class GameManager : NetworkBehaviour
         Rpc_Ready(PlayerPrefs.GetInt("Choosenindex"), localName, default);
         MenuUIManager.instance.Gameroom.SetActive(false);
         GameUIManager.Instance.HUDUI.SetActive(true);
-        //GameHUDManager.Instance.ShowHUD();
+        GameUIManager.Instance.GameHUDPanel?.ShowCurrentUI();
         LocalBackpack.Instance.SetUpdateEnabled(true);
 
         if (Runner.IsServer)
@@ -159,6 +160,12 @@ public class GameManager : NetworkBehaviour
         {
             LocalBackpack.Instance.OnEscortEnd();
         }
+
+        // 確保 HUD 顯示（上一輪結算可能隱藏了）+ 重新綁定 UI 引用
+        GameUIManager.Instance.HUDUI.SetActive(true);
+        GameUIManager.Instance.GameHUDPanel?.ShowCurrentUI();
+        if (GameHUDManager.Instance != null)
+            GameHUDManager.Instance.InitHUD();
 
         if (Runner.IsServer)
         {
@@ -535,6 +542,7 @@ public class GameManager : NetworkBehaviour
     private IEnumerator ResultsSequence(int[] winnerIDs)
     {
         // 0. GameOver 立即隱藏 HUD
+        GameUIManager.Instance.HUDUI.SetActive(false);
         GameUIManager.Instance.GameHUDPanel?.HideCurrentUI();
 
         yield return new WaitForSeconds(resultDelay);
@@ -623,6 +631,7 @@ public class GameManager : NetworkBehaviour
         UnityEngine.Cursor.lockState = CursorLockMode.None;
 
         GameUIManager.Instance.BackBtn?.SetActive(true);
+
     }
 
     /// <summary>押送開始：廣播給所有 Client，顯示範圍圓圈（僅對 Catch 玩家可見）</summary>
