@@ -211,6 +211,47 @@ public class ObjectSpawner : MonoBehaviour
         }
     }
 
+    /// <summary>清理列表中已被 Despawn 或銷毀的 null 項目</summary>
+    public void CleanupList()
+    {
+        spawnedObjects.RemoveAll(o => o == null);
+    }
+
+    /// <summary>Despawn 所有還存在的生成物件</summary>
+    public void DespawnAll()
+    {
+        foreach (var obj in spawnedObjects)
+        {
+            if (obj == null) continue;
+            var netObj = obj.GetComponent<NetworkObject>();
+            if (netObj != null && netObj.IsValid)
+                NetworkManager2.Instance.runner.Despawn(netObj);
+            else
+                Destroy(obj);
+        }
+        spawnedObjects.Clear();
+    }
+
+    /// <summary>隱藏所有還存在的生成物件（不 Despawn）</summary>
+    public void HideAll()
+    {
+        CleanupList();
+        foreach (var obj in spawnedObjects)
+        {
+            if (obj != null) obj.SetActive(false);
+        }
+    }
+
+    /// <summary>目前追蹤中的存活物件數量</summary>
+    public int AliveCount
+    {
+        get
+        {
+            CleanupList();
+            return spawnedObjects.Count;
+        }
+    }
+
     public void objectToSpawn(GameObject obj, Transform position)
     {
         NetworkManager2.Instance.runner.Spawn(obj, position.position, null, null, (runner, obj) =>

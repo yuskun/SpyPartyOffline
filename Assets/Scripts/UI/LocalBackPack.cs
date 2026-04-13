@@ -82,6 +82,8 @@ public class LocalBackpack : MonoBehaviour
                 if (data.shadow != null) data.shadow.enabled = true;
                 data.forbidImage = btn.transform.Find("Forbid")?.GetComponent<Image>();
                 if (data.forbidImage != null) data.forbidImage.gameObject.SetActive(false);
+                data.hintObject = btn.transform.Find("Hint")?.gameObject;
+                if (data.hintObject != null) data.hintObject.SetActive(false);
 
                 buttons.Add(data);
             }
@@ -114,17 +116,24 @@ public class LocalBackpack : MonoBehaviour
         if (isPreviewingItem && FocusIndex != previewingIndex)
             CancelItemPreview();
 
-        if (Input.GetKeyDown(KeyCode.E))
+        // 滑鼠沒鎖定（UI 開啟中）時不處理道具輸入
+        if (Cursor.lockState != CursorLockMode.Locked) return;
+
+        // 手持武器時，左鍵只做武器攻擊，不使用道具
+        bool holdingWeapon = character != null && character.HoldWeapon();
+        if (holdingWeapon) return;
+
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             OnMouseDownUse();
         }
 
-        if (Input.GetKey(KeyCode.E))
+        if (Input.GetKey(KeyCode.Mouse0))
         {
             OnMouseHoldUse();
         }
 
-        if (Input.GetKeyUp(KeyCode.E))
+        if (Input.GetKeyUp(KeyCode.Mouse0))
         {
             OnMouseUpUse();
         }
@@ -478,17 +487,15 @@ public class LocalBackpack : MonoBehaviour
         {
             if (i == FocusIndex)
             {
-                //buttons[i].outline.enabled = true;
-                //buttons[i].shadow.enabled = false;
                 buttons[i].frameImage.sprite = selectedFrame;
                 buttons[i].button.transform.localScale = Vector3.one * 1.15f;
+                if (buttons[i].hintObject != null) buttons[i].hintObject.SetActive(true);
             }
             else
             {
-                //buttons[i].outline.enabled = false;
-                //buttons[i].shadow.enabled = true;
                 buttons[i].frameImage.sprite = normalFrame;
                 buttons[i].button.transform.localScale = Vector3.one;
+                if (buttons[i].hintObject != null) buttons[i].hintObject.SetActive(false);
             }
         }
     }
@@ -595,7 +602,7 @@ public class LocalBackpack : MonoBehaviour
         hadStealCard = false;
     }
 
-    /// <summary>持有 Steal 卡時，所有 StealTarget 持續顯示 Outline</summary>
+    /// <summary>持有 Steal 卡時，所有 StealTarget 持續顯示 Outline，鎖定中的顯示綠色，未鎖定的紅色</summary>
     void UpdateStealOutlines()
     {
         if (userInventory == null) return;
@@ -605,19 +612,34 @@ public class LocalBackpack : MonoBehaviour
         // 狀態沒變且沒持有 → 不需更新
         if (!hasSteal && !hadStealCard) return;
 
-        // 狀態變化 → 全部切換
-        if (hasSteal != hadStealCard)
+        // 狀態變化：失去 Steal 卡 → 關掉全部 Outline
+        if (!hasSteal && hadStealCard)
         {
-            SetAllStealOutlines(hasSteal);
-            hadStealCard = hasSteal;
+            SetAllStealOutlines(false);
+            hadStealCard = false;
             return;
         }
 
-        // 持續持有 → 確保新生成的 target 也亮起來
+        hadStealCard = hasSteal;
+
+        // 持有 Steal 卡 → 更新 Outline 顏色
         if (hasSteal)
         {
+            // 取得目前鎖定的 StealTargetObject
+            var scanner = GetComponent<PlayerScanner>();
+            StealTargetObject lockedTarget = scanner != null ? scanner.currentStealTarget : null;
+
             foreach (var obj in StealTargetObject.All)
-                if (obj != null) obj.SetHighlight(true);
+            {
+                if (obj == null) continue;
+                obj.SetHighlight(true);
+
+                // 鎖定中 → 綠色，未鎖定 → 紅色
+                var outlines = obj.GetComponentsInChildren<Outline>(true);
+                Color c = (lockedTarget != null && obj == lockedTarget) ? Color.green : Color.red;
+                foreach (var outline in outlines)
+                    if (outline != null) outline.OutlineColor = c;
+            }
         }
     }
 
@@ -653,4 +675,5 @@ public class ButtionData
 
     public Image frameImage; // 父物件的 Image
     public Image forbidImage;
+    public GameObject hintObject; // Hint UI
 }

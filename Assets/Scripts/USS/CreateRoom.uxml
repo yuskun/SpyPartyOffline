@@ -21,13 +21,13 @@
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement class="hud-bottom" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&amp;guid=3d5723d09fd5e9a4f97a9f3e046bbb90&amp;type=3#GenSenRounded2TW-R&quot;);">
+        <ui:VisualElement class="hud-bottom" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&amp;guid=3d5723d09fd5e9a4f97a9f3e046bbb90&amp;type=3#GenSenRounded2TW-R&quot;); display: none;">
             <ui:VisualElement class="playerbar">
                 <ui:VisualElement class="avatar-wrap">
                     <ui:VisualElement class="avatar" />
                 </ui:VisualElement>
                 <ui:VisualElement class="player-meta">
-                    <ui:TextField name="PlayerNameInput" value="shaya" class="player-name-input" maxLength="6" />
+                    <ui:TextField name="PlayerNameInput" value="shaya" max-length="6" class="player-name-input" />
                     <ui:VisualElement class="level-line">
                         <ui:VisualElement class="level-track">
                             <ui:VisualElement name="LevelFill" class="level-fill" style="width: 65%;" />

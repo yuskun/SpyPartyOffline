@@ -1,17 +1,16 @@
-using UnityEngine;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Fusion;
 using Fusion.Sockets;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using UnityEngine.SceneManagement;
-using OodlesEngine;
 using NUnit.Framework;
+using OodlesEngine;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
 {
-
     private int PrepareGameIndex = 1;
     public string PlayerName;
     public static NetworkManager2 Instance;
@@ -20,7 +19,14 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
     public NetworkRunner runner;
     private NetworkSceneManagerDefault sceneManager;
 
-    public enum NetMode { Idle, Host, Client, Spectator }
+    public enum NetMode
+    {
+        Idle,
+        Host,
+        Client,
+        Spectator,
+    }
+
     public NetMode mode = NetMode.Idle;
 
     public static bool IsSpectator { get; private set; } = false;
@@ -30,7 +36,11 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
 
     private void Awake()
     {
-        if (Instance != null) { Destroy(gameObject); return; }
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
@@ -64,6 +74,7 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
     {
         _ = QuickJoinAsSpectatorAsync();
     }
+
     public void SwitchScene(int buildIndex)
     {
         _ = SwitchSceneAsync(buildIndex);
@@ -75,7 +86,8 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
 
     private Task InitRunner()
     {
-        if (runner != null) return Task.CompletedTask;
+        if (runner != null)
+            return Task.CompletedTask;
 
         // 1) 建立獨立 Runner 物件
         runnerRoot = new GameObject("FusionRunnerRoot");
@@ -98,11 +110,11 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
 
     private async Task HostAsync()
     {
+        if (mode != NetMode.Idle)
+            return;
 
-        if (mode != NetMode.Idle) return;
-        
         MenuUIManager.instance.showUI(MenuUIManager.instance.LoadingScreen);
-       
+
         await InitRunner();
         await runner.JoinSessionLobby(SessionLobby.ClientServer);
 
@@ -111,17 +123,17 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
         string sessionName = GenerateRoomCode();
         CurrentRoomCode = sessionName;
 
-
-        var result = await runner.StartGame(new StartGameArgs
-        {
-            GameMode = GameMode.Host,
-            SessionName = sessionName,
-            Scene = SceneRef.FromIndex(PrepareGameIndex),
-            SceneManager = sceneManager,
-            IsOpen = true,
-            IsVisible = true,
-
-        });
+        var result = await runner.StartGame(
+            new StartGameArgs
+            {
+                GameMode = GameMode.Host,
+                SessionName = sessionName,
+                Scene = SceneRef.FromIndex(PrepareGameIndex),
+                SceneManager = sceneManager,
+                IsOpen = true,
+                IsVisible = true,
+            }
+        );
 
         if (!result.Ok)
         {
@@ -129,13 +141,14 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
             mode = NetMode.Idle;
             return;
         }
-
     }
 
     private async Task JoinByCodeAsync(string code)
     {
-        if (mode != NetMode.Idle) return;
-        if (string.IsNullOrWhiteSpace(code)) return;
+        if (mode != NetMode.Idle)
+            return;
+        if (string.IsNullOrWhiteSpace(code))
+            return;
 
         MenuUIManager.instance.showUI(MenuUIManager.instance.LoadingScreen);
 
@@ -145,12 +158,14 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
 
             mode = NetMode.Client;
 
-            var result = await runner.StartGame(new StartGameArgs
-            {
-                GameMode = GameMode.Client,
-                SessionName = code.Trim(),
-                SceneManager = sceneManager
-            });
+            var result = await runner.StartGame(
+                new StartGameArgs
+                {
+                    GameMode = GameMode.Client,
+                    SessionName = code.Trim(),
+                    SceneManager = sceneManager,
+                }
+            );
 
             if (!result.Ok)
             {
@@ -171,7 +186,8 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
 
     private async Task QuickJoinAsync()
     {
-        if (mode != NetMode.Idle) return;
+        if (mode != NetMode.Idle)
+            return;
         MenuUIManager.instance.showUI(MenuUIManager.instance.LoadingScreen);
 
         try
@@ -189,7 +205,8 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
 
     private async Task QuickJoinAsSpectatorAsync()
     {
-        if (mode != NetMode.Idle) return;
+        if (mode != NetMode.Idle)
+            return;
 
         IsSpectator = true;
         MenuUIManager.instance.showUI(MenuUIManager.instance.LoadingScreen);
@@ -212,9 +229,11 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
     }
 
     private bool isLeaving = false;
+
     private async Task LeaveAsync()
     {
-        if (isLeaving) return;
+        if (isLeaving)
+            return;
         isLeaving = true;
 
         waitingQuickJoin = false;
@@ -256,7 +275,11 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
         // 3) 切回主選單場景並顯示 UI
         SceneManager.LoadScene(0);
         MenuUIManager.instance.showUI(MenuUIManager.instance.BulidOrJoin);
+        MenuUIManager.instance.MainMenuInit();
+        GameUIManager.Instance.BackBtn?.SetActive(false);
+
     }
+
     public async Task<bool> SwitchSceneAsync(int buildIndex)
     {
         // 1️⃣ 基本檢查
@@ -312,7 +335,7 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
     {
         return Guid.NewGuid().ToString("N").Substring(0, 6).ToUpper();
     }
-    
+
     public void PlayerNamgeChanged(string newName)
     {
         PlayerName = newName;
@@ -327,6 +350,7 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
             PlayerName = MenuUIManager.instance.PlayerNameInput.text;
         }
     }
+
     /*public void PlayerNamgeChanged()
     {
         PlayerName = MenuUIManager.instance.PlayerNameInput.text;
@@ -338,7 +362,8 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> list)
     {
-        if (!waitingQuickJoin) return;
+        if (!waitingQuickJoin)
+            return;
 
         var room = list.FirstOrDefault(s => s.IsOpen && s.IsVisible);
         if (room == null)
@@ -359,12 +384,14 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
     /// <summary>旁觀者用房間名稱直接加入（由 QuickJoin 流程觸發）</summary>
     private async Task JoinSpectatorByCodeAsync(string code)
     {
-        var result = await runner.StartGame(new StartGameArgs
-        {
-            GameMode = GameMode.Client,
-            SessionName = code.Trim(),
-            SceneManager = sceneManager
-        });
+        var result = await runner.StartGame(
+            new StartGameArgs
+            {
+                GameMode = GameMode.Client,
+                SessionName = code.Trim(),
+                SceneManager = sceneManager,
+            }
+        );
 
         if (!result.Ok)
         {
@@ -397,7 +424,8 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
                 Debug.LogWarning($"Runner shutdown error: {e.Message}");
             }
 
-            if (runnerRoot != null) Destroy(runnerRoot);
+            if (runnerRoot != null)
+                Destroy(runnerRoot);
             runner = null;
             sceneManager = null;
             runnerRoot = null;
@@ -407,11 +435,13 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
         IsSpectator = false;
 
         MenuUIManager.instance.showUI(MenuUIManager.instance.BulidOrJoin);
+        MenuUIManager.instance.CreateRoomPanel.ShowCurrentUI();
     }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        if (!runner.IsServer) return;
+        if (!runner.IsServer)
+            return;
         Debug.Log($"Player joined: {player}");
         // Spawn 由 SkinChange.Rpc_RegisterAndSpawn 處理（Client 帶自己的 skinIndex 過來）
     }
@@ -419,7 +449,8 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
         Debug.Log($"Player left: {player}");
-        if (!runner.IsServer) return;
+        if (!runner.IsServer)
+            return;
 
         // 1) Despawn 該玩家的角色並清除 SpawnedPlayers 欄位
         if (SkinChange.instance != null)
@@ -427,7 +458,8 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
             for (int i = 0; i < SkinChange.instance.SpawnedPlayers.Length; i++)
             {
                 var obj = SkinChange.instance.SpawnedPlayers.Get(i);
-                if (obj == null) continue;
+                if (obj == null)
+                    continue;
 
                 var np = obj.GetComponent<NetworkPlayer>();
                 if (np != null && np.PlayerId == player)
@@ -461,40 +493,91 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
         // isLeaving guard 防止與 OnDisconnectedFromServer 重複執行
         _ = LeaveAsync();
     }
+
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
-        if (IsSpectator) return;
+        if (IsSpectator)
+            return;
 
         OodlesCharacterInput pci = new OodlesCharacterInput(
-                   InputManager.Get().GetVertical(),
-                   InputManager.Get().GetHorizontal(),
-                   InputManager.Get().GetJump(),
-                   InputManager.Get().GetTouchMoveY(),
-                   InputManager.Get().GetLeftHandUse(),
-                   InputManager.Get().GetRightHandUse(),
-                   InputManager.Get().GetDoAction1(),
-                   InputManager.Get().GetDoAction2(),
-                   InputManager.Get().GetCameraLook(),
-                   Time.fixedDeltaTime, runner.Tick);
+            InputManager.Get().GetVertical(),
+            InputManager.Get().GetHorizontal(),
+            InputManager.Get().GetJump(),
+            InputManager.Get().GetTouchMoveY(),
+            InputManager.Get().GetLeftHandUse(),
+            InputManager.Get().GetRightHandUse(),
+            InputManager.Get().GetDoAction1(),
+            InputManager.Get().GetDoAction2(),
+            InputManager.Get().GetCameraLook(),
+            Time.fixedDeltaTime,
+            runner.Tick
+        );
 
         input.Set(pci);
     }
 
     public void OnObjectEnterAOI(NetworkRunner r, NetworkObject o, PlayerRef p) { }
+
     public void OnObjectExitAOI(NetworkRunner r, NetworkObject o, PlayerRef p) { }
-    public void OnConnectRequest(NetworkRunner r, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }
-    public void OnConnectFailed(NetworkRunner r, NetAddress remoteAddress, NetConnectFailedReason reason) { }
+
+    public void OnConnectRequest(
+        NetworkRunner r,
+        NetworkRunnerCallbackArgs.ConnectRequest request,
+        byte[] token
+    )
+    { }
+
+    public void OnConnectFailed(
+        NetworkRunner r,
+        NetAddress remoteAddress,
+        NetConnectFailedReason reason
+    )
+    { }
+
     public void OnUserSimulationMessage(NetworkRunner r, SimulationMessagePtr message) { }
-    public void OnReliableDataReceived(NetworkRunner r, PlayerRef p, ReliableKey k, ArraySegment<byte> d) { }
+
+    public void OnReliableDataReceived(
+        NetworkRunner r,
+        PlayerRef p,
+        ReliableKey k,
+        ArraySegment<byte> d
+    )
+    { }
+
     public void OnReliableDataProgress(NetworkRunner r, PlayerRef p, ReliableKey k, float f) { }
+
     public void OnInputMissing(NetworkRunner r, PlayerRef p, NetworkInput i) { }
+
     public void OnConnectedToServer(NetworkRunner r) { }
+
     public void OnCustomAuthenticationResponse(NetworkRunner r, Dictionary<string, object> data) { }
+
     public void OnHostMigration(NetworkRunner r, HostMigrationToken t) { }
+
     public void OnSceneLoadDone(NetworkRunner r)
     {
-        // Loading 由 NetworkPlayer.Spawned() 在玩家生成後關閉，這裡不再自動關
+        // 場景載入完成 → 根據新場景 index 切換新版 UI 狀態
+        // OnSceneLoadDone 時 GetActiveScene() 才是正確的新場景
+        int targetIndex = SceneManager.GetActiveScene().buildIndex;
+        Debug.Log($"[NetworkManager2] OnSceneLoadDone: targetIndex={targetIndex}");
+        switch (targetIndex)
+        {
+            case 0:
+                if (MenuUIManager.instance != null)
+                    MenuUIManager.instance.MainMenuInit();
+                break;
+            case 1:
+                if (MenuUIManager.instance != null)
+                    MenuUIManager.instance.PrepareInit();
+                break;
+            case 2:
+            case 3:
+                if (GameUIManager.Instance != null)
+                    GameUIManager.Instance.GameSceneInit();
+                break;
+        }
     }
+
     public void OnSceneLoadStart(NetworkRunner r)
     {
         // 場景開始載入 → 顯示 Loading（所有端，包含 Client）
@@ -502,3 +585,4 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
             MenuUIManager.instance.LoadingScreen.SetActive(true);
     }
 }
+

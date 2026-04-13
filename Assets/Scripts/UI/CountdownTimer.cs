@@ -8,14 +8,14 @@ public class CountdownTimer : NetworkBehaviour
 
     [Networked, OnChangedRender(nameof(OnTimeTextChanged))]
     public string TimeText { get; set; }
-    private NetworkBool IsRunning { get; set; }
+    [Networked] private NetworkBool IsRunning { get; set; }
 
     [Networked, OnChangedRender(nameof(OnLastMinuteChanged))]
     public NetworkBool IsLastMinute { get; set; }
 
     [Header("時間設定")]
     public int totalMinutes = 15;
-    private float remainingTime;
+    public float remainingTime;
 
     public override void Spawned()
     {
@@ -27,7 +27,8 @@ public class CountdownTimer : NetworkBehaviour
     }
     public void OnTimeTextChanged()
     {
-        GameUIManager.Instance.timerText.text = TimeText;
+        if (GameUIManager.Instance != null && GameUIManager.Instance.timerText != null)
+            GameUIManager.Instance.timerText.text = TimeText;
         GameHUDManager.Instance?.SetTopTime(TimeText);
     }
 
@@ -65,6 +66,7 @@ public class CountdownTimer : NetworkBehaviour
         if (Runner.IsServer)
         {
             remainingTime = totalMinutes * 60f;
+            IsLastMinute = false;
             IsRunning = true;
         }
     }

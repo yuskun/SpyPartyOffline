@@ -72,7 +72,7 @@ public class SkinChange : NetworkBehaviour
                     //MenuUIManager.instance.playerlistmanager.UpdateSkinIndex(Runner.LocalPlayer, currentSkinIndex);
                     MenuUIManager.instance.playerlistmanager.Rpc_RequestSkinUpdate(Runner.LocalPlayer, currentSkinIndex);
                 }
-                
+
                 //FindObjectOfType<PracticeUIManager>()?.RefreshAvatar();
             }
             else
@@ -91,7 +91,7 @@ public class SkinChange : NetworkBehaviour
 
             PlayHideOrShow(true);
             MenuUIManager.instance.Gameroom.SetActive(true);
-            
+
             var practiceRoomUI = FindObjectOfType<PracticeUIManager>(true);
             if (practiceRoomUI != null)
             {
@@ -110,6 +110,7 @@ public class SkinChange : NetworkBehaviour
                 changeSkin(index);
             });
         }
+         
     }
 
 
@@ -141,22 +142,21 @@ public class SkinChange : NetworkBehaviour
             GameUIManager.Instance.progressfill.fillAmount += Time.deltaTime;
             if (GameUIManager.Instance.progressfill.fillAmount >= 1)
             {
-                GameUIManager.Instance.progressBar.SetActive(false);
-                MenuUIManager.instance.Gameroom.SetActive(false);
-                var practiceRoomUI = FindObjectOfType<PracticeUIManager>(true);
-                if (practiceRoomUI != null) practiceRoomUI.gameObject.SetActive(false);
-                CameraFollow.Get().enable = false;
-                StartCoroutine(MoveCamera());
-                Skins[currentSkinIndex].SetActive(true);
-                //MenuUIManager.instance.ChooseCharacterUI.SetActive(true);
-
-                MenuUIManager.instance.chooseCharacterDocument.gameObject.SetActive(true); 
-                
-
-                PlayHideOrShow(false);
+               PickCharacterUI();
 
             }
         }
+    }
+   public void PickCharacterUI()
+    {
+        GameUIManager.Instance.progressBar.SetActive(false);
+        MenuUIManager.instance.Gameroom.SetActive(false);
+        CameraFollow.Get().enable = false;
+        StartCoroutine(MoveCamera());
+        Skins[currentSkinIndex].SetActive(true);
+        MenuUIManager.instance.CharSelectPanel.ShowCurrentUI();
+        PlayHideOrShow(false);
+
     }
     IEnumerator MoveCamera()
     {
@@ -276,6 +276,25 @@ public class SkinChange : NetworkBehaviour
         while (MenuUIManager.instance == null || MenuUIManager.instance.playerlistmanager == null)
             yield return null;
         MenuUIManager.instance.playerlistmanager.RegisterPlayer(player, playerName, skinIndex);
+
+        // Host 生成完該玩家的角色後，通知該 Client 關閉 Loading UI
+        Rpc_PlayerSpawnComplete(player);
+    }
+
+    /// <summary>
+    /// Host → All：通知指定玩家角色已生成完畢，該 Client 可以關閉 Loading。
+    /// 每個 Client 收到後檢查是不是自己，是的話關掉 LoadingScreen。
+    /// </summary>
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void Rpc_PlayerSpawnComplete(PlayerRef targetPlayer)
+    {
+        // 只有目標玩家自己才關 Loading
+        if (Runner.LocalPlayer != targetPlayer) return;
+
+        Debug.Log($"[SkinChange] 收到 Rpc_PlayerSpawnComplete，關閉 Loading");
+        if (MenuUIManager.instance != null && MenuUIManager.instance.LoadingScreen != null)
+            MenuUIManager.instance.LoadingScreen.SetActive(false);
+            PickCharacterUI();
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
@@ -320,14 +339,15 @@ public class SkinChange : NetworkBehaviour
             Runner.Despawn(oldObj);
     }
     [Rpc(RpcSources.StateAuthority, RpcTargets.All, HostMode = RpcHostMode.SourceIsHostPlayer)]
-    void Rpc_ChangeSkinProcess( bool open,NetworkObject Player)
+    void Rpc_ChangeSkinProcess(bool open, NetworkObject Player)
     {
-        if(Player.GetComponent<NetworkPlayer>().PlayerId==Runner.LocalPlayer){
-            GameUIManager.Instance.UserCardUI.sprite=SkinChangeImage;
+        if (Player.GetComponent<NetworkPlayer>().PlayerId == Runner.LocalPlayer)
+        {
+            GameUIManager.Instance.UserCardUI.sprite = SkinChangeImage;
             GameUIManager.Instance.progressBar.SetActive(open);
-                
-            }
-            
+
+        }
+
     }
     public void SetSpawnedPlayer(NetworkObject playerObj)
     {
@@ -338,7 +358,7 @@ public class SkinChange : NetworkBehaviour
             {
                 SpawnedPlayers.Set(index, playerObj);
                 break;
-            } 
+            }
         }
 
     }
@@ -352,24 +372,24 @@ public class SkinChange : NetworkBehaviour
         // 2. 隱藏 3D 預覽模型 
         foreach (var skin in Skins)
         {
-            if (skin != null) skin.SetActive(false); 
+            if (skin != null) skin.SetActive(false);
         }
         GameUIManager.Instance.progressfill.fillAmount = 0;
 
         // 3. 恢復玩家物件與房間介面 
-        PlayHideOrShow(true); 
+        PlayHideOrShow(true);
         if (MenuUIManager.instance != null)
         {
-            MenuUIManager.instance.Gameroom.SetActive(true); 
+            MenuUIManager.instance.Gameroom.SetActive(true);
 
             // 4. 關鍵：同時關閉新舊兩種 UI 面板 
-            MenuUIManager.instance.ChooseCharacterUI.SetActive(false); 
-            if (MenuUIManager.instance.chooseCharacterDocument != null)
+            MenuUIManager.instance.ChooseCharacterUI.SetActive(false);
+            if (MenuUIManager.instance.CharSelectPanel != null)
             {
-                MenuUIManager.instance.chooseCharacterDocument.gameObject.SetActive(false); 
+                MenuUIManager.instance.CharSelectPanel.HideCurrentUI();
             }
         }
-        
+
         var practiceRoomUI = FindObjectOfType<PracticeUIManager>(true);
         if (practiceRoomUI != null)
         {

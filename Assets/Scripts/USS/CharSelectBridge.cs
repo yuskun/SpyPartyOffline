@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 using System.Collections.Generic;
+using ExitGames.Client.Photon.StructWrapping;
 
 public class CharSelectBridge : MonoBehaviour
 {
@@ -34,7 +35,7 @@ public class CharSelectBridge : MonoBehaviour
                 // 模擬點擊原本舊 UI 的確定鈕
                 MenuUIManager.instance.ConfirmCharcterBtn.onClick.Invoke();
                 // 關閉新面板
-                this.gameObject.SetActive(false);
+                this.gameObject.GetComponent<UniversalUIController>().HideCurrentUI();
             };
         }
 

@@ -312,14 +312,7 @@ namespace OodlesEngine
 
         public void UpdateMovement()
         {
-            if (inputState.doAction1 > 0 && energyLeftTime > 0)
-            {
-                movement.moveSpeed = moveForce * runSpeedTimes;
-            }
-            else
-            {
-                movement.moveSpeed = moveForce;
-            }
+            movement.moveSpeed = moveForce;
 
             movement.ProcessInput();
             UpdateFootstep();

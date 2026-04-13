@@ -36,7 +36,7 @@
 
 /* 展開狀態 */
 .mission-task.active {
-    width: 310px;
+    width: auto;
     height: 50px;
     scale: 1.05;
     padding: 0;

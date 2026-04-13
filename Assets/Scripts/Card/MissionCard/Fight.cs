@@ -16,7 +16,7 @@ public class Fight : MissionCard
                 new CardHistoryEntry(
                     parameters.UserId,
                     parameters.TargetId,
-                    "Catch",
+                    "Fight",
                     CardType.Mission
                     //result
                 )

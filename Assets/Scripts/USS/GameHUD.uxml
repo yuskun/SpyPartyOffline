@@ -22,7 +22,7 @@
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement class="hud-bottom">
+        <ui:VisualElement class="hud-bottom" style="display: none;">
             <ui:VisualElement name="VisualElement" class="playerbar" style="top: auto; bottom: 0; scale: 1.2 1.25;">
                 <ui:VisualElement class="avatar-wrap">
                     <ui:Image class="avatar-img" style="scale: 0.8 0.8; bottom: auto; top: -8%;" />

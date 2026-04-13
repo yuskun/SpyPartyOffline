@@ -35,10 +35,14 @@ public class MenuUIManager : MonoBehaviour
     public UnityEngine.UI.Button ConfirmCharcterBtn;
     public UnityEngine.UI.Button[] CharacterButtons;
     public TextMeshProUGUI RoomCodeText;
-    [Header("UI Documents")]
-    public UnityEngine.UIElements.UIDocument hostRoomDocument;
-    public UnityEngine.UIElements.UIDocument chooseCharacterDocument;
-    public UnityEngine.UIElements.UIDocument createRoomDocument;
+    [Header("新版 UI Panel（UniversalUIController）")]
+    public UniversalUIController MainMenuPanel;
+    public UniversalUIController SettingsPanel_1;
+    public UniversalUIController CreateRoomPanel;
+    public UniversalUIController ConfirmExit;
+    public UniversalUIController PracticePanel;
+    public UniversalUIController HostRoomPanel;
+    public UniversalUIController CharSelectPanel;
 
     void Awake()
     {
@@ -63,6 +67,8 @@ public class MenuUIManager : MonoBehaviour
         LoadingScreen.SetActive(false);
         JoinRoomList.SetActive(false);
         // RoomCode.SetActive(false);
+        UnityEngine.Cursor.visible = true;
+        UnityEngine.Cursor.lockState = UnityEngine.CursorLockMode.None;
     }
     void Update()
     {
@@ -135,10 +141,74 @@ public class MenuUIManager : MonoBehaviour
         LocalBackpack.Instance.userInventory.gameObject.GetComponent<NetworkPlayer>().AllowInput = allow;
     }
 
+    /// <summary>主選單初始化：只顯示 MainMenuPanel，其他全部 Hide，滑鼠顯示</summary>
+    public void MainMenuInit()
+    {
+        // Menu 面板
+        if (MainMenuPanel != null)   MainMenuPanel.ShowCurrentUI();
+        if (SettingsPanel_1 != null) SettingsPanel_1.HideCurrentUI();
+        if (CreateRoomPanel != null) CreateRoomPanel.HideCurrentUI();
+        if (ConfirmExit != null)     ConfirmExit.HideCurrentUI();
+        if (PracticePanel != null)   PracticePanel.HideCurrentUI();
+        if (HostRoomPanel != null)   HostRoomPanel.HideCurrentUI();
+        if (CharSelectPanel != null) CharSelectPanel.HideCurrentUI();
+
+        // Game 面板
+        if (GameUIManager.Instance != null)
+            GameUIManager.Instance.GameSceneInit_HideAll();
+
+        // 滑鼠：主選單顯示
+        UnityEngine.Cursor.visible = true;
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
+    }
+
+    /// <summary>PrepareRoom 初始化：只顯示 HostRoomPanel，其他全部 Hide，滑鼠顯示</summary>
+    public void PrepareInit()
+    {
+        // Menu 面板
+        if (MainMenuPanel != null)   MainMenuPanel.HideCurrentUI();
+        if (SettingsPanel_1 != null) SettingsPanel_1.HideCurrentUI();
+        if (CreateRoomPanel != null) CreateRoomPanel.HideCurrentUI();
+        if (ConfirmExit != null)     ConfirmExit.HideCurrentUI();
+        if (PracticePanel != null)   PracticePanel.HideCurrentUI();
+        if (HostRoomPanel != null)   HostRoomPanel.HideCurrentUI();
+        // if (CharSelectPanel != null) CharSelectPanel.ShowCurrentUI();
+
+        // Game 面板
+        if (GameUIManager.Instance != null)
+            GameUIManager.Instance.GameSceneInit_HideAll();
+
+        // 滑鼠：準備房間顯示
+        UnityEngine.Cursor.visible = true;
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
+    }
+
+    /// <summary>根據當前場景 Index 自動呼叫對應的 Init</summary>
+    public void ESCByCurrentScene()
+    {
+        
+        int sceneIndex = UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex;
+        switch (sceneIndex)
+        {
+            case 0:
+                MainMenuInit();
+                break;
+            case 1:
+                PracticePanel.ShowCurrentUI();
+
+                break;
+            case 2:
+            case 3:
+                if (GameUIManager.Instance != null)
+                    GameUIManager.Instance.GameMenuPanel.ShowCurrentUI();
+                break;
+        }
+    }
+
     private void InitCreateRoomUI()
     {
-        if (createRoomDocument == null) return;
-        var root = createRoomDocument.rootVisualElement;
+        if (CreateRoomPanel == null) return;
+        var root = CreateRoomPanel.GetComponent<UIDocument>().rootVisualElement;
 
         // 找到 UXML 裡的 TextField
         var nameField = root.Q<UnityEngine.UIElements.TextField>("PlayerNameInput");

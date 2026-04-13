@@ -23,6 +23,13 @@ public class GameUIManager : MonoBehaviour
     public GameObject CaughtUI;
     public GameObject BackBtn;
 
+    [Header("新版 UI Panel（UniversalUIController）")]
+    public UniversalUIController GameHUDPanel;
+    public UniversalUIController GameMenuPanel;
+    public UniversalUIController GameConfirmExit;
+    public UniversalUIController SettingsPanel_Scene2;
+    public UniversalUIController ItemIntroPanel;
+
     public UniversalUIController GameHudUI;
 
     private void Awake()
@@ -61,44 +68,40 @@ public class GameUIManager : MonoBehaviour
         if (ResultsBgPlane.Instance != null) ResultsBgPlane.Instance.SlideIn();
     }
 
-    void Update()
+    /// <summary>GameScene 初始化：只顯示 GameHUDPanel，其他全部 Hide，滑鼠隱藏鎖定</summary>
+    public void GameSceneInit()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            /*if (GameHudUI.activeSelf)
-            {
-                if (PauseUI.activeSelf)
-                {
-                    PauseUI.SetActive(false);
-                    if (GameHudUI != null) GameHudUI.SetVisible(false);
-                    HUDUI.SetActive(false);
-                }
-                else
-                {
-                    PauseUI.SetActive(true);
-                    if (GameHudUI != null) GameHudUI.SetVisible(true);
-                    HUDUI.SetActive(true);
-                }
-            }*/
+        if (GameHUDPanel != null)        GameHUDPanel.ShowCurrentUI();
+        if (GameMenuPanel != null)       GameMenuPanel.HideCurrentUI();
+        if (GameConfirmExit != null)     GameConfirmExit.HideCurrentUI();
+        if (SettingsPanel_Scene2 != null) SettingsPanel_Scene2.HideCurrentUI();
+        if (ItemIntroPanel != null)      ItemIntroPanel.HideCurrentUI();
 
-            if (GameHudUI != null && GameHudUI.gameObject.activeSelf) 
-            {
-                if (PauseUI.activeSelf)
-                {
-                    PauseUI.SetActive(false);
-                    if (GameHudUI != null) GameHudUI.SetVisible(true);
-                    HUDUI.SetActive(true);
-                }
-                else
-                {
-                    GameHudUI.SetVisible(false);
-                    HUDUI.SetActive(false);
-                    PauseUI.SetActive(true);
-                }
-            }
+        // Menu 面板也全關
+        if (MenuUIManager.instance != null)
+        {
+            if (MenuUIManager.instance.MainMenuPanel != null)   MenuUIManager.instance.MainMenuPanel.HideCurrentUI();
+            if (MenuUIManager.instance.SettingsPanel_1 != null) MenuUIManager.instance.SettingsPanel_1.HideCurrentUI();
+            if (MenuUIManager.instance.CreateRoomPanel != null) MenuUIManager.instance.CreateRoomPanel.HideCurrentUI();
+            if (MenuUIManager.instance.ConfirmExit != null)     MenuUIManager.instance.ConfirmExit.HideCurrentUI();
+            if (MenuUIManager.instance.PracticePanel != null)   MenuUIManager.instance.PracticePanel.HideCurrentUI();
+            if (MenuUIManager.instance.HostRoomPanel != null)   MenuUIManager.instance.HostRoomPanel.HideCurrentUI();
+            if (MenuUIManager.instance.CharSelectPanel != null) MenuUIManager.instance.CharSelectPanel.HideCurrentUI();
         }
 
-        
+        // 滑鼠：遊戲中隱藏並鎖定
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    /// <summary>輔助：Game 面板全部 Hide（給 MenuUIManager 的 Init 呼叫）</summary>
+    public void GameSceneInit_HideAll()
+    {
+        if (GameHUDPanel != null)        GameHUDPanel.HideCurrentUI();
+        if (GameMenuPanel != null)       GameMenuPanel.HideCurrentUI();
+        if (GameConfirmExit != null)     GameConfirmExit.HideCurrentUI();
+        if (SettingsPanel_Scene2 != null) SettingsPanel_Scene2.HideCurrentUI();
+        if (ItemIntroPanel != null)      ItemIntroPanel.HideCurrentUI();
     }
 
 

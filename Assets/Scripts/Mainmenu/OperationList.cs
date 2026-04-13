@@ -14,7 +14,7 @@ public class MissionUIManager : MonoBehaviour
     private int focusIndex = 0;
 
     // 只有這些 key 代表「任務顯示槽」，其餘為 metadata
-    private static readonly HashSet<int> DisplayKeys = new HashSet<int> { 0, 1, 2 };
+    private static readonly HashSet<int> DisplayKeys = new HashSet<int> { 0, 1, 2, 99 };
 
     [Header("UIDocument Bridge（新任務欄）")]
     public MissionPanelBridge missionPanelBridge;
@@ -34,7 +34,10 @@ public class MissionUIManager : MonoBehaviour
             }
             else
             {
-                AddMission(CardManager.Instance.GetMissionCard(mission.Key));
+                if (mission.Key == MissionWinSystem.NormalMissionKey)
+                    AddNormalMission();
+                else
+                    AddMission(CardManager.Instance.GetMissionCard(mission.Key));
             }
         }
 
@@ -96,6 +99,33 @@ public class MissionUIManager : MonoBehaviour
         missionPanelBridge?.AddMission(missionId, card.data.title, card.data.description, 0, goal);
     }
     
+    // ✅ 新增凡人任務
+    public void AddNormalMission()
+    {
+        int missionId = MissionWinSystem.NormalMissionKey;
+        if (missionDict.ContainsKey(missionId)) return;
+
+        int goal = 480; // 預設 8 分鐘
+        LocalBackpack.Instance.userInventory.MissionGoals.TryGet(missionId, out goal);
+
+        string title = "凡人";
+        string desc = "試著拿到其他任務或乖乖等到遊戲結束";
+        MissionData displayData = new MissionData(title, desc, goal);
+
+        GameObject obj = Instantiate(missionSlotPrefab);
+        RectTransform rect = obj.GetComponent<RectTransform>();
+        rect.SetParent(missionContainer, false);
+
+        MissionSlot slot = obj.GetComponent<MissionSlot>();
+        slot.Setup(displayData);
+
+        missionDict.Add(missionId, slot);
+        missionOrder.Add(missionId);
+        RefreshFocus();
+
+        missionPanelBridge?.AddMission(missionId, title, desc, 0, goal);
+    }
+
     // ✅ 移除任務
     public void RemoveMission(int id)
     {
@@ -147,16 +177,50 @@ public class MissionUIManager : MonoBehaviour
                 break;
             }
 
-            case 1: // Steal：偷取場景物件
+            case 1: // Steal：偷取場景物件 / 被押送時切換為「逃離」
             {
-                var stealCard = CardManager.Instance.GetMissionCard(1);
-                slot.data.title       = stealCard != null ? stealCard.data.title : "小偷";
-                slot.data.description = "靠近場景物件長按 E 偷走它";
-                slot.data.current     = setValue;
-                slot.data.goal        = 3;
+                // 檢查是否正在被押送（MissionStates[12] 存在）
+                bool isBeingEscorted = inv.MissionStates.TryGet(12, out int escortProgress);
+
+                if (isBeingEscorted)
+                {
+                    int escortGoal = 10;
+                    if (MissionWinSystem.Instance != null)
+                        escortGoal = (int)MissionWinSystem.Instance.escapeDuration;
+
+                    slot.data.title       = "逃離";
+                    slot.data.description = "逃離警察抓捕" + escortGoal + "秒";
+                    slot.data.current     = escortProgress;
+                    slot.data.goal        = escortGoal;
+                    slot.Refresh();
+
+                    missionPanelBridge?.UpdateDisplay(id, slot.data.title, slot.data.description, escortProgress, escortGoal);
+                }
+                else
+                {
+                    var stealCard = CardManager.Instance.GetMissionCard(1);
+                    slot.data.title       = stealCard != null ? stealCard.data.title : "小偷";
+                    slot.data.description = "靠近場景物件長按 E 偷走它";
+                    slot.data.current     = setValue;
+                    slot.data.goal        = 3;
+                    slot.Refresh();
+
+                    missionPanelBridge?.UpdateDisplay(id, slot.data.title, slot.data.description, setValue, 3);
+                }
+                break;
+            }
+
+            case 99: // 凡人：倒數計時進度
+            {
+                int goal = slot.data.goal;
+                inv.MissionGoals.TryGet(99, out goal);
+                slot.data.goal = goal;
+                slot.data.current = Mathf.Min(setValue, goal);
+                slot.data.title = "凡人";
+                slot.data.description = "試著拿到其他任務或乖乖等到遊戲結束";
                 slot.Refresh();
 
-                missionPanelBridge?.UpdateDisplay(id, slot.data.title, slot.data.description, setValue, 3);
+                missionPanelBridge?.UpdateDisplay(id, slot.data.title, slot.data.description, slot.data.current, goal);
                 break;
             }
 
@@ -166,8 +230,8 @@ public class MissionUIManager : MonoBehaviour
                 slot.Refresh();
                 if (slot.data.current >= slot.data.goal)
                     slot.MarkAsCompleted();
-                    
-                missionPanelBridge?.UpdateProgress(id, slot.data.current, slot.data.goal);                
+
+                missionPanelBridge?.UpdateProgress(id, slot.data.current, slot.data.goal);
                 break;
             }
         }

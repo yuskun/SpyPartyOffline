@@ -7,11 +7,11 @@ using System.Linq; // 必須引用以使用 Cast
 
 public class CardUseUIManager_UIToolkit : MonoBehaviour
 {
-    [Header("UI Documents")]
-    public UIDocument gameHUDDocument;
-    public UIDocument giveUIDocument;
-    public UIDocument peekUIDocument;
-    public UIDocument swapUIDocument;
+    [Header("UI Controllers")]
+    public UniversalUIController gameHUDController;
+    public UniversalUIController giveUIController;
+    public UniversalUIController peekUIController;
+    public UniversalUIController swapUIController;
 
     [Header("失敗提示 UI")]
     public GameObject giveFailUI;
@@ -20,6 +20,9 @@ public class CardUseUIManager_UIToolkit : MonoBehaviour
 
     public GameObject localBackpack;
     public float failMessageDuration = 2f;
+
+    [Header("Swap 隨機問號圖示")]
+    public Sprite questionMarkIcon;
 
     private int selectedUserIndex = -1;
     private int selectedTargetIndex = -1;
@@ -65,8 +68,8 @@ public class CardUseUIManager_UIToolkit : MonoBehaviour
 
     private void OpenGiveUI()
     {
-        giveUIDocument.gameObject.SetActive(true);
-        VisualElement root = giveUIDocument.rootVisualElement;
+        giveUIController.ShowCurrentUI();
+        VisualElement root = giveUIController.GetComponent<UIDocument>().rootVisualElement;
 
         UpdateUIInfo(root, currentUser, currentTarget);
 
@@ -86,14 +89,14 @@ public class CardUseUIManager_UIToolkit : MonoBehaviour
             UpdateSelectionUI(slots, idx);
         }, true);
 
-        BindCommonButtons(root, giveUIDocument);
+        BindCommonButtons(root, giveUIController);
         SetOpenState();
     }
 
     private void OpenPeekUI()
     {
-        peekUIDocument.gameObject.SetActive(true);
-        VisualElement root = peekUIDocument.rootVisualElement;
+        peekUIController.ShowCurrentUI();
+        VisualElement root = peekUIController.GetComponent<UIDocument>().rootVisualElement;
 
         var targetIdentify = currentTarget.GetComponent<PlayerIdentify>();
         var db = SkinChange.instance?.characterAvatarDatabase;
@@ -110,10 +113,10 @@ public class CardUseUIManager_UIToolkit : MonoBehaviour
         RefreshInventorySlots(currentTarget, slots, (idx) => { }, false);
 
         Button closeBtn = root.Q<Button>("CloseBtn");
-        if (closeBtn != null) 
-        { 
-            closeBtn.clicked -= () => CloseUI(peekUIDocument); 
-            closeBtn.clicked += () => CloseUI(peekUIDocument); 
+        if (closeBtn != null)
+        {
+            closeBtn.clicked -= () => CloseUI(peekUIController);
+            closeBtn.clicked += () => CloseUI(peekUIController);
         }
 
         SetOpenState();
@@ -122,28 +125,54 @@ public class CardUseUIManager_UIToolkit : MonoBehaviour
 
     private void OpenSwapUI()
     {
-        swapUIDocument.gameObject.SetActive(true);
-        VisualElement root = swapUIDocument.rootVisualElement;
+        swapUIController.ShowCurrentUI();
+        VisualElement root = swapUIController.GetComponent<UIDocument>().rootVisualElement;
 
         UpdateUIInfo(root, currentUser, currentTarget);
 
         List<VisualElement> panels = root.Query<VisualElement>(className: "item-panel").ToList();
         if (panels.Count >= 2)
         {
+            // 自己的欄位：可以選擇要交換哪張
             List<Button> userSlots = panels[0].Query<Button>(className: "item-slot").ToList();
             RefreshInventorySlots(currentUser, userSlots, (idx) => {
                 selectedUserIndex = idx;
                 UpdateSelectionUI(userSlots, idx);
             }, true);
 
+            // 預設選擇第一張可用的卡片（跳過正在使用的 Swap 卡）
+            Sprite[] userSprites = CardManager.Instance.GetCardInfo(currentUser.GetAllCards());
+            for (int i = 0; i < userSlots.Count; i++)
+            {
+                if (i == currentUseCardIndex) continue;
+                if (i < userSprites.Length && userSprites[i] != null)
+                {
+                    selectedUserIndex = i;
+                    UpdateSelectionUI(userSlots, i);
+                    break;
+                }
+            }
+
+            // 對方的欄位：顯示問號圖示，不可選擇（隨機交換）
             List<Button> targetSlots = panels[1].Query<Button>(className: "item-slot").ToList();
-            RefreshInventorySlots(currentTarget, targetSlots, (idx) => {
-                selectedTargetIndex = idx;
-                UpdateSelectionUI(targetSlots, idx);
-            }, false);
+            foreach (var slot in targetSlots)
+            {
+                slot.SetEnabled(false);
+                slot.style.opacity = 0.7f;
+                var icon = slot.Q<Image>();
+                if (icon != null)
+                {
+                    if (questionMarkIcon != null)
+                        icon.style.backgroundImage = new StyleBackground(questionMarkIcon);
+                    else
+                        icon.style.backgroundImage = StyleKeyword.None;
+                    icon.style.display = DisplayStyle.Flex;
+                }
+            }
         }
 
-        BindCommonButtons(root, swapUIDocument);
+        selectedTargetIndex = -1; // 不需要選對方，由 Execute 隨機決定
+        BindCommonButtons(root, swapUIController);
         SetOpenState();
     }
 
@@ -204,20 +233,20 @@ public class CardUseUIManager_UIToolkit : MonoBehaviour
         }
     }
 
-    private void BindCommonButtons(VisualElement root, UIDocument doc)
+    private void BindCommonButtons(VisualElement root, UniversalUIController controller)
     {
         Button confirmBtn = root.Q<Button>("ConfirmBtn");
-        if (confirmBtn != null) 
-        { 
-            confirmBtn.clicked -= OnConfirmButtonClicked; 
-            confirmBtn.clicked += OnConfirmButtonClicked; 
+        if (confirmBtn != null)
+        {
+            confirmBtn.clicked -= OnConfirmButtonClicked;
+            confirmBtn.clicked += OnConfirmButtonClicked;
         }
 
         Button cancelBtn = root.Q<Button>("CancelBtn");
-        if (cancelBtn != null) 
-        { 
-            cancelBtn.clicked -= () => CloseUI(doc); 
-            cancelBtn.clicked += () => CloseUI(doc); 
+        if (cancelBtn != null)
+        {
+            cancelBtn.clicked -= () => CloseUI(controller);
+            cancelBtn.clicked += () => CloseUI(controller);
         }
     }
 
@@ -228,8 +257,8 @@ public class CardUseUIManager_UIToolkit : MonoBehaviour
     public void OnConfirmButtonClicked()
     {
         GameManager.instance.Rpc_RequestUseCard(BuildParameters());
-        if (currentFunctionCard is Give) CloseUI(giveUIDocument);
-        else if (currentFunctionCard is Swap) CloseUI(swapUIDocument);
+        if (currentFunctionCard is Give) CloseUI(giveUIController);
+        else if (currentFunctionCard is Swap) CloseUI(swapUIController);
     }
 
     private CardUseParameters BuildParameters()
@@ -248,19 +277,19 @@ public class CardUseUIManager_UIToolkit : MonoBehaviour
     private void SetOpenState()
     {
         localBackpack.SetActive(false);
-        if (gameHUDDocument != null) 
-            gameHUDDocument.gameObject.SetActive(false);
+        if (gameHUDController != null)
+            gameHUDController.HideCurrentUI();
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         NetworkPlayer.Local.RPC_PlayGlobalSFX(CharacterSFXManager.SFXType.OpenUI,NetworkPlayer.Local.PlayerId);
     }
 
-    public void CloseUI(UIDocument doc)
+    public void CloseUI(UniversalUIController controller)
     {
-        if (doc != null) doc.gameObject.SetActive(false);
+        if (controller != null) controller.HideCurrentUI();
 
-        if (gameHUDDocument != null) 
-            gameHUDDocument.gameObject.SetActive(true);
+        if (gameHUDController != null)
+            gameHUDController.ShowCurrentUI();
         localBackpack.SetActive(true);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;

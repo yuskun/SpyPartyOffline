@@ -26,7 +26,7 @@
                 </ui:Button>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:Button name="BackBtn" class="back-btn back-pill" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&amp;guid=3d5723d09fd5e9a4f97a9f3e046bbb90&amp;type=3#GenSenRounded2TW-R&quot;); -unity-font-style: bold;">
+        <ui:Button name="BackBtn" enabled="true" class="back-btn back-pill" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&amp;guid=3d5723d09fd5e9a4f97a9f3e046bbb90&amp;type=3#GenSenRounded2TW-R&quot;); -unity-font-style: bold; display: none;">
             <ui:Label text="◀" class="back-arrow" />
             <ui:Label text="返回" class="back-label" />
         </ui:Button>
@@ -36,6 +36,5 @@
                 <ui:VisualElement class="gloss-top" />
             </ui:Button>
         </ui:VisualElement>
-        
     </ui:VisualElement>
 </ui:UXML>

@@ -49,12 +49,14 @@ public class MissionWinSystem : MonoBehaviour
     public float escortDuration = 20f;
     public float escortRadius = 5f;
     public float escortIdleTimeout = 20f; // 累積幾秒沒跑進度就自動解綁
+    public float escapeDuration = 10f;   // 小偷逃離成功所需秒數
 
     public bool isEscorting = false;
     public int escortCatcherID = -1;
     public int escortTargetID = -1;
     private float _escortTimer = 0f;
     private float _escortIdleTimer = 0f; // 累積未跑進度的時間
+    private float _escapeTimer = 0f;     // 小偷逃離計時（警察不在範圍內才累加）
 
     /// <summary>開始押送流程，由 Catch 卡成功使用後呼叫（僅 Host）</summary>
     public void StartEscort(int catcherID, int targetID)
@@ -69,6 +71,13 @@ public class MissionWinSystem : MonoBehaviour
 
         // 重置押送進度（MissionStates[0] = 0，UI 顯示 0/20）
         PlayerInventoryManager.Instance.playerInventories[catcherID].MissionStates.Set(0, 0);
+
+        // 小偷任務切換成「逃離」模式（MissionStates[12] = 0，UI 顯示 0/20）
+        _escapeTimer = 0f;
+        if (targetID >= 0 && targetID < PlayerInventoryManager.Instance.playerInventories.Count)
+        {
+            PlayerInventoryManager.Instance.playerInventories[targetID].MissionStates.Set(12, 0);
+        }
 
         Debug.Log($"[Escort] 押送開始！抓人者:{catcherID} 目標:{targetID}，需維持 {escortDuration} 秒");
         GameManager.instance.RPC_EscortStart(catcherID, targetID);
@@ -99,14 +108,32 @@ public class MissionWinSystem : MonoBehaviour
 
         if (distance > escortRadius)
         {
-            // 超出範圍：進度歸零，累積閒置時間
+            // ── 超出範圍 ──
+            // 警察押送：進度歸零
             if (_escortTimer > 0f)
             {
                 int prev = Mathf.FloorToInt(_escortTimer);
                 _escortTimer = 0f;
                 if (prev > 0)
                     PlayerInventoryManager.Instance.playerInventories[escortCatcherID].MissionStates.Set(0, 0);
-                Debug.Log("[Escort] 超出押送範圍，計時重置");
+                Debug.Log("[Escort] 超出押送範圍，押送計時重置");
+            }
+
+            // 小偷逃離：不在範圍內才累加
+            {
+                int escapeBefore = Mathf.FloorToInt(_escapeTimer);
+                _escapeTimer += deltaTime;
+                int escapeAfter = Mathf.FloorToInt(_escapeTimer);
+                if (escapeAfter > escapeBefore && escortTargetID >= 0 && escortTargetID < PlayerInventoryManager.Instance.playerInventories.Count)
+                    PlayerInventoryManager.Instance.playerInventories[escortTargetID].MissionStates.Set(12, escapeAfter);
+
+                // 小偷逃離成功
+                if (_escapeTimer >= escapeDuration)
+                {
+                    Debug.Log("[Escort] 小偷逃離成功！");
+                    _CancelEscort();
+                    return;
+                }
             }
 
             _escortIdleTimer += deltaTime;
@@ -119,15 +146,25 @@ public class MissionWinSystem : MonoBehaviour
         }
         else
         {
-            // 在範圍內有跑進度 → 重置閒置計時
+            // ── 在範圍內 ──
+            // 警察押送：累加計時
             _escortIdleTimer = 0f;
             int secondsBefore = Mathf.FloorToInt(_escortTimer);
             _escortTimer += deltaTime;
             int secondsAfter = Mathf.FloorToInt(_escortTimer);
 
-            // 每過一整秒才更新一次 MissionStates，避免每 Tick 都寫網路狀態
             if (secondsAfter > secondsBefore)
                 PlayerInventoryManager.Instance.playerInventories[escortCatcherID].MissionStates.Set(0, secondsAfter);
+
+            // 小偷逃離：在範圍內歸零
+            if (_escapeTimer > 0f)
+            {
+                int prevEscape = Mathf.FloorToInt(_escapeTimer);
+                _escapeTimer = 0f;
+                if (prevEscape > 0 && escortTargetID >= 0 && escortTargetID < PlayerInventoryManager.Instance.playerInventories.Count)
+                    PlayerInventoryManager.Instance.playerInventories[escortTargetID].MissionStates.Set(12, 0);
+                Debug.Log("[Escort] 小偷回到押送範圍內，逃離計時重置");
+            }
 
             if (_escortTimer >= escortDuration)
                 _CompleteEscort();
@@ -142,6 +179,11 @@ public class MissionWinSystem : MonoBehaviour
 
         // 押送完成：UI 顯示 goal/goal = 完成
         PlayerInventoryManager.Instance.playerInventories[winnerId].MissionStates.Set(0, (int)escortDuration);
+
+        // 移除小偷逃離狀態
+        var inventories = PlayerInventoryManager.Instance?.playerInventories;
+        if (inventories != null && escortTargetID >= 0 && escortTargetID < inventories.Count)
+            inventories[escortTargetID].MissionStates.Remove(12);
 
         escortCatcherID = -1;
         escortTargetID = -1;
@@ -165,10 +207,15 @@ public class MissionWinSystem : MonoBehaviour
         isEscorting = false;
         _escortTimer = 0f;
 
-        // 重置押送進度 UI → 退回步驟0「尋找小偷」
         var inventories = PlayerInventoryManager.Instance?.playerInventories;
+
+        // 重置押送進度 UI → 退回步驟0「尋找小偷」
         if (inventories != null && escortCatcherID >= 0 && escortCatcherID < inventories.Count)
             inventories[escortCatcherID].MissionStates.Set(0, -1);
+
+        // 移除小偷逃離狀態 → 任務恢復原本的 Steal 顯示
+        if (inventories != null && escortTargetID >= 0 && escortTargetID < inventories.Count)
+            inventories[escortTargetID].MissionStates.Remove(12);
 
         escortCatcherID = -1;
         escortTargetID = -1;
@@ -409,7 +456,13 @@ public class MissionWinSystem : MonoBehaviour
             FightCount++;
             Debug.Log("FightCount"+FightCount);
 
-            PlayerInventoryManager.Instance.playerInventories[FightID].MissionStates.Set(2, FightCount);
+            // 真的擊倒人才進冷卻
+            var fightInv = PlayerInventoryManager.Instance.playerInventories[FightID];
+            var fightCard = CardManager.Instance.GetMissionCard(2);
+            if (fightCard != null)
+                fightInv.SetCooldownEnd(fightCard.cardData);
+
+            fightInv.MissionStates.Set(2, FightCount);
 
             if (FightCount == FightWinCount)
             {
@@ -566,5 +619,49 @@ public class MissionWinSystem : MonoBehaviour
         }
 
         FightID = id;
+    }
+
+    // ====== 凡人任務系統 ======
+    public const int NormalMissionKey = 99;
+
+    /// <summary>Host 每 Tick 呼叫：沒有任務卡的玩家顯示「凡人」任務，進度 = 遊戲倒數計時</summary>
+    public void TickNormalPlayers()
+    {
+        var inventories = PlayerInventoryManager.Instance.playerInventories;
+        if (inventories == null) return;
+
+        // 取得倒數計時器
+        var timer = GameManager.instance?.countdownTimer;
+        int totalSeconds = timer != null ? timer.totalMinutes * 60 : 480;
+        int remaining = timer != null ? Mathf.FloorToInt(timer.remainingTime) : 0;
+        int elapsed = totalSeconds - remaining;
+
+        for (int i = 0; i < inventories.Count; i++)
+        {
+            bool hasMission = (i == CatchID || i == StealID || i == FightID);
+
+            if (!hasMission)
+            {
+                // 設定凡人任務進度
+                if (!inventories[i].MissionStates.ContainsKey(NormalMissionKey))
+                {
+                    inventories[i].MissionStates.Set(NormalMissionKey, elapsed);
+                    inventories[i].MissionGoals.Set(NormalMissionKey, totalSeconds);
+                }
+                else
+                {
+                    inventories[i].MissionStates.Set(NormalMissionKey, elapsed);
+                }
+            }
+            else
+            {
+                // 有任務卡：移除凡人任務
+                if (inventories[i].MissionStates.ContainsKey(NormalMissionKey))
+                {
+                    inventories[i].MissionStates.Remove(NormalMissionKey);
+                    inventories[i].MissionGoals.Remove(NormalMissionKey);
+                }
+            }
+        }
     }
 }

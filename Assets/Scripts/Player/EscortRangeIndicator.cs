@@ -33,6 +33,8 @@ public class EscortRangeIndicator : MonoBehaviour
     private PlayerIdentify identify;
     private GameObject     cachedTarget;
     private int            cachedTargetID = -1;
+    private GameObject     cachedCatcher;
+    private int            cachedCatcherID = -1;
 
     private const int   Segments  = 48;
     private const float LineWidth = 0.07f;
@@ -82,36 +84,44 @@ public class EscortRangeIndicator : MonoBehaviour
         bool isLocalPlayerObject = LocalBackpack.Instance?.playerIdentify != null
                                    && LocalBackpack.Instance.playerIdentify == identify;
         bool iAmCatcher = IsEscortActive && isLocalPlayerObject && identify.PlayerID == CatcherID;
+        bool iAmTarget  = IsEscortActive && isLocalPlayerObject && identify.PlayerID == TargetID;
 
-        if (IsEscortActive && isLocalPlayerObject)
-            Debug.Log($"[EscortRange] IsActive={IsEscortActive} isLocal={isLocalPlayerObject} myID={identify.PlayerID} CatcherID={CatcherID} iAmCatcher={iAmCatcher}");
-
-        if (!iAmCatcher)
+        if (!iAmCatcher && !iAmTarget)
         {
             lr.enabled = false;
             return;
         }
 
-        // 圓圈以小偷（目標）為圓心，只有警察（抓人者）看得到
+        // 圓圈以小偷（目標）為圓心，警察和小偷都看得到
         // 快取目標玩家，避免每幀搜尋
+        // 快取目標（小偷）
         if (cachedTarget == null || cachedTargetID != TargetID)
         {
             cachedTarget = FindPlayerByID(TargetID);
             cachedTargetID = TargetID;
         }
         if (cachedTarget == null) { lr.enabled = false; return; }
-        GameObject target = cachedTarget;
+
+        // 快取警察
+        if (cachedCatcher == null || cachedCatcherID != CatcherID)
+        {
+            cachedCatcher = FindPlayerByID(CatcherID);
+            cachedCatcherID = CatcherID;
+        }
+        if (cachedCatcher == null) { lr.enabled = false; return; }
 
         lr.enabled = true;
 
-        Vector3 center = GetRagdollPos(target);
+        // 圓心永遠在小偷（目標）位置
+        Vector3 center = GetRagdollPos(cachedTarget);
         center.y = GroundY;
 
         float radius = MissionWinSystem.Instance != null
             ? MissionWinSystem.Instance.escortRadius
             : DefaultEscortRadius;
         DrawCircle(center, radius);
-        UpdateColor(center, radius, gameObject);
+        // 顏色用警察和小偷的距離判斷，小偷看到的顏色相反
+        UpdateColor(center, radius, cachedCatcher, iAmTarget);
     }
 
     // ── 圓圈繪製 ─────────────────────────────────────────────────
@@ -129,18 +139,24 @@ public class EscortRangeIndicator : MonoBehaviour
         }
     }
 
-    // ── 顏色：小偷（目標）在圓心範圍內→綠；超出→紅 ──
+    // ── 顏色判斷 ──
 
-    private void UpdateColor(Vector3 targetGroundPos, float radius, GameObject catcher)
+    private void UpdateColor(Vector3 targetGroundPos, float radius, GameObject catcher, bool invertColor)
     {
-        // 取警察自己的位置，判斷小偷是否在範圍內
         Vector3 catcherPos = GetRagdollPos(catcher);
         float dist = Vector2.Distance(
             new Vector2(targetGroundPos.x, targetGroundPos.z),
             new Vector2(catcherPos.x,      catcherPos.z)
         );
 
-        SetColor(dist <= radius ? ColorSafe : ColorWarn);
+        bool inRange = dist <= radius;
+
+        // 警察：在範圍內=綠，超出=紅
+        // 小偷：在範圍內=紅（危險），超出=綠（安全）
+        if (invertColor)
+            SetColor(inRange ? ColorWarn : ColorSafe);
+        else
+            SetColor(inRange ? ColorSafe : ColorWarn);
     }
 
     private void SetColor(Color c)

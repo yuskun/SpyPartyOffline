@@ -22,6 +22,11 @@ public class AIController : NetworkBehaviour
     [SerializeField] private float itemSeekRange  = 20f;   // 感知道具的最大距離
     [SerializeField] private float weaponPriority = 1.5f;  // 武器的距離加權（越高越優先）
 
+    // ── Chase ────────────────────────────────────────────────────
+    [SerializeField] private float chaseDuration  = 8f;    // 追同一目標的最長時間
+    private GameObject chaseTarget;
+    private float      chaseTimer;
+
     // ── Card Usage ───────────────────────────────────────────────
     [SerializeField] private float cardInterval = 6f;
     [SerializeField] private float cardUseRange = 5f;  // 需要目標的卡牌最大使用距離
@@ -79,9 +84,8 @@ public class AIController : NetworkBehaviour
             Vector3.forward, Runner.DeltaTime, Runner.Tick
         );
 
-        // 背包有空格時優先撿道具
-        bool wantsItem = HasEmptySlot();
-        if (wantsItem)
+        // ── 優先級 1：撿 PlayerItem（背包有空格時）──
+        if (HasEmptySlot())
         {
             GameObject nearestItem = FindNearestItem();
             if (nearestItem != null)
@@ -91,24 +95,48 @@ public class AIController : NetworkBehaviour
             }
         }
 
-        // 沒道具可撿 → 追最近玩家
-        currentTarget = FindNearestPlayer();
+        // ── 優先級 2：追玩家、打人 ──
+        UpdateChaseTarget();
 
-        if (currentTarget == null)
+        if (chaseTarget != null)
         {
-            DoWander();
+            float dist = Vector3.Distance(GetMyPos(), GetPos(chaseTarget));
+            if (dist < 1.5f)
+            {
+                aiInput.fire1Axis = 1f;  // 攻擊
+            }
+            else
+            {
+                MoveToward(GetPos(chaseTarget));
+            }
             return;
         }
 
-        float dist = Vector3.Distance(GetMyPos(), GetPos(currentTarget));
-
-        if (dist < 1.5f)
+        // ── 優先級 3：背包空的 → 撿 RandomObject（StealTargetObject）──
+        if (!HasAnyCard())
         {
-            aiInput.fire1Axis = 1f;  // 攻擊
+            GameObject nearestObj = FindNearestRandomObject();
+            if (nearestObj != null)
+            {
+                MoveToward(nearestObj.transform.position);
+                return;
+            }
         }
-        else
+
+        // ── 都沒有目標 → 閒晃 ──
+        DoWander();
+    }
+
+    /// <summary>追蹤目標管理：追一段時間後自動換下一個</summary>
+    private void UpdateChaseTarget()
+    {
+        chaseTimer -= Runner.DeltaTime;
+
+        // 時間到或目標消失 → 換新目標
+        if (chaseTimer <= 0f || chaseTarget == null)
         {
-            MoveToward(GetPos(currentTarget));  // 追擊
+            chaseTarget = FindNearestPlayer();
+            chaseTimer = Random.Range(chaseDuration * 0.7f, chaseDuration * 1.3f);
         }
     }
 
@@ -152,6 +180,35 @@ public class AIController : NetworkBehaviour
         for (int i = 0; i < PlayerInventory.MaxSlots; i++)
             if (inventory.slots[i].IsEmpty()) return true;
         return false;
+    }
+
+    /// <summary>背包是否有任何卡片</summary>
+    private bool HasAnyCard()
+    {
+        if (inventory == null) return false;
+        for (int i = 0; i < PlayerInventory.MaxSlots; i++)
+            if (!inventory.slots[i].IsEmpty()) return true;
+        return false;
+    }
+
+    /// <summary>找場景內最近的未被偷走的 StealTargetObject</summary>
+    private GameObject FindNearestRandomObject()
+    {
+        Vector3 myPos = GetMyPos();
+        GameObject best = null;
+        float bestDist = float.MaxValue;
+
+        foreach (var obj in StealTargetObject.All)
+        {
+            if (obj == null || obj.IsStolen) continue;
+            float dist = Vector3.Distance(myPos, obj.transform.position);
+            if (dist < bestDist)
+            {
+                bestDist = dist;
+                best = obj.gameObject;
+            }
+        }
+        return best;
     }
 
     private void DoWander()
@@ -202,21 +259,14 @@ public class AIController : NetworkBehaviour
             if (card.IsEmpty()) continue;
             if (!inventory.CanUse(card)) continue;
 
+            // AI 禁止使用任務卡片
+            if (card.type == CardType.Mission) continue;
+
             bool canUse  = false;
             int  useTarget = myId;  // 預設目標為自己
 
             switch (card.type)
             {
-                case CardType.Mission:
-                {
-                    MissionCard mc = CardManager.Instance.GetMissionCard(card.id);
-                    if (mc == null) continue;
-                    if (mc.needTarget && (targetInv == null || distToTarget > cardUseRange)) continue;
-                    PlayerInventory t = mc.needTarget ? targetInv : null;
-                    canUse = mc.CanUse(inventory, t, card);
-                    if (mc.needTarget) useTarget = targetId;
-                    break;
-                }
                 case CardType.Function:
                 {
                     FunctionCard fc = CardManager.Instance.GetFunctionCard(card.id);

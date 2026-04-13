@@ -32,6 +32,10 @@ public class GameManager : NetworkBehaviour
     [Header("結算動畫")]
     public Animator resultsAnimator;
     public string resultsAnimBoolName = "Show";
+    public float resultsAnimDuration = 3f; // 結算動畫播放時間
+
+    [Header("結算後關閉物件")]
+    public GameObject[] resultsHideObjects;
 
     [Networked] private NetworkBool HasStarted { get; set; }
     [Networked] private TickTimer StartDelay { get; set; }
@@ -112,7 +116,10 @@ public class GameManager : NetworkBehaviour
     {
         // 押送系統 Tick（Host 驅動，遊戲進行中持續執行）
         if (HasStarted && Runner.IsServer && MissionWinSystem.Instance != null)
+        {
             MissionWinSystem.Instance.TickEscort(Runner.DeltaTime);
+            MissionWinSystem.Instance.TickNormalPlayers();
+        }
 
         if (HasStarted) return;
 
@@ -518,17 +525,40 @@ public class GameManager : NetworkBehaviour
             CameraFollow.Get().SnapTo(camPointObj.transform);
         }
 
+        // 結算畫面打開滑鼠
+        UnityEngine.Cursor.visible = true;
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
+
         GameUIManager.Instance.BackBtn?.SetActive(true);
     }
 
     private IEnumerator ResultsSequence(int[] winnerIDs)
     {
+        // 0. GameOver 立即隱藏 HUD
+        GameUIManager.Instance.GameHUDPanel?.HideCurrentUI();
+
         yield return new WaitForSeconds(resultDelay);
 
         // 1. 主相機解綁，停在原地
         CameraFollow.Get().enable = false;
 
-        // 2. 傳送玩家（Host Only）
+        // 2. 停止所有玩家輸入 + Release 雙手
+        if (Runner.IsServer)
+        {
+            foreach (var parent in PlayerInventoryManager.Instance.playerParents)
+            {
+                parent.GetComponent<NetworkPlayer>().AllowInput = false;
+
+                var character = parent.GetComponent<OodlesEngine.OodlesCharacter>();
+                if (character != null)
+                {
+                    character.handFunctionLeft.ReleaseHand();
+                    character.handFunctionRight.ReleaseHand();
+                }
+            }
+        }
+
+        // 3. 傳送玩家（Host Only）
         if (Runner.IsServer)
         {
             foreach (var parent in PlayerInventoryManager.Instance.playerParents)
@@ -540,11 +570,10 @@ public class GameManager : NetworkBehaviour
             }
         }
 
-        // 3. 結算背景滑入
+        // 4. 結算背景滑入
         GameUIManager.Instance.ShowResultsPanel();
 
-
-        // 4. 等待滑入動畫完成後，將相機移到結算鏡頭點
+        // 5. 等待滑入動畫完成後，將相機移到結算鏡頭點
         // 用 Tag 在 scene 中尋找（避免 prefab-spawned NetworkBehaviour 的 scene reference 在 client 為 null）
         GameObject camPointObj = ResultsCameraPoint != null
             ? ResultsCameraPoint.gameObject
@@ -557,11 +586,41 @@ public class GameManager : NetworkBehaviour
             CameraFollow.Get().SnapTo(camPointObj.transform);
         }
 
+        // 6. 傳送後等 1 秒再執行結算動畫
+        yield return new WaitForSeconds(1f);
+
         // 相機到位後，Host 端觸發結算動畫
         if (Runner.IsServer && resultsAnimator != null)
         {
             resultsAnimator.SetBool(resultsAnimBoolName, true);
         }
+
+        // 7. 等結算動畫播完後恢復玩家操作
+        yield return new WaitForSeconds(resultsAnimDuration);
+
+        if (Runner.IsServer)
+        {
+            foreach (var parent in PlayerInventoryManager.Instance.playerParents)
+            {
+                parent.GetComponent<NetworkPlayer>().AllowInput = true;
+            }
+        }
+
+        // 8. 關閉指定物件 + 銷毀場景 Spawn 物件
+        if (resultsHideObjects != null)
+        {
+            foreach (var obj in resultsHideObjects)
+            {
+                if (obj != null) obj.SetActive(false);
+            }
+        }
+
+        if (Runner.IsServer && ObjectSpawner.Instance != null)
+            ObjectSpawner.Instance.DespawnAll();
+
+        // 9. 結算畫面打開滑鼠
+        UnityEngine.Cursor.visible = true;
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
 
         GameUIManager.Instance.BackBtn?.SetActive(true);
     }

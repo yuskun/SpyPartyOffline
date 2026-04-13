@@ -34,7 +34,7 @@ public class PlayerListManager : NetworkBehaviour
         }
 
         // ── 新版 UI Toolkit 初始化 ──
-        var root = MenuUIManager.instance.hostRoomDocument.rootVisualElement;
+        var root = MenuUIManager.instance.HostRoomPanel.GetComponent<UIDocument>().rootVisualElement;
         slotElements.Clear();
         root.Query<VisualElement>(className: "slot").ForEach(slot => slotElements.Add(slot));
         Debug.Log($"找到 {slotElements.Count} 個 slot");

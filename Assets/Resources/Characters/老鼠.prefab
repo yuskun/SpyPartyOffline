@@ -564,6 +564,7 @@ GameObject:
   - component: {fileID: 4601333307024563074}
   - component: {fileID: -3040980922318471470}
   - component: {fileID: 6976637921557416783}
+  - component: {fileID: 136036525920921404}
   m_Layer: 0
   m_Name: "\u8001\u9F20"
   m_TagString: Player
@@ -631,7 +632,7 @@ MonoBehaviour:
   minTargetDirAngle: -30
   maxTargetDirAngle: 60
   energyTimeLength: 3
-  moveForce: 100000
+  moveForce: 200000
   jumpForce: 22000
   runSpeedTimes: 2
   minArmsAngle: -70
@@ -746,6 +747,7 @@ MonoBehaviour:
   - {fileID: 1814855390758168838}
   - {fileID: 8692955523397336575}
   - {fileID: 2332593447904172981}
+  - {fileID: 136036525920921404}
   - {fileID: 7412705340338259787}
   - {fileID: 740148972317520697}
   - {fileID: 25576949501787078}
@@ -875,6 +877,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6a0109769fc4e840b23cad88c432e90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &136036525920921404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2300421023371744903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a44ff51ff486554497fa36fe13bff43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemSeekRange: 20
+  weaponPriority: 1.5
+  chaseDuration: 8
+  cardInterval: 6
+  cardUseRange: 5
 --- !u!1 &2358503672075532531
 GameObject:
   m_ObjectHideFlags: 0
@@ -1187,7 +1206,7 @@ Transform:
   m_GameObject: {fileID: 3781510323261324573}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.067, y: 0.447, z: 0.772}
+  m_LocalPosition: {x: -0.067, y: 0.447, z: 1.506}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1434,8 +1453,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4286054364
-  m_fontColor: {r: 0.8634924, g: 1, b: 0.4669811, a: 1}
+    rgba: 4278234879
+  m_fontColor: {r: 1, g: 0.6838236, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1458,7 +1477,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
