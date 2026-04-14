@@ -19,6 +19,11 @@ public class GameHUDManager : MonoBehaviour
         }
         Instance = this;
     }
+    void OnEnable()
+    {
+        InitHUD();
+    }
+
     /// <summary>重新綁定所有 UI 元素引用（開始遊戲時呼叫一次）</summary>
     public void InitHUD()
     {
