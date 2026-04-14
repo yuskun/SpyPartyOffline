@@ -489,7 +489,8 @@ public class LocalBackpack : MonoBehaviour
             {
                 buttons[i].frameImage.sprite = selectedFrame;
                 buttons[i].button.transform.localScale = Vector3.one * 1.15f;
-                if (buttons[i].hintObject != null) buttons[i].hintObject.SetActive(true);
+                bool hasCard = userInventory != null && i < userInventory.slotsNetworked.Length && !userInventory.slotsNetworked[i].IsEmpty();
+                if (buttons[i].hintObject != null) buttons[i].hintObject.SetActive(hasCard);
             }
             else
             {

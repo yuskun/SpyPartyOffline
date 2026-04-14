@@ -39,7 +39,7 @@ public class ObjectSpawner : MonoBehaviour
     [SerializeField] private int initialSpawnCount = 5;
 
     [Header("武器生成機率 (0~1)")]
-    [SerializeField] private float weaponSpawnChance = 0.15f;
+    [SerializeField] private float weaponSpawnChance = 0.35f;
 
     private float timer;
     private List<GameObject> spawnedObjects = new List<GameObject>();

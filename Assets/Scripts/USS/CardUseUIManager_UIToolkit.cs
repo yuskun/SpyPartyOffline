@@ -299,9 +299,8 @@ public class CardUseUIManager_UIToolkit : MonoBehaviour
 
     private void ShowFailUI(GameObject failUI)
     {
-        if (failUI == null) return;
-        failUI.SetActive(true);
-        StartCoroutine(CloseAfterSeconds(failUI, failMessageDuration));
+        // 暫時關閉失敗UI顯示
+        return;
     }
 
     private IEnumerator CloseAfterSeconds(GameObject ui, float seconds)
