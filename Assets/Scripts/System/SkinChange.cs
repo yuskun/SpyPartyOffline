@@ -151,6 +151,9 @@ public class SkinChange : NetworkBehaviour
     {
         GameUIManager.Instance.progressBar.SetActive(false);
         MenuUIManager.instance.Gameroom.SetActive(false);
+        MenuUIManager.instance.PracticePanel.HideCurrentUI();
+         MenuUIManager.instance.HostRoomPanel.HideCurrentUI();
+
         CameraFollow.Get().enable = false;
         StartCoroutine(MoveCamera());
         Skins[currentSkinIndex].SetActive(true);

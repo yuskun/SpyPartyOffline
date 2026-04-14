@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-2024994490003761472
+--- !u!114 &-4530941786063309337
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,50 +20,52 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pink
-  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
-  m_Parent: {fileID: 2100000, guid: 54e102e2d1dd4f84fb7c56dea75e7e05, type: 2}
-  m_ModifiedSerializedProperties: 18
+  m_Name: Shader Graphs_New Shader Graph
+  m_Shader: {fileID: -6465566751694194690, guid: 394d60c34839e0c43ae28d0784201f6f, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
-  m_LightmapFlags: 4
+  m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
-  stringTagMap:
-    RenderType: Opaque
+  stringTagMap: {}
   disabledShaderPasses:
   - MOTIONVECTORS
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _BaseMap:
+    - _Texture2DAsset_46603c32fae84726a10f43ab684dadbf_Out_0_Texture2D:
+        m_Texture: {fileID: 2800000, guid: b2190e6f1b2e88449bc18a2c511425bb, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture2DAsset_474968c7617247159ac4abaa92c91a01_Out_0_Texture2D:
+        m_Texture: {fileID: 2800000, guid: d40460febda495343a0d8ca6635787c2, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture2DAsset_a1b8a06d17214cb0ab1a734858799d18_Out_0_Texture2D:
+        m_Texture: {fileID: 2800000, guid: f39c91a55814e4c4e972c0d2ea23b3ce, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _DetailMask:
+    - unity_LightmapsInd:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _EmissionMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTex:
+    - unity_ShadowMasks:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Blend: 0
-    - _DstBlend: 0
-    - _DstBlendAlpha: 0
-    - _Surface: 0
-    - _ZWrite: 1
+    - _QueueControl: 0
+    - _QueueOffset: 0
     m_Colors:
-    - _BaseColor: {r: 1, g: 0.6392157, b: 0.9335542, a: 1}
-    - _Color: {r: 1, g: 0.6392157, b: 0.9335542, a: 1}
-    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Color: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

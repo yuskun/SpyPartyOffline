@@ -14,7 +14,8 @@
       "Bash(2)",
       "Bash(grep -r \"mesh\\\\|Mesh\\\\|vertices\\\\|triangles\" /c/Users/User/Desktop/0310/SpyPartyOffline/Assets/Scripts --include=*.cs)",
       "Bash(git fetch:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(git add:*)"
     ]
   }
 }
