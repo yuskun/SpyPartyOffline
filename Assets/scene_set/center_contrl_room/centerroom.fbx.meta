@@ -1,9 +1,29 @@
 fileFormatVersion: 2
-guid: 9ddafa8d1cd20b4479ce43b92bfc65f8
+guid: a585713cfc83db04da5a969cd9fd5fa3
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MID_SCRM.001
+    second: {fileID: 2100000, guid: 1be7fe254e3973e4cac493e6d4eec194, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: "\u4E2D\u592E\u63A7\u5236\u5BA4"
+    second: {fileID: 2100000, guid: e0f6d37efba609748ab9508eec5271c8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: "\u7269\u4EF6-01"
+    second: {fileID: 2100000, guid: 54e102e2d1dd4f84fb7c56dea75e7e05, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: "\u8CBC\u82B1"
+    second: {fileID: 2100000, guid: 40e1a3853c647aa45a47740800ccefa1, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

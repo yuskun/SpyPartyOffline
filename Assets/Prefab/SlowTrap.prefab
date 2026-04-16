@@ -64,7 +64,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: SlowTrap
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 3451118302482216456, guid: 0ad943701cbf0044d9347a3e6e718fb6, type: 3}
+      propertyPath: m_Convex
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3451118302482216456, guid: 0ad943701cbf0044d9347a3e6e718fb6, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 3451118302482216456, guid: 0ad943701cbf0044d9347a3e6e718fb6, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -126,8 +135,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.020038398, y: 0.00067271, z: 0.01080073}
-  m_Center: {x: 0.0000009001232, y: -0.000010414995, z: -0.0000026749913}
+  m_Size: {x: 0.020038398, y: 0.0010695996, z: 0.01080073}
+  m_Center: {x: 0.00000090040356, y: -0.000024777259, z: -0.000002675169}
 --- !u!114 &3339035182179909619
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,7 +166,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6077581097038177501}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 0.5
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
