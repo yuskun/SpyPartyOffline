@@ -20,7 +20,13 @@ public class NetworkPlayer : NetworkBehaviour
     public bool AllowInput = true;
     public float freezeTimer = 1f;
     private OodlesCharacter characterController;
-    public bool isPrepare = false;
+
+    // Networked：讓 Client 端也能讀到正確值。
+    // PlayerSpawner.SpawnPlayer 會在 Spawn callback 裡設定此欄位，
+    // 由於 Fusion 會把此 [Networked] 的初始值隨 Spawn 一併同步，
+    // 當 Client 的 Spawned() 被呼叫時此值已經是正確的。
+    [Networked]
+    public NetworkBool isPrepare { get; set; }
 
     public override void Spawned()
     {
@@ -33,9 +39,15 @@ public class NetworkPlayer : NetworkBehaviour
             Local = this;
 
             CameraFollow.Get().player = characterController.GetPhysicsBody().transform;
+
+            // PrepareRoom 階段：由 SkinChange.PickCharacterUI 全權控制相機
+            // （它會把 enable 設成 false 並跑 MoveCamera 協程）。
+            // 此處不再碰 enable，避免 Spawned 時序跑在 Rpc_PlayerSpawnComplete 之後
+            // 把 CameraFollow 重新打開，導致 Client 端 MoveCamera 的結果被覆蓋。
+            if (isPrepare) return;
+
             CameraFollow.Get().enable = true;
 
-            if (isPrepare) return;
             if (MiniMap.instance != null)
                 MiniMap.instance.target = characterController.GetPhysicsBody().transform;
 

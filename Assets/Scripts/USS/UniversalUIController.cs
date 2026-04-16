@@ -92,6 +92,10 @@ public class UniversalUIController : MonoBehaviour
         _doc = GetComponent<UIDocument>();
         var root = _doc.rootVisualElement;
 
+        // 修正：UI Toolkit Button 預設按住 Shift/Ctrl/Alt 會無法點擊，
+        // 在此統一放寬整棵樹所有 Button 的修飾鍵過濾。
+        root.AllowAnyModifierForAll();
+
         foreach (var setting in buttonSettings)
         {
             var btn = root.Q<Button>(setting.buttonName);
