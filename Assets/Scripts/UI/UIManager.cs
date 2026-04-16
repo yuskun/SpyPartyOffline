@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -31,6 +32,27 @@ public class GameUIManager : MonoBehaviour
     public UniversalUIController ItemIntroPanel;
 
     public UniversalUIController GameHudUI;
+
+    // ────────────────────────────────────────────────
+    // 使用道具失敗提示 UI
+    // ────────────────────────────────────────────────
+    public enum CardUseFailReason
+    {
+        None,
+        NoTarget,       // 1. 沒有鎖定到玩家
+        TargetFull,     // 2. 對方背包滿了
+        TargetEmpty,    // 3. 對方沒有物品
+        SelfNotEnough   // 4. 自身沒有多的物品
+    }
+
+    [Header("使用道具失敗提示 UI")]
+    public GameObject FailUI_NoTarget;
+    public GameObject FailUI_TargetFull;
+    public GameObject FailUI_TargetEmpty;
+    public GameObject FailUI_SelfNotEnough;
+    [SerializeField] private float failUIDuration = 2f;
+
+    private Coroutine _failUICoroutine;
 
     private void Awake()
     {
@@ -106,6 +128,42 @@ public class GameUIManager : MonoBehaviour
         if (ItemIntroPanel != null)      ItemIntroPanel.HideCurrentUI();
     }
 
+    // ────────────────────────────────────────────────
+    // 使用道具失敗 UI：依原因顯示對應提示，自動關閉
+    // ────────────────────────────────────────────────
+    public void ShowCardFailUI(CardUseFailReason reason)
+    {
+        HideAllFailUIs();
 
+        GameObject target = null;
+        switch (reason)
+        {
+            case CardUseFailReason.NoTarget:      target = FailUI_NoTarget;      break;
+            case CardUseFailReason.TargetFull:    target = FailUI_TargetFull;    break;
+            case CardUseFailReason.TargetEmpty:   target = FailUI_TargetEmpty;   break;
+            case CardUseFailReason.SelfNotEnough: target = FailUI_SelfNotEnough; break;
+        }
+        if (target == null) return;
+
+        target.SetActive(true);
+
+        if (_failUICoroutine != null) StopCoroutine(_failUICoroutine);
+        _failUICoroutine = StartCoroutine(CloseFailUIAfter(target, failUIDuration));
+    }
+
+    private void HideAllFailUIs()
+    {
+        if (FailUI_NoTarget      != null) FailUI_NoTarget.SetActive(false);
+        if (FailUI_TargetFull    != null) FailUI_TargetFull.SetActive(false);
+        if (FailUI_TargetEmpty   != null) FailUI_TargetEmpty.SetActive(false);
+        if (FailUI_SelfNotEnough != null) FailUI_SelfNotEnough.SetActive(false);
+    }
+
+    private IEnumerator CloseFailUIAfter(GameObject ui, float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        if (ui != null) ui.SetActive(false);
+        _failUICoroutine = null;
+    }
 }
 

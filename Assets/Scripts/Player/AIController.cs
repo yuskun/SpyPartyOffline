@@ -231,7 +231,7 @@ public class AIController : NetworkBehaviour
         dir.Normalize();
 
         aiInput.cameraForward = dir;
-        aiInput.forwardAxis   = 1f;
+        aiInput.forwardAxis   = 0.5f;  // AI 移動速度減半
     }
 
     // ── Card Usage ───────────────────────────────────────────────

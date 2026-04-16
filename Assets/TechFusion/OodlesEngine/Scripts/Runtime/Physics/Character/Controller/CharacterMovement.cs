@@ -34,6 +34,11 @@ namespace OodlesEngine
         private float threshold = 0.01f;
         public float maxSlopeAngle = 45f;
 
+        [Header("空中控制 (Air Control)")]
+        [Range(0f, 1f)]
+        public float airControlStrength = 0.3f;  // 空中移動力度 (0 = 無法操控, 1 = 與地面相同)
+        public float airMaxSpeed = 4f;            // 空中最大水平速度上限
+
 
         //Crouch and Slide
         private Vector3 crouchScale = new Vector3(1, 0.5f, 1);
@@ -239,20 +244,26 @@ namespace OodlesEngine
 
             if (grounded)
             {
-                // ✅ 只有在地面時推力才有效
+                // ✅ 地面：全推力
                 rb.AddForce(moveDir * (moveSpeed * sprintScale) * deltaTime);
             }
             else
             {
-                // ✅ 空中可選擇是否允許微調方向（這段可以留或刪）
-                Vector3 horizontalVel = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+                // ✅ 空中 Air Control：允許用較小推力影響方向
                 Vector3 desiredDir = (orientation.forward * y + orientation.right * x).normalized;
 
-                if (horizontalVel.magnitude > 0.1f && desiredDir != Vector3.zero)
+                if (desiredDir != Vector3.zero)
                 {
-                    // 只改變方向，不改變速度大小
-                    Vector3 newDir = Vector3.Lerp(horizontalVel.normalized, desiredDir, deltaTime * 2f);
-                    rb.linearVelocity = newDir * horizontalVel.magnitude + Vector3.up * rb.linearVelocity.y;
+                    // 以 airControlStrength 比例施力（0~1）
+                    rb.AddForce(desiredDir * (moveSpeed * sprintScale * airControlStrength) * deltaTime);
+
+                    // 空中水平速度不能超過 airMaxSpeed（避免越跳越快）
+                    Vector3 horizontalVel = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+                    if (horizontalVel.magnitude > airMaxSpeed)
+                    {
+                        Vector3 clamped = horizontalVel.normalized * airMaxSpeed;
+                        rb.linearVelocity = new Vector3(clamped.x, rb.linearVelocity.y, clamped.z);
+                    }
                 }
             }
         }

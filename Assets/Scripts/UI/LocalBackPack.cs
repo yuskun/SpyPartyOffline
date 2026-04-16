@@ -175,19 +175,20 @@ public class LocalBackpack : MonoBehaviour
         // FunctionCard：仍然瞬發（你原本邏輯）
         if (card is FunctionCard functionCard)
         {
-            if (functionCard.needTarget && targetInventory == null)
+            // 先檢查所有可能的失敗原因，若有則顯示對應的失敗 UI
+            var failReason = CheckFunctionCardFailure(functionCard, userInventory, targetInventory);
+            if (failReason != GameUIManager.CardUseFailReason.None)
             {
                 PlayAnimationViaRpc("DoScratch");
-                Debug.Log("此功能卡需要目標，但沒有掃描到有效目標");
+                GameUIManager.Instance?.ShowCardFailUI(failReason);
+                Debug.Log($"[UseCard] FunctionCard 無法使用，原因：{failReason}");
                 return;
             }
-            //cardUseUIManager.TryUseFunctionCard(functionCard, userInventory, targetInventory, FocusIndex);
 
             if (cardUseUIManagerUIToolkit != null)
                 cardUseUIManagerUIToolkit.TryUseFunctionCard(functionCard, userInventory, targetInventory, FocusIndex);
             else
                 cardUseUIManager.TryUseFunctionCard(functionCard, userInventory, targetInventory, FocusIndex);
-            return;
             return;
         }
 
@@ -197,6 +198,7 @@ public class LocalBackpack : MonoBehaviour
             if (itemCard.needTarget && targetInventory == null)
             {
                 PlayAnimationViaRpc("DoScratch");
+                GameUIManager.Instance?.ShowCardFailUI(GameUIManager.CardUseFailReason.NoTarget);
                 Debug.Log("此物品卡需要目標，但沒有掃描到有效目標");
                 return;
             }
@@ -391,6 +393,43 @@ public class LocalBackpack : MonoBehaviour
         holdingMissionCard = null;
         holdingTargetInventory = null;
         holdingStealTarget = null;
+    }
+
+    /// <summary>
+    /// 檢查 FunctionCard 使用失敗的原因
+    /// 依序檢查：沒目標 → 自己不夠 → 對方滿 / 對方空
+    /// </summary>
+    GameUIManager.CardUseFailReason CheckFunctionCardFailure(FunctionCard card, PlayerInventory user, PlayerInventory target)
+    {
+        // 1. 沒鎖定到玩家
+        if (card.needTarget && target == null)
+            return GameUIManager.CardUseFailReason.NoTarget;
+
+        // 統計雙方背包數量（不含作為「使用中」的那張卡嗎？這裡簡單用總數）
+        int userCount = 0, targetCount = 0;
+        if (user != null)
+            foreach (var c in user.slots) if (!c.IsEmpty()) userCount++;
+        if (target != null)
+            foreach (var c in target.slots) if (!c.IsEmpty()) targetCount++;
+
+        // 各卡片特殊檢查
+        if (card is Give)
+        {
+            // 4. 自身沒有多的物品（只有 Give 卡本身）
+            if (userCount < 2) return GameUIManager.CardUseFailReason.SelfNotEnough;
+            // 2. 對方背包滿（6 格全滿，>5 = 6）
+            if (targetCount > 5) return GameUIManager.CardUseFailReason.TargetFull;
+        }
+        else if (card is Swap)
+        {
+            // 4. 自身沒有多的物品（只有 Swap 卡本身）
+            if (userCount < 2) return GameUIManager.CardUseFailReason.SelfNotEnough;
+            // 3. 對方沒有物品可交換
+            if (targetCount < 1) return GameUIManager.CardUseFailReason.TargetEmpty;
+        }
+        // Peek / Wiretap 之類：只需要 target 不為 null（上方已檢查過）
+
+        return GameUIManager.CardUseFailReason.None;
     }
 
     void SendStealObjectRpc(int cardIndex, StealTargetObject target)

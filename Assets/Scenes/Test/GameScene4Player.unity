@@ -5916,7 +5916,7 @@ MonoBehaviour:
   m_ShadowRenderingLayers: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
-  m_SoftShadowQuality: 1
+  m_SoftShadowQuality: 3
 --- !u!108 &236227384
 Light:
   m_ObjectHideFlags: 0
@@ -5934,7 +5934,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -17929,7 +17929,7 @@ Transform:
   m_GameObject: {fileID: 790109353}
   serializedVersion: 2
   m_LocalRotation: {x: -1.3894326e-15, y: -0.00000004371139, z: 1, w: 0.0000000754979}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.038467407, y: -0.005238819, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -39095,7 +39095,7 @@ Transform:
   m_GameObject: {fileID: 1684725104}
   serializedVersion: 2
   m_LocalRotation: {x: -1.3894326e-15, y: -0.00000004371139, z: 1, w: 0.0000000754979}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.038467407, y: -0.005238819, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -42196,7 +42196,7 @@ Transform:
   m_GameObject: {fileID: 1822033478}
   serializedVersion: 2
   m_LocalRotation: {x: 1, y: -0, z: -0, w: 0.0000000754979}
-  m_LocalPosition: {x: 60.273262, y: 16.833881, z: 16.241346}
+  m_LocalPosition: {x: 64.12, y: 16.31, z: 16.241346}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children:

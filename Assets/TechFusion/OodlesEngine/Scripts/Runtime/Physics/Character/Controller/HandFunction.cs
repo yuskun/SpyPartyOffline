@@ -174,6 +174,9 @@ namespace OodlesEngine
         {
             if (hasJoint) return;
 
+            // 🚫 左手禁止拿武器（只允許右手拿武器）
+            if (handSide == HandSide.HandLeft) return;
+
             WeaponHandler wh = other.gameObject.GetComponent<WeaponHandler>();
 
             if (wh != null)

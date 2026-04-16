@@ -195,8 +195,7 @@ public class SkinChange : NetworkBehaviour
         string hex = "#" + UnityEngine.ColorUtility.ToHtmlStringRGB(color);
         PlayerPrefs.SetString("Color", hex);
     }
-    void ChangeSkinColor(Color color)
-    {
+    void ChangeSkinColor(Color color)   {
         Skins[currentSkinIndex].GetComponent<Renderer>().material.color = color;
     }
     public void changeSkin(int index)

@@ -17,6 +17,10 @@ public class PlayerItem : NetworkBehaviour
 
             if (other.transform.parent.gameObject.GetComponent<PlayerInventory>().AddCard(cardData))
             {
+                // 通知 ObjectSpawner：這張卡是被玩家撿走的，不需要救援重生
+                if (ObjectSpawner.Instance != null)
+                    ObjectSpawner.Instance.UnregisterLostCard(this);
+
                 this.gameObject.SetActive(false);
                 if (cardData.type == CardType.Mission)
                 {
