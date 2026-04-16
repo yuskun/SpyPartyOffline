@@ -11,8 +11,14 @@ public class NetworkPlayer : NetworkBehaviour
     [Networked]
     public PlayerRef PlayerId { get; set; }
 
+    // 由 Host 每 tick 依據 OodlesCharacter.HoldWeapon() 更新；
+    // Client 端用它來判斷自己角色是否正拿著武器（因為實體/Trigger 只在 Host 端觸發，
+    // Client 本地的 HandFunction.GrabbedObject 永遠是 null）。
+    [Networked]
+    public NetworkBool IsHoldingWeapon { get; set; }
+
     public bool AllowInput = true;
-    public float freezeTimer = 1f; 
+    public float freezeTimer = 1f;
     private OodlesCharacter characterController;
     public bool isPrepare = false;
 
@@ -82,6 +88,12 @@ public class NetworkPlayer : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
+        // 由 Host 每 tick 同步手持武器狀態，讓 Client 端也能正確讀到（物理 Trigger 只在 Host 端觸發）
+        if (Object.HasStateAuthority && characterController != null)
+        {
+            IsHoldingWeapon = characterController.HoldWeapon();
+        }
+
         if (!AllowInput) return;
 
         if (freezeTimer > 0f)

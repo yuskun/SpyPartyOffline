@@ -5,27 +5,27 @@ using UnityEngine;
 public class AIController : NetworkBehaviour
 {
     // ── Components ──────────────────────────────────────────────
-    private OodlesCharacter  characterController;
-    private PlayerInventory  inventory;
-    private PlayerIdentify   identify;
-    private NetworkPlayer    networkPlayer;
+    private OodlesCharacter characterController;
+    private PlayerInventory inventory;
+    private PlayerIdentify identify;
+    private NetworkPlayer networkPlayer;
 
     // ── AI Input ─────────────────────────────────────────────────
     private OodlesCharacterInput aiInput;
 
     // ── Movement ─────────────────────────────────────────────────
     private GameObject currentTarget;
-    private Vector3    wanderTarget;
-    private float      wanderTimer;
+    private Vector3 wanderTarget;
+    private float wanderTimer;
 
     // ── Item Seeking ──────────────────────────────────────────────
-    [SerializeField] private float itemSeekRange  = 20f;   // 感知道具的最大距離
+    [SerializeField] private float itemSeekRange = 20f;   // 感知道具的最大距離
     [SerializeField] private float weaponPriority = 1.5f;  // 武器的距離加權（越高越優先）
 
     // ── Chase ────────────────────────────────────────────────────
-    [SerializeField] private float chaseDuration  = 8f;    // 追同一目標的最長時間
+    [SerializeField] private float chaseDuration = 8f;    // 追同一目標的最長時間
     private GameObject chaseTarget;
-    private float      chaseTimer;
+    private float chaseTimer;
 
     // ── Card Usage ───────────────────────────────────────────────
     [SerializeField] private float cardInterval = 6f;
@@ -36,20 +36,20 @@ public class AIController : NetworkBehaviour
 
     public override void Spawned()
     {
-        networkPlayer        = GetComponent<NetworkPlayer>();
-        characterController  = GetComponent<OodlesCharacter>();
-        inventory            = GetComponent<PlayerInventory>();
-        identify             = GetComponent<PlayerIdentify>();
+        networkPlayer = GetComponent<NetworkPlayer>();
+        characterController = GetComponent<OodlesCharacter>();
+        inventory = GetComponent<PlayerInventory>();
+        identify = GetComponent<PlayerIdentify>();
         OodlesCharacter oc = GetComponent<OodlesCharacter>();
 
         // 只對 AI 玩家（PlayerRef.None）啟用
         if (networkPlayer == null || networkPlayer.PlayerId != PlayerRef.None)
         {
             enabled = false;
-            oc.moveForce = oc.moveForce / 2;  // 停止移動
+
             return;
         }
-
+        oc.moveForce = oc.moveForce / 2;
         // 關閉人類輸入，改由本腳本驅動
         networkPlayer.AllowInput = false;
 
@@ -145,11 +145,11 @@ public class AIController : NetworkBehaviour
     // 找場景內最近的可拾取道具（武器優先）
     private GameObject FindNearestItem()
     {
-        Vector3      myPos = GetMyPos();
+        Vector3 myPos = GetMyPos();
         PlayerItem[] items = UnityEngine.Object.FindObjectsByType<PlayerItem>(FindObjectsSortMode.None);
 
-        GameObject best      = null;
-        float      bestScore = float.MaxValue;  // 分數越小越優先
+        GameObject best = null;
+        float bestScore = float.MaxValue;  // 分數越小越優先
 
         foreach (var item in items)
         {
@@ -233,7 +233,7 @@ public class AIController : NetworkBehaviour
         dir.Normalize();
 
         aiInput.cameraForward = dir;
-        aiInput.forwardAxis   = 0.5f;  // AI 移動速度減半
+        aiInput.forwardAxis = 0.5f;  // AI 移動速度減半
     }
 
     // ── Card Usage ───────────────────────────────────────────────
@@ -246,7 +246,7 @@ public class AIController : NetworkBehaviour
         int myId = identify.PlayerID;
 
         // 找目標（供需要目標的卡牌使用）
-        GameObject targetObj    = FindNearestPlayer();
+        GameObject targetObj = FindNearestPlayer();
         PlayerInventory targetInv = targetObj?.GetComponentInChildren<PlayerInventory>()
                                     ?? targetObj?.GetComponent<PlayerInventory>();
         int targetId = targetObj?.GetComponent<PlayerIdentify>()?.PlayerID ?? myId;
@@ -264,41 +264,41 @@ public class AIController : NetworkBehaviour
             // AI 禁止使用任務卡片
             if (card.type == CardType.Mission) continue;
 
-            bool canUse  = false;
-            int  useTarget = myId;  // 預設目標為自己
+            bool canUse = false;
+            int useTarget = myId;  // 預設目標為自己
 
             switch (card.type)
             {
                 case CardType.Function:
-                {
-                    FunctionCard fc = CardManager.Instance.GetFunctionCard(card.id);
-                    if (fc == null) continue;
-                    if (fc.needTarget && (targetInv == null || distToTarget > cardUseRange)) continue;
-                    PlayerInventory t = fc.needTarget ? targetInv : null;
-                    canUse = fc.CanUse(inventory, t);
-                    if (fc.needTarget) useTarget = targetId;
-                    break;
-                }
+                    {
+                        FunctionCard fc = CardManager.Instance.GetFunctionCard(card.id);
+                        if (fc == null) continue;
+                        if (fc.needTarget && (targetInv == null || distToTarget > cardUseRange)) continue;
+                        PlayerInventory t = fc.needTarget ? targetInv : null;
+                        canUse = fc.CanUse(inventory, t);
+                        if (fc.needTarget) useTarget = targetId;
+                        break;
+                    }
                 case CardType.Item:
-                {
-                    ItemCard ic = CardManager.Instance.GetItemCard(card.id);
-                    if (ic == null) continue;
-                    if (ic.needTarget && (targetInv == null || distToTarget > cardUseRange)) continue;
-                    canUse = true;
-                    if (ic.needTarget) useTarget = targetId;
-                    break;
-                }
+                    {
+                        ItemCard ic = CardManager.Instance.GetItemCard(card.id);
+                        if (ic == null) continue;
+                        if (ic.needTarget && (targetInv == null || distToTarget > cardUseRange)) continue;
+                        canUse = true;
+                        if (ic.needTarget) useTarget = targetId;
+                        break;
+                    }
             }
 
             if (!canUse) continue;
 
             CardUseParameters p = new CardUseParameters
             {
-                UserId            = myId,
-                TargetId          = useTarget,
-                Card              = card,
-                UseCardIndex      = i,
-                SelectIndex       = i,
+                UserId = myId,
+                TargetId = useTarget,
+                Card = card,
+                UseCardIndex = i,
+                SelectIndex = i,
                 TargetSelectIndex = GetFirstFilledSlot(targetInv),
             };
 
@@ -314,10 +314,10 @@ public class AIController : NetworkBehaviour
     {
         if (PlayerInventoryManager.Instance == null) return null;
 
-        Vector3    myPos      = GetMyPos();
-        int        myId       = identify.PlayerID;
-        GameObject nearest    = null;
-        float      nearestDist = float.MaxValue;
+        Vector3 myPos = GetMyPos();
+        int myId = identify.PlayerID;
+        GameObject nearest = null;
+        float nearestDist = float.MaxValue;
 
         foreach (var p in PlayerInventoryManager.Instance.playerParents)
         {

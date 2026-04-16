@@ -120,7 +120,11 @@ public class LocalBackpack : MonoBehaviour
         if (Cursor.lockState != CursorLockMode.Locked) return;
 
         // 手持武器時，左鍵只做武器攻擊，不使用道具
+        // Host 端：character.HoldWeapon() 直接讀本地 HandFunction 即可（物理 Trigger 在此端觸發）
+        // Client 端：本地 HandFunction 無法觸發 Trigger，必須改讀由 Host 同步過來的 NetworkPlayer.IsHoldingWeapon
         bool holdingWeapon = character != null && character.HoldWeapon();
+        if (!holdingWeapon && NetworkPlayer.Local != null && NetworkPlayer.Local.IsHoldingWeapon)
+            holdingWeapon = true;
         if (holdingWeapon) return;
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
