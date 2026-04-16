@@ -40,11 +40,13 @@ public class AIController : NetworkBehaviour
         characterController  = GetComponent<OodlesCharacter>();
         inventory            = GetComponent<PlayerInventory>();
         identify             = GetComponent<PlayerIdentify>();
+        OodlesCharacter oc = GetComponent<OodlesCharacter>();
 
         // 只對 AI 玩家（PlayerRef.None）啟用
         if (networkPlayer == null || networkPlayer.PlayerId != PlayerRef.None)
         {
             enabled = false;
+            oc.moveForce = oc.moveForce / 2;  // 停止移動
             return;
         }
 
