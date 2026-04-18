@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a585713cfc83db04da5a969cd9fd5fa3
+guid: 4daec5f2ed7c3ae40977ab482db3f946
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,23 +7,18 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: MID_SCRM.001
+      name: MID_SCRM.002
     second: {fileID: 2100000, guid: 1be7fe254e3973e4cac493e6d4eec194, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: "\u4E2D\u592E\u63A7\u5236\u5BA4"
-    second: {fileID: 2100000, guid: e0f6d37efba609748ab9508eec5271c8, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: "\u7269\u4EF6-01"
+      name: "\u7269\u4EF6-01.004"
     second: {fileID: 2100000, guid: 73f3f7ad4ecddc24ea3c248fcca095d8, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: "\u8CBC\u82B1"
-    second: {fileID: 2100000, guid: 40e1a3853c647aa45a47740800ccefa1, type: 2}
+      name: "\u80FD\u6E90\u5BA4\u5834\u8B66.004"
+    second: {fileID: 2100000, guid: d90162e029cdf2243bb1fe07c331f611, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
