@@ -283,11 +283,17 @@ public class ObjectSpawner : MonoBehaviour
 
     public void objectToSpawn(GameObject obj, Transform position)
     {
-        NetworkManager2.Instance.runner.Spawn(obj, position.position, null, null, (runner, obj) =>
+        objectToSpawn(obj, position.position);
+    }
+
+    /// <summary>以世界座標生成（供 ItemCard 依 Client 送來的 Camera/SpawnObject 位置使用）</summary>
+    public void objectToSpawn(GameObject obj, Vector3 worldPosition)
+    {
+        NetworkManager2.Instance.runner.Spawn(obj, worldPosition, null, null, (runner, netObj) =>
         {
-            if (obj.GetComponent<SetPosition>() != null)
-                obj.GetComponent<SetPosition>().Setpos(position.position);
-                NetworkPlayer.Local.RPC_PlayGlobalSFX(CharacterSFXManager.SFXType.UseCard,NetworkPlayer.Local.PlayerId);
+            if (netObj.GetComponent<SetPosition>() != null)
+                netObj.GetComponent<SetPosition>().Setpos(worldPosition);
+            NetworkPlayer.Local.RPC_PlayGlobalSFX(CharacterSFXManager.SFXType.UseCard, NetworkPlayer.Local.PlayerId);
         });
     }
 

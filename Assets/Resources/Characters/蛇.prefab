@@ -237,9 +237,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 342bf92c97eae0b4e9566fb8c38ae664, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _IsHoldingWeapon:
+    _value: 0
   AllowInput: 1
   freezeTimer: 3
-  isPrepare: 0
+  _isPrepare:
+    _value: 0
 --- !u!114 &4458448911091908190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6470,7 +6473,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: bf24534e3f752b64aacd6642afaf21f7, type: 3}
   m_Resource: {fileID: 8300000, guid: bf24534e3f752b64aacd6642afaf21f7, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.8
+  m_Volume: 0.05
   m_Pitch: 1.5
   Loop: 1
   Mute: 0

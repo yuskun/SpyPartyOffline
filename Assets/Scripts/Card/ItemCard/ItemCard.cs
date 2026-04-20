@@ -37,18 +37,24 @@ public class ItemCard : Card
             return;
         }
 
-        // ✅ 嘗試找到生成點
-        Transform spawnPoint = playerParent.transform.Find("Ragdoll/SpawnObject");
-        if (spawnPoint == null)
-        {
-            Debug.LogError($"[ItemCard] Player {parameters.UserId} 缺少 Ragdoll/SpawnObject 節點。");
-            return;
-        }
         PlayerInventory User = PlayerInventoryManager.Instance.GetPlayer(parameters.UserId).GetComponent<PlayerInventory>();
 
+        // ✅ 生成位置：使用 Client 端送來的 Camera/SpawnObject 世界座標（= 預覽的位置）
+        //    若 SpawnPosition 為 (0,0,0)（舊 client 或 fallback 失敗），退回玩家身上的 SpawnObject。
+        Vector3 spawnWorldPos = parameters.SpawnPosition;
+        if (spawnWorldPos == Vector3.zero)
+        {
+            Transform fallback = playerParent.transform.Find("Ragdoll/SpawnObject");
+            if (fallback != null) spawnWorldPos = fallback.position;
+            else
+            {
+                Debug.LogError($"[ItemCard] Player {parameters.UserId} 找不到 SpawnPosition 與 Ragdoll/SpawnObject，放棄生成。");
+                return;
+            }
+        }
+
         // ✅ 呼叫 ObjectSpawner 生成（Host 負責 Spawn，同步到所有 Client）
-        Debug.Log(ObjectSpawner.Instance);
-        ObjectSpawner.Instance.objectToSpawn(itemPrefab, spawnPoint.transform);
+        ObjectSpawner.Instance.objectToSpawn(itemPrefab, spawnWorldPos);
         User.RemoveCard(parameters.UseCardIndex);
         if (CardHistoryManager.Instance != null)
         {

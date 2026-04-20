@@ -52,6 +52,10 @@ public struct CardUseParameters : INetworkStruct
     public int UseCardIndex;              // 使用卡片所在欄位
     public int SelectIndex;         // 使用者自己要操作的卡槽
     public int TargetSelectIndex;       // 使用者選定的目標玩家卡槽
+
+    // Client 端當下 Camera/SpawnObject 的世界座標，Host 用來生成 ItemCard 的物件
+    // （預覽掛在 MainCamera 底下，Host 看不到客戶端的 Camera，所以必須隨 RPC 傳過去）
+    public Vector3 SpawnPosition;
 }
 [System.Serializable]
 public class MissionData

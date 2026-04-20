@@ -105,6 +105,42 @@ public class LocalBackpack : MonoBehaviour
         UpdateCardImagesByInventory();
         UpdateStealScan();
         UpdateStealOutlines();
+        UpdateItemPreview(); // Focus 落在 ItemCard 時自動顯示預覽
+    }
+
+    /// <summary>
+    /// 依目前 FocusIndex 的卡片自動顯示/隱藏 ItemCard 預覽。
+    /// - Focus 在 ItemCard 上 → 顯示預覽
+    /// - Focus 移到空格 / FunctionCard / MissionCard / UI 開啟時 → 隱藏預覽
+    /// </summary>
+    void UpdateItemPreview()
+    {
+        // 基本 guard
+        if (userInventory == null || CardManager.Instance == null) { EnsurePreviewHidden(); return; }
+        if (FocusIndex < 0 || FocusIndex >= PlayerInventory.MaxSlots) { EnsurePreviewHidden(); return; }
+        if (Cursor.lockState != CursorLockMode.Locked) { EnsurePreviewHidden(); return; }
+
+        var data = userInventory.slotsNetworked[FocusIndex];
+        if (data.IsEmpty()) { EnsurePreviewHidden(); return; }
+
+        var card = CardManager.Instance.Catalog.cards.Find(c => c.cardData.id == data.id && c.cardData.type == data.type);
+        if (!(card is ItemCard)) { EnsurePreviewHidden(); return; }
+
+        // 需要顯示：如果尚未顯示或換格了，重新 Show
+        if (!isPreviewingItem || previewingIndex != FocusIndex)
+        {
+            CardPreviewSystem.Instance.ShowPreview(card);
+            isPreviewingItem = true;
+            previewingIndex = FocusIndex;
+        }
+    }
+
+    void EnsurePreviewHidden()
+    {
+        if (!isPreviewingItem) return;
+        CardPreviewSystem.Instance.HidePreview();
+        isPreviewingItem = false;
+        previewingIndex = -1;
     }
     void HandleCardInput()
     {
@@ -112,32 +148,21 @@ public class LocalBackpack : MonoBehaviour
         if (FocusIndex < 0 || FocusIndex >= buttons.Count) return;
         if (!buttons[FocusIndex].button.interactable) return;
 
-        // FocusIndex 換格子時取消 ItemCard 預覽
-        if (isPreviewingItem && FocusIndex != previewingIndex)
-            CancelItemPreview();
-
         // 滑鼠沒鎖定（UI 開啟中）時不處理道具輸入
         if (Cursor.lockState != CursorLockMode.Locked) return;
 
-        // 手持武器時，左鍵只做武器攻擊，不使用道具
-        // Host 端：character.HoldWeapon() 直接讀本地 HandFunction 即可（物理 Trigger 在此端觸發）
-        // Client 端：本地 HandFunction 無法觸發 Trigger，必須改讀由 Host 同步過來的 NetworkPlayer.IsHoldingWeapon
-        bool holdingWeapon = character != null && character.HoldWeapon();
-        if (!holdingWeapon && NetworkPlayer.Local != null && NetworkPlayer.Local.IsHoldingWeapon)
-            holdingWeapon = true;
-        if (holdingWeapon) return;
-
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        // 道具使用鍵：E（左鍵保留給武器攻擊，不衝突）
+        if (Input.GetKeyDown(KeyCode.E))
         {
             OnMouseDownUse();
         }
 
-        if (Input.GetKey(KeyCode.Mouse0))
+        if (Input.GetKey(KeyCode.E))
         {
             OnMouseHoldUse();
         }
 
-        if (Input.GetKeyUp(KeyCode.Mouse0))
+        if (Input.GetKeyUp(KeyCode.E))
         {
             OnMouseUpUse();
         }
@@ -196,7 +221,7 @@ public class LocalBackpack : MonoBehaviour
             return;
         }
 
-        // ItemCard：第一次 E 顯示預覽，第二次 E 才使用
+        // ItemCard：預覽由 UpdateItemPreview 自動顯示，E 直接使用
         if (card is ItemCard itemCard)
         {
             if (itemCard.needTarget && targetInventory == null)
@@ -207,22 +232,9 @@ public class LocalBackpack : MonoBehaviour
                 return;
             }
 
-            if (!isPreviewingItem || previewingIndex != FocusIndex)
-            {
-                // 第一次按：顯示預覽
-                CancelItemPreview(); // 先取消舊的（換格子的情況）
-                isPreviewingItem = true;
-                previewingIndex = FocusIndex;
-                previewingItemCard = itemCard;
-                previewingCardData = data;
-                previewingTargetInventory = targetInventory;
-                CardPreviewSystem.Instance.ShowPreview(card);
-                return;
-            }
-
-            // 第二次按：真正使用
+            // 直接使用；使用完隱藏預覽（下次 Focus 到 ItemCard 時會再自動顯示）
             CardPreviewSystem.Instance.HidePreview();
-            SendUseCardRpc(previewingCardData, previewingIndex, previewingTargetInventory);
+            SendUseCardRpc(data, FocusIndex, targetInventory);
             ClearItemPreviewState();
             return;
         }
@@ -357,7 +369,23 @@ public class LocalBackpack : MonoBehaviour
                 useCard.TargetId = id.PlayerID;
         }
 
+        // 把當下 Camera/SpawnObject 的世界座標帶給 Host，讓 ItemCard 在這個點生成
+        useCard.SpawnPosition = GetSpawnWorldPosition();
+
         GameManager.instance.Rpc_RequestUseCard(useCard);
+    }
+
+    /// <summary>取得 Camera.main 底下 "SpawnObject" 的世界座標；找不到則退回玩家位置。</summary>
+    Vector3 GetSpawnWorldPosition()
+    {
+        if (Camera.main != null)
+        {
+            var anchor = Camera.main.transform.Find("SpawnObject");
+            if (anchor != null) return anchor.position;
+        }
+        // fallback：用玩家的位置（避免回傳 (0,0,0) 讓物件掉進地圖原點）
+        if (character != null) return character.transform.position;
+        return Vector3.zero;
     }
 
     void FinishHold()

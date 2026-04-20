@@ -570,9 +570,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 342bf92c97eae0b4e9566fb8c38ae664, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _IsHoldingWeapon:
+    _value: 0
   AllowInput: 1
   freezeTimer: 3
-  isPrepare: 0
+  _isPrepare:
+    _value: 0
 --- !u!114 &9154730314767901852
 MonoBehaviour:
   m_ObjectHideFlags: 0
