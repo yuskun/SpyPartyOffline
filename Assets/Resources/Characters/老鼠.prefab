@@ -661,7 +661,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AllowInput: 1
   freezeTimer: 3
-  isPrepare: 0
+  _isPrepare:
+    _value: 0
 --- !u!114 &8692955523397336575
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2842,6 +2843,18 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -5288388704700900448, guid: 9f134400f1a76684d84eb9d9623cdeaa, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -3691434216628288505, guid: fe7bc62f1be35934980fd1ee8aa15efd, type: 3}
+    - target: {fileID: -5288388704700900448, guid: 9f134400f1a76684d84eb9d9623cdeaa, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -5288388704700900448, guid: 9f134400f1a76684d84eb9d9623cdeaa, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 8c32708e2e5d41645bea44fc8ccad469, type: 2}
     - target: {fileID: 919132149155446097, guid: 9f134400f1a76684d84eb9d9623cdeaa, type: 3}
       propertyPath: m_Name
       value: Ragdoll

@@ -81,6 +81,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 5770312955080928201}
   - {fileID: 8930466103785555406}
+  - {fileID: 124139734830324287}
   ForceRemoteRenderTimeframe: 0
 --- !u!65 &9033902312495268954
 BoxCollider:
@@ -166,7 +167,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: ff8a8c2896e70be4db25a100454f5e4a, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 1be7fe254e3973e4cac493e6d4eec194, type: 2}
+      objectReference: {fileID: 2100000, guid: 21d8e4ded91ed104d903b14f70310c10, type: 2}
     - target: {fileID: 919132149155446097, guid: ff8a8c2896e70be4db25a100454f5e4a, type: 3}
       propertyPath: m_Name
       value: "\u96A8\u6A5F\u6389\u843D"
@@ -178,6 +179,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ff8a8c2896e70be4db25a100454f5e4a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4994957008961926008}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ff8a8c2896e70be4db25a100454f5e4a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 124139734830324287}
   m_SourcePrefab: {fileID: 100100000, guid: ff8a8c2896e70be4db25a100454f5e4a, type: 3}
 --- !u!1 &486445704943502535 stripped
 GameObject:
@@ -192,7 +196,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 486445704943502535}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: b4f8201578332b64ebfb777a5fe763c3, type: 2}
   m_CullingMode: 0
@@ -206,6 +210,24 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &124139734830324287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 486445704943502535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Animator: {fileID: 4994957008961926008}
+  ApplyTiming: 2
+  SyncSettings: 79
+  StateHashes: 00000000f672f7b6d7c2d072
+  TriggerHashes: 00000000
+  TotalWords: 0
 --- !u!4 &976123771735531133 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ff8a8c2896e70be4db25a100454f5e4a, type: 3}

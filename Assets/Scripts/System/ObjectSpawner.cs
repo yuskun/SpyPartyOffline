@@ -47,6 +47,16 @@ public class ObjectSpawner : MonoBehaviour
     [Tooltip("Y 座標低於此值視為掉出世界，觸發救援")]
     [SerializeField] private float fallThreshold = -20f;
 
+    [Header("擊倒掉落物理")]
+    [Tooltip("以角色位置為基準往上偏移多少作為生成中心")]
+    [SerializeField] private float dropSpawnHeight = 1.5f;
+    [Tooltip("向上噴射初速")]
+    [SerializeField] private float dropUpwardForce = 4f;
+    [Tooltip("向外擴散初速")]
+    [SerializeField] private float dropOutwardForce = 3f;
+    [Tooltip("向外擴散隨機分量")]
+    [SerializeField] private float dropOutwardRandom = 1.5f;
+
     private float timer;
     private List<GameObject> spawnedObjects = new List<GameObject>();
 
@@ -314,48 +324,30 @@ public class ObjectSpawner : MonoBehaviour
 
         // ownerTransform 可能已銷毀（玩家退出／救援時原物件消失），要容忍 null
         bool hasCenter = centerTransform != null;
-        Vector3 playerPos = hasCenter ? centerTransform.position : Vector3.zero;
+        Vector3 basePos = hasCenter
+            ? centerTransform.position + Vector3.up * dropSpawnHeight
+            : Vector3.up * 5f;
 
         foreach (var cardData in cardDatas)
         {
             bool isMissionCard = cardData.type == CardType.Mission;
-            Vector3 spawnPos = Vector3.zero;
-            bool gotPos = false;
+            Vector3 spawnPos = basePos;
 
-            // === 階段 1：玩家附近（3~5m）=== 沒 centerTransform 就跳過
-            if (hasCenter)
-                gotPos = TryFindDropPosition(playerPos, minDropDistance, maxDropDistance, maxAttempts, out spawnPos);
+            // === 隨機散射初速：向上 + 水平隨機方向 ===
+            float angle = UnityEngine.Random.Range(0f, Mathf.PI * 2f);
+            Vector3 horizontal = new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle))
+                                 * (dropOutwardForce + UnityEngine.Random.Range(-dropOutwardRandom, dropOutwardRandom));
+            Vector3 upward = Vector3.up * (dropUpwardForce + UnityEngine.Random.Range(-1f, 1f));
+            Vector3 initialVelocity = horizontal + upward;
 
-            // === 階段 2：擴大範圍（6~12m）===
-            if (!gotPos && hasCenter)
-            {
-                Debug.LogWarning($"[LostCard] 階段1 失敗，擴大搜尋範圍 (6~12m)");
-                gotPos = TryFindDropPosition(playerPos, 6f, 12f, maxAttempts, out spawnPos);
-            }
-
-            // === 階段 3：任意 SpawnArea（沿用 TryGetRandomSpawnPosition）===
-            if (!gotPos)
-            {
-                Debug.LogWarning($"[LostCard] 改用場景任意 SpawnArea");
-                gotPos = TryGetRandomSpawnPosition(out spawnPos);
-            }
-
-            // === 階段 4：保底（絕對不會消失）===
-            if (!gotPos)
-            {
-                Debug.LogError($"[LostCard] 所有搜尋失敗，保底位置生成（cardType={cardData.type}, id={cardData.id}）");
-                spawnPos = hasCenter ? (playerPos + Vector3.up * 1.2f) : Vector3.up * 5f;
-            }
-
-            // === 任務卡額外墊高，確保明顯可見 ===
-            if (isMissionCard)
-                spawnPos += Vector3.up * 0.5f;
-
-            // === 生成 ===
+            // === 生成（在 onBeforeSpawned 設定 Networked 屬性，讓所有 client 都能收到初速）===
             var obj = NetworkManager2.Instance.runner.Spawn(PlayerItem, spawnPos, null, null, (runner, netObj) =>
             {
                 if (netObj.GetComponent<SetPosition>() != null)
                     netObj.GetComponent<SetPosition>().Setpos(spawnPos);
+                var pi = netObj.GetComponent<PlayerItem>();
+                if (pi != null)
+                    pi.InitialVelocity = initialVelocity;
             });
 
             PlayerItem itemComp = obj.GetComponent<PlayerItem>();

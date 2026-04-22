@@ -2291,7 +2291,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AllowInput: 1
   freezeTimer: 3
-  isPrepare: 0
+  _isPrepare:
+    _value: 0
 --- !u!114 &7662221127124187927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2752,6 +2753,22 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 7231818899095172694, guid: 637741488decd8a45a663a4016432ffe, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 917541664597107813, guid: fe7bc62f1be35934980fd1ee8aa15efd, type: 3}
+    - target: {fileID: 7231818899095172694, guid: 637741488decd8a45a663a4016432ffe, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7231818899095172694, guid: 637741488decd8a45a663a4016432ffe, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f3c9aca01cdc02e4ab09b0fb81c39e66, type: 2}
+    - target: {fileID: 7231818899095172694, guid: 637741488decd8a45a663a4016432ffe, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 41c7dbde034f0b94eb753ee66c83aa9b, type: 2}
     m_RemovedComponents:
     - {fileID: 5866666021909216657, guid: 637741488decd8a45a663a4016432ffe, type: 3}
     m_RemovedGameObjects: []

@@ -237,8 +237,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 342bf92c97eae0b4e9566fb8c38ae664, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _IsHoldingWeapon:
-    _value: 0
   AllowInput: 1
   freezeTimer: 3
   _isPrepare:
@@ -2747,6 +2745,22 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -885980146020112748, guid: 28c5b080c361ef346ac8717c4e8a3a87, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -1077435173747655705, guid: fe7bc62f1be35934980fd1ee8aa15efd, type: 3}
+    - target: {fileID: -885980146020112748, guid: 28c5b080c361ef346ac8717c4e8a3a87, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -885980146020112748, guid: 28c5b080c361ef346ac8717c4e8a3a87, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a193a09d3d2da6345b084995e9bd07a3, type: 2}
+    - target: {fileID: -885980146020112748, guid: 28c5b080c361ef346ac8717c4e8a3a87, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 00fe1080f58d988448e1577c9384d2c2, type: 2}
     - target: {fileID: 919132149155446097, guid: 28c5b080c361ef346ac8717c4e8a3a87, type: 3}
       propertyPath: m_Name
       value: Ragdoll

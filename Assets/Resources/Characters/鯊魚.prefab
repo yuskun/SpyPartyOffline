@@ -570,8 +570,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 342bf92c97eae0b4e9566fb8c38ae664, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _IsHoldingWeapon:
-    _value: 0
   AllowInput: 1
   freezeTimer: 3
   _isPrepare:
@@ -1401,7 +1399,15 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
+    are already bound by a Humanoid avatar. These transforms can only be changed
+    by Humanoid clips.\n\tTransform 'shoulder.r'\n\tTransform 'shoulder.l'\n\tTransform
+    'neck.x'\n\tTransform 'arm_stretch.r'\n\tTransform 'forearm_stretch.r'\n\tTransform
+    'head.x'\n\tTransform 'forearm_stretch.l'\n\tTransform 'shoulder.r'\n\tTransform
+    'hand.r'\n\tTransform 'arm_stretch.l'\n\tand more ...\n\tFrom animation clip
+    '\u6416\u982D-24-Z15'\n\tFrom animation clip '\u6B6A\u982D\u71E6\u7B11-24-Z5'\n\tFrom
+    animation clip '\u4EF0\u982D\u5927\u7B11'\n\tFrom animation clip '\u63EE\u624B.001'\n\tFrom
+    animation clip '\u808C\u8089'\n\tFrom animation clip '\u96D9\u624B\u8209\u9AD8'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -2141,6 +2147,26 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -2744192153509943350, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -9085227118422698276, guid: 87b259bd45ed7034f953c871be794c98, type: 3}
+    - target: {fileID: -2744192153509943350, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
+      propertyPath: m_Quality
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -2744192153509943350, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -2744192153509943350, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 1f60a54017bcdd242baa7ee50e2ff88f, type: 2}
+    - target: {fileID: -2744192153509943350, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: dd94053dc9948ef408305a48c72e1613, type: 2}
     - target: {fileID: 919132149155446097, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
       propertyPath: m_Name
       value: Ragdoll
