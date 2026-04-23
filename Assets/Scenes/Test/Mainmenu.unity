@@ -4848,7 +4848,15 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
+    are already bound by a Humanoid avatar. These transforms can only be changed
+    by Humanoid clips.\n\tTransform 'spine_01.x'\n\tTransform 'thigh_stretch.l'\n\tTransform
+    'arm_stretch.l'\n\tTransform 'leg_stretch.r'\n\tTransform 'shoulder.r'\n\tTransform
+    'toes_01.l'\n\tTransform 'arm_stretch.r'\n\tTransform 'root.x'\n\tTransform 'spine_03.x'\n\tTransform
+    'hand.l'\n\tand more ...\n\tFrom animation clip '\u6416\u982D-24-Z15'\n\tFrom
+    animation clip '\u6B6A\u982D\u71E6\u7B11-24-Z5'\n\tFrom animation clip '\u4EF0\u982D\u5927\u7B11'\n\tFrom
+    animation clip '\u63EE\u624B.001'\n\tFrom animation clip '\u808C\u8089'\n\tFrom
+    animation clip '\u96D9\u624B\u8209\u9AD8'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -22167,7 +22175,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &725264505
 Transform:
   m_ObjectHideFlags: 0
@@ -31478,7 +31486,15 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
+    are already bound by a Humanoid avatar. These transforms can only be changed
+    by Humanoid clips.\n\tTransform 'shoulder.l'\n\tTransform 'leg_stretch.r'\n\tTransform
+    'forearm_stretch.r'\n\tTransform 'root.x'\n\tTransform 'toes_01.r'\n\tTransform
+    'foot.r'\n\tTransform 'leg_stretch.l'\n\tTransform 'c_subneck_1.x'\n\tTransform
+    'hand.r'\n\tTransform 'forearm_stretch.l'\n\tand more ...\n\tFrom animation clip
+    '\u6416\u982D-24-Z15'\n\tFrom animation clip '\u6B6A\u982D\u71E6\u7B11-24-Z5'\n\tFrom
+    animation clip '\u4EF0\u982D\u5927\u7B11'\n\tFrom animation clip '\u63EE\u624B.001'\n\tFrom
+    animation clip '\u808C\u8089'\n\tFrom animation clip '\u96D9\u624B\u8209\u9AD8'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -47674,6 +47690,63 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0.0000019073486}
   m_SizeDelta: {x: 250.7363, y: 275.6948}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1001 &1659460634
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: a34b37720fdf4bb45b027efa70089120, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 125.42
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a34b37720fdf4bb45b027efa70089120, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 11.37
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a34b37720fdf4bb45b027efa70089120, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 10.37
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a34b37720fdf4bb45b027efa70089120, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a34b37720fdf4bb45b027efa70089120, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a34b37720fdf4bb45b027efa70089120, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a34b37720fdf4bb45b027efa70089120, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a34b37720fdf4bb45b027efa70089120, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a34b37720fdf4bb45b027efa70089120, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a34b37720fdf4bb45b027efa70089120, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a34b37720fdf4bb45b027efa70089120, type: 3}
+      propertyPath: m_Name
+      value: bar
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a34b37720fdf4bb45b027efa70089120, type: 3}
 --- !u!1 &1660885424
 GameObject:
   m_ObjectHideFlags: 0
@@ -54348,7 +54421,15 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
+    are already bound by a Humanoid avatar. These transforms can only be changed
+    by Humanoid clips.\n\tTransform 'root.x'\n\tTransform 'toes_01.l'\n\tTransform
+    'leg_stretch.r'\n\tTransform 'neck.x'\n\tTransform 'arm_stretch.r'\n\tTransform
+    'spine_01.x'\n\tTransform 'spine_03.x'\n\tTransform 'thigh_stretch.r'\n\tTransform
+    'spine_02.x'\n\tTransform '\u9C77\u9B5A\u9AA8\u67B6'\n\tand more ...\n\tFrom
+    animation clip '\u6416\u982D-24-Z15'\n\tFrom animation clip '\u6B6A\u982D\u71E6\u7B11-24-Z5'\n\tFrom
+    animation clip '\u4EF0\u982D\u5927\u7B11'\n\tFrom animation clip '\u63EE\u624B.001'\n\tFrom
+    animation clip '\u808C\u8089'\n\tFrom animation clip '\u96D9\u624B\u8209\u9AD8'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -58622,7 +58703,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 7c5a86a23ab2a2346b26ad3b6ede84cd, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2334830646326187502, guid: 7c5a86a23ab2a2346b26ad3b6ede84cd, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -61191,3 +61272,4 @@ SceneRoots:
   - {fileID: 7025864132712926066}
   - {fileID: 1644311134734881151}
   - {fileID: 725264505}
+  - {fileID: 1659460634}
