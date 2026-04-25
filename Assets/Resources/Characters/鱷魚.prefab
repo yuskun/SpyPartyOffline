@@ -2013,7 +2013,15 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
+    are already bound by a Humanoid avatar. These transforms can only be changed
+    by Humanoid clips.\n\tTransform 'root.x'\n\tTransform 'toes_01.l'\n\tTransform
+    'leg_stretch.r'\n\tTransform 'neck.x'\n\tTransform 'arm_stretch.r'\n\tTransform
+    'spine_01.x'\n\tTransform 'spine_03.x'\n\tTransform 'thigh_stretch.r'\n\tTransform
+    'spine_02.x'\n\tTransform '\u9C77\u9B5A\u9AA8\u67B6'\n\tand more ...\n\tFrom
+    animation clip '\u6416\u982D-24-Z15'\n\tFrom animation clip '\u6B6A\u982D\u71E6\u7B11-24-Z5'\n\tFrom
+    animation clip '\u4EF0\u982D\u5927\u7B11'\n\tFrom animation clip '\u63EE\u624B.001'\n\tFrom
+    animation clip '\u808C\u8089'\n\tFrom animation clip '\u96D9\u624B\u8209\u9AD8'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -2756,10 +2764,10 @@ PrefabInstance:
     - target: {fileID: 7231818899095172694, guid: 637741488decd8a45a663a4016432ffe, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 917541664597107813, guid: fe7bc62f1be35934980fd1ee8aa15efd, type: 3}
+      objectReference: {fileID: 917541664597107813, guid: 637741488decd8a45a663a4016432ffe, type: 3}
     - target: {fileID: 7231818899095172694, guid: 637741488decd8a45a663a4016432ffe, type: 3}
       propertyPath: m_Materials.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7231818899095172694, guid: 637741488decd8a45a663a4016432ffe, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'

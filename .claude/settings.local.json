@@ -81,7 +81,12 @@
       "PowerShell([Environment]::UserName; $env:USERPROFILE)",
       "PowerShell(Get-Item 'C:\\\\Users\\\\User\\\\AppData\\\\Roaming\\\\npm' -Force | Format-List Name,FullName,Attributes,LinkType,Target; Write-Output '---'; \\(Get-Acl 'C:\\\\Users\\\\User\\\\AppData\\\\Roaming\\\\npm'\\).Owner)",
       "PowerShell(Get-Item 'C:\\\\Users\\\\User\\\\AppData\\\\Local\\\\Pub\\\\Cache' -Force -ErrorAction SilentlyContinue | Format-List FullName,LinkType,Target; Write-Output '---'; \\(Get-ChildItem 'C:\\\\Users\\\\User\\\\AppData\\\\Local\\\\Pub\\\\Cache\\\\hosted' -ErrorAction SilentlyContinue | Measure-Object\\).Count)",
-      "Bash(grep -E \"\\\\.\\(prefab|cs\\)$\")"
+      "Bash(grep -E \"\\\\.\\(prefab|cs\\)$\")",
+      "Read(//c/Users/User/.claude/plugins/**)",
+      "Bash(find \"C:\\\\Users\\\\User\\\\Desktop\\\\0310\\\\SpyPartyOffline\" -name \"*.meta\" -exec grep -l \"9f134400f1a76684d84eb9d9623cdeaa\" {} \\\\;)",
+      "Bash(xargs -0 grep -l \"00fe1080f58d988448e1577c9384d2c2\")",
+      "Bash(grep -E \"\\\\.mat$\")",
+      "Bash(xargs -0 grep -l \"933532a4fcc9baf4fa0491de14d08ed7\")"
     ]
   }
 }
