@@ -51,7 +51,8 @@ public class PlayerItem : NetworkBehaviour
         int[] layers = {
             LayerMask.NameToLayer("Ragdoll"),
             LayerMask.NameToLayer("RagdollHands"),
-            LayerMask.NameToLayer("Player")
+            LayerMask.NameToLayer("Player"),
+            LayerMask.NameToLayer("weapon")
         };
         foreach (int l in layers)
             if (l >= 0) mask |= 1 << l;

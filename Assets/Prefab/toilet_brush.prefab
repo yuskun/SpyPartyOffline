@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7602886693195395357}
   - component: {fileID: 1379610372779806086}
   - component: {fileID: 7712754809588653447}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Handler (4)
   m_TagString: CanBeGrabbed
   m_Icon: {fileID: 0}
@@ -139,6 +139,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 079c3ee80b3a100449d2a32e548e79cd, type: 3}
       propertyPath: m_Name
       value: toilet_brush
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 079c3ee80b3a100449d2a32e548e79cd, type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
