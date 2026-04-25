@@ -21,6 +21,8 @@ public class UniversalUIController : MonoBehaviour
         [Tooltip("對應 ButtonSettings 裡的按鈕名稱")]
         public string targetButtonName;
     }
+    public UnityEvent OnShowUI;
+    public UnityEvent OnHideUI;
 
     [Tooltip("勾選後，此 UI 在啟動時會自動隱藏")]
     public bool hideOnStart = false;
@@ -170,11 +172,13 @@ public class UniversalUIController : MonoBehaviour
         {
             UnityEngine.Cursor.visible = true;
             UnityEngine.Cursor.lockState = CursorLockMode.None;
+            LocalBackpack.Instance.AllowInput(false);
         }
         else
         {
             UnityEngine.Cursor.visible = false;
             UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+            LocalBackpack.Instance.AllowInput(true);
         }
     }
 }

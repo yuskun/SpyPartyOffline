@@ -300,7 +300,7 @@ MonoBehaviour:
   rayHeight: 7
   maxTotal: 50
   initialSpawnCount: 10
-  weaponSpawnChance: 0.4
+  weaponSpawnChance: 0.3
   rescueCheckInterval: 2
   fallThreshold: -20
   dropSpawnHeight: 1.5

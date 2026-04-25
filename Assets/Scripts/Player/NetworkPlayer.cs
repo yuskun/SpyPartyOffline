@@ -48,6 +48,7 @@ public class NetworkPlayer : NetworkBehaviour
             LocalBackpack.Instance.userInventory = this.GetComponent<PlayerInventory>();
             LocalBackpack.Instance.playerIdentify = this.GetComponent<PlayerIdentify>();
             LocalBackpack.Instance.character = this.GetComponent<OodlesCharacter>();
+            LocalBackpack.Instance.networkPlayer = this.GetComponent<NetworkPlayer>();
             // 預覽錨點改掛在 MainCamera 底下的 "SpawnObject"
             if (Camera.main != null)
             {

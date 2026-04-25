@@ -15,6 +15,14 @@ public class SkinChange : NetworkBehaviour
     private int currentSkinIndex;
     private Color SkinColor;
     private float _triggerCooldown = 0f;
+
+    [Header("角色預覽拖曳旋轉")]
+    [Tooltip("水平拖曳 1 像素轉幾度（角度/像素）")]
+    [SerializeField] private float skinDragSensitivity = 0.4f;
+    [Tooltip("打勾代表「向右拖 = 角色順時針旋轉」；不勾則相反")]
+    [SerializeField] private bool skinDragInvert = false;
+    private bool _isDraggingSkin = false;
+    private float _lastDragMouseX;
     [Networked, Capacity(8)]
     public NetworkArray<NetworkObject> SpawnedPlayers => default;
 
@@ -146,6 +154,89 @@ public class SkinChange : NetworkBehaviour
 
             }
         }
+
+        HandleSkinDragRotate();
+    }
+
+    /// <summary>
+    /// 角色挑選 UI 開啟時，按住左鍵左右拖曳可旋轉預覽角色。
+    /// </summary>
+    [Header("拖曳除錯")]
+    [SerializeField] private bool skinDragDebugLog = true;
+    [Tooltip("打勾後，按下左鍵時不檢查是否點到 UI 按鈕，純粹只要 UI 開著就能拖")]
+    [SerializeField] private bool skinDragIgnoreUIBlock = false;
+
+    private void HandleSkinDragRotate()
+    {
+        if (Skins == null || currentSkinIndex < 0 || currentSkinIndex >= Skins.Length) return;
+        var currentSkin = Skins[currentSkinIndex];
+
+        if (currentSkin == null || !currentSkin.activeInHierarchy)
+        {
+            if (_isDraggingSkin && skinDragDebugLog)
+                Debug.Log($"[SkinDrag] 中止：currentSkin 失效 (null={currentSkin == null}, activeInHierarchy={(currentSkin != null ? currentSkin.activeInHierarchy : false)})");
+            _isDraggingSkin = false;
+            return;
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            bool overSelectable = !skinDragIgnoreUIBlock && IsPointerOverInteractiveUI();
+
+            if (skinDragDebugLog)
+                Debug.Log($"[SkinDrag] MouseDown 偵測到。overInteractiveUI={overSelectable}, skin={currentSkin.name}, skinActive={currentSkin.activeInHierarchy}");
+
+            if (!overSelectable)
+            {
+                _isDraggingSkin = true;
+                _lastDragMouseX = Input.mousePosition.x;
+                if (skinDragDebugLog) Debug.Log("[SkinDrag] ▶ 開始拖曳");
+            }
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            if (_isDraggingSkin && skinDragDebugLog)
+                Debug.Log("[SkinDrag] ■ 結束拖曳");
+            _isDraggingSkin = false;
+        }
+
+        if (_isDraggingSkin && Input.GetMouseButton(0))
+        {
+            float deltaX = Input.mousePosition.x - _lastDragMouseX;
+            _lastDragMouseX = Input.mousePosition.x;
+
+            if (Mathf.Abs(deltaX) > 0.01f)
+            {
+                // 反轉預設方向：向左拖 = 角色向右轉，向右拖 = 角色向左轉
+                float yawDelta = -deltaX * skinDragSensitivity;
+                if (skinDragInvert) yawDelta = -yawDelta;
+                currentSkin.transform.Rotate(0f, yawDelta, 0f, Space.World);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 改用「raycast 後檢查是否打到 Selectable」的判斷，避免被全螢幕背景 Panel 阻擋。
+    /// 也支援 UI Toolkit / EventSystem 兩種情況。
+    /// </summary>
+    private static readonly List<UnityEngine.EventSystems.RaycastResult> _uiRaycastBuffer = new List<UnityEngine.EventSystems.RaycastResult>();
+    private static bool IsPointerOverInteractiveUI()
+    {
+        var es = UnityEngine.EventSystems.EventSystem.current;
+        if (es == null) return false;
+
+        var data = new UnityEngine.EventSystems.PointerEventData(es) { position = Input.mousePosition };
+        _uiRaycastBuffer.Clear();
+        es.RaycastAll(data, _uiRaycastBuffer);
+
+        foreach (var r in _uiRaycastBuffer)
+        {
+            // 只把「真正的互動元件」算成阻擋（Button、Toggle、Slider...）
+            if (r.gameObject != null && r.gameObject.GetComponentInParent<UnityEngine.UI.Selectable>() != null)
+                return true;
+        }
+        return false;
     }
    public void PickCharacterUI()
     {
@@ -157,8 +248,11 @@ public class SkinChange : NetworkBehaviour
         CameraFollow.Get().enable = false;
         StartCoroutine(MoveCamera());
         Skins[currentSkinIndex].SetActive(true);
+        Skins[currentSkinIndex].transform.localRotation = Quaternion.Euler(0f, 90f, 0f); // 開啟 UI 時 reset 成向右 90 度
         MenuUIManager.instance.CharSelectPanel.ShowCurrentUI();
         PlayHideOrShow(false);
+        UnityEngine.Cursor.visible = true;
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
 
     }
     IEnumerator MoveCamera()
@@ -202,6 +296,7 @@ public class SkinChange : NetworkBehaviour
     {
         Skins[currentSkinIndex].SetActive(false);
         Skins[index].SetActive(true);
+        Skins[index].transform.localRotation = Quaternion.Euler(0f, 90f, 0f); // 切換角色時 reset 成向右 90 度
         currentSkinIndex = index;
     }
     void PlayHideOrShow(bool show)

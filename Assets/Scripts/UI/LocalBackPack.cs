@@ -16,6 +16,7 @@ public class LocalBackpack : MonoBehaviour
     [HideInInspector] public PlayerInventory userInventory; // 本地玩家
     [HideInInspector] public OodlesCharacter character;
     [HideInInspector] public PlayerScanner scanner;
+    [HideInInspector] public NetworkPlayer networkPlayer;
     // ========= 長按設定 =========
     [SerializeField] private float holdSeconds = 1f;
 
@@ -90,6 +91,11 @@ public class LocalBackpack : MonoBehaviour
         }
 
         SlotCount = buttons.Count;
+    }
+    public void AllowInput(bool allow)
+    {
+        if (networkPlayer != null)
+            networkPlayer.AllowInput = allow;
     }
 
     void Update()

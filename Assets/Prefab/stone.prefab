@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5482468292787838666}
   - component: {fileID: 840536847159818252}
   - component: {fileID: 4826799870333909555}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: Handler (1)
   m_TagString: CanBeGrabbed
   m_Icon: {fileID: 0}
@@ -142,7 +142,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 38766daf06ee4044fbcde99f467a04e7, type: 3}
       propertyPath: m_Layer
-      value: 11
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

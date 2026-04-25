@@ -200,7 +200,7 @@ public class MissionUIManager : MonoBehaviour
                 {
                     var stealCard = CardManager.Instance.GetMissionCard(1);
                     slot.data.title       = stealCard != null ? stealCard.data.title : "小偷";
-                    slot.data.description = "靠近場景物件長按滑鼠左鍵偷走它";
+                    slot.data.description = "靠近場景物件長按E鍵偷走它";
                     slot.data.current     = setValue;
                     slot.data.goal        = 3;
                     slot.Refresh();
