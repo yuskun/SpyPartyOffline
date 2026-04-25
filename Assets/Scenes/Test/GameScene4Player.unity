@@ -1886,6 +1886,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: energyroom
       objectReference: {fileID: 0}
+    - target: {fileID: 2982422627994907306, guid: 4daec5f2ed7c3ae40977ab482db3f946, type: 3}
+      propertyPath: m_TagString
+      value: SpawnArea
+      objectReference: {fileID: 0}
     - target: {fileID: 6390023955726434691, guid: 4daec5f2ed7c3ae40977ab482db3f946, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -14039,6 +14043,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 934ce1327fb9aac439f80cb0c13fbc4c, type: 2}
+    - target: {fileID: 7724391361461496640, guid: e8a1b2cf8421cb04cb7672e6b59abf54, type: 3}
+      propertyPath: m_TagString
+      value: SpawnArea
+      objectReference: {fileID: 0}
     - target: {fileID: 8453216126278741077, guid: e8a1b2cf8421cb04cb7672e6b59abf54, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -14575,6 +14583,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 73f3f7ad4ecddc24ea3c248fcca095d8, type: 2}
+    - target: {fileID: 8513859187771203891, guid: a585713cfc83db04da5a969cd9fd5fa3, type: 3}
+      propertyPath: m_TagString
+      value: SpawnArea
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

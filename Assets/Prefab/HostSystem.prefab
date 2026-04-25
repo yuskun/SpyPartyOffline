@@ -230,6 +230,8 @@ MonoBehaviour:
   StealCollectWin: 0
   escortDuration: 20
   escortRadius: 5
+  escortIdleTimeout: 20
+  escapeDuration: 10
   isEscorting: 0
   escortCatcherID: -1
   escortTargetID: -1
@@ -291,14 +293,20 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  spawnInterval: 10
+  spawnInterval: 5
   spawnHeightOffset: 0.5
   maxAttempts: 30
   radiusCheck: 0.5
-  rayHeight: 10
-  maxTotal: 40
+  rayHeight: 7
+  maxTotal: 50
   initialSpawnCount: 10
-  weaponSpawnChance: 0.15
+  weaponSpawnChance: 0.4
+  rescueCheckInterval: 2
+  fallThreshold: -20
+  dropSpawnHeight: 1.5
+  dropUpwardForce: 4
+  dropOutwardForce: 3
+  dropOutwardRandom: 1.5
 --- !u!1 &7880250556768618973
 GameObject:
   m_ObjectHideFlags: 0
