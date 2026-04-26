@@ -484,13 +484,20 @@ public class LocalBackpack : MonoBehaviour
     void UpdateStealScan()
     {
         if (scanner == null || userInventory == null) return;
-        if (FocusIndex < 0 || FocusIndex >= PlayerInventory.MaxSlots) { scanner.enableStealScan = false; return; }
 
-        var data = userInventory.slotsNetworked[FocusIndex];
-        if (data.IsEmpty()) { scanner.enableStealScan = false; return; }
+        // 只要背包任一格有 Steal 卡，就啟動掃描（不限焦點）
+        scanner.enableStealScan = LocalPlayerHasStealCard();
+    }
 
+    /// <summary>判斷某個 slot 是不是 Steal 卡</summary>
+    bool IsStealCardAt(int i)
+    {
+        if (userInventory == null) return false;
+        if (i < 0 || i >= userInventory.slotsNetworked.Length) return false;
+        var data = userInventory.slotsNetworked[i];
+        if (data.IsEmpty()) return false;
         var card = CardManager.Instance?.Catalog?.cards?.Find(c => c.cardData.id == data.id && c.cardData.type == data.type);
-        scanner.enableStealScan = card is Steal;
+        return card is Steal;
     }
     public void SetUpdateEnabled(bool state)
     {
@@ -560,21 +567,33 @@ public class LocalBackpack : MonoBehaviour
 
     void UpdateButtonHighlight()
     {
+        // Steal 卡的 hint 規則：只要 scanner 掃到 Steal Object 就亮（不論焦點）
+        bool stealTargetVisible = scanner != null && scanner.currentStealTarget != null;
+
         for (int i = 0; i < buttons.Count; i++)
         {
-            if (i == FocusIndex)
+            bool isFocus = (i == FocusIndex);
+            bool hasCard = userInventory != null && i < userInventory.slotsNetworked.Length && !userInventory.slotsNetworked[i].IsEmpty();
+            bool isStealSlot = hasCard && IsStealCardAt(i);
+
+            // 焦點視覺：框 + 放大
+            buttons[i].frameImage.sprite = isFocus ? selectedFrame : normalFrame;
+            buttons[i].button.transform.localScale = isFocus ? Vector3.one * 1.15f : Vector3.one;
+
+            // Hint 顯示
+            bool showHint;
+            if (isStealSlot)
             {
-                buttons[i].frameImage.sprite = selectedFrame;
-                buttons[i].button.transform.localScale = Vector3.one * 1.15f;
-                bool hasCard = userInventory != null && i < userInventory.slotsNetworked.Length && !userInventory.slotsNetworked[i].IsEmpty();
-                if (buttons[i].hintObject != null) buttons[i].hintObject.SetActive(hasCard);
+                // Steal 卡：scanner 有掃到才開（與焦點無關）
+                showHint = stealTargetVisible;
             }
             else
             {
-                buttons[i].frameImage.sprite = normalFrame;
-                buttons[i].button.transform.localScale = Vector3.one;
-                if (buttons[i].hintObject != null) buttons[i].hintObject.SetActive(false);
+                // 其他卡：原邏輯，焦點且有卡才開
+                showHint = isFocus && hasCard;
             }
+
+            if (buttons[i].hintObject != null) buttons[i].hintObject.SetActive(showHint);
         }
     }
 

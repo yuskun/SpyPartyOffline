@@ -94,10 +94,11 @@ public class DebugPingFPS : MonoBehaviour
     /// <summary>
     /// 嘗試從 Fusion 拿 RTT 並組成顯示字串。
     /// - 沒連線 → "offline"
-    /// - Host 自己 → "Host"（自己對自己沒 ping）
-    /// - Client → "{ms} ms"（對 Host 的 RTT）
+    /// - 場上只有自己 → "solo"
+    /// - 有其他玩家 → 取「自己 → 任一其他玩家」的最大 RTT（Host 看 Client 延遲、Client 看 Host 延遲）
     /// </summary>
     private bool _pingDebugLogged;
+    private float _pingLogTimer;
     private string TryGetPingDisplay()
     {
         try
@@ -108,32 +109,32 @@ public class DebugPingFPS : MonoBehaviour
 
             var runner = nm.runner;
 
-            // Host：自己對自己沒有 RTT，直接標成 Host
-            if (runner.IsServer)
-                return "Host";
-
-            // Client：對自己 RTT 通常是 0，要對「其他玩家（Host）」拿 RTT
-            float rttSec = (float)runner.GetPlayerRtt(runner.LocalPlayer);
-
-            // 如果是 0，遍歷其他 active player（通常就是 Host）拿 RTT
-            if (rttSec <= 0f)
+            // 遍歷所有「非自己」的玩家，取最高 RTT 顯示（一般情況下只有一個 Host/Client 對手）
+            float bestRtt = -1f;
+            int otherCount = 0;
+            foreach (var p in runner.ActivePlayers)
             {
-                foreach (var p in runner.ActivePlayers)
-                {
-                    if (p == runner.LocalPlayer) continue;
-                    float r = (float)runner.GetPlayerRtt(p);
-                    if (r > 0f) { rttSec = r; break; }
-                }
+                if (p == runner.LocalPlayer) continue;
+                otherCount++;
+                float r = (float)runner.GetPlayerRtt(p);
+                if (r > bestRtt) bestRtt = r;
             }
 
-            if (!_pingDebugLogged)
+            // 一段時間印一次診斷 log
+            _pingLogTimer += Time.unscaledDeltaTime;
+            if (!_pingDebugLogged || _pingLogTimer >= 5f)
             {
                 _pingDebugLogged = true;
-                Debug.Log($"[DebugPingFPS] IsServer={runner.IsServer}, LocalPlayer={runner.LocalPlayer}, RTT(local)={runner.GetPlayerRtt(runner.LocalPlayer):F4}s, finalRtt={rttSec:F4}s");
+                _pingLogTimer = 0f;
+                string playerDump = "";
+                foreach (var p in runner.ActivePlayers)
+                    playerDump += $"[{p}={runner.GetPlayerRtt(p):F4}s] ";
+                Debug.Log($"[DebugPingFPS] IsServer={runner.IsServer}, Local={runner.LocalPlayer}, others={otherCount}, bestRtt={bestRtt:F4}s, players={playerDump}");
             }
 
-            if (rttSec <= 0f) return "-- ms";
-            return $"{Mathf.RoundToInt(rttSec * 1000f)} ms";
+            if (otherCount == 0) return "solo";
+            if (bestRtt <= 0f)   return "-- ms";
+            return $"{Mathf.RoundToInt(bestRtt * 1000f)} ms";
         }
         catch (System.Exception e)
         {

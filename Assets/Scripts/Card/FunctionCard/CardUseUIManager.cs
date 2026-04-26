@@ -191,6 +191,30 @@ public class CardUseUIManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 
+    /// <summary>
+    /// 強制關閉所有 Function Card UI（被打倒、退房等情境用）。
+    /// </summary>
+    public void ForceCloseAll()
+    {
+        if (giveBlock.ui != null && giveBlock.ui.activeSelf)   giveBlock.ui.SetActive(false);
+        if (peekBlock.ui != null && peekBlock.ui.activeSelf)   peekBlock.ui.SetActive(false);
+        if (swapBlock.ui != null && swapBlock.ui.activeSelf)   swapBlock.ui.SetActive(false);
+
+        if (giveBlock.failUI != null) giveBlock.failUI.SetActive(false);
+        if (peekBlock.failUI != null) peekBlock.failUI.SetActive(false);
+        if (swapBlock.failUI != null) swapBlock.failUI.SetActive(false);
+
+        if (localBackpack != null) localBackpack.SetActive(true);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
+        selectedUserIndex = -1;
+        selectedTargetIndex = -1;
+        currentFunctionCard = null;
+        currentUser = null;
+        currentTarget = null;
+    }
+
     public void UpdateImagesByInventory(PlayerInventory inv, Image[] images)
     {
         Sprite[] sprites = CardManager.Instance.GetCardInfo(inv.GetAllCards());

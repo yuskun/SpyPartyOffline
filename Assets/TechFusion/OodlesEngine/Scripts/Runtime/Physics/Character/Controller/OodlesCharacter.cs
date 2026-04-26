@@ -464,6 +464,16 @@ namespace OodlesEngine
             this.GetComponent<PlayerInventory>().LostCard();
 
             footstepSource.Stop();
+
+            // 如果被打倒的是「本地玩家」，且當前正在用 Function Card 還沒選完 → 強制關閉 UI
+            var pi = GetComponent<PlayerIdentify>();
+            if (pi != null && LocalBackpack.Instance != null && LocalBackpack.Instance.playerIdentify == pi)
+            {
+                if (LocalBackpack.Instance.cardUseUIManager != null)
+                    LocalBackpack.Instance.cardUseUIManager.ForceCloseAll();
+                if (LocalBackpack.Instance.cardUseUIManagerUIToolkit != null)
+                    LocalBackpack.Instance.cardUseUIManagerUIToolkit.ForceCloseAll();
+            }
         }
 
 

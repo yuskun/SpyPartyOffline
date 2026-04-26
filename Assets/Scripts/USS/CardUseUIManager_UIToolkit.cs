@@ -297,6 +297,31 @@ public class CardUseUIManager_UIToolkit : MonoBehaviour
         selectedTargetIndex = -1;
     }
 
+    /// <summary>
+    /// 強制關閉所有 Function Card UI（被打倒、退房等情境用）。
+    /// </summary>
+    public void ForceCloseAll()
+    {
+        if (giveUIController != null) giveUIController.HideCurrentUI();
+        if (peekUIController != null) peekUIController.HideCurrentUI();
+        if (swapUIController != null) swapUIController.HideCurrentUI();
+
+        if (giveFailUI != null) giveFailUI.SetActive(false);
+        if (peekFailUI != null) peekFailUI.SetActive(false);
+        if (swapFailUI != null) swapFailUI.SetActive(false);
+
+        if (gameHUDController != null) gameHUDController.ShowCurrentUI();
+        if (localBackpack != null) localBackpack.SetActive(true);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
+        selectedUserIndex = -1;
+        selectedTargetIndex = -1;
+        currentFunctionCard = null;
+        currentUser = null;
+        currentTarget = null;
+    }
+
     private void ShowFailUI(GameObject failUI)
     {
         // 暫時關閉失敗UI顯示
