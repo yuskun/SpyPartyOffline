@@ -7,8 +7,23 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: "\u4F11\u606F\u5BA4"
+    second: {fileID: 2100000, guid: c770acb1d5183854d94e2d2f592d907a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: "\u4F11\u606F\u5BA4.003"
+    second: {fileID: 2100000, guid: 766eeca0bb7f3cf4a80eebe3be4626de, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: "\u4F11\u606F\u5BA4.006"
+    second: {fileID: 2100000, guid: 766eeca0bb7f3cf4a80eebe3be4626de, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: "\u7269\u4EF6-01"
-    second: {fileID: 2100000, guid: 54e102e2d1dd4f84fb7c56dea75e7e05, type: 2}
+    second: {fileID: 2100000, guid: 73f3f7ad4ecddc24ea3c248fcca095d8, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -26,8 +41,6 @@ ModelImporter:
     optimizeGameObjects: 0
     removeConstantScaleCurves: 0
     motionNodeName: 
-    rigImportErrors: 
-    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
