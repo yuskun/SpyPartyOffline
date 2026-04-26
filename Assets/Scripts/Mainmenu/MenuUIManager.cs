@@ -20,6 +20,7 @@ public class MenuUIManager : MonoBehaviour
     public GameObject ChooseCharacterUI;
     public GameObject Practice;
     public GameObject RoomCode;
+    public GameObject DebugPingFPS;
     
     
 

@@ -322,7 +322,7 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
 
         // 5️⃣ 4人以下跳小場景（index 3）
         int playerCount = runner.ActivePlayers.Count();
-        if (playerCount <= 4 && buildIndex == 2)
+        if (MenuUIManager.instance.DebugPingFPS.GetComponent<DebugPingFPS>().PlayerCount <= 4 && buildIndex == 2)
         {
             buildIndex = 3;
             Debug.Log($"[SwitchScene] 玩家 {playerCount} 人，切換至小場景 (index {buildIndex})");

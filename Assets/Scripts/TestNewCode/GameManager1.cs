@@ -15,7 +15,7 @@ public class GameManager : NetworkBehaviour
     private Dictionary<PlayerRef, int> playerCharacterIndex = new Dictionary<PlayerRef, int>();
     private Dictionary<PlayerRef, string> playerNames = new Dictionary<PlayerRef, string>();
     public CountdownTimer countdownTimer;
-    public int AICount = 0;
+    public int AllPlayers = 0;
 
     /// <summary>Server 端追蹤旁觀者 PlayerRef</summary>
     private HashSet<PlayerRef> spectatorPlayers = new HashSet<PlayerRef>();
@@ -91,6 +91,7 @@ public class GameManager : NetworkBehaviour
         MissionWinSystem.Instance.ResetFightStats();
         KnockdownTracker.Reset();
         CurrentWinnerData = null;
+        AllPlayers = MenuUIManager.instance.DebugPingFPS.GetComponent<DebugPingFPS>().PlayerCount;
         SpawnAI();
         SpawnAllPlayers();
         PlayerInventoryManager.Instance.init();
@@ -178,7 +179,7 @@ public class GameManager : NetworkBehaviour
     {
         int realPlayerCount = Runner.ActivePlayers.Count() - spectatorPlayers.Count;
         Debug.Log($"ActivePlayers: {Runner.ActivePlayers.Count()}, Spectators: {spectatorPlayers.Count}, RealPlayers: {realPlayerCount}");
-        for (int i = 0; i < 4 - realPlayerCount; i++)
+        for (int i = 0; i < AllPlayers- realPlayerCount; i++)
         {
             PlayerSpawner.instance.SpawnPlayer(Runner, null, PlayerRef.None, "AI_" + i);
         }
