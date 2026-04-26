@@ -566,7 +566,7 @@ GameObject:
   - component: {fileID: 6976637921557416783}
   - component: {fileID: 136036525920921404}
   m_Layer: 0
-  m_Name: "\u8001\u9F20"
+  m_Name: 1
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -879,7 +879,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6a0109769fc4e840b23cad88c432e90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  verticalOffset: -0.3
+  verticalOffset: 0
 --- !u!114 &136036525920921404
 MonoBehaviour:
   m_ObjectHideFlags: 0

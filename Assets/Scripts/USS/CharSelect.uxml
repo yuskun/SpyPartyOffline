@@ -24,6 +24,11 @@
                         <ui:VisualElement name="SybooImg" class="char-img crocodile" />
                     </ui:VisualElement>
                 </ui:Button>
+                <ui:Button class="portrait">
+                    <ui:VisualElement class="avatar">
+                        <ui:VisualElement name="Lahn" class="char-img crocodile" style="background-image: url(&quot;project://database/Assets/Image/Q.png?fileID=21300000&amp;guid=65f558f6cb2435a4d9cc5dadf87ef651&amp;type=3#Q&quot;);" />
+                    </ui:VisualElement>
+                </ui:Button>
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:Button name="BackBtn" enabled="true" class="back-btn back-pill" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&amp;guid=3d5723d09fd5e9a4f97a9f3e046bbb90&amp;type=3#GenSenRounded2TW-R&quot;); -unity-font-style: bold; display: none;">
