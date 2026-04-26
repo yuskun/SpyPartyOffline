@@ -76,8 +76,7 @@ public class DebugPingFPS : MonoBehaviour
         _accumFrames = 0;
         _timeSinceUpdate = 0f;
 
-        int pingMs = TryGetPingMs();
-        string pingStr = (pingMs >= 0) ? $"{pingMs} ms" : "-- ms";
+        string pingStr = TryGetPingDisplay();
         string output = string.Format(format, _displayedFps, pingStr);
 
         if (legacyText != null) legacyText.text = output;
@@ -93,22 +92,53 @@ public class DebugPingFPS : MonoBehaviour
     }
 
     /// <summary>
-    /// 嘗試從 Fusion 拿 RTT。失敗回 -1。
+    /// 嘗試從 Fusion 拿 RTT 並組成顯示字串。
+    /// - 沒連線 → "offline"
+    /// - Host 自己 → "Host"（自己對自己沒 ping）
+    /// - Client → "{ms} ms"（對 Host 的 RTT）
     /// </summary>
-    private int TryGetPingMs()
+    private bool _pingDebugLogged;
+    private string TryGetPingDisplay()
     {
         try
         {
             var nm = NetworkManager2.Instance;
-            if (nm == null || nm.runner == null || !nm.runner.IsRunning) return -1;
+            if (nm == null || nm.runner == null || !nm.runner.IsRunning)
+                return "offline";
 
-            float rttSec = (float)nm.runner.GetPlayerRtt(nm.runner.LocalPlayer);
-            if (rttSec <= 0f) return -1;
-            return Mathf.RoundToInt(rttSec * 1000f);
+            var runner = nm.runner;
+
+            // Host：自己對自己沒有 RTT，直接標成 Host
+            if (runner.IsServer)
+                return "Host";
+
+            // Client：對自己 RTT 通常是 0，要對「其他玩家（Host）」拿 RTT
+            float rttSec = (float)runner.GetPlayerRtt(runner.LocalPlayer);
+
+            // 如果是 0，遍歷其他 active player（通常就是 Host）拿 RTT
+            if (rttSec <= 0f)
+            {
+                foreach (var p in runner.ActivePlayers)
+                {
+                    if (p == runner.LocalPlayer) continue;
+                    float r = (float)runner.GetPlayerRtt(p);
+                    if (r > 0f) { rttSec = r; break; }
+                }
+            }
+
+            if (!_pingDebugLogged)
+            {
+                _pingDebugLogged = true;
+                Debug.Log($"[DebugPingFPS] IsServer={runner.IsServer}, LocalPlayer={runner.LocalPlayer}, RTT(local)={runner.GetPlayerRtt(runner.LocalPlayer):F4}s, finalRtt={rttSec:F4}s");
+            }
+
+            if (rttSec <= 0f) return "-- ms";
+            return $"{Mathf.RoundToInt(rttSec * 1000f)} ms";
         }
-        catch
+        catch (System.Exception e)
         {
-            return -1;
+            Debug.LogWarning($"[DebugPingFPS] TryGetPingDisplay 失敗: {e.Message}");
+            return "err";
         }
     }
     public void PlayerAdd()

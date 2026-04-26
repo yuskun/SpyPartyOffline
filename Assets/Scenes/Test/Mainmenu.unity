@@ -3723,6 +3723,7 @@ MonoBehaviour:
   armsHorizontalSeparation: 0.75
   ragdollMode: 0
   isAttacking: 0
+  energyLeftTime: 0
   animationSpeed: 1
   runningEffect: {fileID: 0}
 --- !u!114 &121499250
@@ -8338,6 +8339,7 @@ MonoBehaviour:
   armsHorizontalSeparation: 0.75
   ragdollMode: 0
   isAttacking: 0
+  energyLeftTime: 0
   animationSpeed: 1
   runningEffect: {fileID: 0}
 --- !u!114 &295078184
@@ -41769,6 +41771,7 @@ MonoBehaviour:
   armsHorizontalSeparation: 0.75
   ragdollMode: 0
   isAttacking: 0
+  energyLeftTime: 0
   animationSpeed: 1
   runningEffect: {fileID: 0}
 --- !u!114 &1462391741
@@ -45281,7 +45284,7 @@ MonoBehaviour:
   tmpText: {fileID: 1115356066}
   SettingPlayerCount: {fileID: 429525027}
   PlayerCountText: {fileID: 43572350}
-  PlayerCount: 0
+  PlayerCount: 4
   ADDPlayerButton: {fileID: 1396149624}
   increasePlayerButton: {fileID: 829418025}
   toggleKey: 293
@@ -60611,6 +60614,7 @@ MonoBehaviour:
   armsHorizontalSeparation: 0.75
   ragdollMode: 0
   isAttacking: 0
+  energyLeftTime: 0
   animationSpeed: 1
   runningEffect: {fileID: 0}
 --- !u!4 &2112623296

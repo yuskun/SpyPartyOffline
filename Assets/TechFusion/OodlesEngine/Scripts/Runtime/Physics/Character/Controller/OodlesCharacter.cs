@@ -30,7 +30,7 @@ namespace OodlesEngine
 
         //energy
 
-        public float energyTimeLength = 3.0f;
+        public float energyTimeLength = 10.0f;
 
         public float moveForce = 20000f;
         public float jumpForce = 22000f;
@@ -68,7 +68,7 @@ namespace OodlesEngine
         private float targetDirVerticalPercent;
 
         //energy
-        private float energyLeftTime;
+        [SerializeReference]private float energyLeftTime;
 
         private Rigidbody physicsBody;
         private ConfigurableJoint physicsBodyJoint;
@@ -314,6 +314,10 @@ namespace OodlesEngine
         {
             movement.moveSpeed = moveForce;
 
+            // 耐力 > 0 且 按下衝刺鍵 且 在地面 → 套用 runSpeedTimes 倍率
+            bool canSprint = (inputState.doAction1 != 0) && energyLeftTime > 0f && movement.grounded;
+            movement.sprintScale = canSprint ? runSpeedTimes : 1f;
+
             movement.ProcessInput();
             UpdateFootstep();
         }
@@ -339,22 +343,35 @@ namespace OodlesEngine
 
         public void UpdateEnergy()
         {
-            if ((inputState.doAction1 != 0) && movement.grounded)
+            // 統一判斷「正在消耗耐力」的條件，避免「回血 + 扣血」互相抵消
+            bool sprintDraining = (inputState.doAction1 != 0) && movement.grounded;
+            bool grabDraining   = Grabsomething(); // 抓著東西就扣，不限定要在移動
+
+            if (sprintDraining || grabDraining)
             {
                 energyLeftTime -= Delatime;
-                energyLeftTime = Mathf.Clamp(energyLeftTime, 0, energyTimeLength);
             }
             else
             {
                 energyLeftTime += Delatime;
-                energyLeftTime = Mathf.Clamp(energyLeftTime, 0, energyTimeLength);
             }
-            if (Grabsomething() && (inputState.forwardAxis != 0 || inputState.leftAxis != 0))
+
+            energyLeftTime = Mathf.Clamp(energyLeftTime, 0f, energyTimeLength);
+
+            // 耐力歸零 → 強制鬆開抓著的東西（只放 GrabObject，不影響武器）
+            if (energyLeftTime <= 0f)
             {
-                energyLeftTime -= Delatime;
-                energyLeftTime = Mathf.Clamp(energyLeftTime, 0, energyTimeLength);
+                if (handFunctionLeft != null && handFunctionLeft.currentHoldType == HoldType.GrabObject)
+                    handFunctionLeft.ReleaseHand();
+                if (handFunctionRight != null && handFunctionRight.currentHoldType == HoldType.GrabObject)
+                    handFunctionRight.ReleaseHand();
             }
         }
+
+        /// <summary>給 UI / 外部腳本讀的耐力比例（0~1）</summary>
+        public float EnergyRatio => energyTimeLength > 0f ? Mathf.Clamp01(energyLeftTime / energyTimeLength) : 0f;
+        public float EnergyLeft => energyLeftTime;
+        public float EnergyMax => energyTimeLength;
 
         public void UpdateStandUp()
         {
@@ -748,8 +765,9 @@ namespace OodlesEngine
         }
         bool Grabsomething()
         {
-            if (handFunctionLeft.currentHoldType == HoldType.GrabObject || handFunctionRight.currentHoldType == HoldType.GrabObject) return true;
-
+            // 同時檢查 hasJoint，避免 ReleaseHand 後 currentHoldType 沒重置造成假陽性
+            if (handFunctionLeft  != null && handFunctionLeft.currentHoldType  == HoldType.GrabObject && handFunctionLeft.hasJoint)  return true;
+            if (handFunctionRight != null && handFunctionRight.currentHoldType == HoldType.GrabObject && handFunctionRight.hasJoint) return true;
             return false;
         }
 

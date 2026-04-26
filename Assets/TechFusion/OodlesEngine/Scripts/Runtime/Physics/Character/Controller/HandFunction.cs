@@ -80,6 +80,7 @@ namespace OodlesEngine
 
             hasJoint = false;
             GrabbedObject = null;
+            currentHoldType = HoldType.None; // 修復：放開後沒重置會導致 Grabsomething() 永遠回 true
         }
 
         public bool HoldWeapon()

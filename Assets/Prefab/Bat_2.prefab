@@ -200,7 +200,7 @@ MonoBehaviour:
   CanBreak: 1
   swingCost: 2
   hitBonusCost: 1
-  hitForce: 10000
+  hitForce: 5000
   isBroken: 0
 --- !u!54 &5677717430843628879
 Rigidbody:

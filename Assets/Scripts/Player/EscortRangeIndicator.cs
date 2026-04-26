@@ -38,8 +38,11 @@ public class EscortRangeIndicator : MonoBehaviour
 
     private const int   Segments  = 48;
     private const float LineWidth = 0.07f;
-    private const float GroundY   = 0.05f;   // 貼地高度
     private const float DefaultEscortRadius = 5f; // 預設押送半徑（與 MissionWinSystem.escortRadius 一致）
+
+    [Header("圓心垂直偏移")]
+    [Tooltip("以小偷 Ragdoll 位置為基準的垂直偏移，負值往下、正值往上。Ragdoll 通常在腰/胸高度，預設 -0.3 在角色下半身位置")]
+    public float verticalOffset = -0.3f;
 
     private static readonly Color ColorSafe = new Color(0.1f, 1f,   0.1f, 0.9f);  // 綠：目標在範圍內
     private static readonly Color ColorWarn = new Color(1f,   0.2f, 0f,   0.9f);  // 紅：目標超出範圍
@@ -112,9 +115,9 @@ public class EscortRangeIndicator : MonoBehaviour
 
         lr.enabled = true;
 
-        // 圓心永遠在小偷（目標）位置
+        // 圓心永遠跟著小偷（目標）位置 + 垂直偏移
         Vector3 center = GetRagdollPos(cachedTarget);
-        center.y = GroundY;
+        center.y += verticalOffset;
 
         float radius = MissionWinSystem.Instance != null
             ? MissionWinSystem.Instance.escortRadius
@@ -128,13 +131,14 @@ public class EscortRangeIndicator : MonoBehaviour
 
     private void DrawCircle(Vector3 center, float radius)
     {
+        // 圓圈所有點都跟著 center.y，不採樣地形
         for (int i = 0; i < Segments; i++)
         {
             float angle = (float)i / Segments * Mathf.PI * 2f;
-            lr.SetPosition(i, center + new Vector3(
-                Mathf.Cos(angle) * radius,
-                0f,
-                Mathf.Sin(angle) * radius
+            lr.SetPosition(i, new Vector3(
+                center.x + Mathf.Cos(angle) * radius,
+                center.y,
+                center.z + Mathf.Sin(angle) * radius
             ));
         }
     }

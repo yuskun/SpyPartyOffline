@@ -144,7 +144,7 @@ MonoBehaviour:
     m_Bits: 0
   minTargetDirAngle: -30
   maxTargetDirAngle: 60
-  energyTimeLength: 3
+  energyTimeLength: 5
   moveForce: 200000
   jumpForce: 22000
   runSpeedTimes: 2
@@ -158,6 +158,7 @@ MonoBehaviour:
   armsHorizontalSeparation: 0.75
   ragdollMode: 0
   isAttacking: 0
+  energyLeftTime: 0
   animationSpeed: 1
   runningEffect: {fileID: 0}
 --- !u!114 &5600976483881776701
