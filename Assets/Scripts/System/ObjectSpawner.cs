@@ -183,6 +183,9 @@ public class ObjectSpawner : MonoBehaviour
         if (prefabToSpawn == null || spawnAreas.Count == 0)
             return;
 
+        // 清掉已經被 Despawn / Destroy 留下的 null entry，避免假性塞滿 maxTotal
+        spawnedObjects.RemoveAll(o => o == null);
+
         if (spawnCount < 0)
             spawnCount = Random.Range(2, 5);
 

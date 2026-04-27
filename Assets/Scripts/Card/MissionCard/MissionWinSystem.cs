@@ -109,15 +109,8 @@ public class MissionWinSystem : MonoBehaviour
         if (distance > escortRadius)
         {
             // ── 超出範圍 ──
-            // 警察押送：進度歸零
-            if (_escortTimer > 0f)
-            {
-                int prev = Mathf.FloorToInt(_escortTimer);
-                _escortTimer = 0f;
-                if (prev > 0)
-                    PlayerInventoryManager.Instance.playerInventories[escortCatcherID].MissionStates.Set(0, 0);
-                Debug.Log("[Escort] 超出押送範圍，押送計時重置");
-            }
+            // 警察押送：進度「暫停」(維持上次秒數)，不歸零；累積 20 秒制
+            // _escortTimer 保留現值，MissionStates 不更動
 
             // 小偷逃離：不在範圍內才累加
             {

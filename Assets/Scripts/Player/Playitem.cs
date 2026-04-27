@@ -31,7 +31,7 @@ public class PlayerItem : NetworkBehaviour
         _physicsCollider.isTrigger = false;
 
         _rb = gameObject.AddComponent<Rigidbody>();
-        _rb.mass = 0.5f;
+        _rb.mass =2f;
         _rb.linearDamping = 0.6f;
         _rb.angularDamping = 1.5f;
         _rb.useGravity = true;
