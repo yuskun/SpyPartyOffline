@@ -1,12 +1,13 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 using System.Collections.Generic;
+using UnityEngine.Audio;
 
 public class SettingsManager : MonoBehaviour
 {
+    [SerializeField] private AudioMixer audioMixer;
     private UIDocument _doc;
     private VisualElement _root;
-
     private int _pendingQualityLevel = 1;
     private List<Button> _qualityButtons = new List<Button>();
 
@@ -72,6 +73,23 @@ public class SettingsManager : MonoBehaviour
         {
             slider.RegisterValueChangedCallback(evt => {
                 valueLabel.text = Mathf.RoundToInt(evt.newValue).ToString();
+                
+                PlayerPrefs.SetFloat(saveKey, evt.newValue);
+
+                switch (sliderName)
+                {
+                    case "MasterVolume":
+                        SetMixerVolume("MasterVol", evt.newValue);
+                        break;
+
+                    case "MusicVolume":
+                        SetMixerVolume("MusicVol", evt.newValue);
+                        break;
+
+                    case "SFXVolume":
+                        SetMixerVolume("SFXVol", evt.newValue);
+                        break;
+                }
             });
         }
     }
@@ -90,7 +108,14 @@ public class SettingsManager : MonoBehaviour
         LoadSliderValue("SFXVolume", SFX_VOL_KEY, 70f);
 
         // 立即應用全域音量
-        AudioListener.volume = PlayerPrefs.GetFloat(MASTER_VOL_KEY, 80f) / 100f;
+        SetMixerVolume("MasterVol",
+            PlayerPrefs.GetFloat(MASTER_VOL_KEY, 80f));
+
+        SetMixerVolume("MusicVol",
+            PlayerPrefs.GetFloat(MUSIC_VOL_KEY, 60f));
+
+        SetMixerVolume("SFXVol",
+            PlayerPrefs.GetFloat(SFX_VOL_KEY, 70f));
     }
 
     private void LoadSliderValue(string sliderName, string saveKey, float defaultValue)
@@ -129,7 +154,38 @@ public class SettingsManager : MonoBehaviour
         if (slider != null)
         {
             PlayerPrefs.SetFloat(saveKey, slider.value);
-            if (sliderName == "MasterVolume") AudioListener.volume = slider.value / 100f;
+            switch (sliderName)
+            {
+                case "MasterVolume":
+                    SetMixerVolume("MasterVol", slider.value);
+                    break;
+
+                case "MusicVolume":
+                    SetMixerVolume("MusicVol", slider.value);
+                    break;
+
+                case "SFXVolume":
+                    SetMixerVolume("SFXVol", slider.value);
+                    break;
+            }
         }
     }
+    private void SetMixerVolume(string parameter, float sliderValue)
+    {   
+        if (audioMixer == null)
+        {
+            Debug.LogError("AudioMixer 尚未指定！");
+            return;
+        }
+        // Slider 0~100 轉成 Mixer dB
+        float db;
+
+        if (sliderValue <= 0.0001f)
+            db = -80f; // 靜音
+        else
+            db = Mathf.Log10(sliderValue / 100f) * 20f;
+
+        audioMixer.SetFloat(parameter, db);
+    }
+
 }

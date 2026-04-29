@@ -60,14 +60,14 @@ public class CharacterSFXManager : MonoBehaviour
     }
 
     // --- 個別音效的細節設定 ---
-    public void PlayAttack() => PlayOneShot(attackClip, 0.1f);
-    public void PlayBreak()  => PlayOneShot(breakClip, 0.1f);
-    public void PlayPunch()  => PlayOneShot(punchClip, 0.1f);
-    public void PlayJump()   => PlayOneShot(jumpClip, 0.05f);
+    public void PlayAttack() => PlayOneShot(attackClip, 0.5f);
+    public void PlayBreak()  => PlayOneShot(breakClip, 0.5f);
+    public void PlayPunch()  => PlayOneShot(punchClip, 0.5f);
+    public void PlayJump()   => PlayOneShot(jumpClip, 1f);
     public void PlayPickUp() => PlayOneShot(pickUpClip, 1f);
-    public void PlayBanana() => PlayOneShot(BananaClip, 0.1f);
-    public void PlayOpenUI() => PlayOneShot(OpenUIClip, 0.05f);
-    public void PlayUseCard() => PlayOneShot(UseCardClip, 0.8f);
+    public void PlayBanana() => PlayOneShot(BananaClip, 0.3f);
+    public void PlayOpenUI() => PlayOneShot(OpenUIClip, 1f);
+    public void PlayUseCard() => PlayOneShot(UseCardClip, 0.4f);
 
     // --- 底層播放邏輯 ---
     private void PlayOneShot(AudioClip clip, float volume = 1f)
