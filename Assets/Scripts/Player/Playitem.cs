@@ -80,9 +80,8 @@ public class PlayerItem : NetworkBehaviour
             }
         }
     }
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider other)
     {
-        var other=collision;
          if (other.gameObject.name == "Ragdoll")
         {
             // 倒地中的玩家不能撿取
