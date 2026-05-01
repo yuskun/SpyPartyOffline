@@ -2041,6 +2041,7 @@ MonoBehaviour:
   HostSystem: {fileID: 3052365514708413033, guid: e159ae16ea9b13d41ac478ce00b42de5, type: 3}
   countdownTimer: {fileID: 1750379173}
   AllPlayers: 0
+  startCountdownDuration: 4.5
   WinnerPoint: {fileID: 149188479}
   LoserPoint: {fileID: 1358849574}
   resultDelay: 1
@@ -34115,7 +34116,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 44b5408d802f2904f97b2a7ab585309c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 43.913937
+      value: 43.929
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 44b5408d802f2904f97b2a7ab585309c, type: 3}
       propertyPath: m_LocalPosition.y
