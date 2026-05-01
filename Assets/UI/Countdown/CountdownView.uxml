@@ -1,0 +1,12 @@
+<engine:UXML xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Countdown/CountdownView.uss?fileID=7433441132597879392&amp;guid=da70266ccc97b8c42b6bb4d395657ea6&amp;type=3#CountdownView" />
+    <engine:VisualElement name="root" picking-mode="Ignore" class="root">
+        <engine:VisualElement name="dim" picking-mode="Ignore" class="dim" />
+        <engine:VisualElement name="ring-host" picking-mode="Ignore" class="ring-host" />
+        <engine:VisualElement name="sparkle-host" picking-mode="Ignore" class="sparkle-host" />
+        <engine:VisualElement name="sticker-stack" picking-mode="Ignore" class="sticker-stack">
+            <engine:Label name="layer-1" text="1" picking-mode="Ignore" class="sticker shadow l1" />
+            <engine:Label name="layer-main" text="1" picking-mode="Ignore" class="sticker main" />
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

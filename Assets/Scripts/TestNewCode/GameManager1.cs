@@ -17,6 +17,11 @@ public class GameManager : NetworkBehaviour
     public CountdownTimer countdownTimer;
     public int AllPlayers = 0;
 
+    [Header("開場倒數 (3-2-1-GO)")]
+    public float startCountdownDuration = 4.5f;
+    [Networked] private TickTimer StartCountdownTimer { get; set; }
+    [Networked] private NetworkBool RoundStarted { get; set; }
+
     /// <summary>Server 端追蹤旁觀者 PlayerRef</summary>
     private HashSet<PlayerRef> spectatorPlayers = new HashSet<PlayerRef>();
 
@@ -106,6 +111,20 @@ public class GameManager : NetworkBehaviour
     {
         yield return new WaitForSeconds(delay);
         Rpc_HideLoading();
+
+        // Loading 一消失就鎖住所有玩家輸入並開始 3-2-1-GO 倒數
+        if (Runner.IsServer)
+        {
+            foreach (var parent in PlayerInventoryManager.Instance.playerParents)
+            {
+                var np = parent.GetComponent<NetworkPlayer>();
+                if (np != null) np.AllowInput = false;
+            }
+            RoundStarted = false;
+            StartCountdownTimer = TickTimer.CreateFromSeconds(Runner, startCountdownDuration);
+        }
+        // 視覺端在每個 client（含 Host）播放 3-2-1-GO
+        RPC_PlayStartCountdown();
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -114,13 +133,59 @@ public class GameManager : NetworkBehaviour
         if (MenuUIManager.instance != null && MenuUIManager.instance.LoadingScreen != null)
             MenuUIManager.instance.LoadingScreen.SetActive(false);
     }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_PlayStartCountdown()
+    {
+        if (NetworkManager2.IsSpectator) return;
+        if (GameUIManager.Instance == null || GameUIManager.Instance.CountDownPanel == null)
+        {
+            Debug.LogWarning("[Countdown] GameUIManager.CountDownPanel 未設定");
+            return;
+        }
+
+        var panel = GameUIManager.Instance.CountDownPanel;
+        // 確保 GameObject 是 active，否則 UIDocument._doc 可能還沒初始化
+        if (!panel.gameObject.activeSelf) panel.gameObject.SetActive(true);
+        panel.ShowCurrentUI();
+
+        // 萬一 OnShowUI UnityEvent 沒拉到 Run()，這裡主動觸發倒數
+        var controller = panel.GetComponent<CountdownController>()
+                      ?? panel.GetComponentInChildren<CountdownController>(true);
+        if (controller != null) controller.Run();
+        else Debug.LogWarning("[Countdown] CountDownPanel 上找不到 CountdownController");
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_HideStartCountdown()
+    {
+        if (NetworkManager2.IsSpectator) return;
+        if (GameUIManager.Instance != null && GameUIManager.Instance.CountDownPanel != null)
+            GameUIManager.Instance.CountDownPanel.HideCurrentUI();
+    }
     public override void FixedUpdateNetwork()
     {
-        // 押送系統 Tick（Host 驅動，遊戲進行中持續執行）
-        if (HasStarted && Runner.IsServer && MissionWinSystem.Instance != null)
+        // 押送系統 Tick：等開場倒數結束、回合正式開始後才跑
+        if (HasStarted && RoundStarted && Runner.IsServer && MissionWinSystem.Instance != null)
         {
             MissionWinSystem.Instance.TickEscort(Runner.DeltaTime);
             MissionWinSystem.Instance.TickNormalPlayers();
+        }
+
+        // 開場倒數結束 → 解鎖玩家輸入、隱藏 CountDownPanel、啟動回合計時
+        if (HasStarted && !RoundStarted && Runner.IsServer && StartCountdownTimer.Expired(Runner))
+        {
+            RoundStarted = true;
+            StartCountdownTimer = TickTimer.None;
+
+            foreach (var parent in PlayerInventoryManager.Instance.playerParents)
+            {
+                var np = parent.GetComponent<NetworkPlayer>();
+                if (np != null) np.AllowInput = true;
+            }
+
+            RPC_HideStartCountdown();
+            if (countdownTimer != null) countdownTimer.StartTimer();
         }
 
         if (HasStarted) return;
@@ -171,7 +236,7 @@ public class GameManager : NetworkBehaviour
         if (Runner.IsServer)
         {
             RandomAssignMissionCard();
-            countdownTimer.StartTimer();
+            // countdownTimer.StartTimer() 移到開場倒數結束後（FixedUpdateNetwork）
             ObjectSpawner.Instance.enabled = true;
         }
     }

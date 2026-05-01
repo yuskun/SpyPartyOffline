@@ -1134,6 +1134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3d92c6daf9c9e74a8b77a71472d8643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioMixer: {fileID: 24100000, guid: 22e1833281e33534d9b657c86f35f779, type: 2}
 --- !u!114 &39293253
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11858,6 +11859,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3d92c6daf9c9e74a8b77a71472d8643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioMixer: {fileID: 0}
 --- !u!114 &408451722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36200,6 +36202,7 @@ MonoBehaviour:
   SettingsPanel_Scene2: {fileID: 39293253}
   ItemIntroPanel: {fileID: 2105088932}
   GameHudUI: {fileID: 1727296449}
+  CountDownPanel: {fileID: 2077382198}
   FailUI_NoTarget: {fileID: 1144203837}
   FailUI_TargetFull: {fileID: 375872685}
   FailUI_TargetEmpty: {fileID: 51590110}
@@ -38564,6 +38567,7 @@ RectTransform:
   - {fileID: 746902070}
   - {fileID: 938588592}
   - {fileID: 2138362037}
+  - {fileID: 2077382195}
   m_Father: {fileID: 1233569029}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -54155,6 +54159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3d92c6daf9c9e74a8b77a71472d8643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioMixer: {fileID: 24100000, guid: 22e1833281e33534d9b657c86f35f779, type: 2}
 --- !u!114 &1859728819
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59787,6 +59792,112 @@ Transform:
   m_Children: []
   m_Father: {fileID: 478774606}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2077382194
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2077382195}
+  - component: {fileID: 2077382197}
+  - component: {fileID: 2077382196}
+  - component: {fileID: 2077382198}
+  m_Layer: 5
+  m_Name: GameCountDown
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2077382195
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2077382194}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -960.3439, y: -539.8068, z: 0}
+  m_LocalScale: {x: 1.7669619, y: 1.7669619, z: 1.7669619}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1315708617}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2077382196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2077382194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a11dae740137b554992d0fb7fe72785f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  numberDuration: 1
+  goDuration: 1.3
+  startDelay: 0.6
+  autoPlayOnEnable: 0
+  countdownFont: {fileID: 0}
+  audioSource: {fileID: 0}
+  playProceduralAudio: 1
+--- !u!114 &2077382197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2077382194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PanelSettings: {fileID: 11400000, guid: 1dc758853d3f069419e1dc8ae4eeb7d4, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 0488597c633ba0245a13194949f2f0ab, type: 3}
+  m_SortingOrder: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+--- !u!114 &2077382198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2077382194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fe8c4f966736984085de30697843f49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnShowUI:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2077382196}
+        m_TargetAssemblyTypeName: CountdownController, Assembly-CSharp
+        m_MethodName: Run
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnHideUI:
+    m_PersistentCalls:
+      m_Calls: []
+  hideOnStart: 1
+  controlCursor: 0
+  buttonSettings: []
+  hotkeySettings: []
 --- !u!1 &2078822828
 GameObject:
   m_ObjectHideFlags: 0
