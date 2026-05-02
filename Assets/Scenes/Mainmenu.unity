@@ -61498,6 +61498,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: UISFX
       objectReference: {fileID: 0}
+    - target: {fileID: 5166039407039430554, guid: 0036297767e488b42b7df1f3f5b08ad4, type: 3}
+      propertyPath: m_Volume
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5166039407039430554, guid: 0036297767e488b42b7df1f3f5b08ad4, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -738551036159897228, guid: 22e1833281e33534d9b657c86f35f779, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -61560,6 +61568,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: BGM
       objectReference: {fileID: 0}
+    - target: {fileID: 2334508049033271204, guid: 888d5cb136068a747b4176aa08b156c5, type: 3}
+      propertyPath: m_Volume
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2334508049033271204, guid: 888d5cb136068a747b4176aa08b156c5, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -4108116186814735236, guid: 22e1833281e33534d9b657c86f35f779, type: 2}
     - target: {fileID: 3146927265620869583, guid: 888d5cb136068a747b4176aa08b156c5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 44.420258
@@ -61764,6 +61780,10 @@ PrefabInstance:
       propertyPath: m_Volume
       value: 0.6
       objectReference: {fileID: 0}
+    - target: {fileID: 5823906016515960146, guid: b5dd377b5532e7d4bb235266b4746b1a, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -738551036159897228, guid: 22e1833281e33534d9b657c86f35f779, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
