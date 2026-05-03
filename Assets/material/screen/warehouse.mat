@@ -68,6 +68,7 @@ Material:
     - _Surface: 1
     - _WorkflowMode: 1
     - _ZWrite: 0
-    m_Colors: []
+    m_Colors:
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -1,9 +1,74 @@
 fileFormatVersion: 2
-guid: 72b608d210286b840b52345f0607d873
+guid: d6e9ab87626369e4596d7cd590d56630
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
   externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MID_SCRM.001
+    second: {fileID: 2100000, guid: 1be7fe254e3973e4cac493e6d4eec194, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MID_SCRM.002
+    second: {fileID: 2100000, guid: 21d8e4ded91ed104d903b14f70310c10, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: glass.001
+    second: {fileID: 2100000, guid: 0a0a01d928076104ab48d79f135fba6e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: needle.002
+    second: {fileID: 2100000, guid: 0a0a01d928076104ab48d79f135fba6e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: needle.003
+    second: {fileID: 2100000, guid: 0a0a01d928076104ab48d79f135fba6e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: needle2.002
+    second: {fileID: 2100000, guid: 0a0a01d928076104ab48d79f135fba6e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: "\u4E2D\u592E\u63A7\u5236\u5BA4"
+    second: {fileID: 2100000, guid: e0f6d37efba609748ab9508eec5271c8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: "\u4F11\u606F\u5BA4.006"
+    second: {fileID: 2100000, guid: c770acb1d5183854d94e2d2f592d907a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: "\u5009\u5EAB2"
+    second: {fileID: 2100000, guid: db3589c770bd62a46b8a6bbe6cd7b48e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: "\u5009\u5EAB\u5730\u677F"
+    second: {fileID: 2100000, guid: db3589c770bd62a46b8a6bbe6cd7b48e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: "\u5730\u6BEF"
+    second: {fileID: 2100000, guid: 5c21e87bc753d4a47ab574553c5bffb0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: "\u5EDA\u623F\u5834\u666F.001"
+    second: {fileID: 2100000, guid: d536f995643663e46975e17e94d6f93b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: "\u7167\u7247.001"
+    second: {fileID: 2100000, guid: 75d2f137a6e6f44439fb32bbe5515281, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -17,8 +82,13 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: "\u73BB\u7483.002"
-    second: {fileID: 2100000, guid: 0a0a01d928076104ab48d79f135fba6e, type: 2}
+      name: "\u7269\u4EF6-01.002"
+    second: {fileID: 2100000, guid: 54e102e2d1dd4f84fb7c56dea75e7e05, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: "\u7269\u4EF6-01.003"
+    second: {fileID: 2100000, guid: 54e102e2d1dd4f84fb7c56dea75e7e05, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -28,12 +98,12 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: "\u76E3\u63A7\u9069\u87A2\u5E55.001"
-    second: {fileID: 2100000, guid: a6a8153899b03f840be2f73a2e129a87, type: 2}
+    second: {fileID: 2100000, guid: 048533d54885c9d4e97a7739677f805f, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: "\u901A\u8A0A\u5BA4-\u5834\u666F"
-    second: {fileID: 2100000, guid: a17861c416c0dd049a8b2ce3a8668ee9, type: 2}
+      name: "\u80FD\u6E90\u5BA4\u5834\u8B66.004"
+    second: {fileID: 2100000, guid: d90162e029cdf2243bb1fe07c331f611, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
