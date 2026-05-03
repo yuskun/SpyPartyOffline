@@ -346,8 +346,6 @@ public class ObjectSpawner : MonoBehaviour
             // === 生成（在 onBeforeSpawned 設定 Networked 屬性，讓所有 client 都能收到初速）===
             var obj = NetworkManager2.Instance.runner.Spawn(PlayerItem, spawnPos, null, null, (runner, netObj) =>
             {
-                if (netObj.GetComponent<SetPosition>() != null)
-                    netObj.GetComponent<SetPosition>().Setpos(spawnPos);
                 var pi = netObj.GetComponent<PlayerItem>();
                 if (pi != null)
                     pi.InitialVelocity = initialVelocity;

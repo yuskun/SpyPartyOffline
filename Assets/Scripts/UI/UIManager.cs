@@ -32,6 +32,7 @@ public class GameUIManager : MonoBehaviour
     public UniversalUIController ItemIntroPanel;
 
     public UniversalUIController GameHudUI;
+    public UniversalUIController CountDownPanel;
 
     // ────────────────────────────────────────────────
     // 使用道具失敗提示 UI

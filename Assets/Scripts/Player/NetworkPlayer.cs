@@ -103,15 +103,21 @@ public class NetworkPlayer : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
-        if (!AllowInput) return;
+        if (!Object.HasStateAuthority) return;
 
-        if (freezeTimer > 0f)
+        bool freezing = freezeTimer > 0f;
+        if (freezing) freezeTimer -= Runner.DeltaTime;
+
+        if (!AllowInput || freezing)
         {
-            freezeTimer -= Runner.DeltaTime;
+            // 餵零輸入：讓 state machine 仍然 tick 一次，
+            // 觸發 UpdateFootstep.Stop() 與 UpdateAnimations 把 BlendVertical 歸 0，
+            // 否則玩家在禁輸入前按住的走路動畫/腳步聲會卡住不停。
+            var zero = new OodlesCharacterInput(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f,
+                Vector3.forward, Runner.DeltaTime, Runner.Tick);
+            characterController.ProcessInput(zero);
             return;
         }
-
-        if (!Object.HasStateAuthority) return;
 
         if (Runner.TryGetInputForPlayer(PlayerId, out OodlesCharacterInput data))
         {

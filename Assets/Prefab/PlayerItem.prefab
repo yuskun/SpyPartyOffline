@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 7928537579773711193}
   - component: {fileID: 6835145252656501270}
   - component: {fileID: 7270015681751908182}
+  - component: {fileID: 2591146453856739125}
   - component: {fileID: 3748029384779228007}
   - component: {fileID: 5880285553932537892}
-  - component: {fileID: 543212655851140753}
-  - component: {fileID: 7782489159849581899}
+  - component: {fileID: 6864809488700661218}
   m_Layer: 0
   m_Name: PlayerItem
   m_TagString: Untagged
@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 4179703982041739608}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 68.63, y: 0.743, z: 17.741936}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -61,6 +61,27 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!135 &2591146453856739125
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4179703982041739608}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 5888
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
@@ -84,7 +105,8 @@ MonoBehaviour:
     id: -1
     type: 3
     cooldown: 0
-  _InitialVelocity: {x: 0, y: 0, z: 0}
+  _InitialVelocity: {x: 3, y: 3, z: 3}
+  _physicsCollider: {fileID: 2591146453856739125}
 --- !u!114 &5880285553932537892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,24 +125,10 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 3748029384779228007}
-  - {fileID: 543212655851140753}
-  - {fileID: 7782489159849581899}
+  - {fileID: 6864809488700661218}
   - {fileID: 7030354892486153992}
   ForceRemoteRenderTimeframe: 0
---- !u!114 &543212655851140753
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4179703982041739608}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9018856f16dfbc049811c0fa3b394c9f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _pos: {x: 0, y: 0, z: 0}
---- !u!114 &7782489159849581899
+--- !u!114 &6864809488700661218
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

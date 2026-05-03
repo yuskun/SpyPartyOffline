@@ -1,0 +1,97 @@
+/* Countdown – matches the HTML/CSS sticker variant.
+ * The 3D depth is faked via 9 stacked Label layers with offset translates
+ * (USS doesn't support multiple text-shadows). */
+
+.root {
+    position: absolute;
+    left: 0; right: 0; top: 0; bottom: 0;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.dim {
+    position: absolute;
+    left: 0; right: 0; top: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.ring-host {
+    position: absolute;
+    left: 0; right: 0; top: 0; bottom: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.sparkle-host {
+    position: absolute;
+    left: 0; right: 0; top: 0; bottom: 0;
+}
+
+.sticker-stack {
+    position: absolute;
+    left: 0; right: 0; top: 0; bottom: 0;
+    align-items: center;
+    justify-content: center;
+    transform-origin: 50% 50%;
+    /* visible by default so UI Builder shows the design;
+       runtime CountdownController.HideStack() inline-overrides scale + opacity. */
+    scale: 1 1;
+    opacity: 1;
+}
+
+.sticker {
+    position: absolute;
+    left: 0; right: 0; top: 0; bottom: 0;
+    -unity-text-align: middle-center;
+    font-size: 280px;
+    -unity-text-outline-width: 7px;
+    white-space: nowrap;
+    -unity-font-style: normal;
+}
+
+/* main label — white fill, cyan outline */
+.sticker.main {
+    color: rgb(255, 255, 255);
+    -unity-text-outline-color: rgb(14, 123, 170);
+}
+.sticker.main.go {
+    color: rgb(255, 248, 214);
+    -unity-text-outline-color: rgb(176, 122, 0);
+}
+
+/* GO! state — both main and shadow shrink to 220px so they align */
+.sticker.go { font-size: 220px; }
+
+/* single shadow layer — offset toward bottom-right of the main label */
+.sticker.shadow      { color: rgb(9,58,85); -unity-text-outline-color: rgb(9,58,85); }
+.sticker.shadow.l1 { translate: 14px 18px; }
+
+/* GO! palette swap — single dark brown */
+.sticker.shadow.go { color: rgb(90,58,0); -unity-text-outline-color: rgb(90,58,0); }
+
+/* sparkle ★ */
+.sparkle {
+    position: absolute;
+    color: rgb(255, 217, 100);
+    font-size: 36px;
+    -unity-text-align: middle-center;
+    -unity-text-outline-width: 0;
+    text-shadow: 0 0 8px rgb(255, 217, 100);
+}
+
+/* ring burst (concentric expanding rings) */
+.ring-burst {
+    position: absolute;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    border-width: 6px;
+    border-color: rgb(255, 217, 100);
+    background-color: rgba(0,0,0,0);
+    scale: 0 0;
+    opacity: 0;
+    align-self: center;
+}
+.ring-burst.r1 { border-color: rgb(255, 217, 100); }
+.ring-burst.r2 { border-color: rgb(93, 227, 255); }
+.ring-burst.r3 { border-color: rgb(255, 255, 255); }
