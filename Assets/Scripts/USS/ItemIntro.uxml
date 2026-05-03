@@ -3,9 +3,10 @@
     <ui:VisualElement name="page-bg" class="page-bg" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;);">
         <ui:VisualElement class="items-panel">
             <ui:VisualElement class="panel-top-bar">
-                <ui:Label text="道具介紹" class="panel-title" />
+                <ui:Label text="全部道具" class="panel-title" />
             </ui:VisualElement>
-            <ui:ScrollView class="scroll-view">
+            <ui:ScrollView class="scroll-view" vertical-scroller-visibility="Hidden"
+               horizontal-scroller-visibility="Hidden">
                 <ui:VisualElement class="cards-grid">
                     <ui:VisualElement class="item-card means-card">
                         <ui:Label text="查看" class="item-header" />
@@ -32,9 +33,39 @@
                         <ui:VisualElement class="item-icon-box">
                             <ui:Image class="item-icon swap" />
                         </ui:VisualElement>
-                        <ui:Label text="可指定卡牌交換" class="item-effect" />
+                        <ui:Label text="交換任意卡片一張" class="item-effect" />
                         <ui:VisualElement class="item-bottom single">
                             <ui:Label text="特工手段卡" class="item-tag means-tag" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="item-card control-card">
+                        <ui:Label text="抓住你囉" class="item-header" />
+                        <ui:VisualElement class="item-icon-box">
+                            <ui:Image class="item-icon handcuffs" />
+                        </ui:VisualElement>
+                        <ui:Label text="逮補小偷玩家" class="item-effect" />
+                        <ui:VisualElement class="item-bottom single">
+                            <ui:Label text="任務紙條卡" class="item-tag control-tag" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="item-card control-card">
+                        <ui:Label text="不要被發現" class="item-header" />
+                        <ui:VisualElement class="item-icon-box">
+                            <ui:Image class="item-icon steal" />
+                        </ui:VisualElement>
+                        <ui:Label text="偷取場景物件" class="item-effect" />
+                        <ui:VisualElement class="item-bottom single">
+                            <ui:Label text="任務紙條卡" class="item-tag control-tag" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="item-card control-card">
+                        <ui:Label text="拳王" class="item-header" />
+                        <ui:VisualElement class="item-icon-box">
+                            <ui:Image class="item-icon fist" />
+                        </ui:VisualElement>
+                        <ui:Label text="擊倒場上所有玩家" class="item-effect" />
+                        <ui:VisualElement class="item-bottom single">
+                            <ui:Label text="任務紙條卡" class="item-tag control-tag" />
                         </ui:VisualElement>
                     </ui:VisualElement>
                     <ui:VisualElement class="item-card trap-card">
@@ -58,39 +89,10 @@
                             <ui:Label text="持續5秒" class="item-subinfo" />
                         </ui:VisualElement>
                     </ui:VisualElement>
-                    <ui:VisualElement class="item-card control-card">
-                        <ui:Label text="抓住你囉" class="item-header" />
-                        <ui:VisualElement class="item-icon-box">
-                            <ui:Image class="item-icon handcuffs" />
-                        </ui:VisualElement>
-                        <ui:Label text="逮補小偷玩家" class="item-effect" />
-                        <ui:VisualElement class="item-bottom single">
-                            <ui:Label text="任務紙條卡" class="item-tag control-tag" />
-                        </ui:VisualElement>
-                    </ui:VisualElement>
-                    <ui:VisualElement class="item-card control-card">
-                        <ui:Label text="不要被發現" class="item-header" />
-                        <ui:VisualElement class="item-icon-box">
-                            <ui:Image class="item-icon steal" />
-                        </ui:VisualElement>
-                        <ui:Label text="偷取任意一張卡牌" class="item-effect" />
-                        <ui:VisualElement class="item-bottom single">
-                            <ui:Label text="任務紙條卡" class="item-tag control-tag" />
-                        </ui:VisualElement>
-                    </ui:VisualElement>
-                    <ui:VisualElement class="item-card control-card">
-                        <ui:Label text="拳王" class="item-header" />
-                        <ui:VisualElement class="item-icon-box">
-                            <ui:Image class="item-icon fist" />
-                        </ui:VisualElement>
-                        <ui:Label text="擊倒3位玩家" class="item-effect" />
-                        <ui:VisualElement class="item-bottom single">
-                            <ui:Label text="任務紙條卡" class="item-tag control-tag" />
-                        </ui:VisualElement>
-                    </ui:VisualElement>
                 </ui:VisualElement>
             </ui:ScrollView>
             <ui:Button name="CloseBtn" text="×" class="close-btn" style="-unity-font-style: bold; font-size: 28px;" />
+            <ui:Button name="backBtn" text="返回" class="back-btn" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

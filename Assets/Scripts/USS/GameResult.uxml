@@ -14,7 +14,7 @@
                 <ui:Label text="Burr" name="WinnerName" class="winner-badge" />
             </ui:VisualElement>
             <ui:VisualElement name="StatsRow" class="stats-row">
-                <ui:VisualElement class="stat-card">
+                <ui:VisualElement class="stat-card finish">
                     <ui:Label text="完成任務" class="stat-title" />
                     <ui:VisualElement class="task-list">
                         <ui:VisualElement class="task-item-row">
@@ -31,7 +31,7 @@
                         </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:VisualElement class="stat-card">
+                <ui:VisualElement class="stat-card use">
                     <ui:Label text="道具使用" class="stat-title" />
                     <ui:ScrollView vertical-scroller-visibility="Hidden" class="item-scroll-view">
                         <ui:VisualElement class="item-icons-container">
@@ -53,15 +53,6 @@
                             </ui:VisualElement>                        
                         </ui:VisualElement>
                     </ui:ScrollView>
-                </ui:VisualElement>
-                <ui:VisualElement class="stat-card">
-                    <ui:Label text="擊倒玩家" class="stat-title" />
-                    <ui:VisualElement class="stat-avatar-group">
-                        <ui:VisualElement class="stat-avatar-wrap">
-                            <ui:Image class="stat-avatar shark" />
-                        </ui:VisualElement>
-                    </ui:VisualElement>
-                    <ui:Label text="2人" class="stat-player" />
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement class="result-actions">

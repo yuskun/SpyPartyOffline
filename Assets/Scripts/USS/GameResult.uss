@@ -52,14 +52,20 @@
 }
 
 /* 統計三格排版 */
-.stats-row { flex-direction: row; justify-content: space-between; padding: 0 40px; }
+.stats-row { flex-direction: row; justify-content: space-between; padding: 0 30px; }
 .stat-card {
-    width: 250px; height: 230px; border-radius: 28px;
     background-image: url("project://database/Assets/Image/UIPanel/GameHUD/end.png");
+    height: 230px;
     overflow: hidden;
 }
+.stat-card.finish {
+    width: 280px;
+}
+.stat-card.use {
+    width: 600px;
+}
 .stat-title {
-    color: #8d5a2c; -unity-text-align: middle-center; font-size: 22px; padding-top: 10px;
+    color: #8d5a2c; -unity-text-align: middle-center; font-size: 22px; padding-top: 15px;
 }
 
 /* =========================================
@@ -72,7 +78,7 @@
     background-image: url("project://database/Assets/Image/UIPanel/GameHUD/task.png");
     flex-direction: row;
     align-items: center;
-    height: 45px;
+    height: 40px;
     width: 110px;
     justify-content: center;
     padding-bottom: 5px;

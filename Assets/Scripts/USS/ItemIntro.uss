@@ -6,8 +6,8 @@
 
 /* 主面板：毛玻璃背景 */
 .items-panel {
-    width: 90%; height: 100%;
-    margin-top: 43px;
+    width: 80%; height: 100%;
+    margin-top: 58px;
     border-radius: 42px;
     background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/bg.png");
 }
@@ -43,8 +43,25 @@
     scale: 0.95;
 }
 
+/* 按鈕 */
+.back-btn {
+    position: absolute; top: 20px; left: 38px;
+    width: 92px; height: 64px; font-size: 18px; color: white;
+    padding-top: -10px;
+    border-width: 0;
+    background-color: transparent;
+    background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/back.png");
+}
+
 /* 網格排版 */
-.scroll-view { flex-grow: 1; margin-top: 50px; }
+.scroll-view {
+    flex-grow: 1; 
+    margin-top: 70px;
+    margin-left: 50px; 
+    margin-right: 50px;
+    margin-bottom: 60px; 
+}
+
 .cards-grid {
     flex-direction: row; flex-wrap: wrap; justify-content: center;
 }

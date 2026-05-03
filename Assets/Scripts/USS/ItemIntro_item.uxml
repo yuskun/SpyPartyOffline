@@ -1,0 +1,37 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Scripts/USS/ItemIntro_task.uss" />
+    <ui:VisualElement name="page-bg" class="page-bg" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;);">
+        <ui:VisualElement class="items-panel" style="background-size: 110% 115%;">
+            <ui:VisualElement class="panel-top-bar">
+                <ui:Label text="間諜道具" class="panel-title" />
+            </ui:VisualElement>
+            <ui:ScrollView class="scroll-view">
+                <ui:VisualElement class="cards-grid">
+                    <ui:VisualElement class="item-card trap-card">
+                        <ui:Label text="香蕉皮" class="item-header" />
+                        <ui:VisualElement class="item-icon-box">
+                            <ui:Image class="item-icon banana" />
+                        </ui:VisualElement>
+                        <ui:Label text="可使玩家滑倒" class="item-effect" />
+                        <ui:VisualElement class="item-bottom single">
+                            <ui:Label text="間諜道具卡" class="item-tag trap-tag" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="item-card trap-card">
+                        <ui:Label text="黏鼠板" class="item-header" />
+                        <ui:VisualElement class="item-icon-box">
+                            <ui:Image class="item-icon glue-trap" />
+                        </ui:VisualElement>
+                        <ui:Label text="減速敵人" class="item-effect" />
+                        <ui:VisualElement class="item-bottom">
+                            <ui:Label text="間諜道具卡" class="item-tag trap-tag" />
+                            <ui:Label text="持續5秒" class="item-subinfo" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:ScrollView>
+            <ui:Button name="CloseBtn" text="×" class="close-btn" style="-unity-font-style: bold; font-size: 28px;" />
+            <ui:Button name="backBtn" text="返回" class="back-btn" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

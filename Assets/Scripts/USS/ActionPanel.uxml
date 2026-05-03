@@ -1,0 +1,34 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Scripts/USS/ActionPanel.uss?fileID=7433441132597879392&amp;guid=cf45dc587a0467b438731762931c39cd&amp;type=3#ActionPanel" />
+    <ui:VisualElement name="emote-wheel" class="emote-wheel" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;);">
+        <ui:Button name="slot-top" data-emote="laugh" class="wheel-slot slot-top">
+            <ui:VisualElement class="hover-overlay" />
+            <ui:VisualElement class="emote-content">
+                <ui:VisualElement class="emote-icon icon-laugh" />
+                <ui:Label text="大笑" class="emote-label" />
+            </ui:VisualElement>
+        </ui:Button>
+        <ui:Button name="slot-right" data-emote="raise" class="wheel-slot slot-right">
+            <ui:VisualElement class="hover-overlay" />
+            <ui:VisualElement class="emote-content">
+                <ui:VisualElement class="emote-icon icon-raise" />
+                <ui:Label text="舉手" class="emote-label" />
+            </ui:VisualElement>
+        </ui:Button>
+        <ui:Button name="slot-bottom" data-emote="muscle" class="wheel-slot slot-bottom">
+            <ui:VisualElement class="hover-overlay" />
+            <ui:VisualElement class="emote-content">
+                <ui:VisualElement class="emote-icon icon-muscle" />
+                <ui:Label text="肌肉" class="emote-label" />
+            </ui:VisualElement>
+        </ui:Button>
+        <ui:Button name="slot-left" data-emote="wave" class="wheel-slot slot-left">
+            <ui:VisualElement class="hover-overlay" />
+            <ui:VisualElement class="emote-content">
+                <ui:VisualElement class="emote-icon icon-wave" />
+                <ui:Label text="揮手" class="emote-label" />
+            </ui:VisualElement>
+        </ui:Button>
+        <ui:Button name="close-center" text="✕" class="wheel-center" />
+    </ui:VisualElement>
+</ui:UXML>

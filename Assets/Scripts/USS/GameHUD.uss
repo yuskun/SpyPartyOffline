@@ -179,3 +179,44 @@
 
 .mic-btn.is-open .mic-open { display: flex; background-image: url("project://database/Assets/Image/UIPanel/GameHUD/mic-open.png"); }
 .mic-btn.is-off .mic-off { display: flex; background-image: url("project://database/Assets/Image/UIPanel/GameHUD/mic-off.png"); }
+
+
+/* 左下角提示容器 */
+.control-hints {
+    position: absolute;
+    left: 24px;
+    bottom: 24px;
+    flex-direction: column;
+}
+
+/* 每一行的間距與對齊 */
+.hint-row {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: -10px;
+}
+
+/* 按鍵外框樣式 */
+.key {
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/key.png");
+    width: 60px;  /* 稍微加大一點點，避免圖片太擠 */
+    height: 35px;
+    padding-top: 1px;
+    color: white;
+    font-size: 14px;
+    -unity-text-align: middle-center;
+}
+
+/* 寬按鍵 (如空白鍵) */
+.key-wide {
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/key2.png");
+    width: 80px;
+}
+
+/* 提示文字樣式 */
+.hint-text {
+    margin-left: 4px;
+    margin-top: 2px;
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 14px;
+}

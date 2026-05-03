@@ -1,0 +1,46 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Scripts/USS/ItemIntro_task.uss?fileID=7433441132597879392&amp;guid=4794d8e13291230479220734afbee4ef&amp;type=3#ItemIntro_task" />
+    <ui:VisualElement name="page-bg" class="page-bg" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;);">
+        <ui:VisualElement class="items-panel" style="background-size: 110% 115%;">
+            <ui:VisualElement class="panel-top-bar">
+                <ui:Label text="任務紙條" class="panel-title" />
+            </ui:VisualElement>
+            <ui:ScrollView class="scroll-view">
+                <ui:VisualElement class="cards-grid">
+                    <ui:VisualElement class="item-card control-card">
+                        <ui:Label text="抓住你囉" class="item-header" />
+                        <ui:VisualElement class="item-icon-box">
+                            <ui:Image class="item-icon handcuffs" />
+                        </ui:VisualElement>
+                        <ui:Label text="逮補小偷玩家" class="item-effect" />
+                        <ui:VisualElement class="item-bottom single">
+                            <ui:Label text="任務紙條卡" class="item-tag control-tag" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="item-card control-card">
+                        <ui:Label text="不要被發現" class="item-header" />
+                        <ui:VisualElement class="item-icon-box">
+                            <ui:Image class="item-icon steal" />
+                        </ui:VisualElement>
+                        <ui:Label text="偷取場景物件" class="item-effect" />
+                        <ui:VisualElement class="item-bottom single">
+                            <ui:Label text="任務紙條卡" class="item-tag control-tag" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="item-card control-card">
+                        <ui:Label text="拳王" class="item-header" />
+                        <ui:VisualElement class="item-icon-box">
+                            <ui:Image class="item-icon fist" />
+                        </ui:VisualElement>
+                        <ui:Label text="擊倒場上所有玩家" class="item-effect" />
+                        <ui:VisualElement class="item-bottom single">
+                            <ui:Label text="任務紙條卡" class="item-tag control-tag" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:ScrollView>
+            <ui:Button name="CloseBtn" text="×" class="close-btn" style="-unity-font-style: bold; font-size: 28px;" />
+            <ui:Button name="backBtn" text="返回" class="back-btn" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

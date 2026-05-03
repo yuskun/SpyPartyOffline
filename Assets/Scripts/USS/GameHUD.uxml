@@ -4,6 +4,56 @@
         <ui:VisualElement class="top-time-container">
             <ui:Label name="TopTime" text="14:30" class="top-time-text" style="top: -8px; position: relative; -unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&amp;guid=3d5723d09fd5e9a4f97a9f3e046bbb90&amp;type=3#GenSenRounded2TW-R&quot;); -unity-font-style: bold; transform-origin: 50px; align-content: flex-start; justify-content: flex-start; -unity-text-align: upper-center;" />
         </ui:VisualElement>
+        <ui:VisualElement name="ControlHints" class="control-hints" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;); -unity-font-style: normal;">
+            <ui:VisualElement class="hint-row">
+                <ui:Label text="W" class="key" />
+                <ui:Label text="前進" class="hint-text" />
+            </ui:VisualElement>
+            <ui:VisualElement class="hint-row">
+                <ui:Label text="S" class="key" />
+                <ui:Label text="後退" class="hint-text" />
+            </ui:VisualElement>
+            <ui:VisualElement class="hint-row">
+                <ui:Label text="A" class="key" />
+                <ui:Label text="向左" class="hint-text" />
+            </ui:VisualElement>
+            <ui:VisualElement class="hint-row">
+                <ui:Label text="D" class="key" />
+                <ui:Label text="向右" class="hint-text" />
+            </ui:VisualElement>
+            <ui:VisualElement class="hint-row">
+                <ui:Label text="E" class="key" />
+                <ui:Label text="使用卡片" class="hint-text" />
+            </ui:VisualElement>
+            <ui:VisualElement class="hint-row">
+                <ui:Label text="T" class="key" />
+                <ui:Label text="表情" class="hint-text" />
+            </ui:VisualElement>
+            <ui:VisualElement class="hint-row">
+                <ui:Label text="空白鍵" class="key key-wide" />
+                <ui:Label text="跳躍" class="hint-text" />
+            </ui:VisualElement>
+            <ui:VisualElement class="hint-row">
+                <ui:Label text="左鍵" class="key" />
+                <ui:Label text="使用武器攻擊" class="hint-text" />
+            </ui:VisualElement>
+            <ui:VisualElement class="hint-row">
+                <ui:Label text="右鍵" class="key" />
+                <ui:Label text="物件互動/抓住玩家" class="hint-text" />
+            </ui:VisualElement>
+            <ui:VisualElement class="hint-row">
+                <ui:Label text="Alt" class="key" />
+                <ui:Label text="開啟滑鼠游標" class="hint-text" />
+            </ui:VisualElement>
+            <ui:VisualElement class="hint-row">
+                <ui:Label text="Esc" class="key" />
+                <ui:Label text="開啟主選單" class="hint-text" />
+            </ui:VisualElement>
+            <ui:VisualElement class="hint-row">
+                <ui:Label text="滾輪" class="key" />
+                <ui:Label text="更換背包道具" class="hint-text" />
+            </ui:VisualElement>
+        </ui:VisualElement>
         <ui:VisualElement name="MissionPanel" class="mission-panel">
             <ui:VisualElement name="Task1" class="mission-task">
                 <ui:VisualElement class="task-left">

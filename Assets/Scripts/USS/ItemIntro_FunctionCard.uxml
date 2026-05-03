@@ -1,0 +1,46 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Scripts/USS/ItemIntro_task.uss" />
+    <ui:VisualElement name="page-bg" class="page-bg" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;);">
+        <ui:VisualElement class="items-panel" style="background-size: 110% 115%;">
+            <ui:VisualElement class="panel-top-bar">
+                <ui:Label text="特工手段" class="panel-title" />
+            </ui:VisualElement>
+            <ui:ScrollView class="scroll-view">
+                <ui:VisualElement class="cards-grid">
+                    <ui:VisualElement class="item-card means-card">
+                        <ui:Label text="查看" class="item-header" />
+                        <ui:VisualElement class="item-icon-box">
+                            <ui:Image class="item-icon magnifier" />
+                        </ui:VisualElement>
+                        <ui:Label text="觀看對方所有卡牌" class="item-effect" style="-unity-font-style: normal; -unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;);" />
+                        <ui:VisualElement class="item-bottom single">
+                            <ui:Label text="特工手段卡" class="item-tag means-tag" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="item-card means-card">
+                        <ui:Label text="贈與" class="item-header" />
+                        <ui:VisualElement class="item-icon-box">
+                            <ui:Image class="item-icon gift" />
+                        </ui:VisualElement>
+                        <ui:Label text="贈與卡牌一張" class="item-effect" />
+                        <ui:VisualElement class="item-bottom single">
+                            <ui:Label text="特工手段卡" class="item-tag means-tag" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="item-card means-card">
+                        <ui:Label text="交換" class="item-header" />
+                        <ui:VisualElement class="item-icon-box">
+                            <ui:Image class="item-icon swap" />
+                        </ui:VisualElement>
+                        <ui:Label text="交換任意卡片一張" class="item-effect" />
+                        <ui:VisualElement class="item-bottom single">
+                            <ui:Label text="特工手段卡" class="item-tag means-tag" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:ScrollView>
+            <ui:Button name="CloseBtn" text="×" class="close-btn" style="-unity-font-style: bold; font-size: 28px;" />
+            <ui:Button name="backBtn" text="返回" class="back-btn" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

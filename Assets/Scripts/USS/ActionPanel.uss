@@ -1,0 +1,134 @@
+.emote-wheel {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -110px; 
+    margin-top: -110px;
+
+    width: 260px;
+    height: 250px;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/action_bg.png");
+    align-items: center;
+    justify-content: center;
+}
+
+.hidden {
+    display: none;
+}
+
+.wheel-slot {
+    position: absolute;
+    background-color: transparent;
+    border-width: 0;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    transition-duration: 0.15s;
+}
+
+
+/* 模擬扇形位置 */
+.slot-top {
+    top: -65px; /* 根據需求微調內容位移 */
+}
+
+.slot-right {
+    right: -70px;
+}
+
+.slot-bottom {
+    bottom: -65px;
+}
+
+.slot-left {
+    left: -70px;
+}
+/* 1. 設定遮罩層基礎樣式 */
+.hover-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    /* 填入你的扇形毛玻璃圖片路徑 */
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/action_hoverT.png");
+    /* 預設隱藏 */
+    opacity: 0;
+    transition-duration: 0.15s;
+}
+
+/* 2. 當滑鼠移入按鈕時，顯示遮罩[cite: 6] */
+.wheel-slot:hover .hover-overlay {
+    opacity: 1;
+}
+
+/* 3. 關鍵：旋轉同一張遮罩圖到四個方向 */
+/* 假設你的 hover_fan.png 原圖是朝上的扇形 */
+.slot-top .hover-overlay {
+    rotate: 0deg;
+}
+
+.slot-right .hover-overlay {
+    rotate: 90deg;
+}
+
+.slot-bottom .hover-overlay {
+    rotate: 180deg;
+}
+
+.slot-left .hover-overlay {
+    rotate: 270deg;
+}
+
+/* 確保按鈕內容（圖示文字）在遮罩上面 */
+.emote-content {
+    position: absolute;
+    z-index: 1;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 定義圖標通用的寬高 */
+.emote-icon {
+    width: 52px;
+    height: 52px;
+    margin-bottom: -6px;
+    margin-top: 6px;
+    /* 確保圖片縮放正確 */
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+/* 這裡是你要填寫路徑的地方[cite: 2] */
+.icon-laugh {
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/laugh.png");
+}
+
+.icon-raise {
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/raise.png");
+}
+
+.icon-muscle {
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/muscle.png");
+}
+
+.icon-wave {
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/wave.png");
+}
+
+.emote-label {
+    color: white;
+    font-size: 15px;
+    text-align: center;
+    margin-left: 3px;
+}
+
+.wheel-center {
+    width: 68px;
+    height: 68px;
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/action_close.png");
+    margin-top:12px;
+    padding-top: 3px;
+    background-color: transparent;
+    border-width: 0;
+    color: white;
+    font-size: 20px;
+}
