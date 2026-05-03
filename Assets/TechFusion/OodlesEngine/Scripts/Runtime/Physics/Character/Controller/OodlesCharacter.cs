@@ -646,6 +646,16 @@ namespace OodlesEngine
 
                 if (!isThrowing)
                 {
+                    // 防誤觸：拿到物件 / 武器後 releaseCooldown 秒內按右鍵不放開。
+                    // 標記 isThrowing = true 後，使用者必須鬆開右鍵再按一次才會再次評估放開。
+                    bool leftBlocked  = handFunctionLeft  != null && handFunctionLeft.GrabbedObject  != null && !handFunctionLeft.CanRelease;
+                    bool rightBlocked = handFunctionRight != null && handFunctionRight.GrabbedObject != null && !handFunctionRight.CanRelease;
+                    if (leftBlocked || rightBlocked)
+                    {
+                        isThrowing = true;
+                        return;
+                    }
+
                     Vector3 hor = physicsBody.transform.forward;
                     hor.y = 0;
                     hor.Normalize();

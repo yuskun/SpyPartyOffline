@@ -172,13 +172,13 @@ public class UniversalUIController : MonoBehaviour
         {
             UnityEngine.Cursor.visible = true;
             UnityEngine.Cursor.lockState = CursorLockMode.None;
-            LocalBackpack.Instance.AllowInput(false);
+            if (LocalBackpack.Instance != null) LocalBackpack.Instance.AllowInput(false);
         }
         else
         {
             UnityEngine.Cursor.visible = false;
             UnityEngine.Cursor.lockState = CursorLockMode.Locked;
-            LocalBackpack.Instance.AllowInput(true);
+            if (LocalBackpack.Instance != null) LocalBackpack.Instance.AllowInput(true);
         }
     }
 }

@@ -198,7 +198,7 @@
 
 /* 按鍵外框樣式 */
 .key {
-    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/key.png");
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/Key.png");
     width: 60px;  /* 稍微加大一點點，避免圖片太擠 */
     height: 35px;
     padding-top: 1px;

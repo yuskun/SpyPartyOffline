@@ -16,6 +16,16 @@ public class SkinChange : NetworkBehaviour
     private Color SkinColor;
     private float _triggerCooldown = 0f;
 
+    // ===== Skin 預覽色票（menu 預覽用，不走網路） =====
+    [Header("Skin 預覽色票設定")]
+    [Tooltip("只動材質名稱等於這個的 material（與 PlayerIdentify 邏輯一致）")]
+    [SerializeField] private string skinMaterialName = "Skin";
+
+    private bool  _previewColorActive = false; // 玩家有沒有選自訂色？
+    private Color _currentPreviewColor = Color.white;
+    // 重複使用同一個 block 物件減少 GC（per call 重設 + GetPropertyBlock 即可）
+    private static MaterialPropertyBlock _mpb;
+
     [Header("角色預覽拖曳旋轉")]
     [Tooltip("水平拖曳 1 像素轉幾度（角度/像素）")]
     [SerializeField] private float skinDragSensitivity = 0.4f;
@@ -51,42 +61,41 @@ public class SkinChange : NetworkBehaviour
         // 旁觀者不生成角色、不註冊、不綁 UI
         if (NetworkManager2.IsSpectator) return;
 
-        // Host 延遲生成（用 TickTimer 等場景穩定），Client 立即生成
-        if (NetworkManager2.Instance.mode == NetworkManager2.NetMode.Host)
-        {
-            instance.StartHostSpawnDelay();
-        }
-        else
-        {
-            int skinIndex = PlayerPrefs.GetInt("Choosenindex", 0);
-            string playerName = NetworkManager2.Instance != null ? NetworkManager2.Instance.PlayerName : "Player";
-            Rpc_RegisterAndSpawn(skinIndex, playerName);
-        }
-
-        // 初始化角色外观
+        // 新流程：玩家先跑選擇角色 + 顏色，按 Confirm / 開始遊戲後才生成
+        // → Client 不再加入後立即 Rpc_RegisterAndSpawn
+        // → Host 也不走 StartHostSpawnDelay 自動生成
+        // 角色生成統一交由 GameManager1.SpawnAllPlayers（Start Game 時）/ Rpc_ChangeSkin（換 skin 時）
+        // 必須先讀 PlayerPrefs 設定 currentSkinIndex，再呼叫 PickCharacterUI
+        // 否則 PickCharacterUI 會用 currentSkinIndex=0 啟用錯的 skin，後續 changeSkin
+        // 想 deactive 時找不到正確目標，造成多隻 skin 同時可見
         currentSkinIndex = PlayerPrefs.GetInt("Choosenindex");
+
+        // 既然已不走 spawn → Rpc_PlayerSpawnComplete 流程，這裡接管原本它做的兩件事：
+        //   1) 關掉 LoadingScreen（不再等 spawn 完成）
+        //   2) 開啟選角面板（順便 ResetSkinPreviewColor 在 PickCharacterUI 內）
+        if (MenuUIManager.instance != null && MenuUIManager.instance.LoadingScreen != null)
+            MenuUIManager.instance.LoadingScreen.SetActive(false);
+        PickCharacterUI();
         MenuUIManager.instance.ConfirmCharcterBtn.onClick.AddListener(() =>
         {
-            if (PlayerPrefs.GetInt("Choosenindex") != currentSkinIndex)
-            {
-                SettingSkinColor(currentSkinIndex, SkinColor);
-                Rpc_ChangeSkin(Runner.LocalPlayer, currentSkinIndex, PlayerPrefs.GetString("Color"));
+            // 寫入 PlayerPrefs（skinIndex / color）
+            // Reset 狀態（沒套自訂色）→ Color 寫空字串，host 端 HexToColor 回 null = 不套色 = 用 prefab 原色
+            // 套了自訂色      → Color 寫 hex，host 端會把角色染這個色
+            PlayerPrefs.SetInt("Choosenindex", currentSkinIndex);
+            string colorToSave = _previewColorActive
+                ? "#" + UnityEngine.ColorUtility.ToHtmlStringRGB(SkinColor)
+                : "";
+            PlayerPrefs.SetString("Color", colorToSave);
+            PlayerPrefs.Save();
 
-                PlayerPrefs.SetInt("Choosenindex", currentSkinIndex);
-                PlayerPrefs.Save();
+            // 永遠呼叫 Rpc_ChangeSkin：
+            //   - 第一次（無舊角色）→ host 端會 SpawnPlayer + 註冊
+            //   - 之後（有舊角色）  → host 端會 despawn 舊 + spawn 新
+            string pName = NetworkManager2.Instance != null ? NetworkManager2.Instance.PlayerName : "Player";
+            Rpc_ChangeSkin(Runner.LocalPlayer, currentSkinIndex, colorToSave, pName);
 
-                if (MenuUIManager.instance.playerlistmanager != null)
-                {
-                    //MenuUIManager.instance.playerlistmanager.UpdateSkinIndex(Runner.LocalPlayer, currentSkinIndex);
-                    MenuUIManager.instance.playerlistmanager.Rpc_RequestSkinUpdate(Runner.LocalPlayer, currentSkinIndex);
-                }
-
-                //FindObjectOfType<PracticeUIManager>()?.RefreshAvatar();
-            }
-            else
-            {
-                SettingSkinColor(currentSkinIndex, SkinColor);
-            }
+            if (MenuUIManager.instance.playerlistmanager != null)
+                MenuUIManager.instance.playerlistmanager.Rpc_RequestSkinUpdate(Runner.LocalPlayer, currentSkinIndex);
 
             MenuUIManager.instance.ChooseCharacterUI.SetActive(false);
 
@@ -249,6 +258,10 @@ public class SkinChange : NetworkBehaviour
         StartCoroutine(MoveCamera());
         Skins[currentSkinIndex].SetActive(true);
         Skins[currentSkinIndex].transform.localRotation = Quaternion.Euler(0f, 90f, 0f); // 開啟 UI 時 reset 成向右 90 度
+
+        // 每次開啟選角畫面（= 每次開始遊戲）→ 預覽色票回到 RESET 狀態
+        ResetSkinPreviewColor();
+
         MenuUIManager.instance.CharSelectPanel.ShowCurrentUI();
         PlayHideOrShow(false);
         UnityEngine.Cursor.visible = true;
@@ -289,15 +302,190 @@ public class SkinChange : NetworkBehaviour
         string hex = "#" + UnityEngine.ColorUtility.ToHtmlStringRGB(color);
         PlayerPrefs.SetString("Color", hex);
     }
-    void ChangeSkinColor(Color color)   {
-        Skins[currentSkinIndex].GetComponent<Renderer>().material.color = color;
+    // ============================================================
+    // Skin 預覽色票（給 menu UI 用，純本地不走網路）
+    // ============================================================
+
+    /// <summary>
+    /// 取得當前已套用的預覽色。沒套自訂色（reset 狀態）時讀目前展示 skin 的 asset 原色。
+    /// 若也讀不到（找不到 Skin material）回傳 white。
+    /// </summary>
+    public Color CurrentPreviewColor
+    {
+        get
+        {
+            if (_previewColorActive) return _currentPreviewColor;
+            // reset 狀態：直接從 sharedMaterial 讀目前 skin 的 asset 原色
+            var skin = GetCurrentSkin();
+            if (skin == null) return Color.white;
+            var renderers = skin.GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                var r = renderers[i];
+                if (r == null) continue;
+                var mats = r.sharedMaterials;
+                for (int j = 0; j < mats.Length; j++)
+                {
+                    var m = mats[j];
+                    if (m == null || !IsSkinMaterial(m)) continue;
+                    if (m.HasProperty("_BaseColor")) return m.GetColor("_BaseColor");
+                    if (m.HasProperty("_Color"))     return m.GetColor("_Color");
+                }
+            }
+            return Color.white;
+        }
     }
+
+    /// <summary>套用顏色到目前展示的 skin（並記住，切到下一個 skin 也會套）</summary>
+    public void SetSkinPreviewColor(Color color)
+    {
+        _previewColorActive = true;
+        _currentPreviewColor = color;
+        SkinColor = color; // 讓 confirm 時的 SettingSkinColor 寫進 PlayerPrefs 是這個色
+        ApplyColorToSkin(GetCurrentSkin(), color);
+    }
+
+    /// <summary>Hex overload：吃 "#FF6464" / "FF6464" 等格式；解析失敗就忽略</summary>
+    public void SetSkinPreviewColor(string hex)
+    {
+        if (string.IsNullOrWhiteSpace(hex)) return;
+        string h = hex.Trim();
+        if (h[0] != '#') h = "#" + h;
+        if (UnityEngine.ColorUtility.TryParseHtmlString(h, out Color c))
+            SetSkinPreviewColor(c);
+        else
+            Debug.LogWarning($"[SkinChange] 無法解析 hex 色票：'{hex}'");
+    }
+
+    /// <summary>
+    /// 還原所有 Skins[] 的 "Skin" 材質回 asset 原色 — 用 PropertyBlock 清空，
+    /// 不 clone material、不依賴快取，每隻 skin 各自顯示自己 prefab 設計色。
+    /// </summary>
+    public void ResetSkinPreviewColor()
+    {
+        _previewColorActive = false;
+        if (Skins == null) return;
+
+        for (int i = 0; i < Skins.Length; i++)
+        {
+            ClearColorOnSkin(Skins[i]);
+        }
+        // _currentPreviewColor / SkinColor reset 後不再被使用，留空即可（白）
+        _currentPreviewColor = Color.white;
+        SkinColor = Color.white;
+    }
+
+    // ============================================================
+    // 測試用 ContextMenu（Inspector 右上角齒輪 → 點即可觸發）
+    // 沒接 ColorPicker UI 之前先用這個試 SetSkinPreview / Reset 流程
+    // ============================================================
+
+    [ContextMenu("Test/Set Preview Red (#FF0000)")]
+    private void TestSetRed() => SetSkinPreviewColor("#FF0000");
+
+    [ContextMenu("Test/Set Preview Blue (#3399FF)")]
+    private void TestSetBlue() => SetSkinPreviewColor("#3399FF");
+
+    [ContextMenu("Test/Set Preview Yellow (#FFCC33)")]
+    private void TestSetYellow() => SetSkinPreviewColor("#FFCC33");
+
+    [ContextMenu("Test/Reset Preview to Original")]
+    private void TestReset() => ResetSkinPreviewColor();
+
+    [ContextMenu("Test/Print Current Preview Color")]
+    private void TestPrintCurrent()
+    {
+        Debug.Log($"[SkinChange] currentSkinIndex={currentSkinIndex} active={_previewColorActive} " +
+                  $"current={_currentPreviewColor} (#{UnityEngine.ColorUtility.ToHtmlStringRGB(_currentPreviewColor)})");
+    }
+
     public void changeSkin(int index)
     {
-        Skins[currentSkinIndex].SetActive(false);
+        if (Skins == null || index < 0 || index >= Skins.Length) return;
+
+        // 先把全部 deactive 再啟用目標：避免 currentSkinIndex 跟畫面狀態不一致時殘留多隻 skin
+        for (int i = 0; i < Skins.Length; i++)
+        {
+            if (Skins[i] != null) Skins[i].SetActive(false);
+        }
         Skins[index].SetActive(true);
         Skins[index].transform.localRotation = Quaternion.Euler(0f, 90f, 0f); // 切換角色時 reset 成向右 90 度
         currentSkinIndex = index;
+
+        // B 模式：玩家有套過自訂色 → 新 skin 也套同色
+        // 沒套色（reset 狀態）→ 不要碰，讓新 skin 顯示自己 asset 的原色
+        if (_previewColorActive)
+        {
+            ApplyColorToSkin(Skins[index], _currentPreviewColor);
+        }
+    }
+
+    // ---- Skin 預覽色票 helpers ----
+
+    GameObject GetCurrentSkin()
+    {
+        if (Skins == null) return null;
+        if (currentSkinIndex < 0 || currentSkinIndex >= Skins.Length) return null;
+        return Skins[currentSkinIndex];
+    }
+
+    /// <summary>
+    /// 用 MaterialPropertyBlock 對指定 skin 的「Skin」材質套 _BaseColor 覆寫。
+    /// 不 clone material，不影響 asset；只在這個 renderer 上做 per-instance 顏色覆寫。
+    /// </summary>
+    void ApplyColorToSkin(GameObject skinGo, Color color)
+    {
+        if (skinGo == null) return;
+        if (_mpb == null) _mpb = new MaterialPropertyBlock();
+
+        var renderers = skinGo.GetComponentsInChildren<Renderer>(true);
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            var r = renderers[i];
+            if (r == null) continue;
+            var sharedMats = r.sharedMaterials; // 不會 clone
+            for (int j = 0; j < sharedMats.Length; j++)
+            {
+                var m = sharedMats[j];
+                if (m == null) continue;
+                if (!IsSkinMaterial(m)) continue;
+
+                _mpb.Clear();
+                r.GetPropertyBlock(_mpb, j); // 取既有 block（沒有就保持空）
+                if (m.HasProperty("_BaseColor")) _mpb.SetColor("_BaseColor", color);
+                else if (m.HasProperty("_Color")) _mpb.SetColor("_Color", color);
+                r.SetPropertyBlock(_mpb, j);
+            }
+        }
+    }
+
+    /// <summary>清掉指定 skin 的「Skin」材質 PropertyBlock 覆寫，回到 asset 原色。</summary>
+    void ClearColorOnSkin(GameObject skinGo)
+    {
+        if (skinGo == null) return;
+        var renderers = skinGo.GetComponentsInChildren<Renderer>(true);
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            var r = renderers[i];
+            if (r == null) continue;
+            var sharedMats = r.sharedMaterials;
+            for (int j = 0; j < sharedMats.Length; j++)
+            {
+                var m = sharedMats[j];
+                if (m == null) continue;
+                if (!IsSkinMaterial(m)) continue;
+                r.SetPropertyBlock(null, j); // null = 清空，這個 sub-material 渲染回 asset 原樣
+            }
+        }
+    }
+
+    bool IsSkinMaterial(Material m)
+    {
+        if (m == null || string.IsNullOrEmpty(skinMaterialName)) return false;
+        string n = m.name;
+        int idx = n.IndexOf(" (Instance)");
+        if (idx >= 0) n = n.Substring(0, idx);
+        return n == skinMaterialName;
     }
     void PlayHideOrShow(bool show)
     {
@@ -328,33 +516,56 @@ public class SkinChange : NetworkBehaviour
 
         int skinIndex = PlayerPrefs.GetInt("Choosenindex", 0);
         string playerName = NetworkManager2.Instance != null ? NetworkManager2.Instance.PlayerName : "Player";
-        Rpc_RegisterAndSpawn(skinIndex, playerName);
+        // 跟 skinIndex 同樣讀本地 PlayerPrefs 的色票，沒設定就傳空字串
+        string colorHex = PlayerPrefs.GetString("Color", "");
+        Rpc_RegisterAndSpawn(skinIndex, playerName, colorHex);
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
-    public void Rpc_RegisterAndSpawn(int skinIndex, string playerName, RpcInfo info = default)
+    public void Rpc_RegisterAndSpawn(int skinIndex, string playerName, string colorHex, RpcInfo info = default)
     {
         if (!Runner.IsServer) return;
         if (PlayerSpawner.instance == null) { Debug.LogWarning("[SkinChange] PlayerSpawner.instance is null"); return; }
-        PlayerSpawner.instance.SpawnPlayer(Runner, skinIndex, info.Source, playerName, true);
+
+        // Streamer 客端：跳過生成 / 註冊（防呆，正常情況 streamer 也不會發這個 RPC）
+        if (StreamerToken.IsStreamer(Runner, info.Source))
+        {
+            Debug.Log($"📺 [SkinChange] streamer client ({info.Source}) 跳過 SpawnPlayer");
+            return;
+        }
+
+        // 用 client 傳來的 PlayerPrefs Color；空字串 → SpawnPlayer 內部的 HexToColor 會回 null → 不套色
+        PlayerSpawner.instance.SpawnPlayer(Runner, skinIndex, info.Source, playerName, true, colorHex);
         StartCoroutine(RegisterWhenReady(info.Source, playerName, skinIndex));
     }
 
     private IEnumerator RebindCameraNextFrame()
     {
-        yield return null; // 等一幀，確保 PlayHideOrShow(true) 已讓 player active
-
+        // 第一次 Confirm 後角色才透過 Rpc_ChangeSkin 在 host 端 spawn，
+        // 對 client 端可能要好幾幀網路同步才看得到 SpawnedPlayers，
+        // 因此這裡用 retry timeout 持續找，而不是只等一幀。
+        const float TIMEOUT = 5f;
+        float elapsed = 0f;
         Transform physicsBody = null;
-        foreach (var playerObj in SpawnedPlayers)
+
+        while (elapsed < TIMEOUT)
         {
-            if (playerObj == null) continue;
-            var np = playerObj.GetComponent<NetworkPlayer>();
-            if (np != null && np.PlayerId == Runner.LocalPlayer)
+            yield return null;
+            elapsed += Time.deltaTime;
+
+            foreach (var playerObj in SpawnedPlayers)
             {
-                var ch = playerObj.GetComponent<OodlesCharacter>();
-                if (ch != null) physicsBody = ch.GetPhysicsBody().transform;
-                break;
+                if (playerObj == null) continue;
+                var np = playerObj.GetComponent<NetworkPlayer>();
+                if (np != null && np.PlayerId == Runner.LocalPlayer)
+                {
+                    var ch = playerObj.GetComponent<OodlesCharacter>();
+                    if (ch != null) physicsBody = ch.GetPhysicsBody().transform;
+                    break;
+                }
             }
+
+            if (physicsBody != null) break;
         }
 
         if (physicsBody != null)
@@ -364,7 +575,7 @@ public class SkinChange : NetworkBehaviour
         }
         else
         {
-            Debug.LogWarning("[SkinChange] RebindCamera: 找不到本地玩家的 physics body");
+            Debug.LogWarning("[SkinChange] RebindCamera: 找不到本地玩家的 physics body (timeout)");
         }
     }
 
@@ -379,36 +590,36 @@ public class SkinChange : NetworkBehaviour
     }
 
     /// <summary>
-    /// Host → All：通知指定玩家角色已生成完畢，該 Client 可以關閉 Loading。
-    /// 每個 Client 收到後檢查是不是自己，是的話關掉 LoadingScreen。
+    /// Host → All：通知指定玩家角色已生成完畢。
+    /// 新流程下 LoadingScreen 已在 Spawned() 直接關掉、選角面板也是 Spawned() 直接開，
+    /// 所以這裡不再做 LoadingScreen.SetActive / PickCharacterUI 之類的副作用，
+    /// 只當作 spawn 完成的事件 hook（之後若需要做 spawn-done 動作可加在這）。
     /// </summary>
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void Rpc_PlayerSpawnComplete(PlayerRef targetPlayer)
     {
-        // 只有目標玩家自己才關 Loading
         if (Runner.LocalPlayer != targetPlayer) return;
-
-        Debug.Log($"[SkinChange] 收到 Rpc_PlayerSpawnComplete，關閉 Loading");
-        if (MenuUIManager.instance != null && MenuUIManager.instance.LoadingScreen != null)
-            MenuUIManager.instance.LoadingScreen.SetActive(false);
-            PickCharacterUI();
+        Debug.Log($"[SkinChange] Rpc_PlayerSpawnComplete (no-op)");
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    void Rpc_ChangeSkin(PlayerRef PlayerId, int index, string colorHex)
+    void Rpc_ChangeSkin(PlayerRef PlayerId, int index, string colorHex, string playerName)
     {
         if (Runner.IsServer)
-            StartCoroutine(ChangeSkinRoutine(PlayerId, index));
+            StartCoroutine(ChangeSkinRoutine(PlayerId, index, colorHex, playerName));
     }
 
-    /// <summary>分幀處理 Despawn / Spawn，避免同一幀同時銷毀+建立造成全體卡頓</summary>
-    private IEnumerator ChangeSkinRoutine(PlayerRef playerId, int skinIndex)
+    /// <summary>
+    /// 統一的「按 Confirm 後生成 / 換 skin」流程：
+    ///  - 沒有舊角色 → 第一次生成（含註冊到 playerlistmanager）
+    ///  - 有舊角色   → 分幀 spawn 新 + despawn 舊（避免同一幀同時 create / destroy 卡頓）
+    /// </summary>
+    private IEnumerator ChangeSkinRoutine(PlayerRef playerId, int skinIndex, string colorHex, string playerName)
     {
         NetworkObject oldObj = null;
         int oldSlot = -1;
-        string playerName = "Player";
 
-        // 1) 找到舊角色，記下名字和欄位
+        // 1) 找舊角色（如有）
         for (int i = 0; i < SpawnedPlayers.Length; i++)
         {
             var obj = SpawnedPlayers.Get(i);
@@ -418,20 +629,26 @@ public class SkinChange : NetworkBehaviour
             {
                 oldObj = obj;
                 oldSlot = i;
-                playerName = obj.GetComponent<PlayerIdentify>()?.PlayerName ?? "Player";
+                // 已存在的角色用既有名字（避免被 client 端傳來的覆寫）
+                string existing = obj.GetComponent<PlayerIdentify>()?.PlayerName;
+                if (!string.IsNullOrEmpty(existing)) playerName = existing;
                 break;
             }
         }
 
-        if (oldObj == null) yield break;
+        // 2) 生成新角色
+        if (oldObj != null) SpawnedPlayers.Set(oldSlot, null); // 騰空舊欄位
+        PlayerSpawner.instance.SpawnPlayer(Runner, skinIndex, playerId, playerName, false, colorHex);
 
-        // 2) Frame A：先生成新角色（Client 端只需要 Instantiate）
-        SpawnedPlayers.Set(oldSlot, null); // 清空舊欄位給新角色用
-        PlayerSpawner.instance.SpawnPlayer(Runner, skinIndex, playerId, playerName);
+        // 3) 分支：沒有舊角色 → 第一次生成，註冊 playerlist 後完成
+        if (oldObj == null)
+        {
+            StartCoroutine(RegisterWhenReady(playerId, playerName, skinIndex));
+            yield break;
+        }
 
-        yield return null; // 等一幀
-
-        // 3) Frame B：再銷毀舊角色（Client 端只需要 Destroy）
+        // 4) 有舊角色：等一幀後 despawn 舊（避免同一幀生成+銷毀）
+        yield return null;
         if (oldObj != null && oldObj.IsValid)
             Runner.Despawn(oldObj);
     }
@@ -465,7 +682,8 @@ public class SkinChange : NetworkBehaviour
     {
 
         int originalIndex = PlayerPrefs.GetInt("Choosenindex", 0);
-        Rpc_ChangeSkin(Runner.LocalPlayer, originalIndex, PlayerPrefs.GetString("Color", "#FFFFFF"));
+        string pName = NetworkManager2.Instance != null ? NetworkManager2.Instance.PlayerName : "Player";
+        Rpc_ChangeSkin(Runner.LocalPlayer, originalIndex, PlayerPrefs.GetString("Color", "#FFFFFF"), pName);
         // 2. 隱藏 3D 預覽模型 
         foreach (var skin in Skins)
         {

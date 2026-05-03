@@ -14,6 +14,8 @@ public class GameManager : NetworkBehaviour
     public static GameManager instance;
     private Dictionary<PlayerRef, int> playerCharacterIndex = new Dictionary<PlayerRef, int>();
     private Dictionary<PlayerRef, string> playerNames = new Dictionary<PlayerRef, string>();
+    private Dictionary<PlayerRef, string> playerColors = new Dictionary<PlayerRef, string>();
+
     public CountdownTimer countdownTimer;
     public int AllPlayers = 0;
 
@@ -66,7 +68,9 @@ public class GameManager : NetworkBehaviour
         }
 
         string localName = NetworkManager2.Instance != null ? NetworkManager2.Instance.PlayerName : "Player";
-        Rpc_Ready(PlayerPrefs.GetInt("Choosenindex"), localName, default);
+        // 跟 Choosenindex 同樣讀本地 PlayerPrefs 色票
+        string localColor = PlayerPrefs.GetString("Color", "");
+        Rpc_Ready(PlayerPrefs.GetInt("Choosenindex"), localName, localColor, default);
         MenuUIManager.instance.Gameroom.SetActive(false);
         GameUIManager.Instance.HUDUI.SetActive(true);
         GameUIManager.Instance.GameHUDPanel?.ShowCurrentUI();
@@ -246,7 +250,9 @@ public class GameManager : NetworkBehaviour
         Debug.Log($"ActivePlayers: {Runner.ActivePlayers.Count()}, Spectators: {spectatorPlayers.Count}, RealPlayers: {realPlayerCount}");
         for (int i = 0; i < AllPlayers- realPlayerCount; i++)
         {
-            PlayerSpawner.instance.SpawnPlayer(Runner, null, PlayerRef.None, "AI_" + i);
+            // AI 色票 index 從 realPlayerCount 開始，避免跟真人玩家撞色
+            string tint = PlayerSpawner.GetPaletteHex(realPlayerCount + i);
+            PlayerSpawner.instance.SpawnPlayer(Runner, null, PlayerRef.None, "AI_" + i, false, tint);
         }
     }
     public void RandomAssignMissionCard()
@@ -336,13 +342,14 @@ public class GameManager : NetworkBehaviour
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
-    public void Rpc_Ready(int chosenIndex, string playerName, RpcInfo info)
+    public void Rpc_Ready(int chosenIndex, string playerName, string colorHex, RpcInfo info)
     {
         if (Runner.IsServer)
         {
             playerCharacterIndex[info.Source] = chosenIndex;
             playerNames[info.Source] = playerName;
-            Debug.Log($"[Ready] {info.Source} name={playerName} skin={chosenIndex}");
+            playerColors[info.Source] = colorHex;
+            Debug.Log($"[Ready] {info.Source} name={playerName} skin={chosenIndex} color={colorHex}");
             CheckAllReady();
         }
     }
@@ -730,14 +737,17 @@ public class GameManager : NetworkBehaviour
                 continue;
             }
 
-            // 從 Rpc_Ready 收集的名字取得
+            // 從 Rpc_Ready 收集的名字 / 色票取得
             string playerName = playerNames.ContainsKey(player) ? playerNames[player] : "Player";
+            string playerColor = playerColors.ContainsKey(player) ? playerColors[player] : "";
 
             PlayerSpawner.instance.SpawnPlayer(
                 Runner,
                 playerCharacterIndex[player],
                 player,
-                playerName
+                playerName,
+                false,
+                playerColor
             );
         }
     }

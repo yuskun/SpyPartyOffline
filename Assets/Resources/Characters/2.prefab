@@ -176,7 +176,11 @@ MonoBehaviour:
   _PlayerID: 0
   _PlayerName: 
   _SkinIndex: 0
+  _TintColor: {r: 1, g: 0.7411765, b: 0.18431373, a: 1}
   Text: {fileID: 7308428587593259544}
+  skinRoot: {fileID: 6314454602956702645}
+  skinObjectName: Skin
+  skinMaterialName: Skin
 --- !u!114 &5337010298752834278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2758,15 +2762,15 @@ PrefabInstance:
     - target: {fileID: -885980146020112748, guid: 28c5b080c361ef346ac8717c4e8a3a87, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: -1077435173747655705, guid: 28c5b080c361ef346ac8717c4e8a3a87, type: 3}
+      objectReference: {fileID: -1077435173747655705, guid: e8ec772eb043e9349ac48fe077ed53e5, type: 3}
     - target: {fileID: -885980146020112748, guid: 28c5b080c361ef346ac8717c4e8a3a87, type: 3}
       propertyPath: m_Materials.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -885980146020112748, guid: 28c5b080c361ef346ac8717c4e8a3a87, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 00fe1080f58d988448e1577c9384d2c2, type: 2}
+      objectReference: {fileID: 2100000, guid: a193a09d3d2da6345b084995e9bd07a3, type: 2}
     - target: {fileID: -885980146020112748, guid: 28c5b080c361ef346ac8717c4e8a3a87, type: 3}
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
@@ -2778,6 +2782,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 28c5b080c361ef346ac8717c4e8a3a87, type: 3}
       propertyPath: m_TagString
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324696799448492677, guid: 28c5b080c361ef346ac8717c4e8a3a87, type: 3}
+      propertyPath: m_Name
+      value: Skin
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5866666021909216657, guid: 28c5b080c361ef346ac8717c4e8a3a87, type: 3}
@@ -5523,6 +5531,11 @@ MonoBehaviour:
   SyncParent: 0
   _autoAOIOverride: 1
   DisableSharedModeInterpolation: 0
+--- !u!4 &6314454602956702645 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3134021384703229465, guid: 28c5b080c361ef346ac8717c4e8a3a87, type: 3}
+  m_PrefabInstance: {fileID: 8997968690312265132}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6485632096661383117 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -6422505948304532895, guid: 28c5b080c361ef346ac8717c4e8a3a87, type: 3}

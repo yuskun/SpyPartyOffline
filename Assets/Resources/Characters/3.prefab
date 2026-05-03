@@ -508,7 +508,11 @@ MonoBehaviour:
   _PlayerID: 0
   _PlayerName: 
   _SkinIndex: 0
+  _TintColor: {r: 0.30980393, g: 0.80784315, b: 0.9529412, a: 1}
   Text: {fileID: 3857618428909973612}
+  skinRoot: {fileID: 5390606240036261421}
+  skinObjectName: Skin
+  skinMaterialName: Skin
 --- !u!114 &4536659258725188919
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2054,14 +2058,14 @@ PrefabInstance:
     - target: {fileID: -2744192153509943350, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: -9085227118422698276, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
+      objectReference: {fileID: -9085227118422698276, guid: e8ec772eb043e9349ac48fe077ed53e5, type: 3}
     - target: {fileID: -2744192153509943350, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
       propertyPath: m_Quality
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -2744192153509943350, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
       propertyPath: m_Materials.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -2744192153509943350, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -2070,7 +2074,7 @@ PrefabInstance:
     - target: {fileID: -2744192153509943350, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
-      objectReference: {fileID: 2100000, guid: 1f60a54017bcdd242baa7ee50e2ff88f, type: 2}
+      objectReference: {fileID: 2100000, guid: dd94053dc9948ef408305a48c72e1613, type: 2}
     - target: {fileID: 919132149155446097, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
       propertyPath: m_Name
       value: Ragdoll
@@ -2078,6 +2082,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
       propertyPath: m_TagString
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 4965042910893088648, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
+      propertyPath: m_Name
+      value: Skin
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5290,6 +5298,11 @@ MonoBehaviour:
   SyncParent: 0
   _autoAOIOverride: 1
   DisableSharedModeInterpolation: 0
+--- !u!4 &5390606240036261421 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -4398302203662417457, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}
+  m_PrefabInstance: {fileID: 592593484347592674}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6526850931259282914 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5957515692329458176, guid: d2064ebb0d01ad143b8663bc740b546f, type: 3}

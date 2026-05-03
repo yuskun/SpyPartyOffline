@@ -463,7 +463,11 @@ MonoBehaviour:
   _PlayerID: 0
   _PlayerName: 
   _SkinIndex: 0
+  _TintColor: {r: 0.2627451, g: 0.8431373, b: 0.9215687, a: 1}
   Text: {fileID: 3733382606950532891}
+  skinRoot: {fileID: 764416332950439914}
+  skinObjectName: Skin
+  skinMaterialName: Skin
 --- !u!114 &446062359575357264
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1032,7 +1036,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2557695918901135190}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 4098a89e302d7f84ba5cd831cc8ee6b5, type: 3}
+  m_Avatar: {fileID: 9000000, guid: 3ee4f821ec19a5943a7a69c21235c21e, type: 3}
   m_Controller: {fileID: 9100000, guid: 00bb9b6c515a25b43a92245dea2db0a6, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
@@ -2938,16 +2942,32 @@ PrefabInstance:
       value: 
       objectReference: {fileID: -8800526663576843685, guid: 3ee4f821ec19a5943a7a69c21235c21e, type: 3}
     - target: {fileID: 6287273949237163193, guid: 4098a89e302d7f84ba5cd831cc8ee6b5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: -8971424173591202461, guid: 4098a89e302d7f84ba5cd831cc8ee6b5, type: 3}
+    - target: {fileID: 6287273949237163193, guid: 4098a89e302d7f84ba5cd831cc8ee6b5, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: -512224122959159241, guid: 4098a89e302d7f84ba5cd831cc8ee6b5, type: 3}
+    - target: {fileID: 6287273949237163193, guid: 4098a89e302d7f84ba5cd831cc8ee6b5, type: 3}
       propertyPath: 'm_Materials.Array.data[2]'
       value: 
       objectReference: {fileID: -2372380289074245050, guid: 3ee4f821ec19a5943a7a69c21235c21e, type: 3}
+    - target: {fileID: 6287273949237163193, guid: 4098a89e302d7f84ba5cd831cc8ee6b5, type: 3}
+      propertyPath: 'm_Materials.Array.data[3]'
+      value: 
+      objectReference: {fileID: -2372380289074245050, guid: 3ee4f821ec19a5943a7a69c21235c21e, type: 3}
+    - target: {fileID: 6624448761394082272, guid: 4098a89e302d7f84ba5cd831cc8ee6b5, type: 3}
+      propertyPath: m_Name
+      value: Skin
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: -5776340015626143035, guid: 4098a89e302d7f84ba5cd831cc8ee6b5, type: 3}
     - {fileID: -4418036071462718803, guid: 4098a89e302d7f84ba5cd831cc8ee6b5, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4098a89e302d7f84ba5cd831cc8ee6b5, type: 3}
-      insertIndex: -1
+      insertIndex: 0
       addedObject: {fileID: 2343809860559944918}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4098a89e302d7f84ba5cd831cc8ee6b5, type: 3}
@@ -3677,6 +3697,11 @@ MonoBehaviour:
   SyncParent: 0
   _autoAOIOverride: 1
   DisableSharedModeInterpolation: 0
+--- !u!4 &764416332950439914 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2677859768687353611, guid: 4098a89e302d7f84ba5cd831cc8ee6b5, type: 3}
+  m_PrefabInstance: {fileID: 3436928072718211297}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1180291577270491481 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -4624256524440043080, guid: 4098a89e302d7f84ba5cd831cc8ee6b5, type: 3}

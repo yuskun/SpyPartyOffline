@@ -26,6 +26,7 @@ Shader "Custom/Outline Mask" {
 
       Stencil {
         Ref 1
+        WriteMask 1
         Pass Replace
       }
     }

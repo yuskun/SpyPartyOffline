@@ -99,7 +99,7 @@
     padding: 20px;
     justify-content: center;
     border-radius: 34px;
-    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/Inventory_bg.png");
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/inventory_bg.png");
 }
 
 .item-slot {

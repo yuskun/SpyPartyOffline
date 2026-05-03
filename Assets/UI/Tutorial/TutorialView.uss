@@ -1,0 +1,483 @@
+/* 確保 inventory 的 item-icon 預設是透明，不要顯示成白圓 */
+.item-icon {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+/* Tutorial UI · Unity UI Toolkit
+   Mirrors the HTML mockup at Its MineUI/tutorial.html
+   Color tokens (matching HUD palette):
+   --cyan-1   #5DE3FF   bright cyan glow
+   --cyan-2   #2BC6F0   border
+   --cyan-3   #0E7BAA   chunky shadow
+   --cyan-ink #093A55   primary text
+   --yellow   #FFD964   highlight / Enter accent
+   --yellow-2 #FFB726   amber accent
+   --yellow-i #5A3A00   yellow shadow / brown text
+*/
+
+.root {
+    position: absolute;
+    left: 0; right: 0; top: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+/* ========== topbar progress ========== */
+.topbar {
+    position: absolute;
+    top: 14px; left: 0; right: 0;
+    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+}
+.topbar > .progress-track {
+    flex-direction: row;
+    background-color: rgba(8, 24, 40, 0.5);
+    border-color: rgba(120, 220, 255, 0.35);
+    border-width: 1px;
+    border-radius: 100px;
+    padding: 8px 14px;
+}
+.pdot {
+    width: 8px; height: 8px;
+    margin: 0 2px;
+    background-color: rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    transition: background-color 200ms, scale 200ms;
+}
+.pdot.done { background-color: rgb(93, 227, 255); }
+.pdot.active {
+    background-color: rgb(255, 217, 100);
+    scale: 1.5;
+}
+.progress-text {
+    margin-left: 12px;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 12px;
+    -unity-font-style: bold;
+    letter-spacing: 1px;
+    align-self: center;
+}
+
+/* ========== overlay (rings + arrows) ========== */
+.overlay-host {
+    position: absolute;
+    left: 0; right: 0; top: 0; bottom: 0;
+}
+.ring {
+    position: absolute;
+    border-color: rgb(255, 217, 100);
+    border-width: 4px;
+    border-radius: 16px;
+    background-color: rgba(0, 0, 0, 0);
+    transition: scale 700ms ease-in-out;
+}
+.ring.circle { border-radius: 200px; }
+
+/* ========== dialogue card (top-left) ========== */
+.dialogue {
+    position: absolute;
+    top: 18px; left: 20px;
+    width: 380px;
+    background-color: rgb(248, 252, 255);
+    /* 不對稱 border：上 3、左右 3、底 7 + 底深色 → 3D 浮起感 */
+    border-top-width: 3px;
+    border-left-width: 3px;
+    border-right-width: 3px;
+    border-bottom-width: 7px;
+    border-top-color: rgb(43, 198, 240);
+    border-left-color: rgb(43, 198, 240);
+    border-right-color: rgb(43, 198, 240);
+    border-bottom-color: rgb(14, 123, 170);
+    border-radius: 18px;
+    padding: 14px 18px;
+    color: rgb(9, 58, 85);
+    transition: width 280ms ease, padding 240ms ease, border-radius 240ms ease;
+}
+
+.dialogue-head {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.step-badge {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background-color: rgb(255, 217, 100);
+    border-width: 3px;
+    border-color: rgb(255, 255, 255);
+    color: rgb(90, 58, 0);
+    font-size: 18px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+.step-text {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-direction: column;
+}
+.step-title {
+    color: rgb(9, 58, 85);
+    font-size: 21px;
+    -unity-font-style: bold;
+    white-space: normal;
+}
+.step-summary {
+    display: none;
+    color: rgba(9, 58, 85, 0.7);
+    font-size: 12px;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.collapsed-hint {
+    display: none;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 14px;
+}
+.collapsed-hint .hint-text {
+    margin-left: 6px;
+    color: rgba(9, 58, 85, 0.7);
+    font-size: 12px;
+    -unity-font-style: bold;
+}
+
+.step-body {
+    color: rgba(9, 58, 85, 0.88);
+    font-size: 14px;
+    margin-top: 4px;
+    white-space: normal;
+}
+
+/* keys row (W/A/S/D/E/RMB...) */
+.keys-row {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+.key {
+    min-width: 40px; height: 40px;
+    margin: 0 6px 6px 0;
+    padding: 0 10px;
+    background-color: rgb(255, 255, 255);
+    /* key cap：底邊厚 4px 暗藍 → 立體鍵帽 */
+    border-top-width: 2px;
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-bottom-width: 4px;
+    border-top-color: rgb(43, 198, 240);
+    border-left-color: rgb(43, 198, 240);
+    border-right-color: rgb(43, 198, 240);
+    border-bottom-color: rgb(14, 123, 170);
+    border-radius: 9px;
+    color: rgb(9, 58, 85);
+    font-size: 16px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+.key.small {
+    min-width: 36px; height: 32px;
+    padding: 0 10px;
+    font-size: 14px;
+    border-width: 2px;
+    border-radius: 8px;
+}
+.key.primary {
+    background-color: rgb(255, 217, 100);
+    border-top-color: rgb(255, 183, 38);
+    border-left-color: rgb(255, 183, 38);
+    border-right-color: rgb(255, 183, 38);
+    border-bottom-color: rgb(180, 122, 0);
+    color: rgb(90, 58, 0);
+}
+
+/* target chip */
+.step-target {
+    display: none;
+    margin-top: 10px;
+    padding: 6px 12px;
+    background-color: rgba(255, 217, 100, 0.25);
+    border-color: rgb(255, 183, 38);
+    border-width: 1.5px;
+    border-radius: 8px;
+    color: rgb(90, 58, 0);
+    font-size: 13px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-left;
+    align-self: flex-start;
+}
+.step-target.show { display: flex; }
+
+/* video slot */
+.video-slot {
+    display: none;
+    margin-top: 12px;
+    height: 140px;
+    border-color: rgb(43, 198, 240);
+    border-width: 2px;
+    border-radius: 10px;
+    background-color: rgba(43, 198, 240, 0.08);
+    align-items: center;
+    justify-content: center;
+}
+.video-slot.show { display: flex; }
+.video-label {
+    color: rgb(14, 123, 170);
+    font-size: 13px;
+    -unity-font-style: bold;
+}
+
+/* keyboard hint footer */
+.kbd-hint {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 14px;
+}
+.kbd-hint-side {
+    flex-direction: row;
+    align-items: center;
+}
+.kbd-hint-side .hint-text {
+    margin-left: 6px;
+    margin-right: 12px;
+    color: rgba(9, 58, 85, 0.7);
+    font-size: 12px;
+    -unity-font-style: bold;
+}
+.kbd-spacer { width: 8px; }
+
+/* ========== collapsed state (Space toggles) ========== */
+.dialogue.collapsed {
+    width: auto;
+    padding: 8px 18px 8px 8px;
+    border-radius: 100px;
+    border-width: 2px;
+}
+.dialogue.collapsed .step-body,
+.dialogue.collapsed .keys-row,
+.dialogue.collapsed .step-target,
+.dialogue.collapsed .video-slot,
+.dialogue.collapsed .kbd-hint { display: none; }
+.dialogue.collapsed .step-badge {
+    width: 38px; height: 38px;
+    font-size: 16px;
+    border-width: 2px;
+}
+.dialogue.collapsed .step-title { font-size: 16px; }
+.dialogue.collapsed .step-summary { display: flex; max-width: 240px; }
+.dialogue.collapsed .collapsed-hint { display: flex; }
+.dialogue.collapsed .dialogue-head { margin-bottom: 0; }
+
+/* ========== modals ========== */
+.modal {
+    display: none;
+    position: absolute;
+    left: 0; right: 0; top: 0; bottom: 0;
+    background-color: rgba(4, 16, 28, 0.65);
+    align-items: center;
+    justify-content: center;
+}
+.modal.show { display: flex; }
+
+.modal-card {
+    background-color: rgb(255, 255, 255);
+    /* 立體 modal：上 3 / 左右 3 / 底 8 深邊 */
+    border-top-width: 3px;
+    border-left-width: 3px;
+    border-right-width: 3px;
+    border-bottom-width: 8px;
+    border-top-color: rgb(43, 198, 240);
+    border-left-color: rgb(43, 198, 240);
+    border-right-color: rgb(43, 198, 240);
+    border-bottom-color: rgb(14, 123, 170);
+    border-radius: 24px;
+    padding: 28px 32px;
+    color: rgb(9, 58, 85);
+    max-width: 90%;
+    align-items: center;
+}
+.modal-title {
+    color: rgb(9, 58, 85);
+    font-size: 26px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+.modal-subtitle {
+    color: rgba(9, 58, 85, 0.6);
+    font-size: 13px;
+    -unity-font-style: normal;
+    -unity-text-align: middle-center;
+    letter-spacing: 2px;
+    margin-top: 4px;
+    margin-bottom: 14px;
+}
+
+/* items grid (3 cols × 2 rows via flex-wrap) */
+.items-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 660px;
+    margin-bottom: 18px;
+}
+.item-card {
+    width: 200px; height: 170px;
+    margin: 7px;
+    padding: 14px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-color: rgb(43, 198, 240);
+    border-width: 2px;
+    border-radius: 14px;
+    align-items: center;
+}
+/* 注意：限定在 .item-card（道具圖鑑 modal）裡才套用，不要影響 hotbar 的 .item-icon */
+.item-card .item-icon {
+    width: 56px; height: 56px;
+    margin-bottom: 8px;
+    border-radius: 50%;
+    background-color: rgb(232, 245, 251);
+    border-color: rgb(255, 255, 255);
+    border-width: 2px;
+    -unity-text-align: middle-center;
+    font-size: 28px;
+}
+.item-name {
+    color: rgb(9, 58, 85);
+    font-size: 15px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    margin-bottom: 4px;
+}
+.item-desc {
+    color: rgba(9, 58, 85, 0.7);
+    font-size: 12px;
+    -unity-text-align: middle-center;
+    white-space: normal;
+}
+
+/* mission card display */
+.mission-card-display {
+    width: 320px; height: 448px;
+    margin-bottom: 16px;
+    border-radius: 18px;
+    background-color: rgb(255, 255, 255);
+    border-color: rgb(255, 255, 255);
+    border-width: 4px;
+    overflow: hidden;
+    align-items: stretch;
+}
+.mc-inner {
+    flex-grow: 1;
+    margin: 14px;
+    border-color: rgba(14, 123, 170, 0.3);
+    border-width: 2px;
+    border-radius: 14px;
+    padding: 14px;
+}
+.mc-type {
+    color: rgb(14, 123, 170);
+    font-size: 11px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    letter-spacing: 3px;
+}
+.mc-name {
+    color: rgb(9, 58, 85);
+    font-size: 30px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    margin-top: 4px;
+}
+.mc-icon {
+    flex-grow: 1;
+    margin: 14px 0;
+    border-radius: 12px;
+    background-color: rgba(93, 227, 255, 0.15);
+    -unity-text-align: middle-center;
+    font-size: 88px;
+}
+.mc-desc {
+    color: rgba(9, 58, 85, 0.85);
+    font-size: 12px;
+    -unity-text-align: middle-center;
+    white-space: normal;
+}
+.mc-win {
+    margin-top: 10px;
+    padding: 8px 10px;
+    background-color: rgba(255, 217, 100, 0.25);
+    border-color: rgb(255, 217, 100);
+    border-width: 1.5px;
+    border-radius: 8px;
+    color: rgb(90, 58, 0);
+    font-size: 12px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+
+/* final cheer */
+.final-card { padding: 36px 40px; }
+.final-crown {
+    font-size: 64px;
+    -unity-text-align: middle-center;
+}
+.final-title {
+    margin-top: 8px;
+    color: rgb(255, 183, 38);
+    font-size: 32px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+.final-body {
+    margin-top: 4px;
+    color: rgba(9, 58, 85, 0.85);
+    font-size: 15px;
+    -unity-text-align: middle-center;
+    white-space: normal;
+}
+
+/* modal action buttons */
+.modal-actions {
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 14px;
+}
+.btn {
+    height: 48px;
+    padding: 10px 22px;
+    margin: 0 4px;
+    border-radius: 12px;
+    font-size: 14px;
+    -unity-font-style: bold;
+    /* 立體按鈕：上 2 / 左右 2 / 底 5 暗色 */
+    border-top-width: 2px;
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-bottom-width: 5px;
+}
+.btn-primary {
+    background-color: rgb(255, 217, 100);
+    border-top-color: rgb(255, 183, 38);
+    border-left-color: rgb(255, 183, 38);
+    border-right-color: rgb(255, 183, 38);
+    border-bottom-color: rgb(180, 122, 0);
+    color: rgb(90, 58, 0);
+}
+.btn-primary:hover {
+    background-color: rgb(255, 233, 176);
+}
+.btn-secondary {
+    background-color: rgb(232, 245, 251);
+    border-top-color: rgb(43, 198, 240);
+    border-left-color: rgb(43, 198, 240);
+    border-right-color: rgb(43, 198, 240);
+    border-bottom-color: rgb(14, 123, 170);
+    color: rgb(9, 58, 85);
+}
+.btn-secondary:hover {
+    background-color: rgb(220, 240, 250);
+}

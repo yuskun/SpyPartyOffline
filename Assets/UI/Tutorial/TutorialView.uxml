@@ -1,0 +1,205 @@
+<engine:UXML
+    xmlns:engine="UnityEngine.UIElements"
+    xmlns:editor="UnityEditor.UIElements"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <engine:Style src="project://database/Assets/UI/Tutorial/TutorialView.uss?fileID=7433441132597879392&amp;guid=96897d67e9fc3d543882ca34d0696343&amp;type=3#TutorialView" />
+  <engine:Style src="project://database/Assets/Scripts/USS/GameHUD.uss?fileID=7433441132597879392&amp;guid=66d7d108cd902544ead603a70d9e8215&amp;type=3#GameHUD" />
+
+  <engine:VisualElement name="root" class="root body-style" picking-mode="Ignore">
+
+    <!-- ===== Game HUD layout (移植自 GameHUDPanel) ===== -->
+    <engine:VisualElement class="top-time-container" picking-mode="Ignore">
+      <engine:Label name="TopTime" text="14:30" class="top-time-text" />
+    </engine:VisualElement>
+
+    <engine:VisualElement class="minimap-container" picking-mode="Ignore">
+      <engine:VisualElement class="minimap-inner">
+        <engine:VisualElement class="map-content">
+          <engine:VisualElement name="PlayerMarker" class="marker player" />
+          <engine:VisualElement class="marker poi poi-1" />
+          <engine:VisualElement class="marker poi poi-2" />
+        </engine:VisualElement>
+      </engine:VisualElement>
+    </engine:VisualElement>
+
+    <!-- 道具欄 (Inventory hotbar) -->
+    <engine:VisualElement name="inventory" class="inventory" picking-mode="Position">
+      <engine:VisualElement class="slot selected" name="slot-1">
+        <engine:VisualElement class="slot-frame" />
+        <engine:VisualElement class="item-icon" />
+        <engine:Label class="cooldown-label" text="" />
+      </engine:VisualElement>
+      <engine:VisualElement class="slot" name="slot-2">
+        <engine:VisualElement class="slot-frame" />
+        <engine:VisualElement class="item-icon" />
+        <engine:Label class="cooldown-label" text="" />
+      </engine:VisualElement>
+      <engine:VisualElement class="slot" name="slot-3">
+        <engine:VisualElement class="slot-frame" />
+        <engine:VisualElement class="item-icon" />
+        <engine:Label class="cooldown-label" text="" />
+      </engine:VisualElement>
+      <engine:VisualElement class="slot" name="slot-4">
+        <engine:VisualElement class="slot-frame" />
+        <engine:VisualElement class="item-icon" />
+        <engine:Label class="cooldown-label" text="" />
+      </engine:VisualElement>
+      <engine:VisualElement class="slot" name="slot-5">
+        <engine:VisualElement class="slot-frame" />
+        <engine:VisualElement class="item-icon" />
+        <engine:Label class="cooldown-label" text="" />
+      </engine:VisualElement>
+      <engine:VisualElement class="slot" name="slot-6">
+        <engine:VisualElement class="slot-frame" />
+        <engine:VisualElement class="item-icon" />
+        <engine:Label class="cooldown-label" text="" />
+      </engine:VisualElement>
+    </engine:VisualElement>
+
+    <engine:VisualElement class="hud-bottom" picking-mode="Position">
+      <engine:VisualElement name="VisualElement" class="playerbar">
+        <engine:VisualElement class="avatar-wrap">
+          <engine:Image class="avatar-img" />
+        </engine:VisualElement>
+        <engine:VisualElement class="player-meta">
+          <engine:Label text="shaya" class="player-name" />
+        </engine:VisualElement>
+        <engine:VisualElement class="player-actions">
+          <engine:Button name="MicBtn" class="icon-btn mic-btn is-open">
+            <engine:VisualElement class="mic-icon mic-open" />
+            <engine:VisualElement class="mic-icon mic-off" />
+          </engine:Button>
+        </engine:VisualElement>
+      </engine:VisualElement>
+    </engine:VisualElement>
+
+    <!-- ===== Tutorial overlay ===== -->
+
+    <!-- topbar progress -->
+    <engine:VisualElement name="topbar" class="topbar" picking-mode="Ignore">
+      <engine:VisualElement name="progress-track" class="progress-track" picking-mode="Ignore" />
+      <engine:Label name="progress-text" class="progress-text" text="1 / 15" />
+    </engine:VisualElement>
+
+    <!-- ring overlay host (highlights spawned here) -->
+    <engine:VisualElement name="overlay-host" class="overlay-host" picking-mode="Ignore" />
+
+    <!-- main dialogue card -->
+    <engine:VisualElement name="dialogue" class="dialogue">
+      <engine:VisualElement class="dialogue-head" picking-mode="Ignore">
+        <engine:Label name="step-badge" class="step-badge" text="1" />
+        <engine:VisualElement class="step-text">
+          <engine:Label name="step-title" class="step-title" text="移動" />
+          <engine:Label name="step-summary" class="step-summary" text="走動 5 秒" />
+        </engine:VisualElement>
+        <engine:VisualElement class="collapsed-hint" picking-mode="Ignore">
+          <engine:Label class="key" text="Space" />
+          <engine:Label class="hint-text" text="展開" />
+        </engine:VisualElement>
+      </engine:VisualElement>
+
+      <engine:Label name="step-body" class="step-body" text="用 W A S D 在場景中走動。" />
+
+      <engine:VisualElement name="keys-row" class="keys-row" picking-mode="Ignore" />
+
+      <engine:Label name="step-target" class="step-target" text="走動 5 秒" />
+
+      <engine:VisualElement name="video-slot" class="video-slot" picking-mode="Ignore">
+        <engine:Label class="video-label" text="影片示範" />
+      </engine:VisualElement>
+
+      <engine:VisualElement class="kbd-hint" picking-mode="Ignore">
+        <engine:VisualElement class="kbd-hint-side">
+          <engine:Label class="key small" text="Esc" />
+          <engine:Label class="hint-text" text="跳過" />
+          <engine:VisualElement class="kbd-spacer" />
+          <engine:Label class="key small" text="Space" />
+          <engine:Label class="hint-text" text="收起" />
+        </engine:VisualElement>
+        <engine:VisualElement class="kbd-hint-side">
+          <engine:Label class="key small primary" text="Enter" />
+          <engine:Label name="kbd-hint-text" class="hint-text" text="繼續" />
+        </engine:VisualElement>
+      </engine:VisualElement>
+    </engine:VisualElement>
+
+    <!-- =========== MODALS =========== -->
+
+    <!-- items intro modal -->
+    <engine:VisualElement name="modal-items" class="modal" picking-mode="Position">
+      <engine:VisualElement class="modal-card">
+        <engine:Label class="modal-title" text="道具圖鑑" />
+        <engine:Label class="modal-subtitle" text="ITEMS" />
+        <engine:VisualElement class="items-grid">
+          <engine:VisualElement class="item-card">
+            <engine:Label class="item-icon" text="🎁" />
+            <engine:Label class="item-name" text="隨機禮物" />
+            <engine:Label class="item-desc" text="隨機抽出一個道具給自己。" />
+          </engine:VisualElement>
+          <engine:VisualElement class="item-card">
+            <engine:Label class="item-icon" text="🔍" />
+            <engine:Label class="item-name" text="監聽器" />
+            <engine:Label class="item-desc" text="短時間內看到對手的動向。" />
+          </engine:VisualElement>
+          <engine:VisualElement class="item-card">
+            <engine:Label class="item-icon" text="🛡" />
+            <engine:Label class="item-name" text="護盾" />
+            <engine:Label class="item-desc" text="擋下一次來襲的道具效果。" />
+          </engine:VisualElement>
+          <engine:VisualElement class="item-card">
+            <engine:Label class="item-icon" text="📡" />
+            <engine:Label class="item-name" text="干擾器" />
+            <engine:Label class="item-desc" text="癱瘓附近電腦數秒鐘。" />
+          </engine:VisualElement>
+          <engine:VisualElement class="item-card">
+            <engine:Label class="item-icon" text="💣" />
+            <engine:Label class="item-name" text="煙霧彈" />
+            <engine:Label class="item-desc" text="短暫遮蔽視野與小地圖。" />
+          </engine:VisualElement>
+          <engine:VisualElement class="item-card">
+            <engine:Label class="item-icon" text="⚡" />
+            <engine:Label class="item-name" text="加速" />
+            <engine:Label class="item-desc" text="短時間內提高移動速度。" />
+          </engine:VisualElement>
+        </engine:VisualElement>
+        <engine:VisualElement class="modal-actions">
+          <engine:Button name="btn-close-items" class="btn btn-primary" text="瞭解了，繼續 →" />
+        </engine:VisualElement>
+      </engine:VisualElement>
+    </engine:VisualElement>
+
+    <!-- mission card modal -->
+    <engine:VisualElement name="modal-mission-card" class="modal" picking-mode="Position">
+      <engine:VisualElement class="modal-card">
+        <engine:Label class="modal-title" text="你的任務卡" />
+        <engine:Label class="modal-subtitle" text="MISSION CARD" />
+        <engine:VisualElement class="mission-card-display">
+          <engine:VisualElement class="mc-inner">
+            <engine:Label class="mc-type" text="★ MISSION ★ THIEF ★" />
+            <engine:Label class="mc-name" text="小偷" />
+            <engine:Label class="mc-icon" text="🦝" />
+            <engine:Label class="mc-desc" text="場上會出現發光的目標物體，你的任務是把它們全部偷走。靠近目標按 E 即可使用任務卡偷取。" />
+            <engine:Label class="mc-win" text="🏆 勝利條件：偷取所有 3 個目標" />
+          </engine:VisualElement>
+        </engine:VisualElement>
+        <engine:VisualElement class="modal-actions">
+          <engine:Button name="btn-close-mission-card" class="btn btn-primary" text="開始任務 →" />
+        </engine:VisualElement>
+      </engine:VisualElement>
+    </engine:VisualElement>
+
+    <!-- final celebration modal -->
+    <engine:VisualElement name="modal-final" class="modal" picking-mode="Position">
+      <engine:VisualElement class="modal-card final-card">
+        <engine:Label class="final-crown" text="👑" />
+        <engine:Label class="final-title" text="教學完成！" />
+        <engine:Label class="final-body" text="你已經學會所有基本操作，準備好正式開始遊戲。" />
+        <engine:VisualElement class="modal-actions">
+          <engine:Button name="btn-restart" class="btn btn-secondary" text="重看教學" />
+          <engine:Button name="btn-enter-game" class="btn btn-primary" text="進入遊戲" />
+        </engine:VisualElement>
+      </engine:VisualElement>
+    </engine:VisualElement>
+
+  </engine:VisualElement>
+</engine:UXML>

@@ -727,7 +727,11 @@ MonoBehaviour:
   _PlayerID: 0
   _PlayerName: 
   _SkinIndex: 0
+  _TintColor: {r: 0.6039216, g: 0.6039216, b: 0.6039216, a: 1}
   Text: {fileID: 1623674596557072772}
+  skinRoot: {fileID: 4704427817462313466}
+  skinObjectName: Skin
+  skinMaterialName: Skin
 --- !u!114 &4601333307024563074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2758,11 +2762,15 @@ PrefabInstance:
     - target: {fileID: -5288388704700900448, guid: 9f134400f1a76684d84eb9d9623cdeaa, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: -3691434216628288505, guid: 9f134400f1a76684d84eb9d9623cdeaa, type: 3}
+      objectReference: {fileID: -3691434216628288505, guid: e8ec772eb043e9349ac48fe077ed53e5, type: 3}
     - target: {fileID: -5288388704700900448, guid: 9f134400f1a76684d84eb9d9623cdeaa, type: 3}
       propertyPath: m_Materials.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: -5288388704700900448, guid: 9f134400f1a76684d84eb9d9623cdeaa, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: fee6118f3545ce548a5520156b2dd37b, type: 2}
     - target: {fileID: -5288388704700900448, guid: 9f134400f1a76684d84eb9d9623cdeaa, type: 3}
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
@@ -2774,6 +2782,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 9f134400f1a76684d84eb9d9623cdeaa, type: 3}
       propertyPath: m_TagString
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 3681481610803667659, guid: 9f134400f1a76684d84eb9d9623cdeaa, type: 3}
+      propertyPath: m_Name
+      value: Skin
       objectReference: {fileID: 0}
     - target: {fileID: 6300111784500738556, guid: 9f134400f1a76684d84eb9d9623cdeaa, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5470,6 +5482,11 @@ MonoBehaviour:
   SyncParent: 0
   _autoAOIOverride: 1
   DisableSharedModeInterpolation: 0
+--- !u!4 &4704427817462313466 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6878797834969439085, guid: 9f134400f1a76684d84eb9d9623cdeaa, type: 3}
+  m_PrefabInstance: {fileID: 2179489347950799511}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4724725811537917030 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -2328779833476325647, guid: 9f134400f1a76684d84eb9d9623cdeaa, type: 3}

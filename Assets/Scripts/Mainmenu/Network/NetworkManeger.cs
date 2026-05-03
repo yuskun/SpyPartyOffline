@@ -174,6 +174,13 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         Debug.Log($"🟢 玩家 {player} 已加入");
         if (_runner.IsServer)
         {
+            // Streamer 客端不生成角色、不註冊到玩家清單
+            if (StreamerToken.IsStreamer(_runner, player))
+            {
+                Debug.Log($"📺 偵測到 streamer client（{player}），跳過 SpawnPlayer / RegisterPlayer");
+                return;
+            }
+
             Debug.Log("TEST");
             PlayerSpawner.instance.SpawnPlayer(_runner, 2, player, PlayerName);
             int skinIndex = PlayerPrefs.GetInt("Choosenindex", 0);

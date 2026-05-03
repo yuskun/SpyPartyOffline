@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using OodlesEngine;
 using TMPro;
@@ -54,6 +55,29 @@ public class LocalBackpack : MonoBehaviour
     [Header("控制項")]
     public bool enableUpdate = false;
 
+    // ========= 背包變動 FX =========
+    [Header("背包變動 FX 設定")]
+    [SerializeField] private Color pickupFlashColor  = new Color(1f, 0.95f, 0.4f, 1f);   // 暖黃 = 撿到
+    [SerializeField] private Color selfUseFlashColor = new Color(0.5f, 1f, 0.7f, 1f);    // 青綠 = 自用
+    [SerializeField] private Color stolenFlashColor  = new Color(1f, 0.3f, 0.3f, 1f);    // 紅 = 被偷
+    [SerializeField] private Color swapFlashColor    = new Color(0.4f, 0.9f, 1f, 1f);    // 青 = 換卡
+    [SerializeField] private float pickupDuration    = 0.45f;
+    [SerializeField] private float selfUseDuration   = 0.55f;
+    [SerializeField] private float swapDuration      = 0.45f;
+    [Tooltip("玩家按 E 自用卡片後，這秒數內背包變空 → 視為自用而非被偷")]
+    [SerializeField] private float selfUseGraceSeconds = 1.5f;
+
+    private CardData[] _lastSlots;
+    private bool _slotsInitialized = false;
+    private Coroutine[] _slotFx;
+    private bool[] _slotStolenLock;       // FX 期間阻擋一般 image 隱藏邏輯
+    private float _selfUseGraceUntil = 0f; // 玩家自用卡片的寬限時間戳
+    private Vector3[] _imgBasePos;
+    private Vector3[] _imgBaseScale;
+    private Quaternion[] _imgBaseRot;
+    private Color[] _imgBaseColor;
+    private Color[] _frameBaseColor;
+
 
     void Awake()
     {
@@ -91,6 +115,33 @@ public class LocalBackpack : MonoBehaviour
         }
 
         SlotCount = buttons.Count;
+
+        // ===== FX 用的快取 =====
+        _lastSlots       = new CardData[PlayerInventory.MaxSlots];
+        _slotFx          = new Coroutine[buttons.Count];
+        _slotStolenLock  = new bool[buttons.Count];
+        _imgBasePos      = new Vector3[buttons.Count];
+        _imgBaseScale    = new Vector3[buttons.Count];
+        _imgBaseRot      = new Quaternion[buttons.Count];
+        _imgBaseColor    = new Color[buttons.Count];
+        _frameBaseColor  = new Color[buttons.Count];
+        for (int i = 0; i < buttons.Count; i++)
+        {
+            if (buttons[i].image != null)
+            {
+                _imgBasePos[i]   = buttons[i].image.transform.localPosition;
+                _imgBaseScale[i] = buttons[i].image.transform.localScale;
+                _imgBaseRot[i]   = buttons[i].image.transform.localRotation;
+                _imgBaseColor[i] = buttons[i].image.color;
+            }
+            else
+            {
+                _imgBaseScale[i] = Vector3.one;
+                _imgBaseRot[i]   = Quaternion.identity;
+                _imgBaseColor[i] = Color.white;
+            }
+            _frameBaseColor[i] = (buttons[i].frameImage != null) ? buttons[i].frameImage.color : Color.white;
+        }
     }
     public void AllowInput(bool allow)
     {
@@ -363,6 +414,9 @@ public class LocalBackpack : MonoBehaviour
 
     void SendUseCardRpc(CardData data, int index, PlayerInventory targetInventory)
     {
+        // 標記自用：本玩家主動用卡，下一個 grace 視窗內變空的格子算「自用」而非「被偷」
+        _selfUseGraceUntil = Time.time + selfUseGraceSeconds;
+
         CardUseParameters useCard = new CardUseParameters();
         useCard.Card = data;
         useCard.UserId = playerIdentify.PlayerID;
@@ -473,6 +527,9 @@ public class LocalBackpack : MonoBehaviour
     void SendStealObjectRpc(int cardIndex, StealTargetObject target)
     {
         if (target == null) return;
+        // 標記自用：Steal 卡屬於主動使用
+        _selfUseGraceUntil = Time.time + selfUseGraceSeconds;
+
         CardUseParameters p = new CardUseParameters();
         p.Card = userInventory.slotsNetworked[cardIndex];
         p.UserId = playerIdentify.PlayerID;
@@ -659,18 +716,58 @@ public class LocalBackpack : MonoBehaviour
             return;
 
         var allCards = CardManager.Instance.Catalog.cards;
+        int slotMax = Mathf.Min(buttons.Count, userInventory.slotsNetworked.Length);
+
         for (int i = 0; i < buttons.Count; i++)
         {
-            var data = userInventory.slotsNetworked[i]; // 直接讀網路狀態，確保 Client 端同步正確
-            if (!data.IsEmpty())
+            CardData data = (i < userInventory.slotsNetworked.Length)
+                ? userInventory.slotsNetworked[i]
+                : CardData.Empty();
+
+            // === 變動偵測：empty→has = 撿到；has→empty = 被偷走；A→B = 被換 ===
+            if (_slotsInitialized && i < slotMax)
             {
-                var card = allCards.Find(c =>
-                    c.cardData.id == data.id && c.cardData.type == data.type
-                );
-                if (card != null && card.image != null)
+                CardData old = _lastSlots[i];
+                bool wasEmpty = old.IsEmpty();
+                bool nowEmpty = data.IsEmpty();
+                bool sameCard = !wasEmpty && !nowEmpty && old.id == data.id && old.type == data.type;
+
+                if (wasEmpty && !nowEmpty)
                 {
-                    buttons[i].image.sprite = card.image;
-                    buttons[i].image.gameObject.SetActive(true);
+                    TriggerSlotFx(i, PickupFx(i));
+                }
+                else if (!wasEmpty && nowEmpty)
+                {
+                    Sprite oldSprite = GetSpriteForData(old);
+                    if (Time.time < _selfUseGraceUntil)
+                        TriggerSlotFx(i, SelfUseFx(i, oldSprite));
+                    else
+                        TriggerSlotFx(i, StolenFx(i, oldSprite));
+                }
+                else if (!wasEmpty && !nowEmpty && !sameCard)
+                {
+                    TriggerSlotFx(i, SwapFx(i));
+                }
+            }
+
+            // === 圖片更新（若 stolen FX 正在播，先不要清掉 sprite，留給協程處理）===
+            if (!_slotStolenLock[i])
+            {
+                if (!data.IsEmpty())
+                {
+                    var card = allCards.Find(c =>
+                        c.cardData.id == data.id && c.cardData.type == data.type
+                    );
+                    if (card != null && card.image != null)
+                    {
+                        buttons[i].image.sprite = card.image;
+                        buttons[i].image.gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        buttons[i].image.sprite = null;
+                        buttons[i].image.gameObject.SetActive(false);
+                    }
                 }
                 else
                 {
@@ -678,20 +775,260 @@ public class LocalBackpack : MonoBehaviour
                     buttons[i].image.gameObject.SetActive(false);
                 }
             }
-            else
+
+            // 紀錄這一幀狀態，給下一幀比對
+            if (i < _lastSlots.Length) _lastSlots[i] = data;
+        }
+        _slotsInitialized = true;
+    }
+
+    // ========= 背包 FX 協程與工具 =========
+
+    Sprite GetSpriteForData(CardData data)
+    {
+        if (data.IsEmpty()) return null;
+        if (CardManager.Instance == null) return null;
+        var card = CardManager.Instance.Catalog.cards.Find(c =>
+            c.cardData.id == data.id && c.cardData.type == data.type);
+        return (card != null) ? card.image : null;
+    }
+
+    void TriggerSlotFx(int i, IEnumerator routine)
+    {
+        if (i < 0 || i >= _slotFx.Length) return;
+        if (_slotFx[i] != null)
+        {
+            StopCoroutine(_slotFx[i]);
+            ResetSlotVisual(i);
+        }
+        _slotFx[i] = StartCoroutine(routine);
+    }
+
+    void ResetSlotVisual(int i)
+    {
+        if (i < 0 || i >= buttons.Count) return;
+        _slotStolenLock[i] = false;
+        var img = buttons[i].image;
+        if (img != null)
+        {
+            img.transform.localPosition = _imgBasePos[i];
+            img.transform.localScale    = _imgBaseScale[i];
+            img.transform.localRotation = _imgBaseRot[i];
+            img.color = _imgBaseColor[i];
+        }
+        if (buttons[i].frameImage != null)
+            buttons[i].frameImage.color = _frameBaseColor[i];
+    }
+
+    /// <summary>撿到新道具：Scale 0.5 → 1.2 overshoot → 1.0，邊框暖黃閃光</summary>
+    IEnumerator PickupFx(int i)
+    {
+        if (i < 0 || i >= buttons.Count) yield break;
+        var imgT  = (buttons[i].image != null) ? buttons[i].image.transform : null;
+        var frame = buttons[i].frameImage;
+
+        float duration = pickupDuration;
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            float n = Mathf.Clamp01(t / duration);
+            if (imgT != null) imgT.localScale = _imgBaseScale[i] * SpringPop(n);
+            if (frame != null) frame.color = Color.Lerp(pickupFlashColor, _frameBaseColor[i], n);
+            yield return null;
+        }
+        ResetSlotVisual(i);
+        _slotFx[i] = null;
+    }
+
+    /// <summary>被偷走：紅色閃 + 抖動 0.5s，再 fade 落下 0.4s，最後清除</summary>
+    IEnumerator StolenFx(int i, Sprite oldSprite)
+    {
+        if (i < 0 || i >= buttons.Count) yield break;
+        var img   = buttons[i].image;
+        var imgT  = (img != null) ? img.transform : null;
+        var frame = buttons[i].frameImage;
+
+        _slotStolenLock[i] = true;
+        if (img != null && oldSprite != null)
+        {
+            img.sprite = oldSprite;
+            img.gameObject.SetActive(true);
+            img.color = _imgBaseColor[i];
+        }
+
+        // Phase 1: 紅閃 + 抖動 (0.5s)
+        float phase1 = 0.5f;
+        float t = 0f;
+        while (t < phase1)
+        {
+            t += Time.deltaTime;
+            float n = Mathf.Clamp01(t / phase1);
+            float pulse = Mathf.Abs(Mathf.Sin(n * Mathf.PI * 3f));
+            if (frame != null) frame.color = Color.Lerp(_frameBaseColor[i], stolenFlashColor, pulse);
+            if (imgT != null)
+                imgT.localPosition = _imgBasePos[i] + new Vector3(Random.Range(-3f, 3f), Random.Range(-3f, 3f), 0f);
+            yield return null;
+        }
+
+        // Phase 2: fade out + drop (0.4s)
+        float phase2 = 0.4f;
+        t = 0f;
+        Color baseImgColor = _imgBaseColor[i];
+        while (t < phase2)
+        {
+            t += Time.deltaTime;
+            float n = Mathf.Clamp01(t / phase2);
+            if (img != null)
+                img.color = new Color(baseImgColor.r, baseImgColor.g, baseImgColor.b, baseImgColor.a * (1f - n));
+            if (imgT != null)
+                imgT.localPosition = _imgBasePos[i] + new Vector3(0f, -25f * n, 0f);
+            yield return null;
+        }
+
+        // Cleanup
+        _slotStolenLock[i] = false;
+        if (img != null)
+        {
+            img.color = baseImgColor;
+            img.sprite = null;
+            img.gameObject.SetActive(false);
+        }
+        if (imgT != null) imgT.localPosition = _imgBasePos[i];
+        if (frame != null) frame.color = _frameBaseColor[i];
+        _slotFx[i] = null;
+    }
+
+    /// <summary>玩家自用：Scale 1.0 → 1.35 + 上升 + 淡出，邊框青綠閃（正向回饋）</summary>
+    IEnumerator SelfUseFx(int i, Sprite oldSprite)
+    {
+        if (i < 0 || i >= buttons.Count) yield break;
+        var img   = buttons[i].image;
+        var imgT  = (img != null) ? img.transform : null;
+        var frame = buttons[i].frameImage;
+
+        _slotStolenLock[i] = true;
+        if (img != null && oldSprite != null)
+        {
+            img.sprite = oldSprite;
+            img.gameObject.SetActive(true);
+            img.color = _imgBaseColor[i];
+        }
+
+        Color baseImgColor = _imgBaseColor[i];
+        float duration = selfUseDuration;
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            float n = Mathf.Clamp01(t / duration);
+            // 影像：放大到 1.35 + 上升 25 + 淡出
+            if (imgT != null)
             {
-                buttons[i].image.sprite = null;
-                buttons[i].image.gameObject.SetActive(false);
+                float scale = Mathf.Lerp(1f, 1.35f, n);
+                imgT.localScale = _imgBaseScale[i] * scale;
+                imgT.localPosition = _imgBasePos[i] + new Vector3(0f, 25f * n, 0f);
             }
+            if (img != null)
+                img.color = new Color(baseImgColor.r, baseImgColor.g, baseImgColor.b, baseImgColor.a * (1f - n));
+            // 邊框：前半段青綠閃光，後半段回到原色
+            if (frame != null)
+            {
+                float flash = Mathf.Sin(n * Mathf.PI);
+                frame.color = Color.Lerp(_frameBaseColor[i], selfUseFlashColor, flash);
+            }
+            yield return null;
+        }
+
+        _slotStolenLock[i] = false;
+        if (img != null)
+        {
+            img.color = baseImgColor;
+            img.sprite = null;
+            img.gameObject.SetActive(false);
+        }
+        if (imgT != null)
+        {
+            imgT.localPosition = _imgBasePos[i];
+            imgT.localScale    = _imgBaseScale[i];
+        }
+        if (frame != null) frame.color = _frameBaseColor[i];
+        _slotFx[i] = null;
+    }
+
+    /// <summary>被交換：Y 軸翻轉 360 + scale pulse + 邊框青光閃</summary>
+    IEnumerator SwapFx(int i)
+    {
+        if (i < 0 || i >= buttons.Count) yield break;
+        var imgT  = (buttons[i].image != null) ? buttons[i].image.transform : null;
+        var frame = buttons[i].frameImage;
+
+        float duration = swapDuration;
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            float n = Mathf.Clamp01(t / duration);
+            if (imgT != null)
+            {
+                imgT.localRotation = Quaternion.Euler(0f, n * 360f, 0f) * _imgBaseRot[i];
+                float scale = 1f + 0.2f * Mathf.Sin(n * Mathf.PI);
+                imgT.localScale = _imgBaseScale[i] * scale;
+            }
+            if (frame != null)
+            {
+                float flash = Mathf.Sin(n * Mathf.PI);
+                frame.color = Color.Lerp(_frameBaseColor[i], swapFlashColor, flash);
+            }
+            yield return null;
+        }
+        ResetSlotVisual(i);
+        _slotFx[i] = null;
+    }
+
+    /// <summary>0~1 → 0.5 → 1.2 (overshoot) → 1.0 的彈跳曲線</summary>
+    static float SpringPop(float n)
+    {
+        if (n < 0.4f)
+        {
+            float k = n / 0.4f;
+            float ease = 1f - Mathf.Pow(1f - k, 3f); // EaseOutCubic
+            return Mathf.Lerp(0.5f, 1.2f, ease);
+        }
+        else
+        {
+            float k = (n - 0.4f) / 0.6f;
+            float ease = 1f - (1f - k) * (1f - k); // EaseOutQuad
+            return Mathf.Lerp(1.2f, 1.0f, ease);
         }
     }
     public void ClearCardImages()
     {
+        // 停所有 FX 並重置視覺
+        if (_slotFx != null)
+        {
+            for (int i = 0; i < _slotFx.Length; i++)
+            {
+                if (_slotFx[i] != null) StopCoroutine(_slotFx[i]);
+                _slotFx[i] = null;
+                if (i < _slotStolenLock.Length) _slotStolenLock[i] = false;
+                ResetSlotVisual(i);
+            }
+        }
+
         for (int i = 0; i < buttons.Count; i++)
         {
             buttons[i].image.sprite = null;
             buttons[i].image.gameObject.SetActive(false);
         }
+
+        // 重置追蹤狀態，下次第一次 update 不會誤觸發 FX
+        if (_lastSlots != null)
+        {
+            for (int i = 0; i < _lastSlots.Length; i++) _lastSlots[i] = CardData.Empty();
+        }
+        _slotsInitialized = false;
+
         enableUpdate = false; // ✅ 清空後關閉 Update
 
         // 清除 Steal Outline

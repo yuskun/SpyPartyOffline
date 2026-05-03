@@ -2690,6 +2690,7 @@ MonoBehaviour:
   HostSystem: {fileID: 3052365514708413033, guid: e159ae16ea9b13d41ac478ce00b42de5, type: 3}
   countdownTimer: {fileID: 1750379173}
   AllPlayers: 0
+  startCountdownDuration: 4.5
   WinnerPoint: {fileID: 149188479}
   LoserPoint: {fileID: 1358849574}
   resultDelay: 1
@@ -3653,8 +3654,8 @@ Transform:
   - {fileID: 348369103}
   - {fileID: 2075457068}
   - {fileID: 735831382}
-  - {fileID: 1905071448}
   - {fileID: 5665366704548319706}
+  - {fileID: 1905071448}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &157318073
@@ -37734,7 +37735,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1905071447}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

@@ -27,6 +27,17 @@ namespace OodlesEngine
         [HideInInspector]
         public Joint catchJoint;
 
+        [Header("放開保護（避免剛撿起又被誤點放掉）")]
+        [Tooltip("拿到物件後這秒數內，使用者右鍵放開請求會被忽略。0 = 沒保護")]
+        private float releaseCooldown = 1f;
+
+        /// <summary>最近一次成功 Grab / 撿到武器的時間戳（Time.time）</summary>
+        [HideInInspector]
+        public float grabbedAtTime = -999f;
+
+        /// <summary>使用者右鍵主動放開時請先檢查這個（其他強制放開 e.g. ragdoll / 武器破損 不需要查）</summary>
+        public bool CanRelease => Time.time - grabbedAtTime >= releaseCooldown;
+
         public void ProcessInput()
         {
             //if (oodlesCharacter.useControls)
@@ -151,6 +162,7 @@ namespace OodlesEngine
 
                     hasJoint = true;
                     currentHoldType = HoldType.GrabObject;
+                    grabbedAtTime = Time.time;
 
                     EventBetter.Raise(new GrabObjectMessage()
                     {
@@ -223,6 +235,7 @@ namespace OodlesEngine
                 hasJoint = true;
                 currentHoldType = HoldType.Weapon;
                 GrabbedObject = wp.GetComponent<Rigidbody>();
+                grabbedAtTime = Time.time;
             }
         }
         

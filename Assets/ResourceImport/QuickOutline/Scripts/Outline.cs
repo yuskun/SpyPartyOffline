@@ -21,7 +21,8 @@ public class Outline : MonoBehaviour {
     OutlineVisible,
     OutlineHidden,
     OutlineAndSilhouette,
-    SilhouetteOnly
+    SilhouetteOnly,
+    OutlineExceptOccluder
   }
 
   public Mode OutlineMode {
@@ -59,7 +60,7 @@ public class Outline : MonoBehaviour {
   [SerializeField]
   private Color outlineColor = Color.white;
 
-  [SerializeField, Range(0f, 10f)]
+  [SerializeField, Range(0f, 30f)]
   private float outlineWidth = 2f;
 
   [Header("Optional")]
@@ -274,6 +275,11 @@ public class Outline : MonoBehaviour {
     // Apply properties according to mode
     outlineFillMaterial.SetColor("_OutlineColor", outlineColor);
 
+    // Default stencil: only check silhouette bit (bit 0). Skip when (current & 1) != 1.
+    outlineFillMaterial.SetFloat("_StencilRef", 1f);
+    outlineFillMaterial.SetFloat("_StencilReadMask", 1f);
+    outlineFillMaterial.SetFloat("_StencilComp", (float)UnityEngine.Rendering.CompareFunction.NotEqual);
+
     switch (outlineMode) {
       case Mode.OutlineAll:
         outlineMaskMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
@@ -303,6 +309,17 @@ public class Outline : MonoBehaviour {
         outlineMaskMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.LessEqual);
         outlineFillMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Greater);
         outlineFillMaterial.SetFloat("_OutlineWidth", 0f);
+        break;
+
+      case Mode.OutlineExceptOccluder:
+        // Always-show outline except where the OutlineOccluder layer marked stencil bit 1.
+        // Stencil pass when (current & 3) == 0  → outside silhouette AND no occluder in front.
+        outlineMaskMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
+        outlineFillMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
+        outlineFillMaterial.SetFloat("_OutlineWidth", outlineWidth);
+        outlineFillMaterial.SetFloat("_StencilRef", 0f);
+        outlineFillMaterial.SetFloat("_StencilReadMask", 3f);
+        outlineFillMaterial.SetFloat("_StencilComp", (float)UnityEngine.Rendering.CompareFunction.Equal);
         break;
     }
   }

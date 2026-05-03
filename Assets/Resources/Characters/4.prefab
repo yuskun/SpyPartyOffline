@@ -2285,7 +2285,11 @@ MonoBehaviour:
   _PlayerID: 0
   _PlayerName: 
   _SkinIndex: 0
+  _TintColor: {r: 0.43137255, g: 0.7254902, b: 0.41960785, a: 1}
   Text: {fileID: 5901316795843207769}
+  skinRoot: {fileID: 5933802137490659702}
+  skinObjectName: Skin
+  skinMaterialName: Skin
 --- !u!114 &2510167533390964607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2755,6 +2759,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -6130148049125292363, guid: 637741488decd8a45a663a4016432ffe, type: 3}
+      propertyPath: m_Name
+      value: Skin
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 637741488decd8a45a663a4016432ffe, type: 3}
       propertyPath: m_Name
       value: Ragdoll
@@ -2766,10 +2774,10 @@ PrefabInstance:
     - target: {fileID: 7231818899095172694, guid: 637741488decd8a45a663a4016432ffe, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 917541664597107813, guid: 637741488decd8a45a663a4016432ffe, type: 3}
+      objectReference: {fileID: 917541664597107813, guid: e8ec772eb043e9349ac48fe077ed53e5, type: 3}
     - target: {fileID: 7231818899095172694, guid: 637741488decd8a45a663a4016432ffe, type: 3}
       propertyPath: m_Materials.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7231818899095172694, guid: 637741488decd8a45a663a4016432ffe, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -5268,6 +5276,11 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!4 &5933802137490659702 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -7652652399802437249, guid: 637741488decd8a45a663a4016432ffe, type: 3}
+  m_PrefabInstance: {fileID: 5158108847040735241}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6809359728184676832 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1867582289440274921, guid: 637741488decd8a45a663a4016432ffe, type: 3}

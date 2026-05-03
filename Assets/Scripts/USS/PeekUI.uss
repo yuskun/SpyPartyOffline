@@ -86,7 +86,7 @@
     height: 180px;
     padding-top: 25px;
     margin-top: 20px;
-    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/Inventory_bg.png");
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/inventory_bg.png");
 }
 
 .item-slot {
