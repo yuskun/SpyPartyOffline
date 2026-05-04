@@ -151,25 +151,50 @@ public class StreamerAutoJoin : MonoBehaviour, INetworkRunnerCallbacks
     public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
     {
         Debug.Log($"[Streamer] Disconnected from server: {reason}");
-        _joined = false;
+        ResetSessionState();
         _ = ReconnectAfterDelay();
     }
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
         Debug.Log($"[Streamer] Runner shutdown: {shutdownReason}");
+        ResetSessionState();
+        _ = ReconnectAfterDelay();
+    }
+
+    /// <summary>立即把 session 相關狀態清成「初始 (Booting)」— 確保 Overlay 馬上切回最初 UI</summary>
+    private void ResetSessionState()
+    {
         _joined = false;
         _joining = false;
+        _inLobby = false;
+        _lastSessionTotal = 0;
+        _lastSessionJoinable = 0;
+        _currentSessionName = "";
+        ResetStateTimer();
+    }
+
+    /// <summary>
+    /// 給 Director 用：偵測到「卡死」（例如 host 突然死掉但 Photon 還沒回 callback）
+    /// 時主動觸發重連流程，不等 OnDisconnectedFromServer。
+    /// </summary>
+    public void ForceReconnect(string reason)
+    {
+        if (!_joined && _runner == null) return; // 已在重連中
+        Debug.Log($"[Streamer] ForceReconnect 觸發：{reason}");
+        ResetSessionState();
         _ = ReconnectAfterDelay();
     }
 
     async Task ReconnectAfterDelay()
     {
-        await Task.Delay(Mathf.RoundToInt(reconnectDelay * 1000));
+        // 順序：先 cleanup runner + 立刻切回 Mainmenu（讓畫面馬上乾淨、Overlay 進 Idle 狀態）
+        // 之後才延遲 + 重連 lobby（避免使用者看到 stale 的遊戲場景）
         CleanupRunner();
-
-        // host 斷線後切回 Mainmenu，避免停在 stale 的遊戲場景
         await ReturnToMainMenu();
+
+        // 延遲一下避免立刻重連又被打回（連線太快會撞到上次斷線殘留）
+        await Task.Delay(Mathf.RoundToInt(reconnectDelay * 1000));
 
         await SetupAndJoinLobby();
     }

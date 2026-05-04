@@ -38,12 +38,53 @@ public class PlayerListManager : NetworkBehaviour
         slotElements.Clear();
         root.Query<VisualElement>(className: "slot").ForEach(slot => slotElements.Add(slot));
         Debug.Log($"找到 {slotElements.Count} 個 slot");
-        
+
         // 只有房主可以點擊開始
         startGameBtn = root.Q<Button>("StartGameBtn");
+        if (startGameBtn != null)
+        {
+            startGameBtn.clicked += OnStartGameClicked;
+        }
         RefreshStartButtonAuthority();
 
         PlayerVersion = 0;
+    }
+
+    /// <summary>房主按下「開始遊戲」按鈕</summary>
+    private void OnStartGameClicked()
+    {
+        if (!Runner.IsServer)
+        {
+            Debug.LogWarning("[PlayerListManager] 只有房主可以開始遊戲");
+            return;
+        }
+        if (!AllNonStreamerPlayersReady())
+        {
+            Debug.Log("[PlayerListManager] 等待所有玩家選完角色才能開始");
+            return;
+        }
+        if (NetworkManager2.Instance != null)
+        {
+            Debug.Log("[PlayerListManager] 所有玩家就緒，切換到遊戲場景 (build index 2)");
+            NetworkManager2.Instance.SwitchScene(2);
+        }
+        else
+        {
+            Debug.LogError("[PlayerListManager] NetworkManager2.Instance 為 null，無法切換場景");
+        }
+    }
+
+    /// <summary>所有「非 streamer」的 active player 都已經選完角色（PlayerSkinIndexes 有他）</summary>
+    private bool AllNonStreamerPlayersReady()
+    {
+        int activeCount = 0;
+        foreach (var p in Runner.ActivePlayers)
+        {
+            if (StreamerToken.IsStreamer(Runner, p)) continue; // streamer 不算
+            activeCount++;
+            if (!PlayerSkinIndexes.ContainsKey(p.AsIndex)) return false;
+        }
+        return activeCount > 0;
     }
     public void Check()
     {
@@ -227,23 +268,31 @@ public class PlayerListManager : NetworkBehaviour
         if (Object != null && Object.IsValid)
         {
             Check();
+            // 每 frame 主動更新開始按鈕的可用 / 文字狀態
+            // 不依賴 PlayerVersion 觸發，避免網路同步延遲或其他狀態變動沒推 PlayerVersion 時卡住
+            RefreshStartButtonAuthority();
         }
     }
 
-    // 新增一個方法專門處理按鈕權限
+    // 按鈕的可用狀態 + 文字依「是否房主」+「玩家是否都選完角色」決定
     private void RefreshStartButtonAuthority()
     {
-        if (startGameBtn != null)
-        {
-            bool isHost = Runner.IsServer; // 或使用 Object.HasStateAuthority
-            startGameBtn.SetEnabled(isHost);
+        if (startGameBtn == null) return;
 
-            // 如果想讓 Client 看到不同的文字
-            var btnLabel = startGameBtn.Q<Label>(className: "btn-text");
-            if (btnLabel != null)
-            {
-                btnLabel.text = isHost ? "開始遊戲" : "等待房主開始";
-            }
+        bool isHost = Runner.IsServer;
+        bool allReady = isHost && AllNonStreamerPlayersReady();
+        bool canClick = isHost && allReady;
+
+        // 雙保險：SetEnabled 處理視覺灰掉，pickingMode 確保 pointer 事件完全擋住
+        startGameBtn.SetEnabled(canClick);
+        startGameBtn.pickingMode = canClick ? PickingMode.Position : PickingMode.Ignore;
+
+        var btnLabel = startGameBtn.Q<Label>(className: "btn-text");
+        if (btnLabel != null)
+        {
+            if (!isHost)        btnLabel.text = "等待房主開始";
+            else if (!allReady) btnLabel.text = "等待玩家選角中...";
+            else                btnLabel.text = "開始遊戲";
         }
     }
 }

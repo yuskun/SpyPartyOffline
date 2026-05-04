@@ -16,6 +16,14 @@ using UnityEngine;
 public class Outline : MonoBehaviour {
   private static HashSet<Mesh> registeredMeshes = new HashSet<Mesh>();
 
+  // 每次場景載入時清空快取，避免跨場景污染
+  // （例：Mainmenu 用 SkinnedMeshRenderer 把某 mesh 的 UV3 清空，遊戲場景用 MeshFilter
+  //   想寫 smooth normals 進去時，因為已在 HashSet 而 skip → UV3 還是空的 → outline 破碎）
+  [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
+  private static void RegisterSceneClearCallback() {
+    UnityEngine.SceneManagement.SceneManager.sceneLoaded += (scene, mode) => registeredMeshes.Clear();
+  }
+
   public enum Mode {
     OutlineAll,
     OutlineVisible,
@@ -180,13 +188,13 @@ public class Outline : MonoBehaviour {
 
   void LoadSmoothNormals() {
 
+    // 不再使用 static registeredMeshes 跨場景跳過 — 因為跨場景共享 mesh asset 時，
+    // 前場景用 SkinnedMeshRenderer 把 UV3 清空後，本場景用 MeshFilter 想寫入 smooth normals
+    // 會被 skip → outline 變破碎。每個 Outline 自己處理自己的 mesh，計算量可接受。
+
     // Retrieve or generate smooth normals
     foreach (var meshFilter in GetComponentsInChildren<MeshFilter>()) {
-
-      // Skip if smooth normals have already been adopted
-      if (!registeredMeshes.Add(meshFilter.sharedMesh)) {
-        continue;
-      }
+      if (meshFilter == null || meshFilter.sharedMesh == null) continue;
 
       // Retrieve or generate smooth normals
       var index = bakeKeys.IndexOf(meshFilter.sharedMesh);
@@ -194,6 +202,9 @@ public class Outline : MonoBehaviour {
 
       // Store smooth normals in UV3
       meshFilter.sharedMesh.SetUVs(3, smoothNormals);
+
+      // 標記已處理（同一場景內若多個 Outline 共用此 mesh，後者可跳過 SetUVs/Combine 重做）
+      registeredMeshes.Add(meshFilter.sharedMesh);
 
       // Combine submeshes
       var renderer = meshFilter.GetComponent<Renderer>();
@@ -205,14 +216,15 @@ public class Outline : MonoBehaviour {
 
     // Clear UV3 on skinned mesh renderers
     foreach (var skinnedMeshRenderer in GetComponentsInChildren<SkinnedMeshRenderer>()) {
+      if (skinnedMeshRenderer == null || skinnedMeshRenderer.sharedMesh == null) continue;
 
-      // Skip if UV3 has already been reset
-      if (!registeredMeshes.Add(skinnedMeshRenderer.sharedMesh)) {
-        continue;
-      }
+      // 已被 MeshFilter 寫過 smooth normals 的 mesh 不要清掉（避免互相覆蓋）
+      if (registeredMeshes.Contains(skinnedMeshRenderer.sharedMesh)) continue;
 
       // Clear UV3
       skinnedMeshRenderer.sharedMesh.uv4 = new Vector2[skinnedMeshRenderer.sharedMesh.vertexCount];
+
+      registeredMeshes.Add(skinnedMeshRenderer.sharedMesh);
 
       // Combine submeshes
       CombineSubmeshes(skinnedMeshRenderer.sharedMesh, skinnedMeshRenderer.sharedMaterials);

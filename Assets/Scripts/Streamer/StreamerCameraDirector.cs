@@ -18,6 +18,8 @@ public class StreamerCameraDirector : MonoBehaviour
     [SerializeField] private float startDelay = 2f;
     [Tooltip("玩家清單刷新頻率")]
     [SerializeField] private float listRefreshInterval = 1.5f;
+    [Tooltip("已加房後，連續 N 秒找不到任何 valid player → 視為 host 死掉，主動觸發重連")]
+    [SerializeField] private float noPlayersTimeout = 8f;
 
     [Header("視角（簡單第三人稱跟隨）")]
     [Tooltip("瞄準點相對玩家身體的偏移（朝這點 LookAt，預設頭部高度）")]
@@ -39,15 +41,18 @@ public class StreamerCameraDirector : MonoBehaviour
     public int   PlayerCount        { get; private set; } = 0;
 
     private SpectatorCamera _spec;
+    private StreamerAutoJoin _autoJoin;
     private float _nextSwitchTime = 0f;
     private float _nextRefreshTime = 0f;
     private float _readyTime = 0f;
     private bool  _started = false;
     private string _lastSceneName = "";
+    private float _noPlayersStartTime = -1f; // watchdog: 紀錄連續沒 valid player 的起始時刻
 
     void Start()
     {
         _readyTime = Time.time + startDelay;
+        _autoJoin = GetComponent<StreamerAutoJoin>();
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -83,6 +88,24 @@ public class StreamerCameraDirector : MonoBehaviour
         int total = _spec.PlayerCount;
         int valid = CountValidTargets();
         PlayerCount = valid;
+
+        // ===== Watchdog：已加房但長時間 0 valid player → 主動觸發重連 =====
+        // 用於 host 直接死掉，Photon 還沒 fire OnDisconnectedFromServer 的情況
+        if (_autoJoin != null && _autoJoin.IsJoined && valid == 0)
+        {
+            if (_noPlayersStartTime < 0f) _noPlayersStartTime = Time.time;
+            else if (Time.time - _noPlayersStartTime > noPlayersTimeout)
+            {
+                Debug.LogWarning($"[Streamer] 已加房但 {noPlayersTimeout}s 內找不到 valid player，主動 ForceReconnect");
+                _autoJoin.ForceReconnect("watchdog:no-valid-players");
+                _noPlayersStartTime = -1f;
+            }
+        }
+        else
+        {
+            _noPlayersStartTime = -1f;
+        }
+        // =============================================================
 
         if (Time.time < _readyTime || total == 0 || valid == 0)
         {
