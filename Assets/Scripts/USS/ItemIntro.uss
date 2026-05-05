@@ -7,7 +7,7 @@
 /* 主面板：毛玻璃背景 */
 .items-panel {
     width: 80%; height: 100%;
-    margin-top: 58px;
+    margin-top: 50px;
     border-radius: 42px;
     background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/bg.png");
 }
@@ -56,7 +56,7 @@
 /* 網格排版 */
 .scroll-view {
     flex-grow: 1; 
-    margin-top: 70px;
+    margin-top: 90px;
     margin-left: 50px; 
     margin-right: 50px;
     margin-bottom: 60px; 
@@ -138,3 +138,38 @@
     background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/gray.png");
     color: white; font-size: 15px;
 }
+
+/* 標籤容器：確保橫向排列 */
+.filter-tabs {
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    margin-top: 50px;
+    margin-left: 150px;
+}
+
+/* 標籤基礎樣式 */
+.filter-tab {
+    padding: 10 20px;
+    background-color: transparent; /* 隱藏預設按鈕背景 */
+    border-width: 0;
+    color: white;
+    font-size: 20px;
+    transition-duration: 0.1s;
+}
+
+.tab-all { background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/default_o.png");}
+.tab-all:hover { background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/hover_o.png"); scale: 1.02; translate: 0 -2px;}
+.tab-all:active { background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/active_o.png"); scale: 0.95;}
+
+.tab-mission { background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/default_b.png");}
+.tab-mission:hover { background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/hover_b.png"); scale: 1.02; translate: 0 -2px;}
+.tab-mission:active { background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/active_b.png"); scale: 0.95;}
+
+.tab-trap { background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/default_y.png");}
+.tab-trap:hover { background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/hover_y.png"); scale: 1.02; translate: 0 -2px;}
+.tab-trap:active { background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/active_y.png"); scale: 0.95;}
+
+.tab-means { background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/default_p.png");}
+.tab-means:hover { background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/hover_p.png"); scale: 1.05; translate: 0 -2px;}
+.tab-means:active { background-image: url("project://database/Assets/Image/UIPanel/ItemIntro/active_p.png"); scale: 0.95;}

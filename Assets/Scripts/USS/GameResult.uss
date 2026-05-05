@@ -26,7 +26,21 @@
 
 /* 贏家區 (關鍵修正：防止頭像拉伸) */
 .winner-section { align-items: center; margin-top: 40px; position: relative; }
+/* 修改或新增此 class，讓 WinnerSection 支援多人顯示 */
+.winner-section.multi-winners {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
 
+/* 讓多人模式下的頭像縮小一點，避免塞不下 */
+.winner-section.multi-winners .winner-avatar-wrap {
+    width: 150px;
+    height: 160px;
+    margin: 10px;
+}
 .crown-icon {
     position: absolute; top: -20px; left: 50%; translate: -50% 0;
     width: 45px; height: 45px;
@@ -124,7 +138,6 @@
 .item-img {
     width: 60px;
     height: 60px;
-    background-image: url("project://database/Assets/Image/CardIcon/Icon_Banana.png");
     margin-top: -15px;
     margin-bottom: -15px; 
     -unity-background-scale-mode: scale-to-fit;

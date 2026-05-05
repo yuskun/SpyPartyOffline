@@ -610,6 +610,8 @@ public class GameManager : NetworkBehaviour
         UnityEngine.Cursor.lockState = CursorLockMode.None;
 
         GameUIManager.Instance.BackBtn?.SetActive(true);
+        GameUIManager.Instance.GameResultPanel.GetComponent<UniversalUIController>().HideCurrentUI();
+
     }
 
     private IEnumerator ResultsSequence(int[] winnerIDs)
@@ -704,6 +706,14 @@ public class GameManager : NetworkBehaviour
         UnityEngine.Cursor.lockState = CursorLockMode.None;
 
         GameUIManager.Instance.BackBtn?.SetActive(true);
+        GameUIManager.Instance.GameResultPanel.ShowCurrentUI();
+
+        // 🔴 關鍵：手動通知 UI 抓取最新資料
+        var uiController = GameUIManager.Instance.GameResultPanel.GetComponent<GameResultUI>();
+        if (uiController != null)
+        {
+            uiController.RefreshDisplay();
+        }
 
     }
 

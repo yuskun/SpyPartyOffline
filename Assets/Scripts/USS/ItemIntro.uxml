@@ -2,9 +2,17 @@
     <Style src="project://database/Assets/Scripts/USS/ItemIntro.uss?fileID=7433441132597879392&amp;guid=6bec0f2a78b03e348804ca48b44eca6b&amp;type=3#ItemIntro" />
     <ui:VisualElement name="page-bg" class="page-bg" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;);">
         <ui:VisualElement class="items-panel">
+            
+            <!-- 頂部標籤過濾列 -->
             <ui:VisualElement class="panel-top-bar">
-                <ui:Label text="全部道具" class="panel-title" />
+                <ui:VisualElement class="filter-tabs">
+                    <ui:Button text="全部" class="filter-tab tab-all" />
+                    <ui:Button text="任務紙條" class="filter-tab tab-mission" />
+                    <ui:Button text="間諜道具" class="filter-tab tab-trap" />
+                    <ui:Button text="特工手段" class="filter-tab tab-means" />
+                </ui:VisualElement>
             </ui:VisualElement>
+
             <ui:ScrollView class="scroll-view" vertical-scroller-visibility="Hidden"
                horizontal-scroller-visibility="Hidden">
                 <ui:VisualElement class="cards-grid">
@@ -92,7 +100,6 @@
                 </ui:VisualElement>
             </ui:ScrollView>
             <ui:Button name="CloseBtn" text="×" class="close-btn" style="-unity-font-style: bold; font-size: 28px;" />
-            <ui:Button name="backBtn" text="返回" class="back-btn" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

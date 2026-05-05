@@ -220,3 +220,18 @@
     color: rgba(255, 255, 255, 0.92);
     font-size: 14px;
 }
+/* 預設狀態：顯示所有 normal-hint */
+.normal-hint {
+    display: flex;
+}
+
+/* 折疊狀態：隱藏所有標記為 normal-hint 的行 */
+.collapsed .normal-hint {
+    display: none;
+}
+
+/* 為了讓視覺更順暢，可以幫容器加一點位移 */
+.control-hints {
+    transition-property: translate;
+    transition-duration: 0.2s;
+}

@@ -34,6 +34,8 @@ public class GameUIManager : MonoBehaviour
     public UniversalUIController GameHudUI;
     public UniversalUIController CountDownPanel;
 
+    public UniversalUIController GameResultPanel;
+
     // ────────────────────────────────────────────────
     // 使用道具失敗提示 UI
     // ────────────────────────────────────────────────

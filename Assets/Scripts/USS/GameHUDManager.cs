@@ -9,6 +9,10 @@ public class GameHUDManager : MonoBehaviour
     public RenderTexture minimapRenderTexture;
     private Button micBtn;
     private bool micOn = true;
+    
+    private bool _isHintsCollapsed = false; 
+    private VisualElement _hintsContainer;
+    private Label _toggleHintLabel;
 
     private void Awake()
     {  if(Instance != null && Instance != this)
@@ -38,6 +42,10 @@ public class GameHUDManager : MonoBehaviour
         var mapContent = root.Q<VisualElement>(className: "map-content");
         if (mapContent != null)
             mapContent.style.backgroundImage = new StyleBackground(Background.FromRenderTexture(minimapRenderTexture));
+
+        _hintsContainer = root.Q<VisualElement>("ControlHints");
+        _toggleHintLabel = root.Q<Label>("ToggleHintText");
+        ApplyHintState(); // 每次開啟面板時，根據記錄的 _isHintsCollapsed 恢復 UI
 
         // 頭像
         if (SkinChange.instance != null && SkinChange.instance.characterAvatarDatabase != null)
@@ -102,5 +110,26 @@ public class GameHUDManager : MonoBehaviour
 
         _playerNameLabel.text = pName;
         Debug.Log($"[GameHUD] 名字已更新為: {pName}");
+    }
+
+    public void ToggleControlHints()
+    {
+        _isHintsCollapsed = !_isHintsCollapsed;
+        ApplyHintState();
+    }
+    private void ApplyHintState()
+    {
+        if (_hintsContainer == null) return;
+
+        if (_isHintsCollapsed)
+        {
+            _hintsContainer.AddToClassList("collapsed");
+            if (_toggleHintLabel != null) _toggleHintLabel.text = "開啟操作提示";
+        }
+        else
+        {
+            _hintsContainer.RemoveFromClassList("collapsed");
+            if (_toggleHintLabel != null) _toggleHintLabel.text = "關閉操作提示";
+        }
     }
 }

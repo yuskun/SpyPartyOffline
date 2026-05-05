@@ -20,8 +20,16 @@
     position: absolute;
     background-color: transparent;
     border-width: 0;
-    width: 100%;
-    height: 100%;
+    /*width: 100%;
+    height: 100%;*/
+
+    width: 120px; 
+    height: 120px;
+    left: 50%;
+    top: 50%;
+    /* 修正中心點：移動負的寬高一半 */
+    translate: -50% -50%;
+
     justify-content: center;
     align-items: center;
     transition-duration: 0.15s;
@@ -30,30 +38,34 @@
 
 /* 模擬扇形位置 */
 .slot-top {
-    top: -65px; /* 根據需求微調內容位移 */
+    /*top: -65px; */
+    translate: -50% -110%;
 }
 
 .slot-right {
-    right: -70px;
+    translate: 10% -50%; /* 向右移 */
 }
 
 .slot-bottom {
-    bottom: -65px;
+    translate: -50% 10%;
 }
 
 .slot-left {
-    left: -70px;
+    translate: -110% -50%;
 }
 /* 1. 設定遮罩層基礎樣式 */
 .hover-overlay {
     position: absolute;
-    width: 100%;
-    height: 100%;
+    width: 130%; 
+    height: 130%;
+
+    -unity-background-scale-mode: scale-to-fit;    
     /* 填入你的扇形毛玻璃圖片路徑 */
-    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/action_hoverT.png");
+    background-image: url("project://database/Assets/Image/UIPanel/GameHUD/action_hover.png");
     /* 預設隱藏 */
     opacity: 0;
     transition-duration: 0.15s;
+    transform-origin: center;
 }
 
 /* 2. 當滑鼠移入按鈕時，顯示遮罩[cite: 6] */
