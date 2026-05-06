@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -17,7 +18,7 @@ public class GameHUDManager : MonoBehaviour
     private void Awake()
     {  if(Instance != null && Instance != this)
         {
-            Debug.LogWarning("GameHUDManager 已存在，正在銷毀重複的實例。");
+            UnityEngine.Debug.LogWarning("GameHUDManager 已存在，正在銷毀重複的實例。");
             Destroy(gameObject);
             return;
         }
@@ -47,16 +48,21 @@ public class GameHUDManager : MonoBehaviour
         _toggleHintLabel = root.Q<Label>("ToggleHintText");
         ApplyHintState(); // 每次開啟面板時，根據記錄的 _isHintsCollapsed 恢復 UI
 
-        // 頭像
-        if (SkinChange.instance != null && SkinChange.instance.characterAvatarDatabase != null)
+        //頭像
+        var database = Resources.Load<CharacterAvatarData>("Characters/CharacterAvatarData");
+        if (database != null)
         {
+            // 從 PlayerPrefs 讀取玩家選定的 Index (這是跨場景傳遞最簡單的方式)
             int skinIndex = PlayerPrefs.GetInt("Choosenindex", 0);
-            Sprite avatar = SkinChange.instance.characterAvatarDatabase.GetAvatar(skinIndex);
+
+            Sprite avatar = database.GetAvatar(skinIndex);
             if (avatar != null)
             {
                 var avatarImg = root.Q<UnityEngine.UIElements.Image>(className: "avatar-img");
                 if (avatarImg != null)
+                {
                     avatarImg.sprite = avatar;
+                }
             }
         }
 
@@ -109,7 +115,7 @@ public class GameHUDManager : MonoBehaviour
         if (string.IsNullOrEmpty(pName)) pName = "Guest";
 
         _playerNameLabel.text = pName;
-        Debug.Log($"[GameHUD] 名字已更新為: {pName}");
+        UnityEngine.Debug.Log($"[GameHUD] 名字已更新為: {pName}");
     }
 
     public void ToggleControlHints()

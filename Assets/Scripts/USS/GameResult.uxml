@@ -39,6 +39,10 @@
                                 <ui:Image class="item-img banana" />
                                 <ui:Label text="x2" class="item-count" />
                             </ui:VisualElement>
+                            <ui:VisualElement class="mini-item">
+                                <ui:Image class="item-img banana" />
+                                <ui:Label text="x2" class="item-count" />
+                            </ui:VisualElement>
                         </ui:VisualElement>
                     </ui:ScrollView>
                 </ui:VisualElement>

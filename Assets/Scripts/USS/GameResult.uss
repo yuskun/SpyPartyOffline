@@ -49,14 +49,16 @@
 }
 
 .winner-avatar-wrap {
-    width: 200px; height: 210px; border-radius: 90px;
+    width: 200px; height: 200px; border-radius: 100px;
     background-image: url("project://database/Assets/Image/UIPanel/GameHUD/player.png");
     overflow: hidden;
+    flex-shrink: 0;
 }
 
 .winner-avatar {
-    width: 100%; height: 100%;
+    width: 60%; height: 62%; border-radius: 45px;
     -unity-background-scale-mode: scale-and-crop;
+    position: absolute; top: 30px; left: 50%; translate: -50% 0;
 }
 
 .winner-badge {
@@ -136,10 +138,10 @@
 }
 
 .item-img {
-    width: 60px;
-    height: 60px;
-    margin-top: -15px;
-    margin-bottom: -15px; 
+    width: 80px;
+    height: 80px;
+    margin-top: -25px;
+    margin-bottom: -10px; 
     -unity-background-scale-mode: scale-to-fit;
 }
 
