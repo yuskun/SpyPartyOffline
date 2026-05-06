@@ -63412,6 +63412,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3972150145275817595, guid: 0036297767e488b42b7df1f3f5b08ad4, type: 3}
+      propertyPath: ChangeCharacter
+      value: 
+      objectReference: {fileID: 8300000, guid: 021a0b57a9565f34c847a165af088c25, type: 3}
     - target: {fileID: 3989750247828415801, guid: 0036297767e488b42b7df1f3f5b08ad4, type: 3}
       propertyPath: m_LocalPosition.x
       value: 44.420258
@@ -63742,6 +63746,10 @@ PrefabInstance:
       propertyPath: OutputAudioMixerGroup
       value: 
       objectReference: {fileID: -738551036159897228, guid: 22e1833281e33534d9b657c86f35f779, type: 2}
+    - target: {fileID: 6873158020544617643, guid: b5dd377b5532e7d4bb235266b4746b1a, type: 3}
+      propertyPath: doorClip
+      value: 
+      objectReference: {fileID: 8300000, guid: f0c158a8369b9434f94d0024c99b2bd4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -7,7 +7,7 @@ public class CharacterSFXManager : MonoBehaviour
     // --- 新增枚舉定義，這會對應 NetworkPlayer RPC 傳進來的類型 ---
     public enum SFXType 
     { 
-        Attack, Break, Punch, Jump, PickUp, Banana, OpenUI, UseCard 
+        Attack, Break, Punch, Door, PickUp, Banana, OpenUI, UseCard, CountDown,
     }
 
     [Header("角色音效檔案")]
@@ -15,12 +15,12 @@ public class CharacterSFXManager : MonoBehaviour
     public AudioClip attackClip;
     public AudioClip breakClip;
     public AudioClip punchClip;
-    public AudioClip jumpClip;
+    public AudioClip doorClip;
     public AudioClip pickUpClip;
     public AudioClip BananaClip;
     public AudioClip OpenUIClip;
     public AudioClip UseCardClip;
-
+    public AudioClip CountDownClip;
     void Awake()
     {
         if (Instance == null)
@@ -51,11 +51,12 @@ public class CharacterSFXManager : MonoBehaviour
             case SFXType.Attack: PlayAttack(); break;
             case SFXType.Break:  PlayBreak();  break;
             case SFXType.Punch:  PlayPunch();  break;
-            case SFXType.Jump:   PlayJump();   break;
+            case SFXType.Door:   PlayDoor();   break;
             case SFXType.PickUp: PlayPickUp(); break;
             case SFXType.Banana: PlayBanana(); break;
             case SFXType.OpenUI: PlayOpenUI(); break;
             case SFXType.UseCard: PlayUseCard(); break;
+            case SFXType.CountDown: PlayCountDown(); break;
         }
     }
 
@@ -63,11 +64,13 @@ public class CharacterSFXManager : MonoBehaviour
     public void PlayAttack() => PlayOneShot(attackClip, 0.5f);
     public void PlayBreak()  => PlayOneShot(breakClip, 0.5f);
     public void PlayPunch()  => PlayOneShot(punchClip, 0.5f);
-    public void PlayJump()   => PlayOneShot(jumpClip, 1f);
+    public void PlayDoor()   => PlayOneShot(doorClip, 1f);
     public void PlayPickUp() => PlayOneShot(pickUpClip, 1f);
     public void PlayBanana() => PlayOneShot(BananaClip, 0.3f);
     public void PlayOpenUI() => PlayOneShot(OpenUIClip, 1f);
     public void PlayUseCard() => PlayOneShot(UseCardClip, 0.4f);
+    public void PlayCountDown() => PlayOneShot(CountDownClip, 0.4f);
+
 
     // --- 底層播放邏輯 ---
     private void PlayOneShot(AudioClip clip, float volume = 1f)

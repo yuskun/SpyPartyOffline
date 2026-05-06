@@ -60,6 +60,7 @@ public class CharSelectBridge : MonoBehaviour
                 _currentV = _defaultV[index];
                 UpdateUISelection(index);
                 RefreshAll();
+                UISFXManager.Instance.PlayChangeCharacterSound();
             };
         }
 

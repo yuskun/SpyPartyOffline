@@ -8,6 +8,7 @@ public class UISFXManager : MonoBehaviour
     public static UISFXManager Instance;
 
     public AudioClip buttonClick;
+    public AudioClip ChangeCharacter;
     private AudioSource audioSource;
 
     void Awake()
@@ -61,6 +62,13 @@ public class UISFXManager : MonoBehaviour
         if (buttonClick != null)
         {
             audioSource.PlayOneShot(buttonClick);
+        }
+    }
+    public void PlayChangeCharacterSound()
+    {
+        if (ChangeCharacter != null)
+        {
+            audioSource.PlayOneShot(ChangeCharacter);
         }
     }
     
