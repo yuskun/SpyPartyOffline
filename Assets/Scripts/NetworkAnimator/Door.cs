@@ -20,13 +20,18 @@ public class Door :  NetworkBehaviour
     // 當有物體進入 Collider (需設為 Trigger)
     private void OnTriggerEnter(Collider other)
     {
-          if (!Runner.IsServer) return;
+        if (!Runner.IsServer) return;
         if (other.CompareTag("Player"))
         {
+            NetworkPlayer hitPlayer = other.transform.parent.gameObject.GetComponentInParent<NetworkPlayer>();
             playersInRange.Add(other.gameObject);
             if (animator != null)
             {
                 animator.SetBool("IsOpen", true);
+            }
+            if (hitPlayer != null) {
+                hitPlayer.RPC_PlayGlobalSFX(CharacterSFXManager.SFXType.Door,hitPlayer.PlayerId);
+                Debug.LogWarning($"[Door] Host 呼叫玩家 {hitPlayer.PlayerId} 播放音效");
             }
         }
     }
