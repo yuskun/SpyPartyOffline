@@ -24,6 +24,7 @@ public class CharSelectBridge : MonoBehaviour
                 // 直接呼叫舊腳本裡的更換皮膚功能
                 SkinChange.instance.changeSkin(index);
                 UpdateUISelection(index);
+                UISFXManager.Instance.PlayChangeCharacterSound();
             };
         }
 
