@@ -2,7 +2,7 @@
     <Style src="project://database/Assets/Scripts/USS/Practice.uss?fileID=7433441132597879392&amp;guid=8c745766ba374e743a6a9cbcf84e1332&amp;type=3#Practice" />
     <ui:VisualElement name="body" class="body-style">
         <ui:VisualElement class="top-left-ui">
-            <ui:Button name="BackBtn" class="back-pill-btn" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&amp;guid=3d5723d09fd5e9a4f97a9f3e046bbb90&amp;type=3#GenSenRounded2TW-R&quot;);">
+            <ui:Button name="BackBtn" class="back-pill-btn" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-R.otf?fileID=12800000&amp;guid=3d5723d09fd5e9a4f97a9f3e046bbb90&amp;type=3#GenSenRounded2TW-R&quot;); background-size: 110% 100%;">
                 <ui:Label text="◀" class="back-arrow" />
                 <ui:Label text="返回(ESC)" class="back-label" />
             </ui:Button>

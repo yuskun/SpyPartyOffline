@@ -36,10 +36,65 @@
             <ui:Label text="返回" class="back-label" />
         </ui:Button>
         <ui:VisualElement class="bottom-right-menu">
-            <ui:Button name="SelectBtn" class="menu-btn orange-jelly" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;); -unity-font-style: normal;">
-                <ui:Label text="選擇" class="select-label" />
+            <ui:Button name="SelectBtn" class="menu-btn orange-jelly" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;); -unity-font-style: bold;">
+                <ui:Label text="選擇" name="Label" class="select-label" />
                 <ui:VisualElement class="gloss-top" />
             </ui:Button>
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement class="palette-panel" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;); -unity-font-style: normal;">
+        <ui:VisualElement class="palette-header">
+            <ui:Label text="角色顏色" class="palette-title" />
+            <ui:Button name="ResetBtn" class="reset-color-btn">
+                <ui:VisualElement class="reset-icon" />
+                <ui:Label text="恢復預設" class="reset-text" />
+            </ui:Button>
+        </ui:VisualElement>
+        <ui:VisualElement class="palette-top">
+            <ui:VisualElement class="wheel-stack">
+                <ui:VisualElement name="HueWheel" class="wheel-wrap">
+                    <ui:VisualElement name="HueMarker" class="hue-marker" />
+                </ui:VisualElement>
+                <ui:VisualElement name="SVSquare" class="sv-wrap">
+                    <ui:VisualElement class="sv-gradient-overlay" />
+                    <ui:VisualElement name="SVMarker" class="sv-marker" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement class="color-preview-block">
+                <ui:Label text="目前顏色" class="palette-label" />
+                <ui:VisualElement name="ColorPreview" class="color-preview" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement class="palette-controls">
+            <ui:VisualElement class="slider-row">
+                <ui:Label text="色相" class="slider-text" />
+                <ui:SliderInt name="HueSlider" low-value="0" high-value="360" value="192" class="custom-slider" />
+                <ui:Label name="HueValueLabel" text="192" class="slider-value" />
+            </ui:VisualElement>
+            <ui:VisualElement class="slider-row">
+                <ui:Label text="飽和度" class="slider-text" />
+                <ui:SliderInt name="SatSlider" low-value="0" high-value="100" value="50" class="custom-slider" />
+                <ui:Label name="SatValueLabel" text="50%" class="slider-value" />
+            </ui:VisualElement>
+            <ui:VisualElement class="slider-row">
+                <ui:Label text="亮度" class="slider-text" />
+                <ui:SliderInt name="ValSlider" low-value="0" high-value="100" value="96" class="custom-slider" />
+                <ui:Label name="ValValueLabel" text="96%" class="slider-value" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement class="color-data-grid">
+            <ui:VisualElement class="data-card">
+                <ui:Label text="色彩數值" class="data-label" />
+                <ui:VisualElement class="data-values">
+                    <ui:Label name="RgbR" text="127" class="rgb-chip" />
+                    <ui:Label name="RgbG" text="219" class="rgb-chip" />
+                    <ui:Label name="RgbB" text="244" class="rgb-chip" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement class="data-card">
+                <ui:Label text="色碼" class="data-label" />
+                <ui:Label name="HexLabel" text="#7FDBF4" class="data-hex" />
+            </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

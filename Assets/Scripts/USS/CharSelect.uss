@@ -25,7 +25,7 @@
 }
 
 .back-arrow { font-size: 18px; color: #8b5525; margin-right: 8px; }
-.back-label { font-size: 16px; color: #8b5525; -unity-font-style: bold; letter-spacing: 2px; }
+.back-label { font-size: 16px; color: #8b5525; letter-spacing: 2px; }
 
 .back-btn:hover { scale: 1.05; translate: 0 -1px; background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/back_hover.png");}
 .back-btn:active { scale: 0.95; translate: 0 2px; background-image: url("project://database/Assets/Image/UIPanel/CreateRoom/back_active.png");}
@@ -132,7 +132,6 @@
 .select-label {
     color: white;
     font-size: 30px;
-    -unity-font-style: bold;
     letter-spacing: 3px;
     /* 模擬 text-shadow */
     -unity-text-outline-width: 1px;
@@ -149,4 +148,258 @@
     scale: 0.95;
     translate: 0 4px;
     background-image: url("project://database/Assets/Image/UIPanel/CharSelect/orange_active.png");
+}
+
+/* =========================================
+   🎨 新增：左側調色盤面板 (標籤化風格)
+   ========================================= */
+.palette-panel {
+    position: absolute;
+    left: 30px;
+    top: 60%;
+    translate: 0 -50%;
+    width: 360px;
+    padding: 24px;
+    background-color: rgba(244, 227, 190, 0.75); /* 奶油色半透明 */
+    border-radius: 32px;
+    border-width: 2px;
+    border-color: rgba(255, 255, 255, 0.5);
+    /* 模擬毛玻璃 */
+}
+
+.palette-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: -10px;
+}
+
+.palette-title {
+    font-size: 26px;
+    color: #7a5745;
+    letter-spacing: 2px;
+}
+
+.reset-color-btn {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 12px;
+    border-width: 0;
+    background-color: transparent;
+    background-image: url("project://database/Assets/Image/UIPanel/CharSelect/resetbtn.png");
+}
+.reset-icon {
+    width: 18px;          /* 根據需求調整大小 */
+    height: 18px;
+    margin-right: 4px;    /* 與文字「恢復預設」保持間距 */
+    /* 指定您的圖示路徑 */
+    background-image: url("project://database/Assets/Image/UIPanel/CharSelect/reset.png");
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.reset-text { color: white; font-size: 14px;}
+
+/* 色環與預覽區 */
+.palette-top {
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.wheel-stack {
+    width: 210px;
+    height: 210px;
+    justify-content: center;
+    align-items: center;
+}
+
+.wheel-wrap {
+    width: 100%; height: 100%;
+    border-radius: 100px;
+    background-image: url("project://database/Assets/Image/UIPanel/CharSelect/HueWheel.png");
+    background-color:  rgba(0, 0, 0, 0); 
+}
+
+.sv-wrap {
+    position: absolute;
+    width: 90px; height: 90px;
+    border-radius: 18px;
+    border-width: 2px;
+    border-color: white;
+}
+
+.sv-gradient-overlay{ 
+    background-image: url("project://database/Assets/Image/UIPanel/CharSelect/color.png");
+    position: absolute; /* 絕對定位填滿父層 */
+    top: 0; left: 0; right: 0; bottom: 0;
+}
+
+.color-preview {
+    width: 75px; height: 75px;
+    margin-top: 10px;
+    border-radius: 20px;
+    border-width: 3px;
+    border-color: white;
+    background-color: rgb(127, 219, 244);
+}
+
+/* 滑桿標籤化樣式 */
+.slider-row {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.slider-text { width: 60px; color: #765342;}
+
+.slider-value {
+    width: 60px;
+    padding: 4px 8px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    color: #765342;
+    -unity-text-align: middle-center;
+}
+
+/* 針對自訂滑桿的修正 */
+.custom-slider {
+    flex: 1;               /* 確保填滿剩餘空間 */
+    margin: 0 10px;        /* 與左右標籤保持間距 */
+    height: 20px;          /* 固定高度，避免偏移 */
+    justify-content: center; /* 垂直居中內部元件 */
+    overflow: hidden;
+}
+
+/* 隱藏 Slider 內建的標籤空間 (非常重要，否則會擠壓滑桿長度) */
+.custom-slider .unity-base-field__label {
+    width: 0;
+    min-width: 0;
+    display: none;
+}
+
+/* 讓滑桿輸入區塊填滿父層 */
+.custom-slider .unity-base-field__input {
+    flex: 1;
+    margin: 0;
+    overflow: hidden;
+    background-color: transparent; /* 顯示我們在 C# 設定的背景圖 */
+}
+
+/* 修正追蹤條 (Tracker) 的位置，使其垂直居中 */
+.custom-slider #unity-tracker {
+    position: absolute;
+    top: 50%;
+    translate: 0 -50%;
+    height: 12px;          /* 追蹤條高度 */
+    width: 100%;
+    border-radius: 5px;
+    border-color: rgba(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.1); /* 稍微有點底色感 */
+}
+
+/* 修正滑塊 (Dragger) 確保它在正中間 */
+.custom-slider #unity-dragger {
+    width: 20px;
+    height: 20px;
+    border-radius: 11px;
+    border-width: 2px;
+    border-color: #765342;
+    background-color: white;
+    top: 50%;
+    translate: 0 -50%;     /* 垂直置中修正 */
+    margin-top: -12;
+}
+
+/* =========================================
+   色環指針
+   ========================================= */
+.hue-marker {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    border-width: 3px;
+    border-color: rgba(255, 255, 255, 0.96);
+    background-color: transparent;
+    /* 初始在 12 點鐘方向，C# 會動態覆寫 left/top */
+    left: 91px;
+    top: 8px;
+    /* 讓點擊事件穿透到下面的 HueWheel */
+    pointer-events: none;
+}
+
+/* =========================================
+   SV 方塊指針
+   ========================================= */
+.sv-marker {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 6px;
+    border-width: 3px;
+    border-color: rgba(255, 255, 255, 0.96);
+    background-color: transparent;
+    pointer-events: none;
+    /* C# 動態設 left/top */
+    left: 40px;
+    top: 5px;
+}
+
+/* =========================================
+   palette-top（改用 row，右側置中）
+   ========================================= */
+.color-preview-block {
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+}
+
+.palette-label {
+    font-size: 14px;
+    color: #7a5745;
+    margin-bottom: -7px;
+}
+
+/* =========================================
+   RGB / Hex 卡片列
+   ========================================= */
+.color-data-grid {
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 14px;
+    padding-right: 12px;
+}
+
+.data-card {
+    flex-direction: column;
+}
+
+.data-label {
+    font-size: 13px;
+    color: #7a5745;
+    margin-bottom: 6px;
+}
+
+.data-values {
+    flex-direction: row;
+}
+
+.rgb-chip {
+    min-width: 44px;
+    padding: 8px 10px;
+    border-radius: 14px;
+    background-color: rgba(255, 255, 255, 0.28);
+    color: #6b4a3b;
+    font-size: 16px;
+    -unity-text-align: middle-center;
+    margin-right: 4px;
+}
+
+.data-hex {
+    padding: 8px 10px;
+    border-radius: 14px;
+    background-color: rgba(255, 255, 255, 0.28);
+    color: #6b4a3b;
+    font-size: 16px;
 }

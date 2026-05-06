@@ -190,6 +190,12 @@ public class SkinChange : NetworkBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
+
+            bool isMouseInPaletteZone = Input.mousePosition.x < 800f;
+
+            // 2. 如果滑鼠在左邊區域，直接不執行旋轉邏輯，把控制權完全交給 UI Toolkit
+            if (isMouseInPaletteZone) return;
+
             bool overSelectable = !skinDragIgnoreUIBlock && IsPointerOverInteractiveUI();
 
             if (skinDragDebugLog)
