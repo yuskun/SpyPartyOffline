@@ -68,9 +68,19 @@
     transform-origin: center;
 }
 
-/* 2. 當滑鼠移入按鈕時，顯示遮罩[cite: 6] */
+/* 2. 當滑鼠移入按鈕時，顯示遮罩 + 提亮 */
 .wheel-slot:hover .hover-overlay {
     opacity: 1;
+    scale: 1.08;
+}
+
+/* hover 時 icon / label 一併提亮，整體觀感更鮮明 */
+.wheel-slot:hover .emote-icon {
+    scale: 1.06;
+}
+
+.wheel-slot:hover .emote-label {
+    color: rgb(255, 250, 220);
 }
 
 /* 3. 關鍵：旋轉同一張遮罩圖到四個方向 */

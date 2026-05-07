@@ -29,10 +29,10 @@ public class Door :  NetworkBehaviour
             {
                 animator.SetBool("IsOpen", true);
             }
-            if (hitPlayer != null) {
-                hitPlayer.RPC_PlayGlobalSFX(CharacterSFXManager.SFXType.Door,hitPlayer.PlayerId);
-                Debug.LogWarning($"[Door] Host 呼叫玩家 {hitPlayer.PlayerId} 播放音效");
-            }
+            // if (hitPlayer != null) {
+            //     hitPlayer.RPC_PlayGlobalSFX(CharacterSFXManager.SFXType.Door,hitPlayer.PlayerId);
+            //     Debug.LogWarning($"[Door] Host 呼叫玩家 {hitPlayer.PlayerId} 播放音效");
+            // }
         }
     }
 

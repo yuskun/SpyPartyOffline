@@ -663,6 +663,16 @@ public class LocalBackpack : MonoBehaviour
         GameManager.instance.Rpc_PlayFailAnimation(playerIdentify.PlayerID, triggerName);
     }
 
+    // ========= Emote 動畫觸發（Trigger 參數）=========
+    /// <summary>揮手</summary>
+    public void DoWaveHand() { PlayAnimationViaRpc("DoWaveHand"); }
+    /// <summary>大笑</summary>
+    public void DoBigLaugh() { PlayAnimationViaRpc("DoBigLaugh"); }
+    /// <summary>肌肉</summary>
+    public void DoMuscle()   { PlayAnimationViaRpc("DoMuscle"); }
+    /// <summary>舉手</summary>
+    public void DoHandUp()   { PlayAnimationViaRpc("DoHandUp"); }
+
     private void ShowForbid(bool show)
     {
         foreach (var btn in buttons)

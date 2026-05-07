@@ -682,7 +682,7 @@ AnimatorStateMachine:
     m_Position: {x: 360, y: 520, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 4478972386037648035}
-    m_Position: {x: -30, y: 400, z: 0}
+    m_Position: {x: -140, y: 490, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1715788460274076516}
     m_Position: {x: 80, y: 510, z: 0}
@@ -937,7 +937,7 @@ AnimatorController:
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
-    m_DefaultBool: 0
+    m_DefaultBool: 1
     m_Controller: {fileID: 9100000}
   - m_Name: DoHandUp
     m_Type: 9
