@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.Events;
+using NUnit.Framework;
 
 public class UniversalUIController : MonoBehaviour
 {
@@ -29,6 +30,9 @@ public class UniversalUIController : MonoBehaviour
 
     [Tooltip("勾選後，Show 會顯示滑鼠，Hide 會隱藏並鎖定滑鼠")]
     public bool controlCursor = false;
+
+
+
 
     public List<ButtonBinding> buttonSettings = new List<ButtonBinding>();
 
@@ -180,5 +184,21 @@ public class UniversalUIController : MonoBehaviour
             UnityEngine.Cursor.lockState = CursorLockMode.Locked;
             if (LocalBackpack.Instance != null) LocalBackpack.Instance.AllowInput(true);
         }
+    }
+    public void ToggleCursor(bool IsShow)
+    {
+        if(IsShow)
+        {
+            UnityEngine.Cursor.visible = true;
+            UnityEngine.Cursor.lockState = CursorLockMode.None;
+           
+        }
+        else
+        {
+            UnityEngine.Cursor.visible = false;
+            UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+           
+        }
+        
     }
 }

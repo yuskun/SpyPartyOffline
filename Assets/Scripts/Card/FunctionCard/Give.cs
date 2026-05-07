@@ -39,7 +39,7 @@ public class Give : FunctionCard
                 new CardHistoryEntry(
                     parameters.UserId,
                     parameters.TargetId,
-                    "give",
+                    "Give",
                     CardType.Function
                 //result
                 )

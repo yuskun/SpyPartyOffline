@@ -31,11 +31,13 @@ public class CharSelectBridge : MonoBehaviour
     private float _currentS = 0.50f;
     private float _currentV = 0.96f;
 
-    // 每個角色的預設 HSV（按頭像順序：mouse, snake, shark, crocodile, ...）
-    // 依你的 UXML 順序調整
-    private readonly float[] _defaultH = { 0.022f, 0.122f, 0.558f, 0.291f, 0.291f };
-    private readonly float[] _defaultS = { 0.03f,  0.78f,  0.67f,  0.62f,  0.62f  };
-    private readonly float[] _defaultV = { 0.90f,  0.98f,  0.98f,  0.88f,  0.88f  };
+    // 每個角色的預設 HSV（按頭像順序：mouse, snake, shark, crocodile, lahn）
+    // 數值 = 該角色 "Skin" material asset 的 _BaseColor 實際 HSV，避免覆寫掉 prefab 原色
+    //   0 老鼠 #ADADAD / 1 蛇 #FFBD2F / 2 鯊魚 #4FCEF3 / 3 鱷魚 #519F4F / 4 小白人 #61F9FF
+    // ※ 若要改某角色「預設色」，記得 array 與對應的 Skin.mat 一起改。
+    private readonly float[] _defaultH = { 0.000f, 0.114f, 0.538f, 0.328f, 0.506f };
+    private readonly float[] _defaultS = { 0.000f, 0.816f, 0.675f, 0.505f, 0.618f };
+    private readonly float[] _defaultV = { 0.679f, 1.000f, 0.953f, 0.623f, 1.000f };
 
     private int _activeIndex = 0;
 

@@ -41,6 +41,13 @@
     height: 160px;
     margin: 10px;
 }
+
+/* 多人模式下每個贏家的頭像+名字直立排列 */
+.winner-card {
+    align-items: center;
+    flex-direction: column;
+    margin: 0 12px;
+}
 .crown-icon {
     position: absolute; top: -20px; left: 50%; translate: -50% 0;
     width: 45px; height: 45px;
@@ -117,8 +124,15 @@
 /* Unity ScrollView 會自動生成一個 .unity-scroll-view__content-container */
 .item-scroll-view .unity-scroll-view__content-container {
     flex-grow: 1;
+    width: 100%;             /* 撐滿寬度，配合 .item-icons-container 的 flex-wrap 自動換行 */
     justify-content: center; /* 垂直置中關鍵 */
     align-items: center;     /* 水平置中關鍵 */
+}
+
+/* 隱藏 ScrollView 內建滑軸（雙保險，避免某些 Unity 版本 attribute 沒吃進去） */
+.item-scroll-view .unity-scroller--horizontal,
+.item-scroll-view .unity-scroller--vertical {
+    display: none;
 }
 
 /* 3. 道具圖示的外層容器 */
@@ -149,6 +163,16 @@
     color: #8d5a2c;
     -unity-font-style: bold;
     font-size: 16px;
+}
+
+/* 沒有使用任何道具的 placeholder */
+.item-empty-text {
+    color: #8d5a2c;
+    font-size: 18px;
+    -unity-text-align: middle-center;
+    white-space: normal;
+    padding: 20px 10px;
+    width: 100%;
 }
 
 /* 按鈕區 */

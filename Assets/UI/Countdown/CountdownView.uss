@@ -48,6 +48,7 @@
     -unity-text-outline-width: 7px;
     white-space: nowrap;
     -unity-font-style: normal;
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&guid=6f1375bf9fa261a40b77477d1fef5011&type=3#GenSenRounded2TW-B");
 }
 
 /* main label — white fill, cyan outline */

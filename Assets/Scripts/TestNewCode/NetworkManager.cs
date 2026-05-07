@@ -274,6 +274,7 @@ public class NetworkManager2 : MonoBehaviour, INetworkRunnerCallbacks
             if (GameUIManager.Instance.HUDUI != null)
                 GameUIManager.Instance.HUDUI.SetActive(false);
             GameUIManager.Instance.GameHUDPanel?.HideCurrentUI();
+            GameUIManager.Instance.GameResultPanel?.HideCurrentUI();
         }
 
         // 3) 切回主選單場景並顯示 UI

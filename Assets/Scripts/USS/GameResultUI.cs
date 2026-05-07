@@ -5,75 +5,153 @@ using System.Collections.Generic;
 public class GameResultUI : MonoBehaviour
 {
     private VisualElement root;
-    
+
     public void RefreshDisplay()
     {
-        
         root = GetComponent<UIDocument>().rootVisualElement;
         if (GameManager.CurrentWinnerData == null) return;
-    
-        // 1. 抓取贏家實體
-        PlayerIdentify winner = GetPlayerByID(GameManager.CurrentWinnerData.winnerID);
-        
-        // 2. 更新名字
-        var winnerNameLabel = root.Q<Label>("WinnerName");
-        if (winnerNameLabel != null)
+
+        var data = GameManager.CurrentWinnerData;
+        var winnerIds = (data.winnerIDs != null && data.winnerIDs.Count > 0)
+            ? data.winnerIDs
+            : new List<int> { data.winnerID };
+        bool isMulti = winnerIds.Count > 1;
+
+        var winnerSection = root.Q<VisualElement>("WinnerSection");
+        var statsRow = root.Q<VisualElement>("StatsRow");
+        var avatarDb = Resources.Load<CharacterAvatarData>("Characters/CharacterAvatarData");
+
+        // 重建 WinnerSection（避免上一場單人/多人佈局殘留）
+        if (winnerSection != null)
         {
-            // 如果抓不到玩家實體，保底顯示 "ID: 1" 之類的
-            winnerNameLabel.text = winner != null ? winner.PlayerName : $"Player {GameManager.CurrentWinnerData.winnerID}";
+            winnerSection.Clear();
+            winnerSection.RemoveFromClassList("multi-winners");
         }
-    
-        // 3. 更新頭像
-        var winnerAvatar = root.Q<Image>("WinnerAvatar");
-        if (winnerAvatar != null && winner != null)
+
+        if (isMulti)
         {
-            // 載入你存放在 Resources 的資料庫
-            var database = Resources.Load<CharacterAvatarData>("Characters/CharacterAvatarData");
-            if (database != null)
+            // 多人勝利：列出所有勝利者頭像 + 名字，隱藏下方統計
+            if (statsRow != null) statsRow.style.display = DisplayStyle.None;
+            if (winnerSection != null)
             {
-                // 使用 winner 身上同步的 SkinIndex
-                winnerAvatar.sprite = database.GetAvatar(winner.SkinIndex);
+                winnerSection.AddToClassList("multi-winners");
+                foreach (var wid in winnerIds)
+                {
+                    var pi = GetPlayerByID(wid);
+                    winnerSection.Add(BuildWinnerCard(pi, wid, avatarDb, withCrown: false));
+                }
+            }
+            root.MarkDirtyRepaint();
+            return;
+        }
+
+        // ── 單人勝利 ──
+        if (statsRow != null) statsRow.style.display = DisplayStyle.Flex;
+        if (winnerSection != null)
+        {
+            var winner = GetPlayerByID(data.winnerID);
+            winnerSection.Add(BuildWinnerCard(winner, data.winnerID, avatarDb, withCrown: true));
+        }
+
+        // 完成任務列表
+        var taskList = root.Q<VisualElement>(className: "task-list");
+        if (taskList != null)
+        {
+            taskList.Clear();
+            foreach (var p in data.missionProgress)
+            {
+                var row = new VisualElement();
+                row.AddToClassList("task-item-row");
+
+                var nameLbl = new Label(p.title);
+                nameLbl.AddToClassList("task-name");
+
+                var valueLbl = new Label();
+                valueLbl.AddToClassList("task-value");
+                valueLbl.text = (p.goal <= 0)
+                    ? "完成"
+                    : (p.current >= p.goal ? "完成" : $"{p.current}/{p.goal}");
+
+                row.Add(nameLbl);
+                row.Add(valueLbl);
+                taskList.Add(row);
             }
         }
 
+        // 道具使用
         var itemIconsContainer = root.Q<VisualElement>(className: "item-icons-container");
-        // 2. 清除舊有的道具圖示
-        itemIconsContainer.Clear();
-
-        // 3. 抓取道具使用資料並生成 UI
-        // 在 GameResultUI.cs 的 foreach 迴圈內修改
-        foreach (var usage in GameManager.CurrentWinnerData.cardUsages)
+        if (itemIconsContainer != null)
         {
-            VisualElement miniItem = new VisualElement();
-            miniItem.AddToClassList("mini-item");
+            itemIconsContainer.Clear();
 
-            Image itemImg = new Image();
-            itemImg.AddToClassList("item-img");
-            // 1. 賦值 Sprite
-            itemImg.sprite = usage.image; 
+            if (data.cardUsages.Count == 0)
+            {
+                var emptyLbl = new Label("沒有使用任何道具");
+                emptyLbl.AddToClassList("item-empty-text");
+                itemIconsContainer.Add(emptyLbl);
+            }
+            else
+            {
+                foreach (var usage in data.cardUsages)
+                {
+                    var miniItem = new VisualElement();
+                    miniItem.AddToClassList("mini-item");
 
-            // 2. 強制指定顯示模式，避免被預設樣式吃掉
-            itemImg.style.width = 80; // 確保寬高與 USS 一致
-            itemImg.style.height = 80;
+                    var itemImg = new Image();
+                    itemImg.AddToClassList("item-img");
+                    itemImg.sprite = usage.image;
+                    itemImg.style.width = 80;
+                    itemImg.style.height = 80;
+                    itemImg.scaleMode = ScaleMode.ScaleToFit;
+                    miniItem.Add(itemImg);
 
-            // 這裡很重要：如果 Sprite 有抓到，這行會確保它填滿
-            itemImg.scaleMode = ScaleMode.ScaleToFit; 
+                    var itemCount = new Label();
+                    itemCount.AddToClassList("item-count");
+                    itemCount.text = $"x{usage.useCount}";
+                    miniItem.Add(itemCount);
 
-            miniItem.Add(itemImg);
-
-            Label itemCount = new Label();
-            itemCount.AddToClassList("item-count");
-            itemCount.text = $"x{usage.useCount}";
-            miniItem.Add(itemCount);
-
-            itemIconsContainer.Add(miniItem);
+                    itemIconsContainer.Add(miniItem);
+                }
+            }
         }
+
         root.MarkDirtyRepaint();
+    }
+
+    /// <summary>建立一張「頭像 + 王冠 + 名字」卡片，與原 UXML 的 winner-section 子結構對齊。</summary>
+    private VisualElement BuildWinnerCard(PlayerIdentify pi, int winnerId, CharacterAvatarData db, bool withCrown)
+    {
+        var card = new VisualElement();
+        card.AddToClassList("winner-card");
+
+        var wrap = new VisualElement();
+        wrap.AddToClassList("winner-avatar-wrap");
+
+        var avatar = new Image();
+        avatar.AddToClassList("winner-avatar");
+        if (pi != null && db != null)
+            avatar.sprite = db.GetAvatar(pi.SkinIndex);
+        wrap.Add(avatar);
+
+        card.Add(wrap);
+
+        if (withCrown)
+        {
+            var crown = new VisualElement();
+            crown.AddToClassList("crown-icon");
+            card.Add(crown);
+        }
+
+        var nameLbl = new Label();
+        nameLbl.AddToClassList("winner-badge");
+        nameLbl.text = pi != null ? pi.PlayerName : $"Player {winnerId}";
+        card.Add(nameLbl);
+
+        return card;
     }
 
     private PlayerIdentify GetPlayerByID(int id)
     {
-        // 找尋場景中所有的玩家識別腳本
         var players = FindObjectsOfType<PlayerIdentify>();
         foreach (var p in players)
         {

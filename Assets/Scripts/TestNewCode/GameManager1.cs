@@ -441,7 +441,7 @@ public class GameManager : NetworkBehaviour
         if (Runner.IsServer)
         {
             if (winnerIDs != null && winnerIDs.Length > 0)
-                BuildWinnerData(winnerIDs[0]);
+                BuildWinnerData(winnerIDs[0], winnerIDs);
             ClearAllPlayerInventories();
         }
 
@@ -468,9 +468,11 @@ public class GameManager : NetworkBehaviour
     {
         StopGameplay();
 
+        // 所有 client 都把上一場結算資料清掉，避免結算面板顯示殘留資料
+        CurrentWinnerData = null;
+
         if (Runner.IsServer)
         {
-            CurrentWinnerData = null;
             ClearAllPlayerInventories();
         }
 
@@ -489,11 +491,15 @@ public class GameManager : NetworkBehaviour
     /// <summary>結算資料（Host 端組裝，所有端可讀）</summary>
     public static WinnerData CurrentWinnerData;
 
-    /// <summary>Host 端組裝勝利者的結算資料</summary>
-    private void BuildWinnerData(int winnerID)
+    /// <summary>Host 端組裝勝利者的結算資料。allWinnerIDs 為 null 時視為單人勝利。</summary>
+    private void BuildWinnerData(int winnerID, int[] allWinnerIDs = null)
     {
         var data = new WinnerData();
         data.winnerID = winnerID;
+        if (allWinnerIDs != null && allWinnerIDs.Length > 0)
+            data.winnerIDs.AddRange(allWinnerIDs);
+        else
+            data.winnerIDs.Add(winnerID);
 
         // 1. 任務卡 — 從勝利者背包抓，附帶圖片
         if (PlayerInventoryManager.Instance != null)
@@ -538,16 +544,26 @@ public class GameManager : NetworkBehaviour
                 else
                 {
                     // 從 Catalog 反查出完整的 CardData + 圖片
+                    // 比對策略：先用 GetType().Name 對 (Steal/Catch/Peek/Swap... 走這條)，
+                    // 再用 c.name field（中文命名）fallback (Banana/SlowTrap 是同一個 ItemCard 類別、必須靠 name 區分；Give 大小寫差異也由此 fallback 接住)
                     CardData cardData = default;
                     Sprite img = null;
                     if (CardManager.Instance?.Catalog != null)
                     {
                         var card = CardManager.Instance.Catalog.cards.Find(c =>
-                            c.GetType().Name == entry.cardName && c.cardData.type == entry.cardType);
+                            c != null
+                            && c.cardData.type == entry.cardType
+                            && (c.GetType().Name == entry.cardName
+                                || string.Equals(c.GetType().Name, entry.cardName, System.StringComparison.OrdinalIgnoreCase)
+                                || c.name == entry.cardName));
                         if (card != null)
                         {
                             cardData = card.cardData;
                             img = card.image;
+                        }
+                        else
+                        {
+                            Debug.LogWarning($"[Results] 找不到 Catalog 內對應卡片：cardName='{entry.cardName}' type={entry.cardType} → 圖片會缺失");
                         }
                     }
 
@@ -575,11 +591,152 @@ public class GameManager : NetworkBehaviour
             });
         }
 
+        // 4. 任務進度快照 — 從勝利者 PlayerInventory 抓 MissionStates / MissionGoals
+        if (PlayerInventoryManager.Instance != null
+            && winnerID >= 0 && winnerID < PlayerInventoryManager.Instance.playerInventories.Count)
+        {
+            var inv = PlayerInventoryManager.Instance.playerInventories[winnerID];
+            foreach (var entry in data.missionCards)
+            {
+                int mid = entry.card.id;
+                int current = 0; inv.MissionStates.TryGet(mid, out current);
+                int goal = 1;    inv.MissionGoals.TryGet(mid, out goal);
+
+                var mc = CardManager.Instance?.GetMissionCard(mid);
+                string title = mc?.data?.title ?? $"Mission {mid}";
+
+                data.missionProgress.Add(new MissionProgressEntry
+                {
+                    missionId = mid,
+                    title = title,
+                    current = current,
+                    goal = goal
+                });
+            }
+        }
+
         CurrentWinnerData = data;
 
         Debug.Log($"[Results] WinnerData 組裝完成: winnerID={winnerID}, " +
                   $"任務卡={data.missionCards.Count}, 道具使用={data.cardUsages.Count}種, " +
                   $"擊倒目標={data.knockdowns.Count}人");
+
+        // 5. 廣播給所有 Client（用平行陣列序列化 — Fusion RPC 不支援 List<複合型別>）
+        BroadcastWinnerDataToClients(data);
+    }
+
+    /// <summary>把 Host 端組好的 WinnerData 拆成可序列化欄位後 RPC 給所有 Client。</summary>
+    private void BroadcastWinnerDataToClients(WinnerData data)
+    {
+        if (data == null)
+        {
+            RPC_BroadcastWinnerData(-1, new int[0],
+                new int[0], new int[0], new int[0],
+                new int[0], new int[0], new int[0]);
+            return;
+        }
+
+        int[] winnerIdArr = data.winnerIDs.Count > 0
+            ? data.winnerIDs.ToArray()
+            : new[] { data.winnerID };
+
+        int uCount = data.cardUsages.Count;
+        int[] usageIds    = new int[uCount];
+        int[] usageTypes  = new int[uCount];
+        int[] usageCounts = new int[uCount];
+        for (int i = 0; i < uCount; i++)
+        {
+            var u = data.cardUsages[i];
+            usageIds[i]    = u.card.id;
+            usageTypes[i]  = (int)u.card.type;
+            usageCounts[i] = u.useCount;
+        }
+
+        int mCount = data.missionProgress.Count;
+        int[] missionIds      = new int[mCount];
+        int[] missionCurrents = new int[mCount];
+        int[] missionGoals    = new int[mCount];
+        for (int i = 0; i < mCount; i++)
+        {
+            var p = data.missionProgress[i];
+            missionIds[i]      = p.missionId;
+            missionCurrents[i] = p.current;
+            missionGoals[i]    = p.goal;
+        }
+
+        RPC_BroadcastWinnerData(data.winnerID, winnerIdArr,
+            usageIds, usageTypes, usageCounts,
+            missionIds, missionCurrents, missionGoals);
+    }
+
+    /// <summary>非 Host Client 依 RPC 帶來的純 ID 在本地反查 Sprite/Title 重建 WinnerData。</summary>
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_BroadcastWinnerData(int winnerID, int[] allWinnerIds,
+        int[] usageIds, int[] usageTypes, int[] usageCounts,
+        int[] missionIds, int[] missionCurrents, int[] missionGoals)
+    {
+        // Host 已在 BuildWinnerData 內建好完整資料（含 knockdowns 等不在 RPC 中的欄位），不需重建
+        if (Runner != null && Runner.IsServer) return;
+
+        if (winnerID < 0)
+        {
+            CurrentWinnerData = null;
+            return;
+        }
+
+        var data = new WinnerData { winnerID = winnerID };
+        if (allWinnerIds != null && allWinnerIds.Length > 0)
+            data.winnerIDs.AddRange(allWinnerIds);
+        else
+            data.winnerIDs.Add(winnerID);
+
+        // 道具使用 — 反查 Catalog 取 Sprite + 完整 CardData
+        if (usageIds != null && CardManager.Instance?.Catalog != null)
+        {
+            for (int i = 0; i < usageIds.Length; i++)
+            {
+                var type = (CardType)usageTypes[i];
+                var card = CardManager.Instance.Catalog.cards.Find(c =>
+                    c != null && c.cardData.id == usageIds[i] && c.cardData.type == type);
+
+                data.cardUsages.Add(new CardUsageEntry
+                {
+                    card = card != null ? card.cardData : new CardData(0, usageIds[i], type, 0),
+                    image = card != null ? card.image : null,
+                    useCount = usageCounts[i]
+                });
+            }
+        }
+
+        // 任務進度 — 反查 MissionCard 取標題與 Sprite
+        if (missionIds != null)
+        {
+            for (int i = 0; i < missionIds.Length; i++)
+            {
+                int mid = missionIds[i];
+                var mc = CardManager.Instance?.GetMissionCard(mid);
+                string title = mc?.data?.title ?? $"Mission {mid}";
+
+                data.missionCards.Add(new MissionCardEntry
+                {
+                    card = mc != null ? mc.cardData : new CardData(0, mid, CardType.Mission, 0),
+                    image = mc != null ? mc.image : null
+                });
+
+                data.missionProgress.Add(new MissionProgressEntry
+                {
+                    missionId = mid,
+                    title = title,
+                    current = missionCurrents[i],
+                    goal = missionGoals[i]
+                });
+            }
+        }
+
+        CurrentWinnerData = data;
+
+        Debug.Log($"[Results] Client 重建 WinnerData: winnerID={winnerID}, " +
+                  $"任務={data.missionProgress.Count}, 道具使用={data.cardUsages.Count}種");
     }
 
     /// <summary>旁觀者的結算流程：關閉自由相機、顯示結算 UI 與返回按鈕</summary>
@@ -705,7 +862,9 @@ public class GameManager : NetworkBehaviour
         UnityEngine.Cursor.visible = true;
         UnityEngine.Cursor.lockState = CursorLockMode.None;
 
-        GameUIManager.Instance.BackBtn?.SetActive(true);
+        // 10. 階段 5：再等 10 秒才顯示結算面板與資料
+        yield return new WaitForSeconds(10f);
+
         GameUIManager.Instance.GameResultPanel.ShowCurrentUI();
 
         // 🔴 關鍵：手動通知 UI 抓取最新資料
