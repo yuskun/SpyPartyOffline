@@ -13,7 +13,7 @@
                 </ui:Button>
                 <ui:Button name="AchieveBtn" class="menu-btn blue">
                     <ui:VisualElement class="icon-img icon-trophy" />
-                    <ui:Label text="成就" class="label" />
+                    <ui:Label text="道具介紹" class="label" />
                 </ui:Button>
                 <ui:Button name="ExitBtn" class="menu-btn orange">
                     <ui:VisualElement class="icon-img icon-back" />

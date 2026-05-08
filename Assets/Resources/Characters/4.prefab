@@ -1422,7 +1422,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 4620677651010736098}
-  worldOffset: {x: 0, y: 2, z: 0}
+  worldOffset: {x: 0, y: 50, z: 0}
   followPosition: 1
   smoothFollow: 1
   smoothSpeed: 15
@@ -2697,7 +2697,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 86d8c1ff3f855d54dbdbc0b0ef5b453e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d2ecc9aab1c37304484fbb707de74ca2, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

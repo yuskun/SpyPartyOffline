@@ -396,7 +396,7 @@ GameObject:
   - component: {fileID: 36410175}
   m_Layer: 7
   m_Name: Plane.025
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -538,7 +538,7 @@ GameObject:
   - component: {fileID: 45819061}
   m_Layer: 7
   m_Name: Cube.002
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -700,7 +700,7 @@ GameObject:
   - component: {fileID: 66373671}
   m_Layer: 7
   m_Name: "\u80FD\u6E90\u5730\u677F.007"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1065,7 +1065,7 @@ GameObject:
   - component: {fileID: 69600831}
   m_Layer: 7
   m_Name: Cube.467
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1174,7 +1174,7 @@ GameObject:
   - component: {fileID: 70486667}
   m_Layer: 7
   m_Name: "\u82B1\u5712\u5730\u677F.018"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1283,7 +1283,7 @@ GameObject:
   - component: {fileID: 81255563}
   m_Layer: 7
   m_Name: "\u5E73\u9762.026"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2988,7 +2988,7 @@ GameObject:
   - component: {fileID: 238221394}
   m_Layer: 7
   m_Name: Cube.044
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3270,7 +3270,7 @@ GameObject:
   - component: {fileID: 269427557}
   m_Layer: 7
   m_Name: Cylinder.005
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3423,7 +3423,7 @@ GameObject:
   - component: {fileID: 273595014}
   m_Layer: 7
   m_Name: tree.001
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3642,7 +3642,7 @@ GameObject:
   - component: {fileID: 298177740}
   m_Layer: 7
   m_Name: "\u80FD\u6E90\u5730\u677F.006"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4310,7 +4310,7 @@ GameObject:
   - component: {fileID: 359930695}
   m_Layer: 7
   m_Name: "\u5E73\u9762.047 (1)"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4419,7 +4419,7 @@ GameObject:
   - component: {fileID: 362188297}
   m_Layer: 7
   m_Name: Cylinder.007
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4528,7 +4528,7 @@ GameObject:
   - component: {fileID: 373521790}
   m_Layer: 7
   m_Name: "\u82B1\u5712\u5730\u677F.013"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4681,7 +4681,7 @@ GameObject:
   - component: {fileID: 381428102}
   m_Layer: 7
   m_Name: Cylinder.003
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4812,7 +4812,7 @@ GameObject:
   - component: {fileID: 399225036}
   m_Layer: 7
   m_Name: Cylinder.006
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5030,7 +5030,7 @@ GameObject:
   - component: {fileID: 408382884}
   m_Layer: 7
   m_Name: "\u5E73\u9762.035"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5423,7 +5423,7 @@ GameObject:
   - component: {fileID: 428037760}
   m_Layer: 7
   m_Name: "\u5E73\u9762.037"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5642,7 +5642,7 @@ GameObject:
   - component: {fileID: 445865790}
   m_Layer: 7
   m_Name: "\u82B1\u5712\u7246\u58C1.008"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6161,7 +6161,7 @@ GameObject:
   - component: {fileID: 467755226}
   m_Layer: 7
   m_Name: "\u5E73\u9762.030"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6552,7 +6552,7 @@ GameObject:
   - component: {fileID: 473051044}
   m_Layer: 7
   m_Name: "\u82B1\u5712\u7246\u58C1.011"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7389,7 +7389,7 @@ GameObject:
   - component: {fileID: 514373902}
   m_Layer: 7
   m_Name: Cube.462
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8149,7 +8149,7 @@ GameObject:
   - component: {fileID: 566024905}
   m_Layer: 7
   m_Name: "\u80FD\u6E90\u7246\u58C1.009"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8429,7 +8429,7 @@ GameObject:
   - component: {fileID: 588045355}
   m_Layer: 7
   m_Name: Cylinder.015
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8560,7 +8560,7 @@ GameObject:
   - component: {fileID: 595420044}
   m_Layer: 7
   m_Name: "\u80FD\u6E90\u7246\u58C1"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8805,7 +8805,7 @@ Transform:
   m_GameObject: {fileID: 616212072}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -29.28, y: 29.81, z: 34.86}
+  m_LocalPosition: {x: -29.28, y: 69.92, z: 34.86}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8941,7 +8941,7 @@ GameObject:
   - component: {fileID: 620951740}
   m_Layer: 7
   m_Name: Cube.001
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9726,7 +9726,7 @@ GameObject:
   - component: {fileID: 678473724}
   m_Layer: 7
   m_Name: Cylinder.113
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10043,7 +10043,7 @@ GameObject:
   - component: {fileID: 699122039}
   m_Layer: 7
   m_Name: Cylinder.115
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10152,7 +10152,7 @@ GameObject:
   - component: {fileID: 701225234}
   m_Layer: 7
   m_Name: Cylinder.114
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10646,7 +10646,7 @@ GameObject:
   - component: {fileID: 722910852}
   m_Layer: 7
   m_Name: Cube.027
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10949,7 +10949,7 @@ GameObject:
   - component: {fileID: 739896083}
   m_Layer: 7
   m_Name: "\u80FD\u6E90\u7246\u58C1.008"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11058,7 +11058,7 @@ GameObject:
   - component: {fileID: 743152753}
   m_Layer: 7
   m_Name: "\u5E73\u9762.033"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11801,7 +11801,7 @@ GameObject:
   - component: {fileID: 796397376}
   m_Layer: 7
   m_Name: "\u5E73\u9762.032"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12225,7 +12225,7 @@ GameObject:
   - component: {fileID: 818613752}
   m_Layer: 7
   m_Name: Cylinder.094
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13047,7 +13047,7 @@ GameObject:
   - component: {fileID: 874567663}
   m_Layer: 7
   m_Name: Cube.058
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13494,7 +13494,7 @@ GameObject:
   - component: {fileID: 915508494}
   m_Layer: 7
   m_Name: "\u5E73\u9762.046"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13740,7 +13740,7 @@ GameObject:
   - component: {fileID: 919151028}
   m_Layer: 7
   m_Name: "\u67F1\u4F53.025"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13893,7 +13893,7 @@ GameObject:
   - component: {fileID: 930836419}
   m_Layer: 7
   m_Name: Cylinder.004
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14112,7 +14112,7 @@ GameObject:
   - component: {fileID: 945963239}
   m_Layer: 7
   m_Name: "\u67F1\u4F53.026"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14455,7 +14455,7 @@ GameObject:
   - component: {fileID: 955785242}
   m_Layer: 7
   m_Name: "\u5E73\u9762.031"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14897,7 +14897,7 @@ GameObject:
   - component: {fileID: 1008353637}
   m_Layer: 7
   m_Name: "\u5E73\u9762.041"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15511,7 +15511,7 @@ GameObject:
   - component: {fileID: 1049387323}
   m_Layer: 7
   m_Name: Cube.466
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15790,7 +15790,7 @@ GameObject:
   - component: {fileID: 1067004993}
   m_Layer: 7
   m_Name: "\u5E73\u9762.044"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15921,7 +15921,7 @@ GameObject:
   - component: {fileID: 1074030600}
   m_Layer: 7
   m_Name: "\u82B1\u5712\u7246\u58C1.004"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16128,7 +16128,7 @@ GameObject:
   - component: {fileID: 1091116626}
   m_Layer: 7
   m_Name: Prop_low.003
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16390,7 +16390,7 @@ GameObject:
   - component: {fileID: 1111984876}
   m_Layer: 7
   m_Name: Cube.051
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16781,7 +16781,7 @@ GameObject:
   - component: {fileID: 1140914907}
   m_Layer: 7
   m_Name: Cube.055
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -17273,7 +17273,7 @@ GameObject:
   - component: {fileID: 1175935489}
   m_Layer: 7
   m_Name: "\u82B1\u5712\u5730\u677F.016"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -17465,7 +17465,7 @@ GameObject:
   - component: {fileID: 1193069579}
   m_Layer: 7
   m_Name: Cylinder.095
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -17780,7 +17780,7 @@ GameObject:
   - component: {fileID: 1203720616}
   m_Layer: 7
   m_Name: Cylinder.036
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -18194,7 +18194,7 @@ GameObject:
   - component: {fileID: 1255453205}
   m_Layer: 7
   m_Name: "\u5E73\u9762.040"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -18500,7 +18500,7 @@ GameObject:
   - component: {fileID: 1270926364}
   m_Layer: 7
   m_Name: Cylinder.016
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -18828,7 +18828,7 @@ GameObject:
   - component: {fileID: 1302180657}
   m_Layer: 7
   m_Name: Cube.474
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -18938,7 +18938,7 @@ GameObject:
   - component: {fileID: 1302797695}
   m_Layer: 7
   m_Name: Cube.043
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -19069,7 +19069,7 @@ GameObject:
   - component: {fileID: 1304826149}
   m_Layer: 7
   m_Name: "\u82B1\u5712\u7246\u58C1.007"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -19517,7 +19517,7 @@ GameObject:
   - component: {fileID: 1346301376}
   m_Layer: 7
   m_Name: Cylinder.009
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -20105,7 +20105,7 @@ GameObject:
   - component: {fileID: 1385079326}
   m_Layer: 7
   m_Name: Cube.026
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -20417,7 +20417,7 @@ GameObject:
   - component: {fileID: 1438392975}
   m_Layer: 7
   m_Name: "\u5E73\u9762.039"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -20741,7 +20741,7 @@ GameObject:
   - component: {fileID: 1446731152}
   m_Layer: 7
   m_Name: "\u5E73\u9762.047"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -22101,7 +22101,7 @@ GameObject:
   - component: {fileID: 1574638652}
   m_Layer: 7
   m_Name: Cube.060
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -22417,7 +22417,7 @@ GameObject:
   - component: {fileID: 1616793520}
   m_Layer: 7
   m_Name: "\u80FD\u6E90\u5730\u677F.010"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -22778,7 +22778,7 @@ GameObject:
   - component: {fileID: 1669673093}
   m_Layer: 7
   m_Name: "\u80FD\u6E90\u5730\u677F.008"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -23832,7 +23832,7 @@ GameObject:
   - component: {fileID: 1737791059}
   m_Layer: 7
   m_Name: "\u82B1\u5712\u5730\u677F.017"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -24140,7 +24140,7 @@ GameObject:
   - component: {fileID: 1762494242}
   m_Layer: 7
   m_Name: Cube.028
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -24249,7 +24249,7 @@ GameObject:
   - component: {fileID: 1764368278}
   m_Layer: 7
   m_Name: "\u82B1\u5712\u7246\u58C1.009"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -24380,7 +24380,7 @@ GameObject:
   - component: {fileID: 1769530964}
   m_Layer: 7
   m_Name: Cube.059
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -24489,7 +24489,7 @@ GameObject:
   - component: {fileID: 1780296150}
   m_Layer: 7
   m_Name: Cylinder.018
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -24685,7 +24685,7 @@ GameObject:
   - component: {fileID: 1784990643}
   m_Layer: 7
   m_Name: Cube.056
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -25000,7 +25000,7 @@ GameObject:
   - component: {fileID: 1798909745}
   m_Layer: 7
   m_Name: "\u5E73\u9762.027"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -25759,7 +25759,7 @@ GameObject:
   - component: {fileID: 1872455870}
   m_Layer: 7
   m_Name: Cube.057
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -26152,7 +26152,7 @@ GameObject:
   - component: {fileID: 1899609948}
   m_Layer: 7
   m_Name: "\u5E73\u9762.132"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -26589,7 +26589,7 @@ GameObject:
   - component: {fileID: 1924428547}
   m_Layer: 7
   m_Name: Plane.012
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -26742,7 +26742,7 @@ GameObject:
   - component: {fileID: 1933738282}
   m_Layer: 7
   m_Name: "\u80FD\u6E90\u7246\u58C1.010"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -27222,7 +27222,7 @@ GameObject:
   - component: {fileID: 1991102989}
   m_Layer: 7
   m_Name: Cube.053
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -27388,7 +27388,6 @@ Transform:
   - {fileID: 514373901}
   - {fileID: 1049387322}
   - {fileID: 69600830}
-  - {fileID: 2022139630}
   - {fileID: 1302180656}
   - {fileID: 1684791144}
   - {fileID: 156152419}
@@ -27527,115 +27526,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -1257641055828385094, guid: d89c1a331fd2cd34eb9670d7418bb2f3, type: 3}
---- !u!1 &2022139629
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2022139630}
-  - component: {fileID: 2022139633}
-  - component: {fileID: 2022139632}
-  - component: {fileID: 2022139631}
-  m_Layer: 7
-  m_Name: Cube.469
-  m_TagString: SpawnArea
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &2022139630
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2022139629}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: 68.02264, y: 3.5271132, z: -4.7072463}
-  m_LocalScale: {x: 100.74306, y: 32.61664, z: 100}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2000469266}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!64 &2022139631
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2022139629}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 6491494390183387859, guid: 6cf0394a7f24f8a40bfc357166bf9da4, type: 3}
---- !u!23 &2022139632
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2022139629}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 54e102e2d1dd4f84fb7c56dea75e7e05, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &2022139633
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2022139629}
-  m_Mesh: {fileID: 6491494390183387859, guid: 6cf0394a7f24f8a40bfc357166bf9da4, type: 3}
 --- !u!64 &2023661626
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -27694,7 +27584,7 @@ GameObject:
   - component: {fileID: 2030158725}
   m_Layer: 7
   m_Name: "\u82B1\u5712\u5730\u677F.019"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -27803,7 +27693,7 @@ GameObject:
   - component: {fileID: 2037061935}
   m_Layer: 7
   m_Name: "\u82B1\u5712\u5730\u677F.020"
-  m_TagString: SpawnArea
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -2,6 +2,10 @@
 #
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
 #
+
+# Claude Code 工作目錄（git worktree 等內部資料，不該進 repo）
+.claude/
+
 .utmp/
 /[Ll]ibrary/
 /[Tt]emp/

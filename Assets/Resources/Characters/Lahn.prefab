@@ -2212,7 +2212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 2898297954015297290}
-  worldOffset: {x: 0, y: 2, z: 0}
+  worldOffset: {x: 0, y: 50, z: 0}
   followPosition: 1
   smoothFollow: 1
   smoothSpeed: 15
