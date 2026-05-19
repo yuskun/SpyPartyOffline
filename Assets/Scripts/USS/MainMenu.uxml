@@ -21,5 +21,6 @@
                 </ui:Button>
             </ui:VisualElement>
         </ui:VisualElement>
+        <ui:VisualElement name="title-img" picking-mode="Ignore" class="title-img" style="top: -103px; right: 27px;" />
     </ui:VisualElement>
 </ui:UXML>

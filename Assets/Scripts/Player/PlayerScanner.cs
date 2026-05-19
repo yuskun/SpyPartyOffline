@@ -25,7 +25,7 @@ public class PlayerScanner : MonoBehaviour
 
     [Header("竊盜模式")]
     public bool enableStealScan = false;
-    public float stealScanRadius = 4f;
+    private  float stealScanRadius = 8f;
 
     public GameObject currentTarget { get; private set; }
     public GameObject currentRagdoll { get; private set; }

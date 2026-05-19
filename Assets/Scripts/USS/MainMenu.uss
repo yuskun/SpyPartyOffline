@@ -89,3 +89,13 @@
     letter-spacing: 5px;
     -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&guid=6f1375bf9fa261a40b77477d1fef5011&type=3#GenSenRounded2TW-B");
 }
+
+.title-img {
+    position: absolute;
+    top: -20px;
+    right: 100px;
+    width: 360px;
+    height: 360px;
+    background-image: url("project://database/Assets/Image/TITLE.png?fileID=21300000&guid=836ecbab02a8d9c499ba99aa47ace5f7&type=3#TITLE");
+    -unity-background-scale-mode: scale-to-fit;
+}

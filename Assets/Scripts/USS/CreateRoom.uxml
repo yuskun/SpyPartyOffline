@@ -14,7 +14,7 @@
                     </ui:Button>
                 </ui:VisualElement>
                 <ui:VisualElement class="room-sub" style="-unity-font-style: normal; -unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/fonts/GenSenRounded2TW-B.otf?fileID=12800000&amp;guid=6f1375bf9fa261a40b77477d1fef5011&amp;type=3#GenSenRounded2TW-B&quot;);">
-                    <ui:Button name="TutorialBtn" class="new-btn jelly-btn" style="display: none;">
+                    <ui:Button name="TutorialBtn" class="new-btn jelly-btn" style="opacity: 1; display: none;">
                         <ui:VisualElement class="btn-icon icon-book" />
                         <ui:Label text="新 手 教 學" class="btn-text-sub" />
                     </ui:Button>

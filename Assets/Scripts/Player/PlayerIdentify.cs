@@ -52,6 +52,10 @@ public class PlayerIdentify : NetworkBehaviour
     {
         if (Text != null)
             Text.text = PlayerName;
+
+        // 本地玩家：把同步進來的真名也推給 HUD（解決 Client 端 GameStart 時序在 PlayerIdentify spawn 之前的問題）
+        if (HasInputAuthority && GameHUDManager.Instance != null)
+            GameHUDManager.Instance.RefreshPlayerName();
     }
 
     /// <summary>

@@ -159,7 +159,10 @@ MonoBehaviour:
   owner: {fileID: 0}
   Time: 2
   CanBreak: 1
+  swingCost: 2
+  hitBonusCost: 1
   hitForce: 15000
+  isBroken: 0
 --- !u!114 &-5497487439667136304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -262,8 +265,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 7.514837, y: 3.4723277, z: 7.232412}
+  m_Center: {x: -0.59576213, y: 1.2361642, z: -0.027353363}
 --- !u!114 &322377337001786054
 MonoBehaviour:
   m_ObjectHideFlags: 0

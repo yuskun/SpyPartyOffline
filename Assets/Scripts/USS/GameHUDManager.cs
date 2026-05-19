@@ -106,16 +106,44 @@ public class GameHUDManager : MonoBehaviour
 
     public void RefreshPlayerName()
     {
+        // SetActive / 顯示重建後，舊引用可能 detach（panel == null），需重新抓
+        if (_playerNameLabel == null || _playerNameLabel.panel == null)
+        {
+            var doc = GetComponent<UIDocument>();
+            if (doc != null && doc.rootVisualElement != null)
+                _playerNameLabel = doc.rootVisualElement.Q<Label>(className: "player-name");
+        }
         if (_playerNameLabel == null) return;
 
-        // 沿用妳在 Practice 使用的邏輯：優先從 NetworkManager2 讀取
-        string pName = NetworkManager2.Instance != null ? NetworkManager2.Instance.PlayerName : "shaya";
-        
-        // 保底預設值
+        string pName = null;
+
+        // 優先：從本地玩家的 PlayerIdentify 讀（[Networked]，server 同步，client 一樣有正確值）
+        var localIdentify = FindLocalPlayerIdentify();
+        if (localIdentify != null && !string.IsNullOrEmpty(localIdentify.PlayerName))
+            pName = localIdentify.PlayerName;
+
+        // 後備：本地 typed name（NetworkManager2，有可能 timing 沒齊）
+        if (string.IsNullOrEmpty(pName) && NetworkManager2.Instance != null)
+            pName = NetworkManager2.Instance.PlayerName;
+
         if (string.IsNullOrEmpty(pName)) pName = "Guest";
 
         _playerNameLabel.text = pName;
         UnityEngine.Debug.Log($"[GameHUD] 名字已更新為: {pName}");
+    }
+
+    /// <summary>找場景中具有 InputAuthority 的玩家（即本地玩家自己）</summary>
+    private PlayerIdentify FindLocalPlayerIdentify()
+    {
+        var all = FindObjectsOfType<PlayerIdentify>();
+        for (int i = 0; i < all.Length; i++)
+        {
+            var p = all[i];
+            if (p == null) continue;
+            // PlayerIdentify : NetworkBehaviour，所以可以直接讀 HasInputAuthority
+            if (p.HasInputAuthority) return p;
+        }
+        return null;
     }
 
     public void ToggleControlHints()
